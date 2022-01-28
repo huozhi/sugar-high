@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "exports": "./lib/index.js",
   "description": "Super lightweight JavaScript syntax highlighter",
+  "files": [
+    "./lib"
+  ],
   "license": "MIT",
   "scripts": {
     "dev": "vite docs",
