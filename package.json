@@ -4,7 +4,8 @@
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "vite docs"
+    "dev": "vite docs",
+    "build": "vite build docs"
   },
   "devDependencies": {
     "vite": "2.7.13"
