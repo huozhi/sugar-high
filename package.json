@@ -1,7 +1,8 @@
 {
   "name": "sugar-high",
-  "version": "1.0.0",
-  "main": "lib/index.js",
+  "version": "0.0.1",
+  "exports": "./lib/index.js",
+  "description": "Super lightweight JavaScript syntax highlighter",
   "license": "MIT",
   "scripts": {
     "dev": "vite docs",
