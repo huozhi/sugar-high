@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sugar high</title>
+<style>
+#code {
+  font-family: Consolas, Monaco, monospace;
+  font-size: 16px;
+  display: block;
+  width: 100%;
+  min-height: 100px;
+  background-color: #fff;
+}
+
+#output {
+  font-family: Consolas, Monaco, monospace;
+  font-size: 16px;
+  display: block;
+  min-height: 100px;
+}
+
+.identifier {
+  color: #2d333b;
+}
+.sign {
+  color: #818c9b;
+  font-weight: bold;
+}
+.string {
+  color: #00a99a;
+}
+.keyword {
+  color: #f47067;
+}
+
+.flex {
+  display: flex;
+}
+.flex-1 {
+  flex: 1 0;
+  margin: 8px;
+  padding: 12px 10px 12px 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #d0d0d0;
+}
+</style>
+</head>
+<body>
+  <div class="flex">
+    <textarea class="flex-1" id="code"></textarea>
+
+    <pre class="flex-1"><code id="output"></code></pre>
+  </div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

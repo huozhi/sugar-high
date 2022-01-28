@@ -1,0 +1,12 @@
+{
+  "name": "sugar-high",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite docs"
+  },
+  "devDependencies": {
+    "vite": "2.7.13"
+  }
+}
