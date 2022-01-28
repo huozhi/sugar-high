@@ -1,5 +1,6 @@
 import { tokenize, generate } from '../lib'
 
+// console interactive API
 window.tokenize = tokenize
 window.generate = generate
 
@@ -11,13 +12,12 @@ codeInput.addEventListener('input', () => {
 })
 
 codeInput.value = `
-import world from '../space'
-
-function hello() {
-  console.log('hello', world)
-}
+// hello-world.js
+import { planet } from '../space'
 
 class SuperArray extends Array {
+  static core = planet
+
   constructor(...args) {
     super(...args)
   }
@@ -26,6 +26,15 @@ class SuperArray extends Array {
     return this.map(x => x + 1)
   }
 }
+
+/**
+ * @param {string} name 
+ * @return {void}
+ */
+function hello(name) {
+  console.log('hello', name)
+}
+
 `.trim()
 
 function update() {
@@ -34,7 +43,7 @@ function update() {
   const output = generate(tokens).join('')
   
   console.log(tokens)
-    
+  
   codeOutput.innerHTML = output
 }
 
