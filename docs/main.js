@@ -18,6 +18,12 @@ class SuperArray extends Array {
     super(...args)
   }
 
+  each(fn) {
+    for (let i = 0; i < this.length; i++) {
+      fn(this[i], i)
+    }
+  }
+
   bump() {
     return this.map(x => x + 1)
   }
@@ -31,6 +37,7 @@ function hello(name) {
   console.log('hello', name)
 }
 
+const reg = /^\\/[0-5]\\/$/
 export const test = (str) => /\.js$/g.test(str)
 
 async function query() {
@@ -38,11 +45,11 @@ async function query() {
 }
 
 function* foo(index) {
-  while (index < 2) {
+  do {
     yield index;
     index++;
     return void 0
-  }
+  } while (index < 2)
 }
 
 `.trim()
