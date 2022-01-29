@@ -11,18 +11,6 @@ codeInput.value = `
 // hello-world.js
 import { planet } from '../space'
 
-class SuperArray extends Array {
-  static core = planet
-
-  constructor(...args) { super(...args); }
-
-  bump() {
-    return this.map(
-      x => x == null ? x + 1 : 0
-    )
-  }
-}
-
 export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 
 async function query() {
@@ -38,11 +26,31 @@ function* foo(index) {
 }
 
 const nums = [
-  undefined
   1000_000_000, 
-  .14, 1.2e3, 0x1f, 1n, 
+  1.2e3, 
+  0x1f,
+  .14, 
+  1n, 
 ].filter(Boolean)
 
+
+// jsx
+const element = (
+  <>
+    <Food
+      season={{
+        sault: <p a={[{}]} />
+      }}>
+    </Food>
+    {/* jsx comment */}
+    <h1 className="title">
+      Read{' '}
+      <Link href="/posts/first-post">
+        <a>this page! - {Date.now()}</a>
+      </Link>
+    </h1>
+  </>
+)
 
 /**
  * @param {string} name 
@@ -53,6 +61,19 @@ function foo(name, callback) {
     callback(name[i])
   }
 }
+
+class SuperArray extends Array {
+  static core = Object.create(null)
+
+  constructor(...args) { super(...args); }
+
+  bump() {
+    return this.map(
+      x => x == undefined ? x + 1 : 0
+    )
+  }
+}
+
 `.trim()
 
 function update() {
