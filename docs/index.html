@@ -30,18 +30,31 @@ body {
   min-height: 100px;
 }
 
-.identifier {
+/*
+ * 0 - comment
+ * 1 - keyword
+ * 2 - break
+ * 3 - string
+ * 4 - space
+ * 5 - sign
+ * 6 - identifier
+ */
+
+.sh__6 {
   color: #2d333b;
 }
-.sign {
+.sh__5 {
   color: #818c9b;
   font-weight: bold;
 }
-.string {
+.sh__3 {
   color: #00a99a;
 }
-.keyword {
+.sh__1 {
   color: #f47067;
+}
+.sh__0 {
+  color: #818c9b;
 }
 
 .flex {
@@ -55,9 +68,7 @@ body {
   border: 1px solid #d0d0d0;
   border-radius: 4px;
 }
-.comment {
-  color: #818c9b;
-}
+
 </style>
 </head>
 <body>

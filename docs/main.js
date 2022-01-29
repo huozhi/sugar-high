@@ -1,8 +1,4 @@
-import { tokenize, generate } from '../lib'
-
-// console interactive API
-window.tokenize = tokenize
-window.generate = generate
+import { highlight } from '..'
 
 const codeInput = document.getElementById('code')
 const codeOutput = document.getElementById('output')
@@ -35,14 +31,25 @@ function hello(name) {
   console.log('hello', name)
 }
 
+export const test = (str) => /\.js$/g.test(str)
+
+async function query() {
+  return await db.query()
+}
+
+function* foo(index) {
+  while (index < 2) {
+    yield index;
+    index++;
+    return void 0
+  }
+}
+
 `.trim()
 
 function update() {
   const code = codeInput.value?.trim() || ''
-  const tokens = tokenize(code)
-  const output = generate(tokens).join('')
-  
-  console.log(tokens)
+  const output = highlight(code)
   
   codeOutput.innerHTML = output
 }
