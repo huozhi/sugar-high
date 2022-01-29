@@ -38,8 +38,12 @@ body {
  * 4 - space
  * 5 - sign
  * 6 - identifier
+ * 7 - Class, numbers or null
  */
 
+.sh__7 {
+  color: #3476cb;
+}
 .sh__6 {
   color: #2d333b;
 }
@@ -62,11 +66,15 @@ body {
 }
 .flex-1 {
   flex: 1 0;
+}
+.pad {
   margin: 8px;
   padding: 12px 10px 12px 10px;
   background-color: #f9f9f9;
   border: 1px solid #d0d0d0;
   border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 .title {
   padding: 0 8px;
@@ -80,9 +88,8 @@ body {
     <p>Super lightweight syntax highlighter for JavaScript, less than <b>1KB</b> after minified and gizpped.</p>
   </div>
   <div class="flex">
-    <textarea class="flex-1" id="code"></textarea>
-
-    <pre class="flex-1"><code id="output"></code></pre>
+    <textarea class="flex-1 pad" id="code"></textarea>
+    <pre class="flex-1 pad"><code id="output"></code></pre>
   </div>
   <script type="module" src="./main.js"></script>
 </body>
