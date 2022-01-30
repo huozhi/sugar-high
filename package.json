@@ -5,7 +5,7 @@
   "exports": {
     "import": "./lib/index.mjs"
   },
-  "description": "Super lightweight JavaScript syntax highlighter",
+  "description": "Super lightweight JSX syntax highlighter",
   "files": [
     "./lib"
   ],
