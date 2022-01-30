@@ -3,11 +3,18 @@ import { highlight } from '..'
 const codeInput = document.getElementById('code')
 const codeOutput = document.getElementById('output')
 
-codeInput.addEventListener('input', () => {
-  update()
-})
+const jsxExample = `
+const element = (
+  <h1 className="title">
+    Read{' '}
+    <Link href="/posts/first-post">
+      <a>this page! - {Date.now()}</a>
+    </Link>
+  </h1>
+)
+`.trim()
 
-codeInput.value = `
+const fullExample = `
 // hello-world.js
 import { planet } from '../space'
 
@@ -75,6 +82,12 @@ class SuperArray extends Array {
 }
 
 `.trim()
+
+codeInput.addEventListener('input', () => {
+  update()
+})
+
+codeInput.value = fullExample
 
 function update() {
   const code = codeInput.value?.trim() || ''
