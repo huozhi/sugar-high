@@ -21,38 +21,39 @@ document.querySelector('pre > code').innerHTML = codeHTML
 
 ### Highlight with CSS
 
-Then make your own theme with customized colors and put in global CSS
+Then make your own theme with customized colors by token type and put in global CSS. The corresponding class names star with `sh__` prefix.
 
 ```css
-/*
- * 0 - comment
- * 1 - keyword
- * 2 - break
- * 3 - string
- * 4 - space
- * 5 - sign
- * 6 - identifier
- * 7 - Class, number and null
+/**
+ * Types that sugar-high have:
+ *
+ * identifier
+ * keyword
+ * string
+ * Class, number and null
+ * sign
+ * comment
+ * 
  */
-.sh__7 {
-  color: #3476cb;
+.sh__class {
+  color: #2d5e9d;
 }
-.sh__6 {
+.sh__identifier {
   color: #2d333b;
 }
-.sh__5 {
-  color: #818c9b;
-  font-weight: bold;
+.sh__sign {
+  color: #8996a3;
 }
-.sh__3 {
+.sh__string {
   color: #00a99a;
 }
-.sh__1 {
+.sh__keyword {
   color: #f47067;
 }
-.sh__0 {
-  color: #818c9b;
+.sh__comment {
+  color: #a19595;
 }
+
 ```
 
 ### LICENSE
