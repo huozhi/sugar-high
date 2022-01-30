@@ -2,12 +2,11 @@
   "name": "sugar-high",
   "version": "0.0.3",
   "type": "module",
-  "exports": {
-    "import": "./lib/index.mjs"
-  },
+  "exports": "./lib/index.mjs",
   "description": "Super lightweight JSX syntax highlighter",
   "files": [
-    "./lib"
+    "lib",
+    "*.md"
   ],
   "license": "MIT",
   "scripts": {
