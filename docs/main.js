@@ -39,7 +39,7 @@ const element = (
       }}>
     </Food>
     {/* jsx comment */}
-    <h1 className="title">
+    <h1 className="title" data-title="true">
       Read{' '}
       <Link href="/posts/first-post">
         <a>this page! - {Date.now()}</a>
@@ -95,7 +95,10 @@ function update() {
   const output = highlight(code)
 
   if (process.env.NODE_ENV !== 'production') {
-    console.log(tokenize(code).map(t => t[1]))
+    console.log(
+      tokenize(code)
+        .map(t => t[1])
+    )
   }
   
   codeOutput.innerHTML = output
