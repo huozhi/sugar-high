@@ -6,28 +6,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>sugar high</title>
 <style>
+* {
+  box-sizing: border-box;
+}
 html {
   font-family: "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif
 }
 body {
-  max-width: 1120px;
+  max-width: 690px;
   margin: auto;
-  padding: 0 10px;
+  padding: 0 10px 40px;
 }
 #code {
-  font-family: Consolas, Monaco, monospace;
-  font-size: 16px;
   display: block;
   width: 100%;
-  min-height: 100px;
-  background-color: #fff;
+  background-color: transparent;
+  color: transparent;
 }
 
 #output {
-  font-family: Consolas, Monaco, monospace;
-  font-size: 16px;
   display: block;
-  min-height: 100px;
 }
 
 .sh__class {
@@ -49,25 +47,44 @@ body {
   color: #a19595;
 }
 
-.flex {
+.editor {
+  position: relative;
+  min-height: 100px;
   display: flex;
 }
-.flex-1 {
-  flex: 1 0;
+
+.absolute-full {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 .pad {
-  margin: 8px;
-  padding: 12px 10px 12px 10px;
-  background-color: #f9f9f9;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
+  padding: 16px 12px;
+  background-color: #f6f6f6;
+  border: none;
+  border-radius: 12px;
   white-space: pre-wrap;
   word-break: break-word;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 16px;
+  caret-color: #333;
 }
 .title {
   padding: 0 8px;
 }
-
+.title h1 {
+  font-size: 64px;
+  font-weight: 800;
+}
+.pre {
+  margin: 0;  
+  flex: 1 0;
+}
+textarea {
+  resize: none;
+}
 </style>
 </head>
 <body>
@@ -76,8 +93,11 @@ body {
     <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
   </div>
   <div class="flex">
-    <textarea class="flex-1 pad" id="code"></textarea>
-    <pre class="flex-1 pad"><code id="output"></code></pre>
+    <div class="editor">
+      <pre class="pre"><code class="pad" id="output"></code></pre>
+      <textarea class="pad absolute-full" id="code"></textarea>
+    </div>
+
   </div>
   <script type="module" src="./main.js"></script>
 </body>
