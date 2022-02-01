@@ -6,6 +6,7 @@
   "description": "Super lightweight JSX syntax highlighter",
   "files": [
     "lib",
+    "index.d.ts",
     "*.md"
   ],
   "license": "MIT",
