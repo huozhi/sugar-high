@@ -91,7 +91,7 @@ codeInput.addEventListener('input', () => {
 codeInput.value = process.env.NODE_ENV !== 'production' ? debugExample : fullExample
 
 function update() {
-  const code = codeInput.value?.trim() || ''
+  const code = codeInput.value || ''
   const output = highlight(code)
 
   if (process.env.NODE_ENV !== 'production') {
