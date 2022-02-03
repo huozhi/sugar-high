@@ -9,27 +9,6 @@ import { planet } from '../space'
 
 export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 
-async function query() {
-  return await db.query()
-}
-
-function* foo(index) {
-  do {
-    yield index;
-    index++;
-    return void 0
-  } while (index < 2)
-}
-
-const nums = [
-  1000_000_000, 
-  1.2e3, 
-  0x1f,
-  .14, 
-  1n, 
-].filter(Boolean)
-
-
 // jsx
 const element = (
   <>
@@ -47,6 +26,23 @@ const element = (
     </h1>
   </>
 )
+
+async function query() {
+  return await db.query()
+}
+
+const nums = [
+  1000_000_000, 1.2e3, 0x1f, .14, 1n
+].filter(Boolean)
+
+
+function* foo(index) {
+  do {
+    yield index;
+    index++;
+    return void 0
+  } while (index < 2)
+}
 
 /**
  * @param {string} name 
@@ -72,23 +68,13 @@ class SuperArray extends Array {
 
 `.trim()
 
-const debugExample = fullExample
-;`
-const element = (
-  <h1 className="title" data-root="false" width="200px">
-    <Dog name={'foo'} age={10} />
-    <Link href="/posts/first-post">
-      <a>this page! - {Date.now()}</a>
-    </Link>
-  </h1>
-)
-`.trim()
+const testExample = fullExample
 
 codeInput.addEventListener('input', () => {
   update()
 })
 
-codeInput.value = process.env.NODE_ENV !== 'production' ? debugExample : fullExample
+codeInput.value = process.env.NODE_ENV !== 'production' ? testExample : fullExample
 
 function update() {
   const code = codeInput.value || ''
