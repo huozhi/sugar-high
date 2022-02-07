@@ -5,8 +5,10 @@ const codeOutput = document.getElementById('output')
 
 const fullExample = `
 // hello-world.js
+
 import { planet } from '../space'
 
+const u = /* evaluate */ 1 / 234 + 56 / 7
 export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 
 // jsx
