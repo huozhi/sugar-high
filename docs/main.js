@@ -8,7 +8,6 @@ const fullExample = `
 
 import { planet } from '../space'
 
-const u = /* evaluate */ (19) / 234 + 56 / 7
 export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 
 // jsx
@@ -73,7 +72,8 @@ class SuperArray extends Array {
 /* This is another comment */ alert('good') // <- alerts
 
 // Invalid calculation: regex and numbers
-123 - /555/ + 444;
+const _in = 123 - /555/ + 444;
+const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 
 
 `.trim()
