@@ -68,6 +68,10 @@ class SuperArray extends Array {
   }
 }
 
+// This is a inline comment / <- a slash
+/// <reference path="..." /> // reference comment
+/* This is another comment */ alert('good') // <- alerts
+
 `.trim()
 
 const testExample = fullExample
