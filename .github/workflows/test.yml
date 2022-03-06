@@ -16,8 +16,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-          cache: 'npm'
-      - run: npm install
-      - run: npm test
+      - run: yarn install
+      - run: yarn test
         env:
           CI: true
