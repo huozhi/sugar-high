@@ -13,6 +13,10 @@ function getTokenTypes(tokens) {
   return tokens.map((tk) => getTypeName(tk))
 }
 
+function getNonSpacesTokensTypes(tokens) {
+  return getTokenTypes(tokens).filter(type => type !== 'space')
+}
+
 function mergeSpaces(str) {  
   return str.trim().replace(/^[\s]{2,}$/g, ' ')
 }
@@ -28,7 +32,7 @@ function getNonSpacesTokens(tokens) {
 }
 
 describe('calculation expression', () => {
-  it('parse basic inline calculation expression', () => {
+  it('basic inline calculation expression', () => {
     const tokens = tokenize(`123 - /555/ + 444;`)
     expect(getTokenTypes(tokens)).toEqual([
       'class', 'space', 'sign', 'space', 'string', 'space', 'sign', 'space', 'class', 'sign',
@@ -39,23 +43,24 @@ describe('calculation expression', () => {
     
   })
 
-  it('parse calculation with comments', () => {
+  it('calculation with comments', () => {
     const tokens = tokenize(`/* evaluate */ (19) / 234 + 56 / 7;`)
-    expect(getTokenTypes(tokens)).toEqual([
-      'comment', 'space', 'sign', 'class', 'sign', 'space', 'sign', 'space', 'class', 'space', 'sign', 'space', 'class', 'space', 'sign', 'space', 'class', 'sign',
+    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+      'comment', 'sign', 'class', 'sign', 'sign', 'class', 'sign', 'class', 'sign', 'class', 'sign',
     ])
     expect(getNonSpacesTokens(tokens)).toEqual([
       '/* evaluate */', '(', '19', ')', '/', '234', '+', '56', '/', '7', ';',
     ])
   })
   
-  it('parse calcaution with defs', () => {
+  it('calculation with defs', () => {
     const tokens = tokenize(`const _iu = (19) / 234 + 56 / 7;`)
-    expect(getTokenTypes(tokens)).toEqual([
-      'keyword', 'space', 'class', 'space', 'sign', 'space', 'sign', 'class', 'sign', 'space', 'sign', 'space', 'class', 'space', 'sign', 'space', 'class', 'space', 'sign', 'space', 'class', 'sign',
-    ])
     expect(getNonSpacesTokens(tokens)).toEqual([
       'const', '_iu', '=', '(', '19', ')', '/', '234', '+', '56', '/', '7', ';',
+    ])
+    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+      "keyword", "class", "sign", "sign", "class", "sign", "sign", 
+      "class", "sign", "class", "sign", "class", "sign",
     ])
   })
 })
@@ -123,12 +128,31 @@ describe('comments', () => {
       "/* This is another comment */",
       "alert",
       "(",
-      "'",
-      "good",
-      "'",
+      "'good'",
       ")",
       "// <- alerts",
     ])
+  })
+})
 
+describe('string & regex', () => {
+  it('basic regex', () => {
+    const reg1 = '/^\\/[0-5]\\/$/'
+    const reg2 = `/^\\w+[a-z0-9]/ig`
+    
+    expect(getNonSpacesTokens(tokenize(reg1))).toEqual([
+      '/^\\/[0-5]\\/$/',
+    ])
+    expect(getNonSpacesTokens(tokenize(reg2))).toEqual([
+      '/^\\w+[a-z0-9]/ig',
+    ])
+  })
+
+  it('import string', () => {
+    const code = `import mod from "../../mod"`
+    const tokens = tokenize(code)
+    expect(getNonSpacesTokens(tokens)).toEqual([
+      'import', 'mod', 'from', '"../../mod"',
+    ])
   })
 })
