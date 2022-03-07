@@ -148,6 +148,13 @@ describe('string & regex', () => {
     ])
   })
 
+  it('regex plus operators', () => {
+    const code = `/^\\/[0-5]\\/$/ + /^\\/\w+\\/$/gi`
+    expect(getNonSpacesTokens(tokenize(code))).toEqual([
+      '/^\\/[0-5]\\/$/', '+', '/^\\/\w+\\/$/gi',
+    ])
+  })
+
   it('import string', () => {
     const code = `import mod from "../../mod"`
     const tokens = tokenize(code)
