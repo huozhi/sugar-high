@@ -33,7 +33,7 @@ Then make your own theme with customized colors by token type and put in global 
  * Class, number and null
  * sign
  * comment
- * 
+ * jsxliterals
  */
 .sh__class {
   color: #2d5e9d;
@@ -53,7 +53,9 @@ Then make your own theme with customized colors by token type and put in global 
 .sh__comment {
   color: #a19595;
 }
-
+.sh__jsxliterals {
+  color: #03066e;
+}
 ```
 
 ### LICENSE
