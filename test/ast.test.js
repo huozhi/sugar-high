@@ -88,8 +88,14 @@ describe('jsx', () => {
       "</", ">", ")",
     ])
 
+    const jsxPropertyNameToken = tokens.find(tk => mergeSpaces(tk[1]) === 'className')
+    expect(getTypeName(jsxPropertyNameToken)).toBe('identifier')
+
+    const jsxPropertyValueToken = tokens.find(tk => mergeSpaces(tk[1]) === '"title"')
+    expect(getTypeName(jsxPropertyValueToken)).toBe('string')
+
     const jsChildrenTextToken = tokens.find(tk => mergeSpaces(tk[1]) === 'Read more')
-    expect(getTypeName(jsChildrenTextToken)).toBe('string')
+    expect(getTypeName(jsChildrenTextToken)).toBe('jsxliterals')
   })
 })
 
