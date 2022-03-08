@@ -103,6 +103,92 @@ export default function Page() {
 
   return (
     <div>
+      <style jsx global>{`
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        font-family: "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif
+      }
+      body {
+        max-width: 690px;
+        margin: auto;
+        padding: 0 10px 40px;
+      }
+      
+      .sh__class {
+        color: #2d5e9d;
+      }
+      .sh__identifier {
+        color: #354150;
+      }
+      .sh__sign {
+        color: #8996a3;
+      }
+      .sh__string {
+        color: #00a99a;
+      }
+      .sh__keyword {
+        color: #f47067;
+      }
+      .sh__comment {
+        color: #a19595;
+      }
+      .sh__jsxliterals {
+        color: #03066e;
+      }
+      
+      `}</style>
+      <style jsx>{`
+      .editor {
+        position: relative;
+        min-height: 100px;
+        display: flex;
+      }
+      
+      .absolute-full {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
+      .pad {
+        padding: 16px 12px;
+        background-color: #f6f6f6;
+        border: none;
+        border-radius: 12px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-family: Consolas, Monaco, monospace;
+        font-size: 16px;
+        caret-color: #333;
+      }
+      .title {
+        padding: 0 8px;
+      }
+      .title h1 {
+        font-size: 64px;
+        font-weight: 800;
+      }
+      .pre {
+        margin: 0;  
+        flex: 1 0;
+      }
+      textarea {
+        resize: none;
+      }
+      #code {
+        display: block;
+        width: 100%;
+        background-color: transparent;
+        color: transparent;
+      }
+      
+      #output {
+        display: block;
+      }      
+      `}</style>
       <div className="title">
         <h1>Sugar High</h1>
         <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
