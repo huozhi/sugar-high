@@ -12,11 +12,13 @@
   "license": "MIT",
   "scripts": {
     "test": "vitest run",
-    "dev": "vite docs",
-    "build": "vite build docs"
+    "dev": "next dev docs",
+    "build": "next build docs"
   },
   "devDependencies": {
-    "vite": "^2.8.6",
-    "vitest": "^0.5.9"
+    "next": "12.1.1-canary.7",
+    "react": "18.0.0-rc.1",
+    "react-dom": "18.0.0-rc.1",
+    "vitest": "^0.6.0"
   }
 }
