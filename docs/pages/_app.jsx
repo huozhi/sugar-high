@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }) {
         <meta property="og:image" content="https://user-images.githubusercontent.com/4800338/157557111-76c6592c-61a0-4325-bebc-cc5c27f3053b.png" />
         <meta property="og:title" content="Sugar High" />
         <meta property="og:description" content="Super lightweight JSX syntax highlighter, around 1KB after minified and gzipped" />
-        <meta name="twitter:image:src" content="https://user-images.githubusercontent.com/4800338/157557111-76c6592c-61a0-4325-bebc-cc5c27f3053b.png" />
+        <meta name="twitter:image" content="https://user-images.githubusercontent.com/4800338/157557111-76c6592c-61a0-4325-bebc-cc5c27f3053b.png" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <Component {...pageProps} />
