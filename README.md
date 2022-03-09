@@ -3,7 +3,7 @@
 
 Super lightweight JSX syntax highlighter, around 1KB after minified and gzipped
 
-![img](https://user-images.githubusercontent.com/4800338/157557111-76c6592c-61a0-4325-bebc-cc5c27f3053b.png)
+![img](https://repository-images.githubusercontent.com/453236442/82cf2807-78f0-4009-bbdf-d7e753f73cf4)
 
 ### Usage
 
