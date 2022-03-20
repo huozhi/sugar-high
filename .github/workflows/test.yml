@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
+      
+      - uses: actions/cache@v2
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -23,4 +23,4 @@ jobs:
         with:
           version: 6.11.0
           run_install: true
-          run: pnpm test
+      - run: pnpm test
