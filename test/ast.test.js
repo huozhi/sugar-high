@@ -135,7 +135,7 @@ describe('comments', () => {
   })
 })
 
-describe('string & regex', () => {
+describe('regex', () => {
   it('basic regex', () => {
     const reg1 = '/^\\/[0-5]\\/$/'
     const reg2 = `/^\\w+[a-z0-9]/ig`
@@ -202,12 +202,25 @@ describe('string & regex', () => {
       ")",
     ])
   })
+})
 
+describe('string', () => {
   it('import string', () => {
     const code = `import mod from "../../mod"`
     const tokens = tokenize(code)
     expect(getNonSpacesTokens(tokens)).toEqual([
       'import', 'mod', 'from', '"../../mod"',
     ])
+  })
+
+  it('multi quotes string', () => {
+    const str1 = `"aa'bb'cc"`
+    const str2 = `'aa"bb"cc'`
+    expect(getNonSpacesTokens(tokenize(str1))).toEqual([
+      str1
+    ])
+    expect(getNonSpacesTokens(tokenize(str2))).toEqual([
+      str2
+    ])    
   })
 })
