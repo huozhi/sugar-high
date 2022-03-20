@@ -196,7 +196,11 @@ describe('string & regex', () => {
       'break',
       'sign',
       'identifier',
+      'sign',
+      'identifier',
+      'sign',
       'string',
+      'sign',
     ])
   })
 
