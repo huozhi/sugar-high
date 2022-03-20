@@ -16,9 +16,9 @@
     "build": "next build docs"
   },
   "devDependencies": {
-    "next": "12.1.1-canary.8",
-    "react": "18.0.0-rc.1",
-    "react-dom": "18.0.0-rc.1",
-    "vitest": "^0.6.0"
+    "next": "12.1.1-canary.15",
+    "react": "18.0.0-rc.2",
+    "react-dom": "18.0.0-rc.2",
+    "vitest": "~0.6.0"
   }
 }

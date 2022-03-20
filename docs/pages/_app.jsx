@@ -1,8 +1,8 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import Head from 'next/head'
 
-export default function Document() {
+export default function App({ Component, pageProps }) {
   return (
-    <Html lang="en">
+    <>
       <Head>
         <title>sugar high</title>
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -13,10 +13,7 @@ export default function Document() {
         <meta name="twitter:image" content="https://repository-images.githubusercontent.com/453236442/82cf2807-78f0-4009-bbdf-d7e753f73cf4" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
+      <Component {...pageProps} />
+    </>
   )
 }
