@@ -155,6 +155,54 @@ describe('string & regex', () => {
     ])
   })
 
+  it('multi line regex tests', () => {
+    const code1 = 
+      `/reg/.test('str')[]\n` +
+      `/reg/.test('str')`
+
+    // '[]' consider as a end of the expression
+    expect(getNonSpacesTokens(tokenize(code1))).toEqual([
+      "/reg/",
+      ".",
+      "test",
+      "(",
+      "'str'",
+      ")",
+      "[",
+      "]",
+      "/reg/", // regex
+      ".",
+      "test",
+      "(",
+      "'str'",
+      ")",
+    ])
+
+    const code2 = 
+      `/reg/.test('str')()\n` +
+      `/reg/.test('str')`
+
+    // what before '()' still considers as an expression
+    expect(getNonSpacesTokens(tokenize(code2))).toEqual([
+      "/reg/",
+      ".",
+      "test",
+      "(",
+      "'str'",
+      ")",
+      "(",
+      ")",
+      "/",   // operator
+      "reg", // identifier
+      "/",   // operator
+      ".",
+      "test",
+      "(",
+      "'str'",
+      ")",
+    ])
+  })
+
   it('import string', () => {
     const code = `import mod from "../../mod"`
     const tokens = tokenize(code)

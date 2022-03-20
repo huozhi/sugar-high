@@ -77,8 +77,10 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 `.trim()
 
 
+const example = fullExample
+
 export default function Page() {
-  const [text, setText] = useState(fullExample)
+  const [text, setText] = useState(example)
   const [output, setOutput] = useState(highlight(text))
   function onChange(event) {
     const code = event.target.value || ''
