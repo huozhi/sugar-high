@@ -161,22 +161,21 @@ describe('string & regex', () => {
       `/reg/.test('str')`
 
     // '[]' consider as a end of the expression
-    expect(getNonSpacesTokensTypes(tokenize(code1))).toEqual([
-      'string',
-      'sign',
-      'identifier',
-      'sign',
-      'string',
-      'sign',
-      'sign',
-      'sign',
-      'break',
-      'string',
-      'sign',
-      'identifier',
-      'sign',
-      'string',
-      'sign',
+    expect(getNonSpacesTokens(tokenize(code1))).toEqual([
+      "/reg/",
+      ".",
+      "test",
+      "(",
+      "'str'",
+      ")",
+      "[",
+      "]",
+      "/reg/", // regex
+      ".",
+      "test",
+      "(",
+      "'str'",
+      ")",
     ])
 
     const code2 = 
@@ -184,23 +183,23 @@ describe('string & regex', () => {
       `/reg/.test('str')`
 
     // what before '()' still considers as an expression
-    expect(getNonSpacesTokensTypes(tokenize(code2))).toEqual([
-      'string',
-      'sign',
-      'identifier',
-      'sign',
-      'string',
-      'sign',
-      'sign',
-      'sign',
-      'break',
-      'sign',
-      'identifier',
-      'sign',
-      'identifier',
-      'sign',
-      'string',
-      'sign',
+    expect(getNonSpacesTokens(tokenize(code2))).toEqual([
+      "/reg/",
+      ".",
+      "test",
+      "(",
+      "'str'",
+      ")",
+      "(",
+      ")",
+      "/",   // operator
+      "reg", // identifier
+      "/",   // operator
+      ".",
+      "test",
+      "(",
+      "'str'",
+      ")",
     ])
   })
 
