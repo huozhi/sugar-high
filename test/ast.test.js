@@ -17,7 +17,7 @@ function getNonSpacesTokensTypes(tokens) {
   return getTokenTypes(tokens).filter(type => type !== 'space')
 }
 
-function mergeSpaces(str) {  
+function mergeSpaces(str) {
   return str.trim().replace(/^[\s]{2,}$/g, ' ')
 }
 
@@ -40,7 +40,7 @@ describe('calculation expression', () => {
     expect(getTokenValues(tokens)).toEqual([
       '123', ' ', '-', ' ', '/555/', ' ', '+', ' ', '444', ';'
     ])
-    
+
   })
 
   it('calculation with comments', () => {
@@ -52,14 +52,14 @@ describe('calculation expression', () => {
       '/* evaluate */', '(', '19', ')', '/', '234', '+', '56', '/', '7', ';',
     ])
   })
-  
+
   it('calculation with defs', () => {
     const tokens = tokenize(`const _iu = (19) / 234 + 56 / 7;`)
     expect(getNonSpacesTokens(tokens)).toEqual([
       'const', '_iu', '=', '(', '19', ')', '/', '234', '+', '56', '/', '7', ';',
     ])
     expect(getNonSpacesTokensTypes(tokens)).toEqual([
-      "keyword", "class", "sign", "sign", "class", "sign", "sign", 
+      "keyword", "class", "sign", "sign", "class", "sign", "sign",
       "class", "sign", "class", "sign", "class", "sign",
     ])
   })
@@ -85,11 +85,11 @@ describe('jsx', () => {
       </>
     )`)
     expect(getNonSpacesTokens(tokens)).toEqual([
-      "// jsx", "const", "element", "=", "(", "<", ">", "<", "Food", "season", "=", "{", "{", "sault", 
-      ":", "<", "p", "a", "=", "{", "[", "{", "}", "]", "}", "/>", "}", "}", ">", "</", "Food", ">", "{", 
-      "/* jsx comment */", "}", "<", "h1", "className", "=", '"title"', "data", "-", "title", "=", '"true"', 
-      ">", "Read more", "{", "' '", "}", "<", "Link", "href", "=", '"/posts/first-post"', ">", "<", "a", ">", 
-      "this page! -", "{", "Date", ".", "now", "(", ")", "}", "</", "a", ">", "</", "Link", ">", "</", "h1", ">", 
+      "// jsx", "const", "element", "=", "(", "<", ">", "<", "Food", "season", "=", "{", "{", "sault",
+      ":", "<", "p", "a", "=", "{", "[", "{", "}", "]", "}", "/>", "}", "}", ">", "</", "Food", ">", "{",
+      "/* jsx comment */", "}", "<", "h1", "className", "=", '"title"', "data", "-", "title", "=", '"true"',
+      ">", "Read more", "{", "' '", "}", "<", "Link", "href", "=", '"/posts/first-post"', ">", "<", "a", ">",
+      "this page! -", "{", "Date", ".", "now", "(", ")", "}", "</", "a", ">", "</", "Link", ">", "</", "h1", ">",
       "</", ">", ")",
     ])
 
@@ -106,9 +106,10 @@ describe('jsx', () => {
 
 describe('comments', () => {
   it('basic inline comments', () => {
-    const code = `// This is a inline comment / <- a slash`
+    const code = `+ // This is a inline comment / <- a slash`
     const tokens = tokenize(code)
     expect(getNonSpacesTokens(tokens)).toEqual([
+      '+',
       '// This is a inline comment / <- a slash',
     ])
   })
@@ -139,7 +140,7 @@ describe('regex', () => {
   it('basic regex', () => {
     const reg1 = '/^\\/[0-5]\\/$/'
     const reg2 = `/^\\w+[a-z0-9]/ig`
-    
+
     expect(getNonSpacesTokens(tokenize(reg1))).toEqual([
       '/^\\/[0-5]\\/$/',
     ])
@@ -156,7 +157,7 @@ describe('regex', () => {
   })
 
   it('multi line regex tests', () => {
-    const code1 = 
+    const code1 =
       `/reg/.test('str')[]\n` +
       `/reg/.test('str')`
 
@@ -178,7 +179,7 @@ describe('regex', () => {
       ")",
     ])
 
-    const code2 = 
+    const code2 =
       `/reg/.test('str')()\n` +
       `/reg/.test('str')`
 
