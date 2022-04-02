@@ -150,7 +150,7 @@ export default function Page() {
       <style jsx>{`
       .editor {
         position: relative;
-        // min-height: 100px;
+        min-height: 100px;
         display: flex;
       }
 
