@@ -44,7 +44,7 @@ function* foo(index) {
 }
 
 /**
- * @param {string} name 
+ * @param {string} name
  * @return {void}
  */
 function foo(name, callback) {
@@ -81,13 +81,14 @@ const example = fullExample
 
 export default function Page() {
   const [text, setText] = useState(example)
+  const [isLineNumberEnabled, setLineNumbleEnabled] = useState(true)
   const [output, setOutput] = useState(highlight(text))
   function onChange(event) {
     const code = event.target.value || ''
     const highlighted = highlight(code)
     setText(code)
     setOutput(highlighted)
-  
+
     if (process.env.NODE_ENV !== 'production') {
       console.log(
         tokenize(code)
@@ -117,7 +118,6 @@ export default function Page() {
         margin: auto;
         padding: 0 10px 40px;
       }
-      
       .sh__class {
         color: #2d5e9d;
       }
@@ -139,15 +139,24 @@ export default function Page() {
       .sh__jsxliterals {
         color: #03066e;
       }
-      
-      `}</style>
+      ${isLineNumberEnabled && `
+        .sh__line::before {
+          content: attr(data-line-number);
+          margin-right: 24px;
+          text-align: right;
+          color: #a4a4a4;
+        }`
+      }`}</style>
       <style jsx>{`
       .editor {
         position: relative;
-        min-height: 100px;
+        // min-height: 100px;
         display: flex;
       }
-      
+
+      .features {
+        margin: 16px 0;
+      }
       .absolute-full {
         position: absolute;
         left: 0;
@@ -156,51 +165,54 @@ export default function Page() {
         bottom: 0;
       }
       .pad {
+        overflow-wrap: break-word;
+        display: inline-block;
         padding: 16px 12px;
         background-color: #f6f6f6;
         border: none;
         border-radius: 12px;
-        white-space: pre-wrap;
-        word-break: break-word;
         font-family: Consolas, Monaco, monospace;
         font-size: 16px;
+        line-height: 1.25em;
         caret-color: #333;
       }
-      .title {
+      .header {
         padding: 0 8px;
       }
-      .title h1 {
+      .header h1 {
         font-size: 64px;
         font-weight: 800;
       }
       .pre {
-        margin: 0;  
+        margin: 0;
         flex: 1 0;
+        white-space: pre-wrap;
       }
       textarea {
         resize: none;
       }
-      #code {
+      .code {
         display: block;
         width: 100%;
         background-color: transparent;
         color: transparent;
       }
-      
-      #output {
-        display: block;
-      }      
       `}</style>
-      <div className="title">
+      <div className="header">
         <h1>Sugar High</h1>
         <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
+        <div className="features">
+          <span>
+            <input type="checkbox" checked={isLineNumberEnabled} onChange={(e) => setLineNumbleEnabled(e.target.checked)} />line number
+          </span>
+        </div>
       </div>
       <div className="flex">
         <div className="editor">
           <pre className="pre">
             <code className="pad" id="output" dangerouslySetInnerHTML={{ __html: output }}></code>
           </pre>
-          <textarea className="pad absolute-full" id="code" value={text} onChange={onChange}></textarea>
+          <textarea className="pad absolute-full code" value={text} onChange={onChange}></textarea>
         </div>
       </div>
     </div>

@@ -58,6 +58,21 @@ Then make your own theme with customized colors by token type and put in global 
 }
 ```
 
+### Features
+
+#### Line number
+
+Sugar high provide `.sh_line` class name for each line. To display line number, define the `.sh_line::before` element with CSS will enable line numbers automatically.
+
+```css
+.sh__line::before {
+  content: attr(data-line-number);
+  margin-right: 24px;
+  text-align: right;
+  color: #a4a4a4;
+}
+```
+
 ### LICENSE
 
 MIT
