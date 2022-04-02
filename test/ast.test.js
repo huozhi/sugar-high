@@ -216,11 +216,9 @@ describe('string', () => {
   it('multi quotes string', () => {
     const str1 = `"aa'bb'cc"`
     const str2 = `'aa"bb"cc'`
-    expect(getNonSpacesTokens(tokenize(str1))).toEqual([
-      str1
-    ])
-    expect(getNonSpacesTokens(tokenize(str2))).toEqual([
-      str2
-    ])    
+    const str3 = `\`\nabc\``
+    expect(getNonSpacesTokens(tokenize(str1))).toEqual([str1])
+    expect(getNonSpacesTokens(tokenize(str2))).toEqual([str2])
+    expect(getNonSpacesTokens(tokenize(str3))).toEqual([str3])
   })
 })
