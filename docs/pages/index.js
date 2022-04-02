@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { tokenize, highlight } from '../../lib/index.mjs'
 
 const fullExample = `
@@ -77,14 +77,29 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 `.trim()
 
 
-const example = fullExample
+const debugExample = ``
+
+// `
+// /**
+//  * @param {string} name
+//  * @return {void}
+//  */
+// function foo(name, callback) {
+//   for (let i = 0; i < name.length; i++) {
+//     callback(name[i])
+//   }
+// }
+// `
+const example = process.env.NODE_ENV === 'development' && debugExample
+  ? debugExample
+  : fullExample
 
 export default function Page() {
   const [text, setText] = useState(example)
   const [isLineNumberEnabled, setLineNumbleEnabled] = useState(true)
   const [output, setOutput] = useState(highlight(text))
-  function onChange(event) {
-    const code = event.target.value || ''
+
+  function debug(code) {
     const highlighted = highlight(code)
     setText(code)
     setOutput(highlighted)
@@ -103,6 +118,15 @@ export default function Page() {
       )
     }
   }
+
+  function onChange(event) {
+    const code = event.target.value || ''
+    debug(code)
+  }
+
+  useEffect(() => {
+    debug(example)
+  }, [])
 
   return (
     <div>
@@ -139,13 +163,15 @@ export default function Page() {
       .sh__jsxliterals {
         color: #03066e;
       }
-      ${isLineNumberEnabled && `
+      ${isLineNumberEnabled ? `
         .sh__line::before {
           content: attr(data-line-number);
-          margin-right: 24px;
+          width: 24px;
+          display: inline-block;
+          margin-right: 20px;
           text-align: right;
           color: #a4a4a4;
-        }`
+        }` : ''
       }`}</style>
       <style jsx>{`
       .editor {
@@ -188,14 +214,17 @@ export default function Page() {
         flex: 1 0;
         white-space: pre-wrap;
       }
-      textarea {
-        resize: none;
+      .pre code {
+        width: 100%;
+        min-height: 100px;
       }
-      .code {
+      .code-input {
+        resize: none;
         display: block;
         width: 100%;
         background-color: transparent;
         color: transparent;
+        ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
       }
       `}</style>
       <div className="header">
@@ -210,9 +239,9 @@ export default function Page() {
       <div className="flex">
         <div className="editor">
           <pre className="pre">
-            <code className="pad" id="output" dangerouslySetInnerHTML={{ __html: output }}></code>
+            <code className="pad" dangerouslySetInnerHTML={{ __html: output }}></code>
           </pre>
-          <textarea className="pad absolute-full code" value={text} onChange={onChange}></textarea>
+          <textarea className="pad absolute-full code-input" value={text} onChange={onChange}></textarea>
         </div>
       </div>
     </div>
