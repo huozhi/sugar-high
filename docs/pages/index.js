@@ -77,26 +77,16 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 `.trim()
 
 
-const debugExample = ``
+const devExample = ``
 
-// `
-// /**
-//  * @param {string} name
-//  * @return {void}
-//  */
-// function foo(name, callback) {
-//   for (let i = 0; i < name.length; i++) {
-//     callback(name[i])
-//   }
-// }
-// `
-const example = process.env.NODE_ENV === 'development' && debugExample
-  ? debugExample
+const example = process.env.NODE_ENV === 'development' && devExample
+  ? devExample
   : fullExample
 
 export default function Page() {
   const [text, setText] = useState(example)
-  const [isLineNumberEnabled, setLineNumbleEnabled] = useState(true)
+  const [isLineNumberEnabled, setLineNumberEnabled] = useState(true)
+  const [isDev, setIsDev] = useState(false)
   const [output, setOutput] = useState(highlight(text))
 
   function debug(code) {
@@ -224,6 +214,7 @@ export default function Page() {
         width: 100%;
         background-color: transparent;
         color: transparent;
+        ${isDev ? 'color: #000;' : ''}
         ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
       }
       `}</style>
@@ -232,8 +223,13 @@ export default function Page() {
         <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
         <div className="features">
           <span>
-            <input type="checkbox" checked={isLineNumberEnabled} onChange={(e) => setLineNumbleEnabled(e.target.checked)} />line number
+            <input type="checkbox" checked={isLineNumberEnabled} onChange={(e) => setLineNumberEnabled(e.target.checked)} />line number
           </span>
+          {process.env.NODE_ENV === 'development' &&
+            <span>
+              <input type="checkbox" checked={isDev} onChange={(e) => setIsDev(e.target.checked)} />matching text
+            </span>
+          }
         </div>
       </div>
       <div className="flex">
