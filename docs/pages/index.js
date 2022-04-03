@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { tokenize, highlight } from '../../lib/index.mjs'
 
 const fullExample = `
@@ -44,7 +44,7 @@ function* foo(index) {
 }
 
 /**
- * @param {string} name 
+ * @param {string} name
  * @return {void}
  */
 function foo(name, callback) {
@@ -77,17 +77,23 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 `.trim()
 
 
-const example = fullExample
+const devExample = ``
+
+const example = process.env.NODE_ENV === 'development' && devExample
+  ? devExample
+  : fullExample
 
 export default function Page() {
   const [text, setText] = useState(example)
+  const [isLineNumberEnabled, setLineNumberEnabled] = useState(true)
+  const [isDev, setIsDev] = useState(false)
   const [output, setOutput] = useState(highlight(text))
-  function onChange(event) {
-    const code = event.target.value || ''
+
+  function debug(code) {
     const highlighted = highlight(code)
     setText(code)
     setOutput(highlighted)
-  
+
     if (process.env.NODE_ENV !== 'production') {
       console.log(
         tokenize(code)
@@ -103,6 +109,15 @@ export default function Page() {
     }
   }
 
+  function onChange(event) {
+    const code = event.target.value || ''
+    debug(code)
+  }
+
+  useEffect(() => {
+    debug(example)
+  }, [])
+
   return (
     <div>
       <style jsx global>{`
@@ -117,7 +132,6 @@ export default function Page() {
         margin: auto;
         padding: 0 10px 40px;
       }
-      
       .sh__class {
         color: #2d5e9d;
       }
@@ -139,15 +153,26 @@ export default function Page() {
       .sh__jsxliterals {
         color: #03066e;
       }
-      
-      `}</style>
+      ${isLineNumberEnabled ? `
+        .sh__line::before {
+          content: attr(data-line-number);
+          width: 24px;
+          display: inline-block;
+          margin-right: 20px;
+          text-align: right;
+          color: #a4a4a4;
+        }` : ''
+      }`}</style>
       <style jsx>{`
       .editor {
         position: relative;
         min-height: 100px;
         display: flex;
       }
-      
+
+      .features {
+        margin: 16px 0;
+      }
       .absolute-full {
         position: absolute;
         left: 0;
@@ -156,51 +181,63 @@ export default function Page() {
         bottom: 0;
       }
       .pad {
+        overflow-wrap: break-word;
+        display: inline-block;
         padding: 16px 12px;
         background-color: #f6f6f6;
         border: none;
         border-radius: 12px;
-        white-space: pre-wrap;
-        word-break: break-word;
         font-family: Consolas, Monaco, monospace;
         font-size: 16px;
+        line-height: 1.25em;
         caret-color: #333;
       }
-      .title {
+      .header {
         padding: 0 8px;
       }
-      .title h1 {
+      .header h1 {
         font-size: 64px;
         font-weight: 800;
       }
       .pre {
-        margin: 0;  
+        margin: 0;
         flex: 1 0;
+        white-space: pre-wrap;
       }
-      textarea {
+      .pre code {
+        width: 100%;
+        min-height: 100px;
+      }
+      .code-input {
         resize: none;
-      }
-      #code {
         display: block;
         width: 100%;
         background-color: transparent;
         color: transparent;
+        ${isDev ? 'color: #000;' : ''}
+        ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
       }
-      
-      #output {
-        display: block;
-      }      
       `}</style>
-      <div className="title">
+      <div className="header">
         <h1>Sugar High</h1>
         <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
+        <div className="features">
+          <span>
+            <input type="checkbox" checked={isLineNumberEnabled} onChange={(e) => setLineNumberEnabled(e.target.checked)} />line number
+          </span>
+          {process.env.NODE_ENV === 'development' &&
+            <span>
+              <input type="checkbox" checked={isDev} onChange={(e) => setIsDev(e.target.checked)} />matching text
+            </span>
+          }
+        </div>
       </div>
       <div className="flex">
         <div className="editor">
           <pre className="pre">
-            <code className="pad" id="output" dangerouslySetInnerHTML={{ __html: output }}></code>
+            <code className="pad" dangerouslySetInnerHTML={{ __html: output }}></code>
           </pre>
-          <textarea className="pad absolute-full" id="code" value={text} onChange={onChange}></textarea>
+          <textarea className="pad absolute-full code-input" value={text} onChange={onChange}></textarea>
         </div>
       </div>
     </div>
