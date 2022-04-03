@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { tokenize, highlight } from '../../lib/index.mjs'
 
 const fullExample = `
-// hello-world.js
+// npm i -S sugar-high
 
-import { planet } from '../space'
+import { highlight } from 'sugar-high'
 
-export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
+const codeHTML = highlight(code)
+
+document.querySelector('pre > code').innerHTML = codeHTML
 
 // jsx
 const element = (
@@ -26,31 +28,27 @@ const element = (
   </>
 )
 
-async function query() {
-  return await db.query()
-}
-
 const nums = [
   1000_000_000, 1.2e3, 0x1f, .14, 1n
 ].filter(Boolean)
 
-
 function* foo(index) {
   do {
-    yield index;
-    index++;
+    yield index++;
     return void 0
   } while (index < 2)
 }
 
 /**
- * @param {string} name
- * @return {void}
+ * @param {string} names
+ * @return {Promise<string[]>}
  */
-function foo(name, callback) {
-  for (let i = 0; i < name.length; i++) {
-    callback(name[i])
+async function notify(names) {
+  const tags = []
+  for (let i = 0; i < names.length; i++) {
+    tags.push('@' + names[i])
   }
+  await ping(tags)
 }
 
 class SuperArray extends Array {
@@ -64,6 +62,8 @@ class SuperArray extends Array {
     )
   }
 }
+
+export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 
 // This is a inline comment / <- a slash
 /// <reference path="..." /> // reference comment
