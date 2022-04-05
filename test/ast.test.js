@@ -104,6 +104,20 @@ describe('jsx', () => {
   })
 })
 
+describe('jsx nest', () => {
+  it('parse jsx compositions', () => {
+    const tokens = tokenize(`
+      <Component>This is content</Component>
+    `)
+    expect(getNonSpacesTokens(tokens)).toEqual([
+      "<", "Component", ">", "This is content", "</", "Component", ">",
+    ])
+    
+    const jsChildrenTextToken = tokens.find(tk => mergeSpaces(tk[1]) === 'This is content')
+    expect(getTypeName(jsChildrenTextToken)).toBe('jsxliterals')
+  })
+})
+
 describe('comments', () => {
   it('basic inline comments', () => {
     const code = `+ // This is a inline comment / <- a slash`
