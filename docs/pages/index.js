@@ -77,7 +77,8 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 `.trim()
 
 
-const devExample = ``
+const devExample = `
+`.trim()
 
 const example = process.env.NODE_ENV === 'development' && devExample
   ? devExample
@@ -151,7 +152,7 @@ export default function Page() {
         color: #a19595;
       }
       .sh__jsxliterals {
-        color: #03066e;
+        color: #6266d1;
       }
       ${isLineNumberEnabled ? `
         .sh__line::before {

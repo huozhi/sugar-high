@@ -54,7 +54,7 @@ Then make your own theme with customized colors by token type and put in global 
   color: #a19595;
 }
 .sh__jsxliterals {
-  color: #03066e;
+  color: #6266d1;
 }
 ```
 

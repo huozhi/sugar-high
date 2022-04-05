@@ -40,7 +40,6 @@ describe('calculation expression', () => {
     expect(getTokenValues(tokens)).toEqual([
       '123', ' ', '-', ' ', '/555/', ' ', '+', ' ', '444', ';'
     ])
-
   })
 
   it('calculation with comments', () => {
@@ -99,22 +98,28 @@ describe('jsx', () => {
     const jsxPropertyValueToken = tokens.find(tk => mergeSpaces(tk[1]) === '"title"')
     expect(getTypeName(jsxPropertyValueToken)).toBe('string')
 
-    const jsChildrenTextToken = tokens.find(tk => mergeSpaces(tk[1]) === 'Read more')
-    expect(getTypeName(jsChildrenTextToken)).toBe('jsxliterals')
+    const jsxTextChildrenToken = tokens.find(tk => mergeSpaces(tk[1]) === 'Read more')
+    expect(getTypeName(jsxTextChildrenToken)).toBe('jsxliterals')
   })
-})
 
-describe('jsx nest', () => {
-  it('parse jsx compositions', () => {
-    const tokens = tokenize(`
-      <Component>This is content</Component>
-    `)
+  it('parse basic jsx with text without expression children', () => {
+    const tokens = tokenize(`<Foo>This is content</Foo>`)
     expect(getNonSpacesTokens(tokens)).toEqual([
-      "<", "Component", ">", "This is content", "</", "Component", ">",
+      '<', 'Foo', '>', 'This is content', '</', 'Foo', '>',
     ])
-    
-    const jsChildrenTextToken = tokens.find(tk => mergeSpaces(tk[1]) === 'This is content')
-    expect(getTypeName(jsChildrenTextToken)).toBe('jsxliterals')
+    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+      'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign',
+    ])
+  })
+
+  it('parse basic jsx with expression children', () => {
+    const tokens = tokenize(`<Foo>{Class + variable}</Foo>`)
+    expect(getNonSpacesTokens(tokens)).toEqual([
+      '<', 'Foo', '>', '{', 'Class', '+', 'variable', '}', '</', 'Foo', '>',
+    ])
+    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+      'sign', 'identifier', 'sign', 'sign', 'class', 'sign', 'identifier', 'sign', 'sign', 'identifier', 'sign',
+    ])
   })
 })
 
@@ -235,5 +240,15 @@ describe('string', () => {
     expect(getNonSpacesTokens(tokenize(str1))).toEqual([str1])
     expect(getNonSpacesTokens(tokenize(str2))).toEqual([str2])
     expect(getNonSpacesTokens(tokenize(str3))).toEqual([str3])
+  })
+})
+
+describe('class', () => {
+  it('determine class name', () => {
+    const code = `class Bar extends Array {}`
+    const tokens = tokenize(code)
+    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+      'keyword', 'class', 'keyword', 'class', 'sign', 'sign',
+    ])
   })
 })
