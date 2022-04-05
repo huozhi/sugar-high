@@ -13,7 +13,7 @@ function getTokenTypes(tokens) {
   return tokens.map((tk) => getTypeName(tk))
 }
 
-function getNonSpacesTokensTypes(tokens) {
+function extractTokensTypes(tokens) {
   return getTokenTypes(tokens).filter(type => type !== 'space')
 }
 
@@ -27,7 +27,7 @@ function filterSpaces(arr) {
     .filter(Boolean)
 }
 
-function getNonSpacesTokens(tokens) {
+function extractTokenValues(tokens) {
   return filterSpaces(getTokenValues(tokens))
 }
 
@@ -44,20 +44,20 @@ describe('calculation expression', () => {
 
   it('calculation with comments', () => {
     const tokens = tokenize(`/* evaluate */ (19) / 234 + 56 / 7;`)
-    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+    expect(extractTokensTypes(tokens)).toEqual([
       'comment', 'sign', 'class', 'sign', 'sign', 'class', 'sign', 'class', 'sign', 'class', 'sign',
     ])
-    expect(getNonSpacesTokens(tokens)).toEqual([
+    expect(extractTokenValues(tokens)).toEqual([
       '/* evaluate */', '(', '19', ')', '/', '234', '+', '56', '/', '7', ';',
     ])
   })
 
   it('calculation with defs', () => {
     const tokens = tokenize(`const _iu = (19) / 234 + 56 / 7;`)
-    expect(getNonSpacesTokens(tokens)).toEqual([
+    expect(extractTokenValues(tokens)).toEqual([
       'const', '_iu', '=', '(', '19', ')', '/', '234', '+', '56', '/', '7', ';',
     ])
-    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+    expect(extractTokensTypes(tokens)).toEqual([
       "keyword", "class", "sign", "sign", "class", "sign", "sign",
       "class", "sign", "class", "sign", "class", "sign",
     ])
@@ -83,7 +83,7 @@ describe('jsx', () => {
         </h1>
       </>
     )`)
-    expect(getNonSpacesTokens(tokens)).toEqual([
+    expect(extractTokenValues(tokens)).toEqual([
       "// jsx", "const", "element", "=", "(", "<", ">", "<", "Food", "season", "=", "{", "{", "sault",
       ":", "<", "p", "a", "=", "{", "[", "{", "}", "]", "}", "/>", "}", "}", ">", "</", "Food", ">", "{",
       "/* jsx comment */", "}", "<", "h1", "className", "=", '"title"', "data", "-", "title", "=", '"true"',
@@ -104,20 +104,20 @@ describe('jsx', () => {
 
   it('parse basic jsx with text without expression children', () => {
     const tokens = tokenize(`<Foo>This is content</Foo>`)
-    expect(getNonSpacesTokens(tokens)).toEqual([
+    expect(extractTokenValues(tokens)).toEqual([
       '<', 'Foo', '>', 'This is content', '</', 'Foo', '>',
     ])
-    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+    expect(extractTokensTypes(tokens)).toEqual([
       'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign',
     ])
   })
 
   it('parse basic jsx with expression children', () => {
     const tokens = tokenize(`<Foo>{Class + variable}</Foo>`)
-    expect(getNonSpacesTokens(tokens)).toEqual([
+    expect(extractTokenValues(tokens)).toEqual([
       '<', 'Foo', '>', '{', 'Class', '+', 'variable', '}', '</', 'Foo', '>',
     ])
-    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+    expect(extractTokensTypes(tokens)).toEqual([
       'sign', 'identifier', 'sign', 'sign', 'class', 'sign', 'identifier', 'sign', 'sign', 'identifier', 'sign',
     ])
   })
@@ -127,7 +127,7 @@ describe('comments', () => {
   it('basic inline comments', () => {
     const code = `+ // This is a inline comment / <- a slash`
     const tokens = tokenize(code)
-    expect(getNonSpacesTokens(tokens)).toEqual([
+    expect(extractTokenValues(tokens)).toEqual([
       '+',
       '// This is a inline comment / <- a slash',
     ])
@@ -136,7 +136,7 @@ describe('comments', () => {
   it('multiple slashes started inline comments', () => {
     const code = `/// <reference path="..." /> // reference comment`
     const tokens = tokenize(code)
-    expect(getNonSpacesTokens(tokens)).toEqual([
+    expect(extractTokenValues(tokens)).toEqual([
       '/// <reference path="..." /> // reference comment',
     ])
   })
@@ -144,7 +144,7 @@ describe('comments', () => {
   it('multi-line comments', () => {
     const code = `/* This is another comment */ alert('good') // <- alerts`
     const tokens = tokenize(code)
-    expect(getNonSpacesTokens(tokens)).toEqual([
+    expect(extractTokenValues(tokens)).toEqual([
       "/* This is another comment */",
       "alert",
       "(",
@@ -160,17 +160,17 @@ describe('regex', () => {
     const reg1 = '/^\\/[0-5]\\/$/'
     const reg2 = `/^\\w+[a-z0-9]/ig`
 
-    expect(getNonSpacesTokens(tokenize(reg1))).toEqual([
+    expect(extractTokenValues(tokenize(reg1))).toEqual([
       '/^\\/[0-5]\\/$/',
     ])
-    expect(getNonSpacesTokens(tokenize(reg2))).toEqual([
+    expect(extractTokenValues(tokenize(reg2))).toEqual([
       '/^\\w+[a-z0-9]/ig',
     ])
   })
 
   it('regex plus operators', () => {
     const code = `/^\\/[0-5]\\/$/ + /^\\/\w+\\/$/gi`
-    expect(getNonSpacesTokens(tokenize(code))).toEqual([
+    expect(extractTokenValues(tokenize(code))).toEqual([
       '/^\\/[0-5]\\/$/', '+', '/^\\/\w+\\/$/gi',
     ])
   })
@@ -181,7 +181,7 @@ describe('regex', () => {
       `/reg/.test('str')`
 
     // '[]' consider as a end of the expression
-    expect(getNonSpacesTokens(tokenize(code1))).toEqual([
+    expect(extractTokenValues(tokenize(code1))).toEqual([
       "/reg/",
       ".",
       "test",
@@ -203,7 +203,7 @@ describe('regex', () => {
       `/reg/.test('str')`
 
     // what before '()' still considers as an expression
-    expect(getNonSpacesTokens(tokenize(code2))).toEqual([
+    expect(extractTokenValues(tokenize(code2))).toEqual([
       "/reg/",
       ".",
       "test",
@@ -228,7 +228,7 @@ describe('string', () => {
   it('import string', () => {
     const code = `import mod from "../../mod"`
     const tokens = tokenize(code)
-    expect(getNonSpacesTokens(tokens)).toEqual([
+    expect(extractTokenValues(tokens)).toEqual([
       'import', 'mod', 'from', '"../../mod"',
     ])
   })
@@ -237,9 +237,9 @@ describe('string', () => {
     const str1 = `"aa'bb'cc"`
     const str2 = `'aa"bb"cc'`
     const str3 = `\`\nabc\``
-    expect(getNonSpacesTokens(tokenize(str1))).toEqual([str1])
-    expect(getNonSpacesTokens(tokenize(str2))).toEqual([str2])
-    expect(getNonSpacesTokens(tokenize(str3))).toEqual([str3])
+    expect(extractTokenValues(tokenize(str1))).toEqual([str1])
+    expect(extractTokenValues(tokenize(str2))).toEqual([str2])
+    expect(extractTokenValues(tokenize(str3))).toEqual([str3])
   })
 })
 
@@ -247,7 +247,7 @@ describe('class', () => {
   it('determine class name', () => {
     const code = `class Bar extends Array {}`
     const tokens = tokenize(code)
-    expect(getNonSpacesTokensTypes(tokens)).toEqual([
+    expect(extractTokensTypes(tokens)).toEqual([
       'keyword', 'class', 'keyword', 'class', 'sign', 'sign',
     ])
   })
