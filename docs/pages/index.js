@@ -222,16 +222,17 @@ export default function Page() {
       <div className="header">
         <h1>Sugar High</h1>
         <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
-        <div className="features">
-          <span>
-            <input type="checkbox" checked={isLineNumberEnabled} onChange={(e) => setLineNumberEnabled(e.target.checked)} />line number
-          </span>
-          {process.env.NODE_ENV === 'development' &&
+        {process.env.NODE_ENV === 'development' &&
+          <div className="features">
+            <span>
+              <input type="checkbox" checked={isLineNumberEnabled} onChange={(e) => setLineNumberEnabled(e.target.checked)} />line number
+            </span>
+
             <span>
               <input type="checkbox" checked={isDev} onChange={(e) => setIsDev(e.target.checked)} />matching text
             </span>
-          }
-        </div>
+          </div>
+        }
       </div>
       <div className="flex">
         <div className="editor">
