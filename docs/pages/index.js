@@ -4,6 +4,8 @@ import { tokenize, highlight } from '../../lib/index.mjs'
 const fullExample = `
 // npm i -S sugar-high
 
+// This is a super lightweight javascript syntax highlighter npm package
+
 import { highlight } from 'sugar-high'
 
 const codeHTML = highlight(code)
@@ -91,10 +93,6 @@ export default function Page() {
   const [output, setOutput] = useState(highlight(text))
 
   function debug(code) {
-    const highlighted = highlight(code)
-    setText(code)
-    setOutput(highlighted)
-
     if (process.env.NODE_ENV !== 'production') {
       console.log(
         tokenize(code)
@@ -111,12 +109,18 @@ export default function Page() {
   }
 
   function onChange(event) {
-    const code = event.target.value || ''
+    update(event.target.value || '')
+  }
+
+  function update(code) {
+    const highlighted = highlight(code)
     debug(code)
+    setText(code)
+    setOutput(highlighted)
   }
 
   useEffect(() => {
-    debug(example)
+    update(example)
   }, [])
 
   return (
@@ -156,10 +160,12 @@ export default function Page() {
       }
       ${isLineNumberEnabled ? `
         .sh__line::before {
-          content: attr(data-line-number);
+          counter-increment: sh-line-number 1;
+          content: counter(sh-line-number);
           width: 24px;
           display: inline-block;
-          margin-right: 20px;
+          margin-right: 18px;
+          margin-left: -42px;
           text-align: right;
           color: #a4a4a4;
         }` : ''
@@ -208,15 +214,16 @@ export default function Page() {
       .pre code {
         width: 100%;
         min-height: 100px;
+        ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
+        counter-reset: sh-line-number;
       }
       .code-input {
         resize: none;
         display: block;
-        width: 100%;
         background-color: transparent;
         color: transparent;
-        ${isDev ? 'color: #000;' : ''}
-        ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
+        padding-left: 54px;
+        ${isDev ? 'color: #f8515163;' : ''}
       }
       `}</style>
       <div className="header">
