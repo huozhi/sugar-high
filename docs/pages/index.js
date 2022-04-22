@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { tokenize, highlight } from '../../lib/index.mjs'
+import { tokenize } from 'sugar-high'
+import { Editor } from 'coediteur'
 
 const fullExample = `
 // npm i -S sugar-high
@@ -84,11 +85,11 @@ const example = process.env.NODE_ENV === 'development' && devExample
   ? devExample
   : fullExample
 
+
 export default function Page() {
-  const [text, setText] = useState(example)
+
   const [isLineNumberEnabled, setLineNumberEnabled] = useState(true)
   const [isDev, setIsDev] = useState(false)
-  const [output, setOutput] = useState(highlight(text))
 
   function debug(code) {
     if (process.env.NODE_ENV !== 'production') {
@@ -106,15 +107,8 @@ export default function Page() {
     }
   }
 
-  function onChange(event) {
-    update(event.target.value || '')
-  }
-
   function update(code) {
-    const highlighted = highlight(code)
     debug(code)
-    setText(code)
-    setOutput(highlighted)
   }
 
   useEffect(() => {
@@ -143,6 +137,9 @@ export default function Page() {
         --sh-keyword: #f47067;
         --sh-comment: #a19595;
         --sh-jsxliterals: #6266d1;
+
+        --editor-text-color: ${isDev ? '#f8515163' : 'transparent'};
+        --editor-background-color: transparent;
       }
       ${isLineNumberEnabled ? `
         .sh__line::before {
@@ -155,8 +152,7 @@ export default function Page() {
           text-align: right;
           color: #a4a4a4;
         }` : ''
-      }`}</style>
-      <style jsx>{`
+      }
       .features {
         margin: 16px 0;
       }
@@ -167,49 +163,28 @@ export default function Page() {
         font-size: 64px;
         font-weight: 800;
       }
-
       .editor {
         position: relative;
         min-height: 100px;
         display: flex;
       }
-      .absolute-full {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-      }
-      .pad {
-        overflow-wrap: break-word;
-        display: inline-block;
+      code, textarea {
+        font-family: Consolas, Monaco, monospace;
         padding: 16px 12px;
         background-color: #f6f6f6;
         border: none;
         border-radius: 12px;
-        font-family: Consolas, Monaco, monospace;
         font-size: 16px;
         line-height: 1.25em;
         caret-color: #333;
       }
-      .pre {
-        margin: 0;
-        flex: 1 0;
-        white-space: pre-wrap;
-      }
-      .pre code {
-        width: 100%;
+      code {
+        counter-reset: sh-line-number;
         min-height: 100px;
         ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
-        counter-reset: sh-line-number;
       }
-      .code-input {
-        resize: none;
-        display: block;
-        background-color: transparent;
-        color: transparent;
+      textarea {
         padding-left: 54px;
-        ${isDev ? 'color: #f8515163;' : ''}
       }
       `}</style>
       <div className="header">
@@ -228,12 +203,7 @@ export default function Page() {
         }
       </div>
       <div className="flex">
-        <div className="editor">
-          <pre className="pre">
-            <code className="pad" dangerouslySetInnerHTML={{ __html: output }}></code>
-          </pre>
-          <textarea className="pad absolute-full code-input" value={text} onChange={onChange}></textarea>
-        </div>
+        <Editor className="editor" defaultValue={example} onChange={update} />
       </div>
     </div>
   )

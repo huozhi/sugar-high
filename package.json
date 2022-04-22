@@ -16,9 +16,11 @@
     "build": "next build docs"
   },
   "devDependencies": {
+    "coediteur": "0.0.1",
     "next": "12.1.4",
     "react": "18.0.0",
     "react-dom": "18.0.0",
+    "sugar-high": "link:./",
     "vitest": "~0.6.0"
   }
 }

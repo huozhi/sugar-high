@@ -1,15 +1,19 @@
 lockfileVersion: 5.3
 
 specifiers:
+  coediteur: 0.0.1
   next: 12.1.4
   react: 18.0.0
   react-dom: 18.0.0
+  sugar-high: link:./
   vitest: ~0.6.0
 
 devDependencies:
+  coediteur: 0.0.1_react@18.0.0
   next: 12.1.4_react-dom@18.0.0+react@18.0.0
   react: 18.0.0
   react-dom: 18.0.0_react@18.0.0
+  sugar-high: 'link:'
   vitest: 0.6.3
 
 packages:
@@ -147,6 +151,15 @@ packages:
 
   /check-error/1.0.2:
     resolution: {integrity: sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=}
+    dev: true
+
+  /coediteur/0.0.1_react@18.0.0:
+    resolution: {integrity: sha512-VnoeVemSXTZYqnnF3Z9H74pdJnec/vc8fiFWP84Taf3CRW+gJ2JH/HfoCKMKUMvb7ucSfl/A3I+Nuk1CxvirZg==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+      sugar-high: ^0.4.0
+    dependencies:
+      react: 18.0.0
     dev: true
 
   /deep-eql/3.0.1:
