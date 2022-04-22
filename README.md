@@ -35,26 +35,14 @@ Then make your own theme with customized colors by token type and put in global 
  * comment
  * jsxliterals
  */
-.sh__class {
-  color: #2d5e9d;
-}
-.sh__identifier {
-  color: #2d333b;
-}
-.sh__sign {
-  color: #8996a3;
-}
-.sh__string {
-  color: #00a99a;
-}
-.sh__keyword {
-  color: #f47067;
-}
-.sh__comment {
-  color: #a19595;
-}
-.sh__jsxliterals {
-  color: #6266d1;
+:root {
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
+  --sh-jsxliterals: #6266d1;
 }
 ```
 

@@ -4,8 +4,6 @@ import { tokenize, highlight } from '../../lib/index.mjs'
 const fullExample = `
 // npm i -S sugar-high
 
-// This is a super lightweight javascript syntax highlighter npm package
-
 import { highlight } from 'sugar-high'
 
 const codeHTML = highlight(code)
@@ -67,6 +65,8 @@ class SuperArray extends Array {
 
 export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 
+// This is a super lightweight javascript syntax highlighter npm package
+
 // This is a inline comment / <- a slash
 /// <reference path="..." /> // reference comment
 /* This is another comment */ alert('good') // <- alerts
@@ -74,8 +74,6 @@ export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 // Invalid calculation: regex and numbers
 const _in = 123 - /555/ + 444;
 const _iu = /* evaluate */ (19) / 234 + 56 / 7;
-
-
 `.trim()
 
 
@@ -137,26 +135,14 @@ export default function Page() {
         margin: auto;
         padding: 0 10px 40px;
       }
-      .sh__class {
-        color: #2d5e9d;
-      }
-      .sh__identifier {
-        color: #354150;
-      }
-      .sh__sign {
-        color: #8996a3;
-      }
-      .sh__string {
-        color: #00a99a;
-      }
-      .sh__keyword {
-        color: #f47067;
-      }
-      .sh__comment {
-        color: #a19595;
-      }
-      .sh__jsxliterals {
-        color: #6266d1;
+      :root {
+        --sh-class: #2d5e9d;
+        --sh-identifier: #354150;
+        --sh-sign: #8996a3;
+        --sh-string: #00a99a;
+        --sh-keyword: #f47067;
+        --sh-comment: #a19595;
+        --sh-jsxliterals: #6266d1;
       }
       ${isLineNumberEnabled ? `
         .sh__line::before {
@@ -171,14 +157,21 @@ export default function Page() {
         }` : ''
       }`}</style>
       <style jsx>{`
+      .features {
+        margin: 16px 0;
+      }
+      .header {
+        padding: 0 8px;
+      }
+      .header h1 {
+        font-size: 64px;
+        font-weight: 800;
+      }
+
       .editor {
         position: relative;
         min-height: 100px;
         display: flex;
-      }
-
-      .features {
-        margin: 16px 0;
       }
       .absolute-full {
         position: absolute;
@@ -198,13 +191,6 @@ export default function Page() {
         font-size: 16px;
         line-height: 1.25em;
         caret-color: #333;
-      }
-      .header {
-        padding: 0 8px;
-      }
-      .header h1 {
-        font-size: 64px;
-        font-weight: 800;
       }
       .pre {
         margin: 0;
