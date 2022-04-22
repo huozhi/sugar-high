@@ -65,8 +65,13 @@ Then make your own theme with customized colors by token type and put in global 
 Sugar high provide `.sh_line` class name for each line. To display line number, define the `.sh_line::before` element with CSS will enable line numbers automatically.
 
 ```css
+pre code {
+  counter-reset: sh-line-number;
+}
+
 .sh__line::before {
-  content: attr(data-line-number);
+  counter-increment: sh-line-number 1;
+  content: counter(sh-line-number);
   margin-right: 24px;
   text-align: right;
   color: #a4a4a4;
