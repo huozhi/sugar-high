@@ -118,6 +118,17 @@ export default function Page() {
   return (
     <div>
       <style jsx global>{`
+      :root {
+        --sh-class: #2d5e9d;
+        --sh-identifier: #354150;
+        --sh-sign: #8996a3;
+        --sh-string: #00a99a;
+        --sh-keyword: #f47067;
+        --sh-comment: #a19595;
+        --sh-jsxliterals: #6266d1;
+        --editor-background-color: transparent;
+      }
+
       * {
         box-sizing: border-box;
       }
@@ -128,30 +139,6 @@ export default function Page() {
         max-width: 690px;
         margin: auto;
         padding: 0 10px 40px;
-      }
-      :root {
-        --sh-class: #2d5e9d;
-        --sh-identifier: #354150;
-        --sh-sign: #8996a3;
-        --sh-string: #00a99a;
-        --sh-keyword: #f47067;
-        --sh-comment: #a19595;
-        --sh-jsxliterals: #6266d1;
-
-        --editor-text-color: ${isDev ? '#f8515163' : 'transparent'};
-        --editor-background-color: transparent;
-      }
-      ${isLineNumberEnabled ? `
-        .sh__line::before {
-          counter-increment: sh-line-number 1;
-          content: counter(sh-line-number);
-          width: 24px;
-          display: inline-block;
-          margin-right: 18px;
-          margin-left: -42px;
-          text-align: right;
-          color: #a4a4a4;
-        }` : ''
       }
       .features {
         margin: 16px 0;
@@ -168,6 +155,9 @@ export default function Page() {
         min-height: 100px;
         display: flex;
       }
+      pre {
+        width: 100%;
+      }
       code, textarea {
         font-family: Consolas, Monaco, monospace;
         padding: 16px 12px;
@@ -178,13 +168,32 @@ export default function Page() {
         line-height: 1.25em;
         caret-color: #333;
       }
+      textarea {
+        padding-left: 54px;
+      }
       code {
         counter-reset: sh-line-number;
         min-height: 100px;
-        ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
+        width: 100%;
       }
-      textarea {
-        padding-left: 54px;
+
+      :root {
+        --editor-text-color: ${isDev ? '#f8515163' : 'transparent'};
+      }
+      ${isLineNumberEnabled ? `
+        .sh__line::before {
+          counter-increment: sh-line-number 1;
+          content: counter(sh-line-number);
+          width: 24px;
+          display: inline-block;
+          margin-right: 18px;
+          margin-left: -42px;
+          text-align: right;
+          color: #a4a4a4;
+        }` : ''
+      }
+      code {
+        ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
       }
       `}</style>
       <div className="header">
@@ -202,13 +211,9 @@ export default function Page() {
           </div>
         }
       </div>
+      <Editor className="editor" defaultValue={example} onChange={update} />
       <div className="flex">
-        <Editor className="editor" defaultValue={example} onChange={update} />
       </div>
     </div>
   )
-}
-
-export const config = {
-  runtime: 'edge'
 }
