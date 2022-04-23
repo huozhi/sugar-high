@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  coediteur: 0.0.1
+  codice: 0.0.1
   next: 12.1.4
   react: 18.0.0
   react-dom: 18.0.0
@@ -9,7 +9,7 @@ specifiers:
   vitest: ~0.6.0
 
 devDependencies:
-  coediteur: 0.0.1_react@18.0.0
+  codice: 0.0.1_react@18.0.0
   next: 12.1.4_react-dom@18.0.0+react@18.0.0
   react: 18.0.0
   react-dom: 18.0.0_react@18.0.0
@@ -153,8 +153,8 @@ packages:
     resolution: {integrity: sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=}
     dev: true
 
-  /coediteur/0.0.1_react@18.0.0:
-    resolution: {integrity: sha512-VnoeVemSXTZYqnnF3Z9H74pdJnec/vc8fiFWP84Taf3CRW+gJ2JH/HfoCKMKUMvb7ucSfl/A3I+Nuk1CxvirZg==}
+  /codice/0.0.1_react@18.0.0:
+    resolution: {integrity: sha512-mglz9m+JK72zZa72L3QRETLakQDVNyH2KtCUQFAAt6uvf3bgqsJTfRYS5+cEXob8p2SH+FrObzPJksp1aTcwDA==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
       sugar-high: ^0.4.0

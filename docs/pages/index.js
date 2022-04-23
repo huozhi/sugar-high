@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { tokenize } from 'sugar-high'
-import { Editor } from 'coediteur'
+import { Editor } from 'codice'
 
 const fullExample = `
 // npm i -S sugar-high
