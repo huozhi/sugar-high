@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  codice: 0.0.1
+  codice: ^0.0.3
   next: 12.1.6-canary.6
   react: 18.0.0
   react-dom: 18.0.0
@@ -9,7 +9,7 @@ specifiers:
   vitest: ~0.6.0
 
 devDependencies:
-  codice: 0.0.1_react@18.0.0
+  codice: 0.0.3_react@18.0.0
   next: 12.1.6-canary.6_react-dom@18.0.0+react@18.0.0
   react: 18.0.0
   react-dom: 18.0.0_react@18.0.0
@@ -153,8 +153,8 @@ packages:
     resolution: {integrity: sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=}
     dev: true
 
-  /codice/0.0.1_react@18.0.0:
-    resolution: {integrity: sha512-mglz9m+JK72zZa72L3QRETLakQDVNyH2KtCUQFAAt6uvf3bgqsJTfRYS5+cEXob8p2SH+FrObzPJksp1aTcwDA==}
+  /codice/0.0.3_react@18.0.0:
+    resolution: {integrity: sha512-cnrnhHqS4efDTKX7tKXPnhA1LoLQkTJV032B9hdx6pEh4iEchEEa01sBmpUi3fSqoL0sINTs23gSd1HVW/G6RA==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
       sugar-high: ^0.4.0
