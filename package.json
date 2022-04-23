@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "codice": "0.0.1",
-    "next": "12.1.4",
+    "next": "12.1.6-canary.6",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "sugar-high": "link:./",
