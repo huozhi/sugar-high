@@ -202,6 +202,13 @@ describe('regex', () => {
     ])
   })
 
+  it('regex with quotes inside', () => {
+    const code = `replace(/'/, \`"\`)`
+    expect(extractTokenValues(tokenize(code))).toEqual([
+      'replace', '(', '/\'/', ',', '`"`', ')',
+    ])
+  })
+
   it('multi line regex tests', () => {
     const code1 =
       `/reg/.test('str')[]\n` +
