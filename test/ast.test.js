@@ -31,6 +31,15 @@ function extractTokenValues(tokens) {
   return filterSpaces(getTokenValues(tokens))
 }
 
+describe('function calls', () => {
+  it('dot catch should not be determined as keyword', () => {
+    const tokens = tokenize(`promise.catch(log)`)
+    expect(extractTokensTypes(tokens)).toEqual([
+      'identifier', 'sign', 'identifier', 'sign', 'identifier', 'sign',
+    ])
+  })
+})
+
 describe('calculation expression', () => {
   it('basic inline calculation expression', () => {
     const tokens = tokenize(`123 - /555/ + 444;`)
