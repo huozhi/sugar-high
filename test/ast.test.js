@@ -121,6 +121,24 @@ describe('jsx', () => {
       'sign', 'identifier', 'sign', 'sign', 'class', 'sign', 'identifier', 'sign', 'sign', 'identifier', 'sign',
     ])
   })
+
+  it('parse multi jsx definitions', () => {
+    const tokens = tokenize(
+      `x = <div>this </div>
+        y = <div>thi</div>
+        z = <div>this</div>
+      `)
+    expect(extractTokenValues(tokens)).toEqual([
+      'x', '=', '<', 'div', '>', 'this', '</', 'div', '>',
+      'y', '=', '<', 'div', '>', 'thi', '</', 'div', '>',
+      'z', '=', '<', 'div', '>', 'this', '</', 'div', '>',
+    ])
+    expect(extractTokensTypes(tokens)).toEqual([
+      'identifier', 'sign', 'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign', 'break',
+      'identifier', 'sign', 'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign', 'break',
+      'identifier', 'sign', 'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign', 'break',
+    ])
+  })
 })
 
 describe('comments', () => {
