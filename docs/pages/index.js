@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { tokenize } from 'sugar-high'
+import { highlight, tokenize, types } from 'sugar-high'
 import { Editor } from 'codice'
 
 const fullExample = `
@@ -79,6 +79,8 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 
 
 const devExample = `
+<div>Hello <Name /> with {data}</div>
+
 `.trim()
 
 const example = process.env.NODE_ENV === 'development' && devExample
@@ -95,14 +97,7 @@ export default function Page() {
     if (process.env.NODE_ENV !== 'production') {
       console.log(
         tokenize(code)
-          .map(t => t[1])
-      )
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(
-        tokenize(code)
-          .map(t => t[1])
+          .map(t => [t[1], types[t[0]]])
       )
     }
   }
@@ -211,7 +206,7 @@ export default function Page() {
           </div>
         }
       </div>
-      <Editor className="editor" defaultValue={example} onChange={update} />
+      <Editor className="editor" highlight={highlight} value={example} onChange={update} />
       <div className="flex">
       </div>
     </div>

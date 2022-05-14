@@ -162,6 +162,16 @@ describe('jsx', () => {
     const jsxTextChildrenToken = tokens.find(tk => mergeSpaces(tk[1]) === 'Hello World')
     expect(getTypeName(jsxTextChildrenToken)).toBe('jsxliterals')
   });
+
+  it('parse keyword in jsx children literals as jsx literals', () => {
+    const tokens = tokenize(`<div>Hello <Name /> with {data}</div>`)
+    expect(extractTokenValues(tokens)).toEqual([
+      '<', 'div', '>', 'Hello', '<', 'Name', '/>', 'with', '{', 'data', '}', '</', 'div', '>',
+    ])
+    expect(extractTokensTypes(tokens)).toEqual([
+      'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier',
+    ])
+  })
 })
 
 describe('comments', () => {
