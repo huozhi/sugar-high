@@ -148,6 +148,20 @@ describe('jsx', () => {
       'identifier', 'sign', 'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign', 'break',
     ])
   })
+
+  it('parse fold jsx', () => {
+    const tokens = tokenize(`// jsx
+    const element = (
+      <div>Hello World <Food /><div/>
+    )`);
+
+    expect(extractTokenValues(tokens)).toEqual([
+      "// jsx", "const", "element", "=", "(", "<", "div", ">", "Hello World", "<", "Food", "/>", "<", "div", "/>", ")"
+    ])
+
+    const jsxTextChildrenToken = tokens.find(tk => mergeSpaces(tk[1]) === 'Hello World')
+    expect(getTypeName(jsxTextChildrenToken)).toBe('jsxliterals')
+  });
 })
 
 describe('comments', () => {
