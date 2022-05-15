@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { tokenize } from 'sugar-high'
+import { highlight, tokenize, types } from 'sugar-high'
 import { Editor } from 'codice'
 
 const fullExample = `
@@ -87,32 +87,26 @@ const example = process.env.NODE_ENV === 'development' && devExample
 
 
 export default function Page() {
-
   const [isLineNumberEnabled, setLineNumberEnabled] = useState(true)
   const [isDev, setIsDev] = useState(false)
+  const [code, setCode] = useState(() => example)
 
   function debug(code) {
     if (process.env.NODE_ENV !== 'production') {
       console.log(
         tokenize(code)
-          .map(t => t[1])
-      )
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(
-        tokenize(code)
-          .map(t => t[1])
+          .map(t => [t[1], types[t[0]]])
       )
     }
   }
 
-  function update(code) {
-    debug(code)
+  function update(_code) {
+    debug(_code)
+    setCode(_code)
   }
 
   useEffect(() => {
-    update(example)
+    update(code)
   }, [])
 
   return (
@@ -152,11 +146,14 @@ export default function Page() {
       }
       .editor {
         position: relative;
-        min-height: 100px;
+        min-height: 600px;
         display: flex;
+        overflow-y: hidden;
       }
       pre {
-        width: 100%;
+        position: abosolute;
+        top: 0;
+        bottom: 0;
       }
       code, textarea {
         font-family: Consolas, Monaco, monospace;
@@ -173,8 +170,8 @@ export default function Page() {
       }
       code {
         counter-reset: sh-line-number;
-        min-height: 100px;
         width: 100%;
+        height: 100%;
       }
 
       :root {
@@ -211,7 +208,7 @@ export default function Page() {
           </div>
         }
       </div>
-      <Editor className="editor" defaultValue={example} onChange={update} />
+      <Editor className="editor" highlight={highlight} value={code} onChange={update} />
       <div className="flex">
       </div>
     </div>

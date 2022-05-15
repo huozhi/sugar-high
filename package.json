@@ -16,7 +16,7 @@
     "build": "next build docs"
   },
   "devDependencies": {
-    "codice": "^0.0.3",
+    "codice": "^0.0.9",
     "next": "12.1.6-canary.6",
     "react": "18.0.0",
     "react-dom": "18.0.0",
