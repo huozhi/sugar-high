@@ -91,7 +91,9 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 
 
 const devExample = `
-<div>Hello <Name /> with {data}</div>
+x = <div>this </div>
+y = <div>thi</div>
+z = <div>this</div>
 `.trim()
 
 const example = process.env.NODE_ENV === 'development' && devExample
