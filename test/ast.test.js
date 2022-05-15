@@ -170,6 +170,7 @@ describe('jsx', () => {
     ])
     expect(extractTokensTypes(tokens)).toEqual([
       'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier',
+      'sign', 'sign', 'identifier', 'sign'
     ])
   })
 })

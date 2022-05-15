@@ -2,18 +2,6 @@ import { useEffect, useState } from 'react'
 import { highlight, tokenize, types } from 'sugar-high'
 import { Editor } from 'codice'
 
-function LocalStorage() {
-  const key = '$$__sugar_highlight_code__'
-  function set(code) {
-    localStorage.setItem(key, code)
-  }
-  function get() {
-    return localStorage.getItem(key)
-  }
-
-  return { set, get }
-}
-
 const fullExample = `
 // npm i -S sugar-high
 
@@ -91,9 +79,6 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 
 
 const devExample = `
-x = <div>this </div>
-y = <div>thi</div>
-z = <div>this</div>
 `.trim()
 
 const example = process.env.NODE_ENV === 'development' && devExample
@@ -104,15 +89,7 @@ const example = process.env.NODE_ENV === 'development' && devExample
 export default function Page() {
   const [isLineNumberEnabled, setLineNumberEnabled] = useState(true)
   const [isDev, setIsDev] = useState(false)
-  const [storage] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const s = LocalStorage()
-      return s
-    }
-  })
-  const [code, setCode] = useState(
-    () => (typeof window !== 'undefined' && storage.get()) || example
-  )
+  const [code, setCode] = useState(() => example)
 
   function debug(code) {
     if (process.env.NODE_ENV !== 'production') {
@@ -125,13 +102,11 @@ export default function Page() {
 
   function update(_code) {
     debug(_code)
-    storage.set(_code)
     setCode(_code)
   }
 
   useEffect(() => {
-    const _code = storage.get() || example
-    update(_code)
+    update(code)
   }, [])
 
   return (
