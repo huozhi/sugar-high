@@ -107,10 +107,10 @@ check-error@^1.0.2:
   resolved "https://registry.yarnpkg.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
   integrity sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=
 
-codice@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/codice/-/codice-0.0.9.tgz#356d55e3fcb3c4c958697f5dab4f6dfbff398e08"
-  integrity sha512-Zfgipzkr/B51E8p83kRFLhsWdLRwobSqv4Ud5y/KxWmsFnSqYiqm5T9s/DHUBAx7zNuuZi+uY1YYtkkaYar7Hw==
+codice@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/codice/-/codice-0.0.10.tgz#78aeb8f115d2f7da0b6afd31b1a1cc6ec1ad64e4"
+  integrity sha512-DiXAQA79TWwo3Op7GcS2VzebIWnZ5INGrr3T5sQyXIx5ST2bBc3AUi2NNxVDZHv580ittTeCrup3DlydMtVBLQ==
 
 deep-eql@^3.0.1:
   version "3.0.1"

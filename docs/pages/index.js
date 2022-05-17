@@ -146,27 +146,26 @@ export default function Page() {
       }
       .editor {
         position: relative;
-        min-height: 600px;
-        display: flex;
-        overflow-y: hidden;
-      }
-      pre {
-        position: abosolute;
-        top: 0;
-        bottom: 0;
+        height: 600px;
+        overflow-y: scroll;
+        border-radius: 12px;
       }
       code, textarea {
         font-family: Consolas, Monaco, monospace;
         padding: 16px 12px;
         background-color: #f6f6f6;
         border: none;
-        border-radius: 12px;
         font-size: 16px;
         line-height: 1.25em;
         caret-color: #333;
       }
       textarea {
         padding-left: 54px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
       }
       code {
         counter-reset: sh-line-number;
@@ -209,6 +208,7 @@ export default function Page() {
         }
       </div>
       <Editor className="editor" highlight={highlight} value={code} onChange={update} />
+
       <div className="flex">
       </div>
     </div>
