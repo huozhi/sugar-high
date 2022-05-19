@@ -79,7 +79,22 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 
 
 const devExample = `
+
 `.trim()
+
+/*
+\`hi \$\{ a \} world\`
+\`hello \$\{world\}\`
+\`hi \$\{ b \} plus \$\{ c + \`text\` \}\`
+\`nested \$\{ c + \`\$\{ no \}\` }\`
+\`
+hehehehe
+\`
+'we'
+"no"
+\`hello\`
+*/
+
 
 const example = process.env.NODE_ENV === 'development' && devExample
   ? devExample
@@ -93,7 +108,7 @@ export default function Page() {
 
   function debug(code) {
     if (process.env.NODE_ENV !== 'production') {
-      console.log(
+      console.info(
         tokenize(code)
           .map(t => [t[1], types[t[0]]])
       )
