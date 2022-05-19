@@ -82,20 +82,6 @@ const devExample = `
 
 `.trim()
 
-/*
-\`hi \$\{ a \} world\`
-\`hello \$\{world\}\`
-\`hi \$\{ b \} plus \$\{ c + \`text\` \}\`
-\`nested \$\{ c + \`\$\{ no \}\` }\`
-\`
-hehehehe
-\`
-'we'
-"no"
-\`hello\`
-*/
-
-
 const example = process.env.NODE_ENV === 'development' && devExample
   ? devExample
   : fullExample

@@ -243,24 +243,8 @@ describe('regex', () => {
 
     // '[]' consider as a end of the expression
     expect(extractTokenValues(tokenize(code1))).toEqual([
-      "/reg/",
-      ".",
-      "test",
-      "(",
-      "'",
-      "str",
-      "'",
-      ")",
-      "[",
-      "]",
-      "/reg/", // regex
-      ".",
-      "test",
-      "(",
-      "'",
-      "str",
-      "'",
-      ")",
+      "/reg/", ".", "test", "(", "'", "str", "'", ")", "[", "]",
+      "/reg/", ".", "test", "(", "'", "str", "'", ")",
     ])
 
     const code2 =
@@ -269,26 +253,8 @@ describe('regex', () => {
 
     // what before '()' still considers as an expression
     expect(extractTokenValues(tokenize(code2))).toEqual([
-      "/reg/",
-      ".",
-      "test",
-      "(",
-      "'",
-      "str",
-      "'",
-      ")",
-      "(",
-      ")",
-      "/",   // operator
-      "reg", // identifier
-      "/",   // operator
-      ".",
-      "test",
-      "(",
-      "'",
-      "str",
-      "'",
-      ")",
+      "/reg/", ".", "test", "(", "'", "str", "'", ")", "(", ")", "/",
+      "reg", "/", ".", "test", "(", "'", "str", "'", ")",
     ])
   })
 })
@@ -323,19 +289,8 @@ describe('strings', () => {
       \`hello \$\{world\}\`
     `
     expect(extractTokenValues(tokenize(code1))).toEqual([
-      "`",
-      "hi",
-      "${",
-      "a",
-      "}",
-      "world",
-      "`",
-      "`",
-      "hello",
-      "${",
-      "world",
-      "}",
-      "`",
+      "`", "hi", "${", "a", "}", "world", "`",
+      "`", "hello", "${", "world", "}", "`",
 
     ])
     const code2 = `
