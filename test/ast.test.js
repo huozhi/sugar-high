@@ -318,19 +318,11 @@ describe('strings', () => {
   })
 
   it('string template', () => {
-    const code = `
+    const code1 = `
       \`hi \$\{ a \} world\`
       \`hello \$\{world\}\`
-      \`hi \$\{ b \} plus \$\{ c + \`text\` \}\`
-      \`nested \$\{ c + \`\$\{ no \}\` }\`
-      \`
-      hehehehe
-      \`
-      'we'
-      "no"
-      \`hello\`
     `
-    expect(extractTokenValues(tokenize(code))).toEqual([
+    expect(extractTokenValues(tokenize(code1))).toEqual([
       "`",
       "hi",
       "${",
@@ -344,45 +336,29 @@ describe('strings', () => {
       "world",
       "}",
       "`",
-      "`",
-      "hi",
-      "${",
-      "b",
-      "}",
-      "plus",
-      "${",
-      "c",
-      "+",
-      "`",
-      "text",
-      "`",
-      "}",
-      "`",
-      "`",
-      "nested",
-      "${",
-      "c",
-      "+",
-      "`",
-      "$",
-      "{",
-      "no",
-      "}",
-      "`",
-      "}",
-      "`",
-      "`",
-      "hehehehe",
-      "`",
-      "'",
-      "we",
-      "'",
-      "\"",
-      "no",
-      "\"",
-      "`",
-      "hello",
-      "`",
+
+    ])
+    const code2 = `
+    \`hi \$\{ b \} plus \$\{ c + \`text\` \}\`
+      \`nested \$\{ c + \`\$\{ no \}\` }\`
+    `
+    expect(extractTokenValues(tokenize(code2))).toEqual([
+      "`", "hi", "${", "b", "}", "plus", "${", "c", "+", "`", "text", "`", "}",
+      "`", "`", "nested", "${", "c", "+", "`", "$", "{", "no", "}", "`", "}", "`",
+    ])
+    const code3 = `
+    \`
+      hehehehe
+      \`
+      'we'
+      "no"
+      \`hello\`
+    `
+    expect(extractTokenValues(tokenize(code3))).toEqual([
+      "`", "hehehehe", "`",
+      "'", "we", "'",
+      "\"", "no", "\"",
+      "`", "hello", "`",
     ])
   })
 })
