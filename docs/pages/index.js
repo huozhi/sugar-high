@@ -79,6 +79,7 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 
 
 const devExample = `
+
 `.trim()
 
 const example = process.env.NODE_ENV === 'development' && devExample
@@ -93,7 +94,7 @@ export default function Page() {
 
   function debug(code) {
     if (process.env.NODE_ENV !== 'production') {
-      console.log(
+      console.info(
         tokenize(code)
           .map(t => [t[1], types[t[0]]])
       )

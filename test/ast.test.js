@@ -95,8 +95,8 @@ describe('jsx', () => {
     expect(extractTokenValues(tokens)).toEqual([
       "// jsx", "const", "element", "=", "(", "<", ">", "<", "Food", "season", "=", "{", "{", "sault",
       ":", "<", "p", "a", "=", "{", "[", "{", "}", "]", "}", "/>", "}", "}", ">", "</", "Food", ">", "{",
-      "/* jsx comment */", "}", "<", "h1", "className", "=", '"title"', "data", "-", "title", "=", '"true"',
-      ">", "Read more", "{", "' '", "}", "<", "Link", "href", "=", '"/posts/first-post"', ">", "<", "a", ">",
+      "/* jsx comment */", "}", "<", "h1", "className", "=", '"', 'title', '"', "data", "-", "title", "=", '"', 'true', '"',
+      ">", "Read more", "{", "'", "'", "}", "<", "Link", "href", "=", '"', '/posts/first-post', '"', ">", "<", "a", ">",
       "this page! -", "{", "Date", ".", "now", "(", ")", "}", "</", "a", ">", "</", "Link", ">", "</", "h1", ">",
       "</", ">", ")",
     ])
@@ -104,7 +104,7 @@ describe('jsx', () => {
     const jsxPropertyNameToken = tokens.find(tk => mergeSpaces(tk[1]) === 'className')
     expect(getTypeName(jsxPropertyNameToken)).toBe('identifier')
 
-    const jsxPropertyValueToken = tokens.find(tk => mergeSpaces(tk[1]) === '"title"')
+    const jsxPropertyValueToken = tokens.find(tk => mergeSpaces(tk[1]) === 'title')
     expect(getTypeName(jsxPropertyValueToken)).toBe('string')
 
     const jsxTextChildrenToken = tokens.find(tk => mergeSpaces(tk[1]) === 'Read more')
@@ -200,7 +200,9 @@ describe('comments', () => {
       "/* This is another comment */",
       "alert",
       "(",
-      "'good'",
+      "'",
+      "good",
+      "'",
       ")",
       "// <- alerts",
     ])
@@ -230,7 +232,7 @@ describe('regex', () => {
   it('regex with quotes inside', () => {
     const code = `replace(/'/, \`"\`)`
     expect(extractTokenValues(tokenize(code))).toEqual([
-      'replace', '(', '/\'/', ',', '`"`', ')',
+      'replace', '(', '/\'/', ',', '`', '"', '`', ')',
     ])
   })
 
@@ -241,20 +243,8 @@ describe('regex', () => {
 
     // '[]' consider as a end of the expression
     expect(extractTokenValues(tokenize(code1))).toEqual([
-      "/reg/",
-      ".",
-      "test",
-      "(",
-      "'str'",
-      ")",
-      "[",
-      "]",
-      "/reg/", // regex
-      ".",
-      "test",
-      "(",
-      "'str'",
-      ")",
+      "/reg/", ".", "test", "(", "'", "str", "'", ")", "[", "]",
+      "/reg/", ".", "test", "(", "'", "str", "'", ")",
     ])
 
     const code2 =
@@ -263,32 +253,18 @@ describe('regex', () => {
 
     // what before '()' still considers as an expression
     expect(extractTokenValues(tokenize(code2))).toEqual([
-      "/reg/",
-      ".",
-      "test",
-      "(",
-      "'str'",
-      ")",
-      "(",
-      ")",
-      "/",   // operator
-      "reg", // identifier
-      "/",   // operator
-      ".",
-      "test",
-      "(",
-      "'str'",
-      ")",
+      "/reg/", ".", "test", "(", "'", "str", "'", ")", "(", ")", "/",
+      "reg", "/", ".", "test", "(", "'", "str", "'", ")",
     ])
   })
 })
 
-describe('string', () => {
-  it('import string', () => {
+describe('strings', () => {
+  it('import paths', () => {
     const code = `import mod from "../../mod"`
     const tokens = tokenize(code)
     expect(extractTokenValues(tokens)).toEqual([
-      'import', 'mod', 'from', '"../../mod"',
+      'import', 'mod', 'from', '"', '../../mod', '"',
     ])
   })
 
@@ -296,9 +272,49 @@ describe('string', () => {
     const str1 = `"aa'bb'cc"`
     const str2 = `'aa"bb"cc'`
     const str3 = `\`\nabc\``
-    expect(extractTokenValues(tokenize(str1))).toEqual([str1])
-    expect(extractTokenValues(tokenize(str2))).toEqual([str2])
-    expect(extractTokenValues(tokenize(str3))).toEqual([str3])
+    expect(extractTokenValues(tokenize(str1))).toEqual([
+      `"`, `aa`, `'`, `bb`, `'`, `cc`, `"`,
+    ])
+    expect(extractTokenValues(tokenize(str2))).toEqual([
+      `'`, `aa`, `"`, `bb`, `"`, `cc`, `'`,
+    ])
+    expect(extractTokenValues(tokenize(str3))).toEqual([
+      '`', `abc`, '`',
+    ])
+  })
+
+  it('string template', () => {
+    const code1 = `
+      \`hi \$\{ a \} world\`
+      \`hello \$\{world\}\`
+    `
+    expect(extractTokenValues(tokenize(code1))).toEqual([
+      "`", "hi", "${", "a", "}", "world", "`",
+      "`", "hello", "${", "world", "}", "`",
+
+    ])
+    const code2 = `
+    \`hi \$\{ b \} plus \$\{ c + \`text\` \}\`
+      \`nested \$\{ c + \`\$\{ no \}\` }\`
+    `
+    expect(extractTokenValues(tokenize(code2))).toEqual([
+      "`", "hi", "${", "b", "}", "plus", "${", "c", "+", "`", "text", "`", "}",
+      "`", "`", "nested", "${", "c", "+", "`", "$", "{", "no", "}", "`", "}", "`",
+    ])
+    const code3 = `
+    \`
+      hehehehe
+      \`
+      'we'
+      "no"
+      \`hello\`
+    `
+    expect(extractTokenValues(tokenize(code3))).toEqual([
+      "`", "hehehehe", "`",
+      "'", "we", "'",
+      "\"", "no", "\"",
+      "`", "hello", "`",
+    ])
   })
 })
 
