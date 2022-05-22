@@ -79,7 +79,6 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 
 
 const devExample = `
-
 `.trim()
 
 const example = process.env.NODE_ENV === 'development' && devExample
@@ -147,8 +146,8 @@ export default function Page() {
       }
       .editor {
         position: relative;
-        height: 600px;
         overflow-y: scroll;
+        height: 600px;
         border-radius: 12px;
       }
       code, textarea {
