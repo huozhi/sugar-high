@@ -297,10 +297,17 @@ describe('strings', () => {
     \`hi \$\{ b \} plus \$\{ c + \`text\` \}\`
       \`nested \$\{ c + \`\$\{ no \}\` }\`
     `
-    expect(extractTokenValues(tokenize(code2))).toEqual([
+    const tokens2 = tokenize(code2)
+    expect(extractTokenValues(tokens2)).toEqual([
       "`", "hi", "${", "b", "}", "plus", "${", "c", "+", "`", "text", "`", "}",
-      "`", "`", "nested", "${", "c", "+", "`", "$", "{", "no", "}", "`", "}", "`",
+      "`", "`", "nested", "${", "c", "+", "`", "${", "no", "}", "`", "}", "`",
     ])
+    const stringToken = tokens2.find(tk => mergeSpaces(tk[1]) === 'text')
+    expect(getTypeName(stringToken)).toBe('string')
+
+    const exprIdToken = tokens2.find(tk => mergeSpaces(tk[1]) === 'no')
+    expect(getTypeName(exprIdToken)).toBe('identifier')
+
     const code3 = `
     \`
       hehehehe
