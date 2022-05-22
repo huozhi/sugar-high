@@ -308,6 +308,9 @@ describe('strings', () => {
     const exprIdToken = tokens2.find(tk => mergeSpaces(tk[1]) === 'no')
     expect(getTypeName(exprIdToken)).toBe('identifier')
 
+    const stringTemplateQuoteToken = tokens2.find(tk => mergeSpaces(tk[1]) === '`')
+    expect(getTypeName(stringTemplateQuoteToken)).toBe('string')
+
     const code3 = `
     \`
       hehehehe
