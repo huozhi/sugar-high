@@ -173,6 +173,18 @@ describe('jsx', () => {
       'sign', 'sign', 'identifier', 'sign'
     ])
   })
+
+  it('parse arrow function in jsx correctly', () => {
+    const code = '<button onClick={() => {}}>click</button>'
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      '<', 'button', 'onClick', '=', '{', '(', ')', '=', '>', '{', '}', '}', '>', 'click', '</', 'button', '>',
+    ])
+    expect(extractTokensTypes(tokens)).toEqual([
+      'sign', 'identifier', 'identifier', 'sign', 'sign', 'sign', 'sign', 'sign', 'sign',
+      'sign', 'sign', 'sign', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign'
+    ])
+  })
 })
 
 describe('comments', () => {
