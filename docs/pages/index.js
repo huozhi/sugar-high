@@ -71,10 +71,10 @@ class SuperArray extends Array {
 
   constructor(...args) { super(...args); }
 
-  bump() {
+  bump(value) {
     return this.map(
       x => x == undefined ? x + 1 : 0
-    )
+    ).concat(value)
   }
 }
 `],
