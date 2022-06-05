@@ -1,4 +1,9 @@
 # Sugar High
+
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
+[![Downloads][downloads-badge]][downloads]
+
 ### Introduction
 
 Super lightweight JSX syntax highlighter, around 1KB after minified and gzipped
@@ -70,3 +75,16 @@ pre code {
 
 MIT
 
+<!-- Definitions -->
+
+[build-badge]: https://github.com/huozhi/sugar-high/workflows/Test/badge.svg
+
+[build]: https://github.com/huozhi/sugar-high/actions
+
+[coverage-badge]: https://badge.fury.io/js/sugar-high.svg
+
+[coverage]: https://codecov.io/github/huozhi/sugar-high
+
+[downloads-badge]: https://img.shields.io/npm/dm/sugar-high.svg
+
+[downloads]: https://www.npmjs.com/package/sugar-high

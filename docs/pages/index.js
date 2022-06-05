@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react'
-import { highlight, tokenize, types } from 'sugar-high'
+import { useState } from 'react'
+import { highlight } from 'sugar-high'
 import { Editor } from 'codice'
 
-const fullExample = `
+const fullExample = [
+[
+  'install.js',
+  `
 // npm i -S sugar-high
 
 import { highlight } from 'sugar-high'
@@ -10,8 +13,12 @@ import { highlight } from 'sugar-high'
 const codeHTML = highlight(code)
 
 document.querySelector('pre > code').innerHTML = codeHTML
+`
+],
 
-// jsx
+[
+  `app.jsx`,
+`
 const element = (
   <>
     <Food
@@ -28,7 +35,10 @@ const element = (
     </h1>
   </>
 )
-
+`],
+[
+  `hello.js`,
+`
 const nums = [
   1000_000_000, 1.2e3, 0x1f, .14, 1n
 ].filter(Boolean)
@@ -39,7 +49,11 @@ function* foo(index) {
     return void 0
   } while (index < 2)
 }
+`],
 
+[
+  `klass.js`,
+  `
 /**
  * @param {string} names
  * @return {Promise<string[]>}
@@ -63,7 +77,11 @@ class SuperArray extends Array {
     )
   }
 }
+`],
 
+[
+  `regex.js`,
+  `
 export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 
 // This is a super lightweight javascript syntax highlighter npm package
@@ -75,39 +93,29 @@ export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 // Invalid calculation: regex and numbers
 const _in = 123 - /555/ + 444;
 const _iu = /* evaluate */ (19) / 234 + 56 / 7;
-`.trim()
+`]
+].map(([name, code]) => [name, code.trim()])
 
+function CodeFrame({ code, title = 'Untitled' }) {
+  return (
+    <div className='code-frame'>
+      <div className='code-header'>
+        <div className='code-controls'>
+          <div className='code-control' />
+          <div className='code-control' />
+          <div className='code-control' />
+        </div>
+        <div className='code-title'>{title}</div>
+      </div>
 
-const devExample = `
-`.trim()
-
-const example = process.env.NODE_ENV === 'development' && devExample
-  ? devExample
-  : fullExample
-
+      <Editor className='editor' highlight={highlight} value={code} disabled />
+    </div>
+  )
+}
 
 export default function Page() {
   const [isLineNumberEnabled, setLineNumberEnabled] = useState(true)
   const [isDev, setIsDev] = useState(false)
-  const [code, setCode] = useState(() => example)
-
-  function debug(code) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.info(
-        tokenize(code)
-          .map(t => [t[1], types[t[0]]])
-      )
-    }
-  }
-
-  function update(_code) {
-    debug(_code)
-    setCode(_code)
-  }
-
-  useEffect(() => {
-    update(code)
-  }, [])
 
   return (
     <div>
@@ -147,17 +155,16 @@ export default function Page() {
       .editor {
         position: relative;
         overflow-y: scroll;
-        height: 600px;
-        border-radius: 12px;
       }
       code, textarea {
         font-family: Consolas, Monaco, monospace;
-        padding: 16px 12px;
+        padding: 16px;
         background-color: #f6f6f6;
         border: none;
         font-size: 16px;
         line-height: 1.25em;
         caret-color: #333;
+        outline: none;
       }
       textarea {
         padding-left: 54px;
@@ -166,11 +173,48 @@ export default function Page() {
         bottom: 0;
         left: 0;
         right: 0;
+        pointer-events: none; // disable text area
+      }
+
+      .code-snippets {
+
       }
       code {
         counter-reset: sh-line-number;
         width: 100%;
         height: 100%;
+      }
+      .code-frame {
+        position: relative;
+        padding: 12px 0;
+      }
+      .code-header {
+        position: relative;
+        display: flex;
+        background-color: #f6f6f6;
+        padding: 16px 22px;
+      }
+      .code-control {
+        display: flex;
+        width: 12px;
+        height: 12px;
+        margin: 4px;
+        background-color: hsl(0deg 0% 0% / 34%);
+        border-radius: 50%;
+      }
+      .code-controls {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(16px, -50%);
+      }
+      .code-title {
+        flex: 1 0;
+        text-align: center;
+        color: hsl(0deg 0% 0% / 34%);
       }
 
       :root {
@@ -207,9 +251,12 @@ export default function Page() {
           </div>
         }
       </div>
-      <Editor className="editor" highlight={highlight} value={code} onChange={update} />
 
-      <div className="flex">
+
+      <div className='code-snippets'>
+        {fullExample.map(([name, code], i) => (
+          <CodeFrame key={i} code={code} title={name} />
+        ))}
       </div>
     </div>
   )
