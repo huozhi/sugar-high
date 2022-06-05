@@ -338,6 +338,17 @@ describe('strings', () => {
       "`", "hello", "`",
     ])
   })
+
+  it('unicode token', () => {
+    const code = `let hello你好 = 'hello你好'`
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      'let', 'hello你好', '=', "'", 'hello你好', "'",
+    ])
+    expect(extractTokensTypes(tokens)).toEqual([
+      'keyword', 'identifier', 'sign', 'string', 'string', 'string',
+    ])
+  })
 })
 
 describe('class', () => {
