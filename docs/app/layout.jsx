@@ -1,11 +1,11 @@
-import Head from 'next/head'
+import StyledJsxRegistry from './style-registry'
 
 const imgUrl = 'https://repository-images.githubusercontent.com/453236442/1d63a6ff-aa11-422c-a36c-ca16fc102f18'
 
-export default function App({ Component, pageProps }) {
+export default function Layout({ children }) {
   return (
-    <>
-      <Head>
+    <html>
+      <head>
         <title>sugar high</title>
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,8 +14,12 @@ export default function App({ Component, pageProps }) {
         <meta property="og:image" content={imgUrl} />
         <meta name="twitter:image" content={imgUrl} />
         <meta name="twitter:card" content="summary_large_image" />
-      </Head>
-      <Component {...pageProps} />
-    </>
+      </head>
+      <body>
+        <StyledJsxRegistry>
+          {children}
+        </StyledJsxRegistry>
+      </body>
+    </html>
   )
 }
