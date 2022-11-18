@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { highlight } from 'sugar-high'
 import { Editor } from 'codice'
