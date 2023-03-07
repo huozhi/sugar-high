@@ -167,6 +167,10 @@ export default function Page() {
           overflow: ${index === mid ? 'auto' : 'hidden'};
           box-shadow: -5px 5px 89px rgba(0, 0, 0, 0.5);
           transition: box-shadow 0.3s ease, transform 0.2s ease;
+          ${index !== mid 
+            ? `cursor: pointer; user-select: none;` 
+            : ''
+          }
         }`
 
         return r
