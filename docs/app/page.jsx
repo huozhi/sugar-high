@@ -118,6 +118,7 @@ function CodeFrame({ code, title = 'Untitled' }) {
 export default function Page() {
   const [isLineNumberEnabled, setLineNumberEnabled] = useState(true)
   const [isDev, setIsDev] = useState(false)
+  const [selected, setSelected] = useState(0)
 
   return (
     <div>
@@ -140,9 +141,11 @@ export default function Page() {
         font-family: "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif
       }
       body {
-        max-width: 690px;
+        max-width: 960px;
         margin: auto;
         padding: 0 10px 40px;
+        display: flex;
+        justify-content: center;
       }
       .features {
         margin: 16px 0;
@@ -153,10 +156,12 @@ export default function Page() {
       .header h1 {
         font-size: 64px;
         font-weight: 800;
+        text-align: center;
       }
       .editor {
         position: relative;
         overflow-y: scroll;
+        scrollbar-width: none;
       }
       code, textarea {
         font-family: Consolas, Monaco, monospace;
@@ -167,6 +172,7 @@ export default function Page() {
         line-height: 1.25em;
         caret-color: #333;
         outline: none;
+        scrollbar-width: none;
       }
       textarea {
         padding-left: 54px;
@@ -184,7 +190,7 @@ export default function Page() {
       code {
         counter-reset: sh-line-number;
         width: 100%;
-        height: 100%;
+        min-height: 360px;
       }
       .code-frame {
         position: relative;
@@ -237,7 +243,35 @@ export default function Page() {
       code {
         ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
       }
+
+      ${fullExample.reduce((r, c, i) => {
+        const half = Math.floor(fullExample.length / 2)
+        const dis = selected - half
+        const index = (i - dis + fullExample.length) % fullExample.length
+        
+        let translate = '0%, 0%'
+        let scale = 1
+        let opacity = 1
+        if (index < half) {
+          translate = '-40%, 60px'
+          scale = '0.8'
+          opacity = '.2' 
+        } else if (index > half) {
+          translate = '40%, 60px'
+          scale = '0.8'
+          opacity = '.2'
+        } 
+        return r + `.code-label#code-${i} {
+          transform: translate(${translate}) scale(${scale});
+          opacity: ${opacity};
+          z-index: ${index === half ? 1 : 0};
+        }
+      `
+      }, '')}
+
       `}</style>
+
+
       <div className="header">
         <h1>Sugar High</h1>
         <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
@@ -254,11 +288,27 @@ export default function Page() {
         }
       </div>
 
-
-      <div className='code-snippets'>
-        {fullExample.map(([name, code], i) => (
-          <CodeFrame key={i} code={code} title={name} />
-        ))}
+      <div className="container">
+        <>
+          {fullExample.map((_, i) => (
+            <input
+              key={i}
+              type="radio"
+              name="slider"
+              className={`item`}
+              id={`item-${i}`}
+              checked={selected === i}
+              onChange={() => setSelected(i)}
+            />
+          ))}
+        </>
+        <div className="cards">
+          {fullExample.map(([name, code], i) => (
+            <label key={i} htmlFor={`item-${i}`} className={`code-label`} id={`code-${i}`}>
+              <CodeFrame code={code} title={name} />
+            </label>
+          ))}
+        </div>
       </div>
     </div>
   )

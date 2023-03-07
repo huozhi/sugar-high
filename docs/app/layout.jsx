@@ -1,4 +1,5 @@
 import StyledJsxRegistry from './style-registry'
+import './styles.css'
 
 const imgUrl = 'https://repository-images.githubusercontent.com/453236442/1d63a6ff-aa11-422c-a36c-ca16fc102f18'
 
