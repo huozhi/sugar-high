@@ -1,15 +1,104 @@
+:root {
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
+  --sh-jsxliterals: #6266d1;
+  --editor-background-color: transparent;
+}
+
 * {
   box-sizing: border-box;
 }
 
-body {
-  padding: 30px 10px;
-  font-family: 'DM Sans', sans-serif;
-  transition: background .4s ease-in;
+html {
+  font-family: "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif
 }
-
+body {
+  max-width: 960px;
+  margin: auto;
+  padding: 0 10px 40px;
+  display: flex;
+  justify-content: center;
+}
 input[type=radio] {
   display: none;
+}
+.features {
+  margin: 16px 0;
+}
+.header {
+  padding: 0 8px;
+}
+.header h1 {
+  font-size: 64px;
+  font-weight: 800;
+  text-align: center;
+  margin: 1rem;
+}
+.editor {
+  position: relative;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+code, textarea {
+  font-family: Consolas, Monaco, monospace;
+  padding: 10px;
+  background-color: #f6f6f6;
+  border: none;
+  font-size: 16px;
+  line-height: 1.25em;
+  caret-color: #333;
+  outline: none;
+  scrollbar-width: none;
+}
+textarea {
+  padding-left: 48px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none; /* disable text area */
+}
+
+code {
+  counter-reset: sh-line-number;
+  width: 100%;
+  min-height: 360px;
+}
+.code-frame {
+  position: relative;
+}
+.code-header {
+  position: relative;
+  display: flex;
+  background-color: #f6f6f6;
+  padding: 16px 22px;
+}
+.code-control {
+  display: flex;
+  width: 12px;
+  height: 12px;
+  margin: 4px;
+  background-color: hsl(0deg 0% 0% / 34%);
+  border-radius: 50%;
+}
+.code-controls {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(16px, -50%);
+}
+.code-title {
+  flex: 1 0;
+  text-align: center;
+  color: hsl(0deg 0% 0% / 34%);
 }
 
 .code-label {
@@ -22,7 +111,8 @@ input[type=radio] {
   cursor: pointer;
 }
 
-.container {
+.carousel {
+  margin-top: 4rem;
   width: 100%;
   transform-style: preserve-3d;
   display: flex;
@@ -33,8 +123,13 @@ input[type=radio] {
 
 .cards {
   position: relative;
-  width: 100%;
+  width: 600px;
   height: 100%;
   margin-bottom: 20px;
 }
 
+@media screen and (max-width: 600px) {
+  .cards {
+    width: 100%;
+  }
+}

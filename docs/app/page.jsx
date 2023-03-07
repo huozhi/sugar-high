@@ -124,108 +124,6 @@ export default function Page() {
     <div>
       <style jsx global>{`
       :root {
-        --sh-class: #2d5e9d;
-        --sh-identifier: #354150;
-        --sh-sign: #8996a3;
-        --sh-string: #00a99a;
-        --sh-keyword: #f47067;
-        --sh-comment: #a19595;
-        --sh-jsxliterals: #6266d1;
-        --editor-background-color: transparent;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-      html {
-        font-family: "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif
-      }
-      body {
-        max-width: 960px;
-        margin: auto;
-        padding: 0 10px 40px;
-        display: flex;
-        justify-content: center;
-      }
-      .features {
-        margin: 16px 0;
-      }
-      .header {
-        padding: 0 8px;
-      }
-      .header h1 {
-        font-size: 64px;
-        font-weight: 800;
-        text-align: center;
-      }
-      .editor {
-        position: relative;
-        overflow-y: scroll;
-        scrollbar-width: none;
-      }
-      code, textarea {
-        font-family: Consolas, Monaco, monospace;
-        padding: 16px;
-        background-color: #f6f6f6;
-        border: none;
-        font-size: 16px;
-        line-height: 1.25em;
-        caret-color: #333;
-        outline: none;
-        scrollbar-width: none;
-      }
-      textarea {
-        padding-left: 54px;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none; // disable text area
-      }
-
-      .code-snippets {
-
-      }
-      code {
-        counter-reset: sh-line-number;
-        width: 100%;
-        min-height: 360px;
-      }
-      .code-frame {
-        position: relative;
-        padding: 12px 0;
-      }
-      .code-header {
-        position: relative;
-        display: flex;
-        background-color: #f6f6f6;
-        padding: 16px 22px;
-      }
-      .code-control {
-        display: flex;
-        width: 12px;
-        height: 12px;
-        margin: 4px;
-        background-color: hsl(0deg 0% 0% / 34%);
-        border-radius: 50%;
-      }
-      .code-controls {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transform: translate(16px, -50%);
-      }
-      .code-title {
-        flex: 1 0;
-        text-align: center;
-        color: hsl(0deg 0% 0% / 34%);
-      }
-
-      :root {
         --editor-text-color: ${isDev ? '#f8515163' : 'transparent'};
       }
       ${isLineNumberEnabled ? `
@@ -241,35 +139,50 @@ export default function Page() {
         }` : ''
       }
       code {
-        ${isLineNumberEnabled ? `padding-left: 54px;` : ''}
+        ${isLineNumberEnabled ? `padding-left: 48px;` : ''}
       }
 
       ${fullExample.reduce((r, c, i) => {
-        const half = Math.floor(fullExample.length / 2)
-        const dis = selected - half
+        const mid = Math.floor(fullExample.length / 2)
+        const dis = selected - mid
         const index = (i - dis + fullExample.length) % fullExample.length
         
         let translate = '0%, 0%'
         let scale = 1
         let opacity = 1
-        if (index < half) {
+        if (index < mid) {
           translate = '-40%, 60px'
           scale = '0.8'
           opacity = '.2' 
-        } else if (index > half) {
+        } else if (index > mid) {
           translate = '40%, 60px'
           scale = '0.8'
           opacity = '.2'
         } 
-        return r + `.code-label#code-${i} {
+        r += `.code-label#code-${i} {
           transform: translate(${translate}) scale(${scale});
           opacity: ${opacity};
-          z-index: ${index === half ? 1 : 0};
-        }
-      `
+          z-index: ${index === mid ? 1 : 0};
+          height: ${index === mid ? 'auto' : '300px'};
+          overflow: ${index === mid ? 'auto' : 'hidden'};
+          box-shadow: -5px 5px 89px rgba(0, 0, 0, 0.5);
+          transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }`
+
+        return r
       }, '')}
 
       `}</style>
+
+      <div className="github-corner" aria-label="View source on GitHub">
+        <a href="https://github.com/huozhi/sugar-high" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub">
+          <svg width="80" height="80" viewBox="0 0 250 250" style={{ fill: '#151513', color: '#fff', position: 'absolute', top: 0, border: 0, right: 0 }} aria-hidden="true">
+            <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+            <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style={{ transformOrigin: '130px 106px' }} className="octo-arm"></path>
+            <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" className="octo-body"></path>
+          </svg>
+        </a>
+      </div>
 
 
       <div className="header">
@@ -288,7 +201,7 @@ export default function Page() {
         }
       </div>
 
-      <div className="container">
+      <div className="carousel">
         <>
           {fullExample.map((_, i) => (
             <input
