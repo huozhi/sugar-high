@@ -17,11 +17,11 @@
   },
   "devDependencies": {
     "codice": "^0.0.10",
-    "next": "^13.4.19",
+    "next": "13.4.20-canary.23",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sugar-high": "link:./",
     "vitest": "^0.13.1"
   },
-  "packageManager": "pnpm@7"
+  "packageManager": "pnpm@8.7.1"
 }

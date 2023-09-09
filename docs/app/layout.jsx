@@ -1,4 +1,3 @@
-import StyledJsxRegistry from './style-registry'
 import './styles.css'
 
 const imgUrl = 'https://repository-images.githubusercontent.com/453236442/1d63a6ff-aa11-422c-a36c-ca16fc102f18'
@@ -6,17 +5,15 @@ const imgUrl = 'https://repository-images.githubusercontent.com/453236442/1d63a6
 export default function Layout({ children }) {
   return (
     <html>
-      <head></head>
       <body>
-        <StyledJsxRegistry>
-          {children}
-        </StyledJsxRegistry>
+        {children}
       </body>
     </html>
   )
 }
 
 export const metadata = {
+  metadataBase: new URL('https://sugar-high.vercel.app'),
   title: 'Sugar High',
   authors: [{ name: '@huozhi' }],
   description: 'Super lightweight JSX syntax highlighter, around 1KB after minified and gzipped',

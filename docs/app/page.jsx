@@ -122,7 +122,7 @@ export default function Page() {
 
   return (
     <div>
-      <style jsx global>{`
+      <style>{`
       :root {
         --editor-text-color: ${isDev ? '#f8515163' : 'transparent'};
       }
@@ -146,19 +146,19 @@ export default function Page() {
         const mid = Math.floor(fullExample.length / 2)
         const dis = selected - mid
         const index = (i - dis + fullExample.length) % fullExample.length
-        
+
         let translate = '0%, 0%'
         let scale = 1
         let opacity = 1
         if (index < mid) {
           translate = '-40%, 60px'
           scale = '0.8'
-          opacity = '.2' 
+          opacity = '.2'
         } else if (index > mid) {
           translate = '40%, 60px'
           scale = '0.8'
           opacity = '.2'
-        } 
+        }
         r += `.code-label#code-${i} {
           transform: translate(${translate}) scale(${scale});
           opacity: ${opacity};
@@ -167,8 +167,8 @@ export default function Page() {
           overflow: ${index === mid ? 'auto' : 'hidden'};
           box-shadow: -5px 5px 89px rgba(0, 0, 0, 0.5);
           transition: box-shadow 0.3s ease, transform 0.2s ease;
-          ${index !== mid 
-            ? `cursor: pointer; user-select: none;` 
+          ${index !== mid
+            ? `cursor: pointer; user-select: none;`
             : ''
           }
         }`
