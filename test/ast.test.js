@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { tokenize, types } from '../lib'
+import { tokenize, SugarHigh } from '../lib'
 
 function getTypeName(token) {
-  return types[token[0]]
+  return SugarHigh.TokenTypes[token[0]]
 }
 
 function getTokenValues(tokens) {

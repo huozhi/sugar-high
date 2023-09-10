@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { highlight, tokenize, types as TOKEN_TYPES } from 'sugar-high'
+import { highlight, tokenize, SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
 
 function debounce(func, timeout = 200){
@@ -73,7 +73,7 @@ export default function LiveEditor() {
           }}
         />
         <ul className='live-editor-color-plate'>
-          {Object.entries(TOKEN_TYPES).sort((a, b) => a - b).map(([tokenType, tokenTypeName]) => (
+          {Object.entries(SugarHigh.TokenTypes).sort((a, b) => a - b).map(([tokenType, tokenTypeName]) => (
             <li key={tokenType} className='live-editor-color'>
               <span className={`live-editor-color-plate-block sh__token--${tokenTypeName}`} /> {tokenTypeName}
             </li>
@@ -85,7 +85,7 @@ export default function LiveEditor() {
           <div className='editor-tokens'>
             <pre>
               {liveCodeTokens.map(([tokenType, token], i) => {
-                const tokenTypeName = TOKEN_TYPES[tokenType]
+                const tokenTypeName = SugarHigh.TokenTypes[tokenType]
                 return (
                   <div key={i}>{tokenTypeName}{' '.repeat(12 - tokenTypeName.length)} {token}</div>
                 )
