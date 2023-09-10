@@ -1,6 +1,6 @@
 import './styles.css'
 
-const imgUrl = 'https://repository-images.githubusercontent.com/453236442/1d63a6ff-aa11-422c-a36c-ca16fc102f18'
+const imgUrl = 'https://repository-images.githubusercontent.com/453236442/aa0db684-bad3-4cd3-a420-f4e53b8c6757'
 
 export default function Layout({ children }) {
   return (
