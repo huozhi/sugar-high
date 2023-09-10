@@ -71,6 +71,18 @@ pre code {
 }
 ```
 
+#### CSS Class Names
+
+You can use `.sh__token--<token type>` to customize the output node of each token.
+
+```css
+.sh__token--keyword {
+  background: #f47067;
+}
+```
+
+```css
+
 ### LICENSE
 
 MIT
