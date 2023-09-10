@@ -32,7 +32,7 @@ export default function LiveEditor() {
   const debouncedTokenize = debouncedTokenizeRef.current
 
   return (
-    <div className='live-editor-section'>
+    <div className={`live-editor-section ${isDebug ? `live-editor-section--debug` : 'live-editor-section--default'}`}>
       <style>{`
         .live-editor {
           --editor-text-color: ${isDebug ? '#2c7ea163' : 'transparent'};
