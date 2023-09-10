@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { highlight } from 'sugar-high'
+import { highlight, tokenize, types as TOKEN_TYPES } from 'sugar-high'
 import { Editor } from 'codice'
 
-const fullExample = [
+const EXAMPLE_PAIRS = [
 [
   'install.js',
   `
@@ -117,14 +117,17 @@ function CodeFrame({ code, title = 'Untitled' }) {
 
 export default function Page() {
   const [isLineNumberEnabled, setLineNumberEnabled] = useState(true)
-  const [isDev, setIsDev] = useState(false)
+  const [isDebug, setIsDebug] = useState(false)
   const [selected, setSelected] = useState(0)
+
+  const currentCode = EXAMPLE_PAIRS[selected][1]
+  const currentCodeTokens = tokenize(currentCode)
 
   return (
     <div>
       <style>{`
       :root {
-        --editor-text-color: ${isDev ? '#f8515163' : 'transparent'};
+        --editor-text-color: ${isDebug ? '#f8515163' : 'transparent'};
       }
       ${isLineNumberEnabled ? `
         .sh__line::before {
@@ -142,10 +145,10 @@ export default function Page() {
         ${isLineNumberEnabled ? `padding-left: 48px;` : ''}
       }
 
-      ${fullExample.reduce((r, c, i) => {
-        const mid = Math.floor(fullExample.length / 2)
+      ${EXAMPLE_PAIRS.reduce((r, c, i) => {
+        const mid = Math.floor(EXAMPLE_PAIRS.length / 2)
         const dis = selected - mid
-        const index = (i - dis + fullExample.length) % fullExample.length
+        const index = (i - dis + EXAMPLE_PAIRS.length) % EXAMPLE_PAIRS.length
 
         let translate = '0%, 0%'
         let scale = 1
@@ -199,7 +202,7 @@ export default function Page() {
             </span>
 
             <span>
-              <input type="checkbox" checked={isDev} onChange={(e) => setIsDev(e.target.checked)} />matching text
+              <input type="checkbox" checked={isDebug} onChange={(e) => setIsDebug(e.target.checked)} />matching text
             </span>
           </div>
         }
@@ -207,7 +210,7 @@ export default function Page() {
 
       <div className="carousel">
         <>
-          {fullExample.map((_, i) => (
+          {EXAMPLE_PAIRS.map((_, i) => (
             <input
               key={i}
               type="radio"
@@ -220,13 +223,26 @@ export default function Page() {
           ))}
         </>
         <div className="cards">
-          {fullExample.map(([name, code], i) => (
+          {EXAMPLE_PAIRS.map(([name, code], i) => (
             <label key={i} htmlFor={`item-${i}`} className={`code-label`} id={`code-${i}`}>
               <CodeFrame code={code} title={name} />
             </label>
           ))}
         </div>
       </div>
+
+      {process.env.NODE_ENV === 'development' &&
+        <div className='token-logger'>
+          <pre>
+            {currentCodeTokens.map(([tokenType, token], i) => {
+              const tokenTypeName = TOKEN_TYPES[tokenType]
+              return (
+                <div key={i}>{tokenTypeName}{' '.repeat(16 - tokenTypeName.length)} {token}</div>
+              )
+            })}
+          </pre>
+        </div>
+      }
     </div>
   )
 }

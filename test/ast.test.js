@@ -185,6 +185,17 @@ describe('jsx', () => {
       'sign', 'sign', 'sign', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign'
     ])
   })
+
+  it('should render string for any jsx attribute values', () => {
+    const code = '<h1 data-title="true" />'
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      '<', 'h1', 'data', '-', 'title', '=', '"', 'true', '"', '/>',
+    ])
+    expect(extractTokensTypes(tokens)).toEqual([
+      'sign', 'identifier', 'identifier', 'sign', 'identifier', 'sign', 'string', 'string', 'string', 'sign',
+    ])
+  })
 })
 
 describe('comments', () => {
