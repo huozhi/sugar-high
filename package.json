@@ -21,7 +21,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sugar-high": "link:./",
-    "vitest": "^0.13.1"
+    "vitest": "^0.34.4"
   },
   "packageManager": "pnpm@8.7.1"
 }
