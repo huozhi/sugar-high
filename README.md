@@ -81,8 +81,6 @@ You can use `.sh__token--<token type>` to customize the output node of each toke
 }
 ```
 
-```css
-
 ### LICENSE
 
 MIT
