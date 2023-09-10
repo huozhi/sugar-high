@@ -195,6 +195,17 @@ describe('jsx', () => {
     expect(extractTokensTypes(tokens)).toEqual([
       'sign', 'identifier', 'identifier', 'sign', 'identifier', 'sign', 'string', 'string', 'string', 'sign',
     ])
+
+
+    const code2 = '<svg color="null" height="24"/>'
+    const tokens2 = tokenize(code2)
+    expect(extractTokenValues(tokens2)).toEqual([
+      '<', 'svg', 'color', '=', '"', 'null', '"', 'height', '=', '"', '24', '"', '/>',
+    ])
+    expect(extractTokensTypes(tokens2)).toEqual([
+      'sign', 'identifier', 'identifier', 'sign', 'string', 'string', 'string',
+      'identifier', 'sign', 'string', 'string', 'string', 'sign',
+    ])
   })
 })
 
