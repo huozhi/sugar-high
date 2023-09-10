@@ -1,12 +1,6 @@
 :root {
-  --sh-class: #2d5e9d;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-string: #00a99a;
-  --sh-keyword: #f47067;
-  --sh-comment: #a19595;
-  --sh-jsxliterals: #6266d1;
   --editor-background-color: transparent;
+  --editor-text-color: transparent;
 }
 
 * {
@@ -26,10 +20,35 @@ body {
 input[type=radio] {
   display: none;
 }
+.flex {
+  display: flex;
+}
 .features {
   margin: 16px 0;
 }
+.features__control {
+  display: flex;
+  align-items: center;
+  margin: 8px auto;
+}
+input[type="checkbox"] {
+  cursor: pointer;
+  appearance: none;
+  background-color: transparent;
+  font: inherit;
+  color: #444;
+  width: 1em;
+  height: 1em;
+  border: 0.15em solid currentColor;
+  margin-right: 8px;
+}
+
+input[type="checkbox"]:checked {
+  background-color: currentColor;
+}
+
 .header {
+  margin-top: 1rem;
   padding: 0 8px;
 }
 .header h1 {
@@ -38,7 +57,7 @@ input[type=radio] {
   text-align: center;
   margin: 1rem;
 }
-.editor {
+.cards .editor {
   position: relative;
   overflow-y: scroll;
   scrollbar-width: none;
@@ -61,7 +80,6 @@ textarea {
   bottom: 0;
   left: 0;
   right: 0;
-  pointer-events: none; /* disable text area */
 }
 
 code {
@@ -111,7 +129,6 @@ code {
   right: 0;
   margin: auto;
   transition: transform .4s ease;
-  cursor: pointer;
 }
 
 .carousel {
@@ -125,10 +142,23 @@ code {
 }
 
 .cards {
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
+  --sh-jsxliterals: #6266d1;
+  --editor-background-color: transparent;
+
   position: relative;
   width: 600px;
   height: 480px;
   margin-bottom: 20px;
+}
+.cards textarea {
+  /* disable text area */
+  pointer-events: none;
 }
 
 @media screen and (max-width: 600px) {
@@ -137,6 +167,108 @@ code {
   }
 }
 
-.token-logger {
+.live-editor-section {
+  margin: 100px 0;
+}
 
+.live-editor {
+  --editor-background-color: transparent;
+
+  flex: 1;
+  cursor: default;
+  box-shadow: -5px 5px 89px rgba(0, 0, 0, 0.5);
+}
+
+.live-editor code,
+.live-editor textarea {
+  padding: 24px 48px;
+}
+
+.live-editor {
+  cursor: default;
+  margin: 40px auto 80px;
+}
+
+.live-editor-color {
+  display: flex;
+  align-items: center;
+  color: #666;
+  margin: 4px 0;
+}
+.live-editor-color-plate-block {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+}
+
+.live-editor .sh__line {
+  color: #333;
+}
+
+.live-editor-section--default {
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
+  --sh-jsxliterals: #6266d1;
+  --editor-background-color: transparent;
+}
+
+.live-editor-section--debug .sh__token--class {
+  background-color: #d173a3;
+}
+.live-editor-section--debug .sh__token--identifier {
+  background-color: #4789db;
+}
+.live-editor-section--debug .sh__token--sign {
+  background-color: #87bcc3;
+}
+.live-editor-section--debug .sh__token--string {
+  background-color: #00a99a;
+}
+.live-editor-section--debug .sh__token--keyword {
+  background-color: #dec580;
+}
+.live-editor-section--debug .sh__token--comment {
+  background-color: #a27b7b;
+}
+.live-editor-section--debug .sh__token--jsxliterals {
+  background-color: #9c9fef;
+}
+.live-editor-section--debug .sh__token--break {
+  background-color: #e6dab8;
+}
+.live-editor-section--debug .sh__token--space {
+  background-color: #ebd79f;
+}
+
+.live-editor-section--default .live-editor-color-plate .sh__token--class {
+  background-color: var(--sh-class);
+}
+.live-editor-section--default .live-editor-color-plate .sh__token--identifier {
+  background-color: var(--sh-identifier);
+}
+.live-editor-section--default .live-editor-color-plate .sh__token--sign {
+  background-color: var(--sh-sign);
+}
+.live-editor-section--default .live-editor-color-plate .sh__token--string {
+  background-color: var(--sh-string);
+}
+.live-editor-section--default .live-editor-color-plate .sh__token--keyword {
+  background-color: var(--sh-keyword);
+}
+.live-editor-section--default .live-editor-color-plate .sh__token--comment {
+  background-color: var(--sh-comment);
+}
+.live-editor-section--default .live-editor-color-plate .sh__token--jsxliterals {
+  background-color: var(--sh-jsxliterals);
+}
+.live-editor-section--default .live-editor-color-plate .sh__token--break {
+  background-color: var(--sh-break);
+}
+.live-editor-section--default .live-editor-color-plate .sh__token--space {
+  background-color: var(--sh-space);
 }
