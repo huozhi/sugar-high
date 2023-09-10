@@ -207,6 +207,17 @@ describe('jsx', () => {
       'identifier', 'sign', 'string', 'string', 'string', 'sign',
     ])
   })
+
+  it('should render single quote inside jsx literals as jsx literals', () => {
+    const code = `<p>Let's get started!</p>`
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      '<', 'p', '>', 'Let\'s get started!', '</', 'p', '>',
+    ])
+    expect(extractTokensTypes(tokens)).toEqual([
+      'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign',
+    ])
+  })
 })
 
 describe('comments', () => {
