@@ -161,7 +161,7 @@ describe('jsx', () => {
 
     const jsxTextChildrenToken = tokens.find(tk => mergeSpaces(tk[1]) === 'Hello World')
     expect(getTypeName(jsxTextChildrenToken)).toBe('jsxliterals')
-  });
+  })
 
   it('parse keyword in jsx children literals as jsx literals', () => {
     const tokens = tokenize(`<div>Hello <Name /> with {data}</div>`)
@@ -216,6 +216,27 @@ describe('jsx', () => {
     ])
     expect(extractTokensTypes(tokens)).toEqual([
       'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign',
+    ])
+  })
+
+  it('should handle nested jsx literals correctly', async () => {
+    const code =
+    `<>
+      <div>
+        <p>Text 1</p>
+      </div>
+      <p>Text 2</p>
+    </>`
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      '<', '>', '<', 'div', '>', '<', 'p', '>', 'Text 1', '</', 'p', '>', '</', 'div', '>',
+      '<', 'p', '>', 'Text 2', '</', 'p', '>', '</', '>',
+    ])
+    expect(extractTokensTypes(tokens)).toEqual([
+      'sign', 'sign', 'break', 'sign', 'identifier', 'sign', 'jsxliterals', 'jsxliterals',
+      'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier', 'sign', 'break', 'sign',
+      'identifier', 'sign', 'break', 'sign', 'identifier', 'sign', 'jsxliterals', 'sign', 'identifier',
+      'sign', 'break', 'sign', 'sign',
     ])
   })
 })
