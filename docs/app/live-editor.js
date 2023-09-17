@@ -11,7 +11,7 @@ const defaultColorPlateColors = {
   string: '#00a99a',
   keyword: '#f47067',
   comment: '#a19595',
-  jsxliterals: '#6266d1',
+  jsxliterals: '#bf7db6',
   break: '#ffffff',
   space: '#ffffff',
 }
@@ -32,7 +32,7 @@ const customizableColors = Object.entries(SugarHigh.TokenTypes)
 
 const defaultLiveCode = `\
 export default function App() {
-  return <p>hello world<p>
+  return <p>hello world</p>
 }`
 
 function useTextTypingAnimation(targetText, delay, onReady) {
