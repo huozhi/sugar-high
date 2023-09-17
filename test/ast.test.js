@@ -403,6 +403,17 @@ describe('strings', () => {
       'keyword', 'identifier', 'sign', 'string', 'string', 'string',
     ])
   })
+
+  it('number in string', () => {
+    const code = `'123'\n'true'`
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      "'", '123', "'", "'", 'true', "'",
+    ])
+    expect(extractTokensTypes(tokens)).toEqual([
+      'string', 'string', 'string', 'break', 'string', 'string', 'string',
+    ])
+  })
 })
 
 describe('class', () => {
