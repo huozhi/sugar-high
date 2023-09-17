@@ -7,94 +7,94 @@ import { highlight } from 'sugar-high'
 const EXAMPLE_PAIRS = [
   [
     'install.js',
-    `
-  // npm i -S sugar-high
+    `\
+// npm i -S sugar-high
 
-  import { highlight } from 'sugar-high'
+import { highlight } from 'sugar-high'
 
-  const codeHTML = highlight(code)
+const html = highlight(code)
 
-  document.querySelector('pre > code').innerHTML = codeHTML
+document.querySelector('pre > code').innerHTML = html
   `
   ],
 
   [
     `app.jsx`,
-  `
-  const element = (
-    <>
-      <Food
-        season={{
-          sault: <p a={[{}]} />
-        }}>
-      </Food>
-      {/* jsx comment */}
-      <h1 className="title" data-title="true">
-        Read{' '}
-        <Link href="/posts/first-post">
-          <a>this page! - {Date.now()}</a>
-        </Link>
-      </h1>
-    </>
-  )
+  `\
+const element = (
+  <>
+    <Food
+      season={{
+        sault: <p a={[{}]} />
+      }}>
+    </Food>
+    {/* jsx comment */}
+    <h1 className="title" data-title="true">
+      Read{' '}
+      <Link href="/posts/first-post">
+        <a>this page! - {Date.now()}</a>
+      </Link>
+    </h1>
+  </>
+)
   `],
   [
     `hello.js`,
-  `
-  const nums = [
-    1000_000_000, 1.2e3, 0x1f, .14, 1n
-  ].filter(Boolean)
+  `\
+const nums = [
+  1000_000_000, 1.2e3, 0x1f, .14, 1n
+].filter(Boolean)
 
-  function* foo(index) {
-    do {
-      yield index++;
-      return void 0
-    } while (index < 2)
-  }
+function* foo(index) {
+  do {
+    yield index++;
+    return void 0
+  } while (index < 2)
+}
   `],
 
   [
     `klass.js`,
-    `
-  /**
-   * @param {string} names
-   * @return {Promise<string[]>}
-   */
-  async function notify(names) {
-    const tags = []
-    for (let i = 0; i < names.length; i++) {
-      tags.push('@' + names[i])
-    }
-    await ping(tags)
+    `\
+/**
+ * @param {string} names
+ * @return {Promise<string[]>}
+ */
+async function notify(names) {
+  const tags = []
+  for (let i = 0; i < names.length; i++) {
+    tags.push('@' + names[i])
   }
+  await ping(tags)
+}
 
-  class SuperArray extends Array {
-    static core = Object.create(null)
+class SuperArray extends Array {
+  static core = Object.create(null)
 
-    constructor(...args) { super(...args); }
+  constructor(...args) { super(...args); }
 
-    bump(value) {
-      return this.map(
-        x => x == undefined ? x + 1 : 0
-      ).concat(value)
-    }
+  bump(value) {
+    return this.map(
+      x => x == undefined ? x + 1 : 0
+    ).concat(value)
   }
+}
   `],
 
   [
     `regex.js`,
-    `
-  export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
+    `\
+export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 
-  // This is a super lightweight javascript syntax highlighter npm package
+// This is a super lightweight javascript syntax highlighter npm package
 
-  // This is a inline comment / <- a slash
-  /// <reference path="..." /> // reference comment
-  /* This is another comment */ alert('good') // <- alerts
+// This is a inline comment / <- a slash
+/// <reference path="..." /> // reference comment
+/* This is another comment */ alert('good') // <- alerts
 
-  // Invalid calculation: regex and numbers
-  const _in = 123 - /555/ + 444;
-  const _iu = /* evaluate */ (19) / 234 + 56 / 7;
+// Invalid calculation: regex and numbers
+const _in = 123 - /555/ + 444;
+const _iu = /* evaluate */ (19) / 234 + 56 / 7;
   `]
   ].map(([name, code]) => [name, code.trim()])
 
@@ -111,7 +111,7 @@ const EXAMPLE_PAIRS = [
         </div>
 
         <Editor
-          className='editor'
+          className='codice-editor'
           highlight={highlight}
           value={code}
           disabled
@@ -126,7 +126,7 @@ export default function Carousel() {
   const [selected, setSelected] = useState(0)
 
   return (
-    <div className="carousel">
+    <div className="carousel max-width-container">
       <style>
         {`
         ${examples.reduce((r, c, i) => {
@@ -175,7 +175,10 @@ export default function Carousel() {
           />
         ))}
       </>
-      <h2>Showcase</h2>
+      <div className='align-start'>
+        <h1>Showcase</h1>
+        <p>Code highlight examples built with sugar-high</p>
+      </div>
       <div className="cards">
         {examples.map(([name, code], i) => (
           <label key={i} htmlFor={`item-${i}`} className={`code-label`} id={`code-${i}`}>

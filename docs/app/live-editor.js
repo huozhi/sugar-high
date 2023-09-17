@@ -37,7 +37,7 @@ export default function App() {
 `
 export default function LiveEditor() {
   const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
-  const isLineNumberEnabled = true
+  // TODO: enable debug flag process.env.NODE_ENV === 'development'
   const isDebug = false
   const [liveCode, setLiveCode] = useState(defaultLiveCode)
   const [liveCodeTokens, setLiveCodeTokens] = useState([])
@@ -48,18 +48,8 @@ export default function LiveEditor() {
   const debouncedTokenize = debouncedTokenizeRef.current
 
   return (
-    <div className={`live-editor-section ${isDebug ? `live-editor-section--debug` : 'live-editor-section--default'}`}>
+    <div className={`max-width-container live-editor-section`}>
       <style>{`
-        .sh__line::before {
-          counter-increment: sh-line-number 1;
-          content: counter(sh-line-number);
-          width: 24px;
-          display: inline-block;
-          margin-right: 18px;
-          margin-left: -42px;
-          text-align: right;
-          color: #a4a4a4;
-        }
         ${`
         .live-editor-section {
           --sh-class: ${colorPlateColors.class};
@@ -70,15 +60,12 @@ export default function LiveEditor() {
           --sh-comment: ${colorPlateColors.comment};
           --sh-jsxliterals: ${colorPlateColors.jsxliterals};
         }
-        `}
-        code {
-          padding-left: 48px;
-        }`
+        `}`
       }</style>
 
       <div className='flex live-editor'>
         <Editor
-          className='flex-1'
+          className='codice-editor flex-1'
           highlight={highlight}
           value={liveCode}
           onChange={(newCode) => {
