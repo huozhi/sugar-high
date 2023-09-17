@@ -32,7 +32,7 @@ const customizableColors = Object.entries(SugarHigh.TokenTypes)
 
 const defaultLiveCode = `\
 export default function App() {
-  return "hello world"
+  return <p>hello world<p>
 }`
 
 function useTextTypingAnimation(targetText, delay, onReady) {
