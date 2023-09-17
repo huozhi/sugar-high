@@ -68,7 +68,7 @@ input[type="checkbox"]:checked {
 
 .header {
   margin-top: 1rem;
-  padding: 0 8px;
+  padding: 0px 8px;
   text-align: center;
 }
 .header h1 {
@@ -76,6 +76,7 @@ input[type="checkbox"]:checked {
   font-weight: 800;
   text-align: center;
   margin: 1rem;
+  padding: 16px 0;
   flex-direction: column;
 }
 .cards .editor {
@@ -178,6 +179,12 @@ textarea {
 @media screen and (max-width: 600px) {
   .cards {
     width: 100%;
+  }
+  .code-label--non-selected {
+    width: 0 !important;
+    height: 0 !important;
+    transform: none !important;
+    visibility: hidden;
   }
 }
 

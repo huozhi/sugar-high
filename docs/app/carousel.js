@@ -195,7 +195,7 @@ export default function Carousel() {
       </div>
       <div className="cards">
         {examples.map(([name, code], i) => (
-          <label key={i} htmlFor={`item-${i}`} className={`code-label`} id={`code-${i}`}>
+          <label key={i} htmlFor={`item-${i}`} className={`code-label ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`} id={`code-${i}`}>
             <CodeFrame code={code} title={name} />
           </label>
         ))}

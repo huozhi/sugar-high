@@ -22,6 +22,16 @@
 .install-banner__code {
   background-color: #2d2d2d;
   font-size: 1rem;
-  padding: 8px 48px;
+  padding: 8px 24px;
   width: 600px;
+  max-width: calc(100vw - 48px);
+}
+
+@media screen and (max-width: 600px) {
+  .install-banner__command {
+    font-size: 2rem;
+  }
+  .install-banner__code {
+    font-size: 0.75rem;
+  }
 }
