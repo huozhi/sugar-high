@@ -176,18 +176,6 @@ textarea {
   pointer-events: none;
 }
 
-@media screen and (max-width: 600px) {
-  .cards {
-    width: 100%;
-  }
-  .code-label--non-selected {
-    width: 0 !important;
-    height: 0 !important;
-    transform: none !important;
-    visibility: hidden;
-  }
-}
-
 .live-editor-section {
   margin-top: 80px;
 }
@@ -292,4 +280,19 @@ pre code .sh__line::before {
 }
 .live-editor-section .live-editor__color__item__indicator--jsxliterals {
   background-color: currentColor;
+}
+
+@media screen and (max-width: 600px) {
+  .cards {
+    width: 100%;
+  }
+  .code-label--non-selected {
+    width: 0 !important;
+    height: 0 !important;
+    transform: none !important;
+    visibility: hidden;
+  }
+  .live-editor__color {
+    display: none;
+  }
 }

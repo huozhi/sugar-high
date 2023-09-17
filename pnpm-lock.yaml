@@ -6,8 +6,8 @@ settings:
 
 devDependencies:
   codice:
-    specifier: ^0.0.10
-    version: 0.0.10(react@18.2.0)(sugar-high@0.4.6)
+    specifier: ^0.2.0
+    version: 0.2.0(react@18.2.0)(sugar-high@)
   next:
     specifier: 13.4.20-canary.23
     version: 13.4.20-canary.23(react-dom@18.2.0)(react@18.2.0)
@@ -19,7 +19,7 @@ devDependencies:
     version: 18.2.0(react@18.2.0)
   sugar-high:
     specifier: link:./
-    version: 0.4.6
+    version: 'link:'
   vitest:
     specifier: ^0.34.4
     version: 0.34.4
@@ -439,14 +439,14 @@ packages:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
     dev: true
 
-  /codice@0.0.10(react@18.2.0)(sugar-high@0.4.6):
-    resolution: {integrity: sha512-DiXAQA79TWwo3Op7GcS2VzebIWnZ5INGrr3T5sQyXIx5ST2bBc3AUi2NNxVDZHv580ittTeCrup3DlydMtVBLQ==}
+  /codice@0.2.0(react@18.2.0)(sugar-high@):
+    resolution: {integrity: sha512-6Ap8lRtTL8H371JmrXZ6ES5CCKSc/dK5ZomPvywB3dNwH6hZIvXKl9hi7OHx09imPRRrUZRBJY9QX+Jqflc8VQ==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
       sugar-high: '*'
     dependencies:
       react: 18.2.0
-      sugar-high: 0.4.6
+      sugar-high: 'link:'
     dev: true
 
   /debug@4.3.4:
@@ -747,10 +747,6 @@ packages:
     dependencies:
       client-only: 0.0.1
       react: 18.2.0
-    dev: true
-
-  /sugar-high@0.4.6:
-    resolution: {integrity: sha512-V/5BlmDTQ0YCD6o+xumBpOBP8CWDqVDA8Pt7W/i8QzkwFnYwBxX9T4a8XRmay7ulnnCj/5rX3f845tbkXU1lIw==}
     dev: true
 
   /tinybench@2.5.0:

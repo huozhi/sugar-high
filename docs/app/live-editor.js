@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { highlight, tokenize, SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
 
@@ -33,13 +33,52 @@ const customizableColors = Object.entries(SugarHigh.TokenTypes)
 const defaultLiveCode = `\
 export default function App() {
   return "hello world"
+}`
+
+function useTextTypingAnimation(targetText, delay, onReady) {
+  const [text, setText] = useState('')
+  const [isTyping, setIsTyping] = useState(true)
+
+  useEffect(() => {
+    let timeoutId
+
+    const typeText = (index) => {
+      if (index === targetText.length) {
+        setIsTyping(false)
+        onReady()
+        return
+      }
+
+      setText(targetText.substring(0, index + 1))
+      timeoutId = setTimeout(() => typeText(index + 1), delay / targetText.length)
+    }
+
+    typeText(0)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  }, [targetText, delay])
+
+  return { text, isTyping, setText }
 }
-`
+
 
 export default function LiveEditor() {
+  const editorRef = useRef()
   const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
   const isDebug = process.env.NODE_ENV === 'development'
-  const [liveCode, setLiveCode] = useState(defaultLiveCode)
+
+  const { text: liveCode, setText: setLiveCode } = useTextTypingAnimation(defaultLiveCode, 1000, () => {
+    if (editorRef.current) {
+      // focus needs to be delayed
+      setTimeout(() => {
+        editorRef.current.focus()
+      })
+    }
+  })
+
+
   const [liveCodeTokens, setLiveCodeTokens] = useState([])
   const debouncedTokenizeRef = useRef(debounce((c) => {
     const tokens = tokenize(c)
@@ -65,6 +104,7 @@ export default function LiveEditor() {
 
       <div className='flex live-editor'>
         <Editor
+          ref={editorRef}
           className='codice-editor flex-1'
           highlight={highlight}
           value={liveCode}
