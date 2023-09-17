@@ -22,5 +22,6 @@
 .install-banner__code {
   background-color: #2d2d2d;
   font-size: 1rem;
-  padding: 4px 16px;
+  padding: 8px 48px;
+  width: 600px;
 }
