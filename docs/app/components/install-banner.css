@@ -1,0 +1,27 @@
+.install-banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100vw;
+  min-height: 200px;
+  background-color: #000;
+  color: #fff;
+  margin: 0;
+}
+
+.install-banner ::selection {
+  background-color: #fff;
+  color: #000;
+}
+
+.install-banner__command {
+  text-align: center;
+  font-size: 4rem;
+}
+
+.install-banner__code {
+  background-color: #2d2d2d;
+  font-size: 1rem;
+  padding: 8px 48px;
+  width: 600px;
+}

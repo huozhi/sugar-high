@@ -1,100 +1,100 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Editor } from 'codice'
 import { highlight } from 'sugar-high'
 
 const EXAMPLE_PAIRS = [
   [
     'install.js',
-    `
-  // npm i -S sugar-high
+    `\
+// npm i -S sugar-high
 
-  import { highlight } from 'sugar-high'
+import { highlight } from 'sugar-high'
 
-  const codeHTML = highlight(code)
+const html = highlight(code)
 
-  document.querySelector('pre > code').innerHTML = codeHTML
+document.querySelector('pre > code').innerHTML = html
   `
   ],
 
   [
     `app.jsx`,
-  `
-  const element = (
-    <>
-      <Food
-        season={{
-          sault: <p a={[{}]} />
-        }}>
-      </Food>
-      {/* jsx comment */}
-      <h1 className="title" data-title="true">
-        Read{' '}
-        <Link href="/posts/first-post">
-          <a>this page! - {Date.now()}</a>
-        </Link>
-      </h1>
-    </>
-  )
+  `\
+const element = (
+  <>
+    <Food
+      season={{
+        sault: <p a={[{}]} />
+      }}>
+    </Food>
+    {/* jsx comment */}
+    <h1 className="title" data-title="true">
+      Read{' '}
+      <Link href="/posts/first-post">
+        <a>this page! - {Date.now()}</a>
+      </Link>
+    </h1>
+  </>
+)
   `],
   [
     `hello.js`,
-  `
-  const nums = [
-    1000_000_000, 1.2e3, 0x1f, .14, 1n
-  ].filter(Boolean)
+  `\
+const nums = [
+  1000_000_000, 1.2e3, 0x1f, .14, 1n
+].filter(Boolean)
 
-  function* foo(index) {
-    do {
-      yield index++;
-      return void 0
-    } while (index < 2)
-  }
+function* foo(index) {
+  do {
+    yield index++;
+    return void 0
+  } while (index < 2)
+}
   `],
 
   [
     `klass.js`,
-    `
-  /**
-   * @param {string} names
-   * @return {Promise<string[]>}
-   */
-  async function notify(names) {
-    const tags = []
-    for (let i = 0; i < names.length; i++) {
-      tags.push('@' + names[i])
-    }
-    await ping(tags)
+    `\
+/**
+ * @param {string} names
+ * @return {Promise<string[]>}
+ */
+async function notify(names) {
+  const tags = []
+  for (let i = 0; i < names.length; i++) {
+    tags.push('@' + names[i])
   }
+  await ping(tags)
+}
 
-  class SuperArray extends Array {
-    static core = Object.create(null)
+class SuperArray extends Array {
+  static core = Object.create(null)
 
-    constructor(...args) { super(...args); }
+  constructor(...args) { super(...args); }
 
-    bump(value) {
-      return this.map(
-        x => x == undefined ? x + 1 : 0
-      ).concat(value)
-    }
+  bump(value) {
+    return this.map(
+      x => x == undefined ? x + 1 : 0
+    ).concat(value)
   }
+}
   `],
 
   [
     `regex.js`,
-    `
-  export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
+    `\
+export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 
-  // This is a super lightweight javascript syntax highlighter npm package
+// This is a super lightweight javascript syntax highlighter npm package
 
-  // This is a inline comment / <- a slash
-  /// <reference path="..." /> // reference comment
-  /* This is another comment */ alert('good') // <- alerts
+// This is a inline comment / <- a slash
+/// <reference path="..." /> // reference comment
+/* This is another comment */ alert('good') // <- alerts
 
-  // Invalid calculation: regex and numbers
-  const _in = 123 - /555/ + 444;
-  const _iu = /* evaluate */ (19) / 234 + 56 / 7;
+// Invalid calculation: regex and numbers
+const _in = 123 - /555/ + 444;
+const _iu = /* evaluate */ (19) / 234 + 56 / 7;
   `]
   ].map(([name, code]) => [name, code.trim()])
 
@@ -111,7 +111,7 @@ const EXAMPLE_PAIRS = [
         </div>
 
         <Editor
-          className='editor'
+          className='codice-editor'
           highlight={highlight}
           value={code}
           disabled
@@ -123,39 +123,53 @@ const EXAMPLE_PAIRS = [
 
 export default function Carousel() {
   const examples = EXAMPLE_PAIRS
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState(Math.ceil(examples.length / 2))
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSelected((selected + 1) % examples.length)
+    } , 2500)
+    return () => clearInterval(timer)
+  }, [selected])
 
   return (
-    <div className="carousel">
+    <div className="carousel max-width-container">
       <style>
         {`
         ${examples.reduce((r, c, i) => {
-          const mid = Math.floor(examples.length / 2)
-          const dis = selected - mid
-          const index = (i - dis + examples.length) % examples.length
+          const left = (selected - 1 + examples.length) % examples.length
+          const right = (selected + 1) % examples.length
+          const isAdjacent = i === left || i === right
+          const isSelected = i === selected
+          const isShown = isAdjacent || isSelected
 
           let translate = '0%, 0%'
           let scale = 1
           let opacity = 1
-          if (index < mid) {
+          if (i == left) {
             translate = '-40%, 60px'
             scale = '0.8'
             opacity = '.2'
-          } else if (index > mid) {
+          } else if (i === right) {
             translate = '40%, 60px'
             scale = '0.8'
             opacity = '.2'
           }
           r += `.code-label#code-${i} {
             transform: translate(${translate}) scale(${scale});
-            opacity: ${opacity};
-            z-index: ${index === mid ? 1 : 0};
-            height: ${index === mid ? 'auto' : '300px'};
-            overflow: ${index === mid ? 'auto' : 'hidden'};
+            opacity: ${isShown ? opacity : 0};
+            z-index: ${isSelected ? 1 : 0};
+            height: ${isSelected ? 'auto' : '300px'};
+            overflow: ${isSelected ? 'auto' : 'hidden'};
             box-shadow: -5px 5px 89px rgba(0, 0, 0, 0.5);
-            transition: box-shadow 0.3s ease, transform 0.2s ease;
-            ${index !== mid ? `cursor: pointer; user-select: none;` : ''}
+            ${isSelected ? '' : `cursor: pointer; user-select: none;`}
           }`
+
+          if (isAdjacent || i === selected) {
+            r += `.code-label#code-${i}:hover {
+              transform: translate(${translate}) scale(${scale * 1.1});
+            }`
+          }
 
           return r
         }, '')}
@@ -175,6 +189,10 @@ export default function Carousel() {
           />
         ))}
       </>
+      <div className='align-start'>
+        <h1>Showcase</h1>
+        <p>Code highlight examples built with sugar-high</p>
+      </div>
       <div className="cards">
         {examples.map(([name, code], i) => (
           <label key={i} htmlFor={`item-${i}`} className={`code-label`} id={`code-${i}`}>

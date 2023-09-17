@@ -1,9 +1,10 @@
 import Carousel from './carousel'
 import LiveEditor from './live-editor'
+import InstallBanner from './components/install-banner'
 
 export default function Page() {
   return (
-    <div>
+    <>
       <div className="github-corner" aria-label="View source on GitHub">
         <a href="https://github.com/huozhi/sugar-high" target="_blank" rel="noopener noreferrer" aria-label="View source on GitHub">
           <svg width="80" height="80" viewBox="0 0 250 250" style={{ fill: '#151513', color: '#fff', position: 'absolute', top: 0, border: 0, right: 0 }} aria-hidden="true">
@@ -15,14 +16,15 @@ export default function Page() {
       </div>
 
 
-      <div className="header">
+      <div className="max-width-container header">
         <h1>Sugar High</h1>
         <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
       </div>
 
-      <Carousel />
       <LiveEditor />
+      <InstallBanner />
+      <Carousel />
 
-    </div>
+    </>
   )
 }
