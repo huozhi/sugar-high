@@ -212,7 +212,7 @@ pre code .sh__line::before {
   box-shadow: -5px 5px 89px rgba(0, 0, 0, 0.5);
   cursor: default;
   margin: 8rem auto;
-  max-width: 640px;
+  max-width: 720px;
 }
 .codice-editor code::selection {
   color: transparent;
