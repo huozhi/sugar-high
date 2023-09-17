@@ -175,6 +175,7 @@ export default function Carousel() {
           />
         ))}
       </>
+      <h2>Showcase</h2>
       <div className="cards">
         {examples.map(([name, code], i) => (
           <label key={i} htmlFor={`item-${i}`} className={`code-label`} id={`code-${i}`}>

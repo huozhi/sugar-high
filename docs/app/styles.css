@@ -3,6 +3,10 @@
   --editor-text-color: transparent;
 }
 
+::selection {
+  background-color: #e2ffea;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -22,6 +26,12 @@ input[type=radio] {
 }
 .flex {
   display: flex;
+}
+.flex-1 {
+  flex: 1;
+}
+.align-center {
+  align-items: center;
 }
 .features {
   margin: 16px 0;
@@ -85,11 +95,9 @@ textarea {
 code {
   counter-reset: sh-line-number;
   width: 100%;
-  min-height: 360px;
+  min-height: 372px;
 }
-::selection {
-  background-color: #e2ffea;
-}
+
 .code-frame {
   position: relative;
 }
@@ -132,7 +140,7 @@ code {
 }
 
 .carousel {
-  margin-top: 4rem;
+  margin: 8rem auto;
   width: 100%;
   transform-style: preserve-3d;
   display: flex;
@@ -154,7 +162,7 @@ code {
   position: relative;
   width: 600px;
   height: 480px;
-  margin-bottom: 20px;
+  margin: 2rem auto;
 }
 .cards textarea {
   /* disable text area */
@@ -168,15 +176,22 @@ code {
 }
 
 .live-editor-section {
-  margin: 100px 0;
+  margin: 80px 0;
 }
 
 .live-editor {
-  --editor-background-color: transparent;
-
   flex: 1;
   cursor: default;
   box-shadow: -5px 5px 89px rgba(0, 0, 0, 0.5);
+  cursor: default;
+  margin: 8rem auto;
+}
+
+.live-editor code::selection {
+  color: transparent;
+}
+.live-editor textarea::selection {
+  color: #2c7ea163;
 }
 
 .live-editor code,
@@ -184,18 +199,35 @@ code {
   padding: 24px 48px;
 }
 
-.live-editor {
-  cursor: default;
-  margin: 40px auto 80px;
+.live-editor__color {
+  margin: 24px 0;
+  padding: 0 40px;
 }
-
-.live-editor-color {
+.live-editor__color h3 {
+  margin: 0 0 24px;
+}
+.live-editor__color input[type="color"] {
+  display: inline;
+  width: 0;
+  height: 0;
+  border: none;
+  padding: 0;
+  margin: 0 0 0 8px;
+  opacity: 0;
+  cursor: none;
+}
+.live-editor__color__item {
   display: flex;
   align-items: center;
   color: #666;
   margin: 4px 0;
+
 }
-.live-editor-color-plate-block {
+.live-editor__color__item:hover,
+.live-editor__color__item:hover label {
+  cursor: pointer;
+}
+.live-editor__color__item__indicator {
   display: inline-block;
   width: 30px;
   height: 30px;
@@ -206,7 +238,7 @@ code {
   color: #333;
 }
 
-.live-editor-section--default {
+/* .live-editor-section--default {
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
   --sh-sign: #8996a3;
@@ -215,60 +247,69 @@ code {
   --sh-comment: #a19595;
   --sh-jsxliterals: #6266d1;
   --editor-background-color: transparent;
-}
+} */
 
+/* .live-editor-section--debug .live-editor__color__item__indicator--class,
 .live-editor-section--debug .sh__token--class {
   background-color: #d173a3;
 }
+.live-editor-section--debug .live-editor__color__item__indicator--identifier,
 .live-editor-section--debug .sh__token--identifier {
   background-color: #4789db;
 }
+.live-editor-section--debug .live-editor__color__item__indicator--sign,
 .live-editor-section--debug .sh__token--sign {
   background-color: #87bcc3;
 }
+.live-editor-section--debug .live-editor__color__item__indicator--string,
 .live-editor-section--debug .sh__token--string {
   background-color: #00a99a;
 }
+.live-editor-section--debug .live-editor__color__item__indicator--keyword,
 .live-editor-section--debug .sh__token--keyword {
   background-color: #dec580;
 }
+.live-editor-section--debug .live-editor__color__item__indicator--comment,
 .live-editor-section--debug .sh__token--comment {
   background-color: #a27b7b;
 }
+.live-editor-section--debug .live-editor__color__item__indicator--jsxliterals,
 .live-editor-section--debug .sh__token--jsxliterals {
   background-color: #9c9fef;
 }
+.live-editor-section--debug .live-editor__color__item__indicator--break,
 .live-editor-section--debug .sh__token--break {
   background-color: #e6dab8;
 }
+.live-editor-section--debug .live-editor__color__item__indicator--space,
 .live-editor-section--debug .sh__token--space {
   background-color: #ebd79f;
-}
+} */
 
-.live-editor-section--default .live-editor-color-plate .sh__token--class {
-  background-color: var(--sh-class);
+.live-editor-section--default .live-editor__color__item__indicator--class {
+  background-color: currentColor; /*(--sh-class);*/
 }
-.live-editor-section--default .live-editor-color-plate .sh__token--identifier {
-  background-color: var(--sh-identifier);
+.live-editor-section--default .live-editor__color__item__indicator--identifier {
+  background-color: currentColor; /*(--sh-identifier);*/
 }
-.live-editor-section--default .live-editor-color-plate .sh__token--sign {
-  background-color: var(--sh-sign);
+.live-editor-section--default .live-editor__color__item__indicator--sign {
+  background-color: currentColor; /*(--sh-sign);*/
 }
-.live-editor-section--default .live-editor-color-plate .sh__token--string {
-  background-color: var(--sh-string);
+.live-editor-section--default .live-editor__color__item__indicator--string {
+  background-color: currentColor; /*(--sh-string);*/
 }
-.live-editor-section--default .live-editor-color-plate .sh__token--keyword {
-  background-color: var(--sh-keyword);
+.live-editor-section--default .live-editor__color__item__indicator--keyword {
+  background-color: currentColor; /*(--sh-keyword);*/
 }
-.live-editor-section--default .live-editor-color-plate .sh__token--comment {
-  background-color: var(--sh-comment);
+.live-editor-section--default .live-editor__color__item__indicator--comment {
+  background-color: currentColor; /*(--sh-comment);*/
 }
-.live-editor-section--default .live-editor-color-plate .sh__token--jsxliterals {
-  background-color: var(--sh-jsxliterals);
+.live-editor-section--default .live-editor__color__item__indicator--jsxliterals {
+  background-color: currentColor; /*(--sh-jsxliterals);*/
 }
-.live-editor-section--default .live-editor-color-plate .sh__token--break {
-  background-color: var(--sh-break);
+.live-editor-section--default .live-editor__color__item__indicator--break {
+  background-color: currentColor;
 }
-.live-editor-section--default .live-editor-color-plate .sh__token--space {
-  background-color: var(--sh-space);
+.live-editor-section--default .live-editor__color__item__indicator--space {
+  background-color: currentColor;
 }

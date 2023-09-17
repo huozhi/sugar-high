@@ -20,8 +20,8 @@ export default function Page() {
         <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
       </div>
 
-      <Carousel />
       <LiveEditor />
+      <Carousel />
 
     </div>
   )
