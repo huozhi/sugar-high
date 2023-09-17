@@ -142,7 +142,7 @@ textarea {
   left: 0;
   right: 0;
   margin: auto;
-  transition: transform .4s ease;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .carousel {

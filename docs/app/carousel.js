@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Editor } from 'codice'
 import { highlight } from 'sugar-high'
 
@@ -123,39 +123,53 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 
 export default function Carousel() {
   const examples = EXAMPLE_PAIRS
-  const [selected, setSelected] = useState(0)
+  const [selected, setSelected] = useState(Math.ceil(examples.length / 2))
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSelected((selected + 1) % examples.length)
+    } , 2500)
+    return () => clearInterval(timer)
+  }, [selected])
 
   return (
     <div className="carousel max-width-container">
       <style>
         {`
         ${examples.reduce((r, c, i) => {
-          const mid = Math.floor(examples.length / 2)
-          const dis = selected - mid
-          const index = (i - dis + examples.length) % examples.length
+          const left = (selected - 1 + examples.length) % examples.length
+          const right = (selected + 1) % examples.length
+          const isAdjacent = i === left || i === right
+          const isSelected = i === selected
+          const isShown = isAdjacent || isSelected
 
           let translate = '0%, 0%'
           let scale = 1
           let opacity = 1
-          if (index < mid) {
+          if (i == left) {
             translate = '-40%, 60px'
             scale = '0.8'
             opacity = '.2'
-          } else if (index > mid) {
+          } else if (i === right) {
             translate = '40%, 60px'
             scale = '0.8'
             opacity = '.2'
           }
           r += `.code-label#code-${i} {
             transform: translate(${translate}) scale(${scale});
-            opacity: ${opacity};
-            z-index: ${index === mid ? 1 : 0};
-            height: ${index === mid ? 'auto' : '300px'};
-            overflow: ${index === mid ? 'auto' : 'hidden'};
+            opacity: ${isShown ? opacity : 0};
+            z-index: ${isSelected ? 1 : 0};
+            height: ${isSelected ? 'auto' : '300px'};
+            overflow: ${isSelected ? 'auto' : 'hidden'};
             box-shadow: -5px 5px 89px rgba(0, 0, 0, 0.5);
-            transition: box-shadow 0.3s ease, transform 0.2s ease;
-            ${index !== mid ? `cursor: pointer; user-select: none;` : ''}
+            ${isSelected ? '' : `cursor: pointer; user-select: none;`}
           }`
+
+          if (isAdjacent || i === selected) {
+            r += `.code-label#code-${i}:hover {
+              transform: translate(${translate}) scale(${scale * 1.1});
+            }`
+          }
 
           return r
         }, '')}
