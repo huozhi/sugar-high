@@ -16,7 +16,12 @@
 
 .install-banner__command {
   text-align: center;
-  font-size: 4rem;
+  font-size: 2.5rem;
+}
+
+.install-banner__command a,
+.install-banner__command a:visited {
+  color: #fff;
 }
 
 .install-banner__code {
