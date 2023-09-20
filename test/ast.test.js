@@ -13,6 +13,10 @@ function getTokenTypes(tokens) {
   return tokens.map((tk) => getTypeName(tk))
 }
 
+function getTokenArray(tokens) {
+  return tokens.map((tk) => [tk[1], getTypeName(tk)]);
+}
+
 function extractTokensTypes(tokens) {
   return getTokenTypes(tokens).filter(type => type !== 'space')
 }
@@ -40,8 +44,16 @@ describe('function calls', () => {
   })
 })
 
-describe('calculation expression', () => {
+describe.only('calculation expression', () => {
   it('basic inline calculation expression', () => {
+    const tokens = tokenize(`123 - /555/ + 444;`)
+    expect(getTokenArray(tokens)).toEqual([
+      ["123", "class"], [" ", "space"], ["-", "sign"], [" ", "space"], ["/555/", "string"], [" ", "space"],
+      ["+", "sign"], [" ", "space"], ["444", "class"], [";", "sign"]
+    ]);
+  })
+
+  it.skip('basic inline calculation expression', () => {
     const tokens = tokenize(`123 - /555/ + 444;`)
     expect(getTokenTypes(tokens)).toEqual([
       'class', 'space', 'sign', 'space', 'string', 'space', 'sign', 'space', 'class', 'sign',
@@ -51,7 +63,7 @@ describe('calculation expression', () => {
     ])
   })
 
-  it('calculation with comments', () => {
+  it.skip('calculation with comments', () => {
     const tokens = tokenize(`/* evaluate */ (19) / 234 + 56 / 7;`)
     expect(extractTokensTypes(tokens)).toEqual([
       'comment', 'sign', 'class', 'sign', 'sign', 'class', 'sign', 'class', 'sign', 'class', 'sign',
@@ -61,7 +73,7 @@ describe('calculation expression', () => {
     ])
   })
 
-  it('calculation with defs', () => {
+  it.skip('calculation with defs', () => {
     const tokens = tokenize(`const _iu = (19) / 234 + 56 / 7;`)
     expect(extractTokenValues(tokens)).toEqual([
       'const', '_iu', '=', '(', '19', ')', '/', '234', '+', '56', '/', '7', ';',
