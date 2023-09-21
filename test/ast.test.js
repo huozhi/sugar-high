@@ -5,6 +5,10 @@ function getTokenValues(tokens) {
   return tokens.map((tk) => tk[1])
 }
 
+function getTokenTypes(tokens) {
+  return tokens.map((tk) => getTypeName(tk))
+}
+
 function getTypeName(token) {
   return SugarHigh.TokenTypes[token[0]]
 }
