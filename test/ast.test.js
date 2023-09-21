@@ -38,7 +38,7 @@ function extractTokenValues(tokens) {
 function extractTokenArray(tokens) {
   return tokens
     .map((tk) => [mergeSpaces(tk[1]), getTypeName(tk)])
-    .filter(([_, type]) => type !== 'space')
+    .filter(([_, type]) => type !== 'space' && type !== 'break')
 }
 
 describe('function calls', () => {
@@ -96,23 +96,21 @@ describe('jsx', () => {
       </>
     )`)
     expect(extractTokenArray(tokens)).toEqual([
-      ["// jsx", "comment"], ["const", "keyword"], ["element", "identifier"], ["=", "sign"], ["(", "sign"], ["", "break"],
-      ["<", "sign"], [">", "sign"], ["", "break"], ["<", "sign"], ["Food", "identifier"], ["", "break"],
-      ["season", "identifier"], ["=", "sign"], ["{", "sign"], ["{", "sign"], ["", "break"], ["sault", "identifier"],
-      [":", "sign"], ["<", "sign"], ["p", "identifier"], ["a", "identifier"], ["=", "sign"], ["{", "sign"], ["[", "sign"],
-      ["{", "sign"], ["}", "sign"], ["]", "sign"], ["}", "sign"], ["/>", "sign"], ["", "break"], ["}", "sign"], ["}", "sign"],
-      [">", "sign"], ["", "break"], ["</", "sign"], ["Food", "identifier"], [">", "sign"], ["", "break"], ["{", "sign"],
-      ["/* jsx comment */", "comment"], ["}", "sign"], ["", "break"], ["<", "sign"], ["h1", "identifier"],
-      ["className", "identifier"], ["=", "sign"], ["\"", "string"], ["title", "string"], ["\"", "string"],
-      ["data", "identifier"], ["-", "sign"], ["title", "identifier"], ["=", "sign"], ["\"", "string"], ["true", "string"],
-      ["\"", "string"], [">", "sign"], ["", "jsxliterals"], ["Read more", "jsxliterals"], ["{", "sign"], ["'", "string"],
-      ["", "string"], ["'", "string"], ["}", "sign"], ["", "jsxliterals"], ["", "jsxliterals"], ["<", "sign"],
-      ["Link", "identifier"], ["href", "identifier"], ["=", "sign"], ["\"", "string"], ["/posts/first-post", "string"],
-      ["\"", "string"], [">", "sign"], ["", "jsxliterals"], ["", "jsxliterals"], ["<", "sign"], ["a", "identifier"],
-      [">", "sign"], ["this page! -", "jsxliterals"], ["{", "sign"], ["Date", "class"], [".", "sign"], ["now", "identifier"],
-      ["(", "sign"], [")", "sign"], ["}", "sign"], ["</", "sign"], ["a", "identifier"], [">", "sign"], ["", "break"],
-      ["</", "sign"], ["Link", "identifier"], [">", "sign"], ["", "break"], ["</", "sign"], ["h1", "identifier"],
-      [">", "sign"], ["", "break"], ["</", "sign"], [">", "sign"], ["", "break"], [")", "sign"]
+      ["// jsx", "comment"], ["const", "keyword"], ["element", "identifier"], ["=", "sign"], ["(", "sign"], ["<", "sign"],
+      [">", "sign"], ["<", "sign"], ["Food", "identifier"], ["season", "identifier"], ["=", "sign"], ["{", "sign"],
+      ["{", "sign"], ["sault", "identifier"], [":", "sign"], ["<", "sign"], ["p", "identifier"], ["a", "identifier"],
+      ["=", "sign"], ["{", "sign"], ["[", "sign"], ["{", "sign"], ["}", "sign"], ["]", "sign"], ["}", "sign"], ["/>", "sign"],
+      ["}", "sign"], ["}", "sign"], [">", "sign"], ["</", "sign"], ["Food", "identifier"], [">", "sign"], ["{", "sign"],
+      ["/* jsx comment */", "comment"], ["}", "sign"], ["<", "sign"], ["h1", "identifier"], ["className", "identifier"],
+      ["=", "sign"], ["\"", "string"], ["title", "string"], ["\"", "string"], ["data", "identifier"], ["-", "sign"],
+      ["title", "identifier"], ["=", "sign"], ["\"", "string"], ["true", "string"], ["\"", "string"], [">", "sign"],
+      ["", "jsxliterals"], ["Read more", "jsxliterals"], ["{", "sign"], ["'", "string"], ["", "string"], ["'", "string"],
+      ["}", "sign"], ["", "jsxliterals"], ["", "jsxliterals"], ["<", "sign"], ["Link", "identifier"], ["href", "identifier"],
+      ["=", "sign"], ["\"", "string"], ["/posts/first-post", "string"], ["\"", "string"], [">", "sign"], ["", "jsxliterals"],
+      ["", "jsxliterals"], ["<", "sign"], ["a", "identifier"], [">", "sign"], ["this page! -", "jsxliterals"], ["{", "sign"],
+      ["Date", "class"], [".", "sign"], ["now", "identifier"], ["(", "sign"], [")", "sign"], ["}", "sign"], ["</", "sign"],
+      ["a", "identifier"], [">", "sign"], ["</", "sign"], ["Link", "identifier"], [">", "sign"], ["</", "sign"],
+      ["h1", "identifier"], [">", "sign"], ["</", "sign"], [">", "sign"], [")", "sign"]
     ])
   })
 
@@ -140,11 +138,11 @@ describe('jsx', () => {
       `)
     expect(extractTokenArray(tokens)).toEqual([
       ["x", "identifier"], ["=", "sign"], ["<", "sign"], ["div", "identifier"], [">", "sign"], ["this", "jsxliterals"],
-      ["</", "sign"], ["div", "identifier"], [">", "sign"], ["", "break"],
+      ["</", "sign"], ["div", "identifier"], [">", "sign"],
       ["y", "identifier"], ["=", "sign"], ["<", "sign"], ["div", "identifier"], [">", "sign"], ["thi", "jsxliterals"],
-      ["</", "sign"], ["div", "identifier"], [">", "sign"], ["", "break"],
+      ["</", "sign"], ["div", "identifier"], [">", "sign"],
       ["z", "identifier"], ["=", "sign"], ["<", "sign"], ["div", "identifier"], [">", "sign"], ["this", "jsxliterals"],
-      ["</", "sign"], ["div", "identifier"], [">", "sign"], ["", "break"]
+      ["</", "sign"], ["div", "identifier"], [">", "sign"],
     ])
   })
 
@@ -154,10 +152,9 @@ describe('jsx', () => {
       <div>Hello World <Food /><div/>
     )`);
     expect(extractTokenArray(tokens)).toEqual([
-      ["// jsx", "comment"], ["const", "keyword"], ["element", "identifier"], ["=", "sign"], ["(", "sign"], ["", "break"],
-      ["<", "sign"], ["div", "identifier"], [">", "sign"], ["Hello World", "jsxliterals"], ["<", "sign"],
-      ["Food", "identifier"], ["/>", "sign"], ["<", "sign"], ["div", "identifier"], ["/>", "sign"], ["", "jsxliterals"],
-      [")", "jsxliterals"]
+      ["// jsx", "comment"], ["const", "keyword"], ["element", "identifier"], ["=", "sign"], ["(", "sign"], ["<", "sign"],
+      ["div", "identifier"], [">", "sign"], ["Hello World", "jsxliterals"], ["<", "sign"], ["Food", "identifier"],
+      ["/>", "sign"], ["<", "sign"], ["div", "identifier"], ["/>", "sign"], ["", "jsxliterals"], [")", "jsxliterals"]
     ])
   })
 
@@ -215,11 +212,11 @@ describe('jsx', () => {
     </>`
     const tokens = tokenize(code)
     expect(extractTokenArray(tokens)).toEqual([
-      ["<", "sign"], [">", "sign"], ["", "break"], ["<", "sign"], ["div", "identifier"], [">", "sign"], ["", "jsxliterals"],
+      ["<", "sign"], [">", "sign"], ["<", "sign"], ["div", "identifier"], [">", "sign"], ["", "jsxliterals"],
       ["", "jsxliterals"], ["<", "sign"], ["p", "identifier"], [">", "sign"], ["Text 1", "jsxliterals"], ["</", "sign"],
-      ["p", "identifier"], [">", "sign"], ["", "break"], ["</", "sign"], ["div", "identifier"], [">", "sign"], ["", "break"],
-      ["<", "sign"], ["p", "identifier"], [">", "sign"], ["Text 2", "jsxliterals"], ["</", "sign"], ["p", "identifier"],
-      [">", "sign"], ["", "break"], ["</", "sign"], [">", "sign"]
+      ["p", "identifier"], [">", "sign"], ["</", "sign"], ["div", "identifier"], [">", "sign"], ["<", "sign"],
+      ["p", "identifier"], [">", "sign"], ["Text 2", "jsxliterals"], ["</", "sign"], ["p", "identifier"], [">", "sign"],
+      ["</", "sign"], [">", "sign"]
     ])
   })
 })
@@ -282,7 +279,7 @@ describe('regex', () => {
     // '[]' consider as a end of the expression
     expect(extractTokenArray(tokenize(code1))).toEqual([
       ["/reg/", "string"], [".", "sign"], ["test", "identifier"], ["(", "sign"], ["'", "string"], ["str", "string"],
-      ["'", "string"], [")", "sign"], ["[", "sign"], ["]", "sign"], ["", "break"], ["/reg/", "string"], [".", "sign"],
+      ["'", "string"], [")", "sign"], ["[", "sign"], ["]", "sign"], ["/reg/", "string"], [".", "sign"],
       ["test", "identifier"], ["(", "sign"], ["'", "string"], ["str", "string"], ["'", "string"], [")", "sign"]
     ])
 
@@ -293,7 +290,7 @@ describe('regex', () => {
     // what before '()' still considers as an expression
     expect(extractTokenArray(tokenize(code2))).toEqual([
       ["/reg/", "string"], [".", "sign"], ["test", "identifier"], ["(", "sign"], ["'", "string"], ["str", "string"],
-      ["'", "string"], [")", "sign"], ["(", "sign"], [")", "sign"], ["", "break"], ["/", "sign"], ["reg", "identifier"],
+      ["'", "string"], [")", "sign"], ["(", "sign"], [")", "sign"], ["/", "sign"], ["reg", "identifier"],
       ["/", "sign"], [".", "sign"], ["test", "identifier"], ["(", "sign"], ["'", "string"], ["str", "string"],
       ["'", "string"], [")", "sign"]
     ])
@@ -333,9 +330,9 @@ describe('strings', () => {
       \`hello \$\{world\}\`
     `
     expect(extractTokenArray(tokenize(code1))).toEqual([
-      ["", "break"], ["`", "string"], ["hi", "string"], ["${", "sign"], ["a", "identifier"], ["}", "sign"],
-      ["world", "string"], ["`", "string"], ["", "break"], ["`", "string"], ["hello", "string"], ["${", "sign"],
-      ["world", "identifier"], ["}", "sign"], ["`", "string"], ["", "break"]
+      ["`", "string"], ["hi", "string"], ["${", "sign"], ["a", "identifier"], ["}", "sign"], ["world", "string"],
+      ["`", "string"], ["`", "string"], ["hello", "string"], ["${", "sign"], ["world", "identifier"], ["}", "sign"],
+      ["`", "string"],
     ])
 
     const code2 = `
@@ -344,11 +341,10 @@ describe('strings', () => {
     `
     const tokens2 = tokenize(code2)
     expect(extractTokenArray(tokens2)).toEqual([
-      ["", "break"], ["`", "string"], ["hi", "string"], ["${", "sign"], ["b", "identifier"], ["}", "sign"],
-      ["plus", "string"], ["${", "sign"], ["c", "identifier"], ["+", "sign"], ["`", "string"], ["text", "string"],
-      ["`", "string"], ["}", "sign"], ["`", "string"], ["", "break"], ["`", "string"], ["nested", "string"],
-      ["${", "sign"], ["c", "identifier"], ["+", "sign"], ["`", "string"], ["${", "sign"], ["no", "identifier"],
-      ["}", "sign"], ["`", "string"], ["}", "sign"], ["`", "string"], ["", "break"]
+      ["`", "string"], ["hi", "string"], ["${", "sign"], ["b", "identifier"], ["}", "sign"], ["plus", "string"],
+      ["${", "sign"], ["c", "identifier"], ["+", "sign"], ["`", "string"], ["text", "string"], ["`", "string"], ["}", "sign"],
+      ["`", "string"], ["`", "string"], ["nested", "string"], ["${", "sign"], ["c", "identifier"], ["+", "sign"],
+      ["`", "string"], ["${", "sign"], ["no", "identifier"], ["}", "sign"], ["`", "string"], ["}", "sign"], ["`", "string"],
     ])
 
     const code3 = `
@@ -360,11 +356,10 @@ describe('strings', () => {
       \`hello\`
     `
     expect(extractTokenArray(tokenize(code3))).toEqual([
-      ["", "break"],["`", "string"], ["hehehehe", "string"], ["`", "string"],
-      ["", "break"], ["'", "string"], ["we", "string"], ["'", "string"],
-      ["", "break"], ["\"", "string"], ["no", "string"], ["\"", "string"],
-      ["", "break"], ["`", "string"], ["hello", "string"], ["`", "string"],
-      ["", "break"]
+      ["`", "string"], ["hehehehe", "string"], ["`", "string"],
+      ["'", "string"], ["we", "string"], ["'", "string"],
+      ["\"", "string"], ["no", "string"], ["\"", "string"],
+      ["`", "string"], ["hello", "string"], ["`", "string"],
     ])
   })
 
@@ -380,7 +375,7 @@ describe('strings', () => {
     const code = `'123'\n'true'`
     const tokens = tokenize(code)
     expect(extractTokenArray(tokens)).toEqual([
-      ["'", "string"], ["123", "string"], ["'", "string"], ["", "break"], ["'", "string"], ["true", "string"], ["'", "string"]
+      ["'", "string"], ["123", "string"], ["'", "string"], ["'", "string"], ["true", "string"], ["'", "string"]
     ])
   })
 })
