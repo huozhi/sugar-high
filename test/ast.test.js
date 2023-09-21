@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize, SugarHigh } from '../lib'
 
+function getTokenValues(tokens) {
+  return tokens.map((tk) => tk[1])
+}
+
 function getTypeName(token) {
   return SugarHigh.TokenTypes[token[0]]
 }
