@@ -5,34 +5,12 @@ function getTypeName(token) {
   return SugarHigh.TokenTypes[token[0]]
 }
 
-function getTokenValues(tokens) {
-  return tokens.map((tk) => tk[1])
-}
-
-function getTokenTypes(tokens) {
-  return tokens.map((tk) => getTypeName(tk))
-}
-
 function getTokenArray(tokens) {
   return tokens.map((tk) => [tk[1], getTypeName(tk)]);
 }
 
-function extractTokensTypes(tokens) {
-  return getTokenTypes(tokens).filter(type => type !== 'space')
-}
-
 function mergeSpaces(str) {
   return str.trim().replace(/^[\s]{2,}$/g, ' ')
-}
-
-function filterSpaces(arr) {
-  return arr
-    .map(t => mergeSpaces(t))
-    .filter(Boolean)
-}
-
-function extractTokenValues(tokens) {
-  return filterSpaces(getTokenValues(tokens))
 }
 
 function extractTokenArray(tokens) {
