@@ -57,6 +57,19 @@ export const PaletteProvider = ({
           value: "sh-default",
           palette: defaultPalette,
         },
+        {
+          label: "v0",
+          value: "v0",
+          palette: {
+            class: "#00a7fd",
+            identifier: "#fff",
+            sign: "#9b9b9b",
+            string: "#00e7c1",
+            keyword: "#ff0078",
+            comment: "#a19595",
+            jsxliterals: "#ffff72",
+          },
+        },
       ],
     },
     {
