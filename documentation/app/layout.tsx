@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
+import Header from "@/components/sugarhigh/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,9 +39,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="grid grid-cols-1">
-          <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            test
-          </header>
+          <Header />
           {children}
         </div>
         <Toaster />

@@ -70,6 +70,19 @@ export const PaletteProvider = ({
             jsxliterals: "#ffff72",
           },
         },
+        {
+          label: "vercel",
+          value: "vercel",
+          palette: {
+            class: "#52a8ff", // From --shiki-token-constant
+            identifier: "#ededed", // From --shiki-color-text
+            sign: "#ededed", // From --shiki-token-punctuation
+            string: "#62c073", // From --shiki-token-string
+            keyword: "#f75f8f", // From --shiki-token-keyword
+            comment: "#a1a1a1", // From --shiki-token-comment
+            jsxliterals: "#62c073", // From --shiki-token-string-expression
+          },
+        },
       ],
     },
     {
