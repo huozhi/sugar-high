@@ -1,18 +1,15 @@
 "use client";
 import Glow from "@/components/sugarhigh/background/glow";
 import ConsoleDemo from "@/components/sugarhigh/home/console-demo";
-import {
-  PaletteProvider,
-  usePalette,
-} from "@/components/sugarhigh/home/console-demo/palette/context";
-import TestComponent from "@/components/sugarhigh/test/typing";
-import Image from "next/image";
+import ShuffleConsolePreviews from "@/components/sugarhigh/home/console-previews";
+import { PaletteProvider } from "@/components/sugarhigh/home/console-demo/palette/context";
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center justify-between ">
+    <main className="flex flex-col items-center justify-between w-full">
       <PaletteProvider>
-        <div className="flex flex-col justify-center space-y-8 text-center">
+        <div className="flex flex-col justify-center space-y-8 text-center w-full">
+          <Glow />
           <div className="space-y-2 mt-16">
             <h1
               className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 py-2 md:py-4 cursor-pointer"
@@ -30,8 +27,11 @@ export default function Home() {
               <b> 1KB</b> after minified and gizpped.
             </p>
           </div>
-          <Glow />
-          <ConsoleDemo />
+
+          <div className="grid place-items-center">
+            <ConsoleDemo />
+            <ShuffleConsolePreviews />
+          </div>
         </div>
       </PaletteProvider>
     </main>

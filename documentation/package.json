@@ -35,6 +35,7 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.2.0",
     "react-scroll-sync": "^0.11.1",
+    "react-use-measure": "^2.1.1",
     "sugar-high": "^0.5.2",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7"

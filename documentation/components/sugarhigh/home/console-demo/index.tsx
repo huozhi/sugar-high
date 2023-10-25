@@ -33,6 +33,7 @@ import { useTextTypingAnimation } from "@/lib/hooks";
 import TokenLogs, { useDebouncedTokenize } from "./debug/token-logs";
 import { ConsoleTerminalDebugProvider } from "./debug/context";
 import CTAArrow from "./cta-arrow";
+import { isDesktop } from "react-device-detect";
 
 type Props = {
   className?: string;
@@ -86,7 +87,10 @@ const ConsoleDemo = ({ className, ...props }: Props) => {
 
   return (
     <ConsoleTerminalDebugProvider>
-      <Card className={cn("w-[600px] backdrop-blur-sm", className)} {...props}>
+      <Card
+        className={cn("w-full max-w-[600px] backdrop-blur-sm", className)}
+        {...props}
+      >
         <div className="border-b">
           <div className="flex h-16 items-center px-4 justify-between">
             <div
@@ -111,7 +115,7 @@ const ConsoleDemo = ({ className, ...props }: Props) => {
             {showCta && (
               <CTAArrow
                 text={"Change Palette"}
-                className="mt-4 -right-[110px]"
+                className="mt-4 -right-[110px] hidden lg:block"
                 arrowColor={selectedPalette.palette.keyword}
                 duration={3}
               />

@@ -15,7 +15,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
-import { GitHubLogoIcon, ArchiveIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon, ArchiveIcon, MarginIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { MobileView, BrowserView } from "react-device-detect";
 import {
@@ -45,9 +45,14 @@ const Header = (props: Props) => {
           <SheetContent side={"left"}>
             <SheetHeader>
               <SheetTitle>
-                <h1 className="text-md font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white/75 to-gray-500 py-2 md:py-4 cursor-pointer mx-4 w-full text-left">
-                  Sugar High
-                </h1>
+                <Link href={"/"}>
+                  <div className="flex items-center gap-2 -translate-x-2">
+                    <MarginIcon className="h-6 w-6" />
+                    <h1 className="text-2xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white/75 to-gray-500 py-2 md:py-4 cursor-pointer w-full text-left">
+                      Sugar High
+                    </h1>
+                  </div>
+                </Link>
               </SheetTitle>
             </SheetHeader>
             <ScrollArea className="relative overflow-hidden my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
