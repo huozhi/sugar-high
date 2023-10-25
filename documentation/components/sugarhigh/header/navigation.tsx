@@ -24,17 +24,17 @@ export const gettingStarted: {
 }[] = [
   {
     title: "Examples",
-    href: "/docs",
+    href: "/docs#examples",
     description: "Component examples built using Sugar High!",
   },
   {
     title: "Installation",
-    href: "/docs/installation",
+    href: "/docs#installation",
     description: "Installation and getting started with the basic usage.",
   },
   {
     title: "Customization",
-    href: "/docs/customization",
+    href: "/docs#customization",
     description: "Create your own customized color palettes.",
   },
 ];
@@ -46,29 +46,29 @@ export const documentation: {
 }[] = [
   {
     title: "Highlighting",
-    href: "/docs/features/highlighting",
+    href: "/docs/features#highlighting",
     description:
       "Utilize the highlight function to convert code to highlighted HTML.",
   },
   {
     title: "Line Numbers",
-    href: "/docs/features/line-numbers",
+    href: "/docs/features#line-numbers",
     description: "Enable line numbers with simple CSS customization.",
   },
   {
     title: "Token Customization",
-    href: "/docs/features/token-customization",
+    href: "/docs/features#token-customization",
     description: "Customize the appearance of different token types using CSS.",
   },
   {
     title: "CSS Class Names",
-    href: "/docs/features/css-class-names",
+    href: "/docs/features#css-class-names",
     description:
       "Utilize custom CSS class names to further customize the output node of each token.",
   },
   {
     title: "Inline Editing",
-    href: "/docs/features/editor",
+    href: "/docs/features#editor",
     description:
       "Set up inline editing to modify code directly within the highlighted output, providing a dynamic, interactive code editing and viewing experience.",
   },
@@ -91,7 +91,7 @@ export function NavigationMenuDemo() {
             <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
               <li className="row-span-3">
                 <NavigationMenuLink asChild>
-                  <a
+                  <Link
                     className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                     href="/"
                   >
@@ -103,7 +103,7 @@ export function NavigationMenuDemo() {
                       Super lightweight syntax highlighter for JSX,
                       <b> 1KB</b> after minified and gizpped.
                     </p>
-                  </a>
+                  </Link>
                 </NavigationMenuLink>
               </li>
               {gettingStarted.map((page) => (
