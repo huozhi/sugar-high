@@ -10,10 +10,10 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex flex-col items-center justify-between ">
       <PaletteProvider>
         <div className="flex flex-col justify-center space-y-8 text-center">
-          <div className="space-y-2">
+          <div className="space-y-2 mt-16">
             <h1
               className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 py-2 md:py-4 cursor-pointer"
               onClick={() =>
@@ -31,8 +31,9 @@ export default function Home() {
             </p>
           </div>
           <Glow />
-          <ConsoleDemo />
-          {/* <TestComponent /> */}
+          <div className="overflow-auto hidden">
+            <ConsoleDemo />
+          </div>
         </div>
       </PaletteProvider>
     </main>

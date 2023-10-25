@@ -14,9 +14,36 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { isMobile } from "react-device-detect";
 import { MarginIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 
-const documentation: { title: string; href: string; description: string }[] = [
+export const gettingStarted: {
+  title: string;
+  href: string;
+  description: string;
+}[] = [
+  {
+    title: "Examples",
+    href: "/docs",
+    description: "Component examples built using Sugar High!",
+  },
+  {
+    title: "Installation",
+    href: "/docs/installation",
+    description: "Installation and getting started with the basic usage.",
+  },
+  {
+    title: "Customization",
+    href: "/docs/customization",
+    description: "Create your own customized color palettes.",
+  },
+];
+
+export const documentation: {
+  title: string;
+  href: string;
+  description: string;
+}[] = [
   {
     title: "Highlighting",
     href: "/docs/features/highlighting",
@@ -79,18 +106,11 @@ export function NavigationMenuDemo() {
                   </a>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/docs" title="Examples">
-                Component examples built using Sugar High!
-              </ListItem>
-              <ListItem href="/docs/installation" title="Installation">
-                Installation and getting started with the basic usage.
-              </ListItem>
-              <ListItem
-                href="/docs/primitives/customization"
-                title="Customization"
-              >
-                Create your own customized color palettes
-              </ListItem>
+              {gettingStarted.map((page) => (
+                <ListItem key={page.href} href={page.href} title={page.title}>
+                  {page.description}
+                </ListItem>
+              ))}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
