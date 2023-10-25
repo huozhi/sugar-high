@@ -22,10 +22,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Preset, usePalette } from "./context";
+import { usePalette } from "./context";
 import { useState } from "react";
 import PaletteCreator from "./creator";
-import { Label } from "@/components/ui/label";
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger

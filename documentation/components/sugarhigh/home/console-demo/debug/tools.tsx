@@ -1,16 +1,10 @@
-import {
-  CircleIcon,
-  StarIcon,
-  StackIcon,
-  CodeIcon,
-} from "@radix-ui/react-icons";
+import { StackIcon, CodeIcon } from "@radix-ui/react-icons";
 import React, { useEffect } from "react";
 import { useConsoleTerminalDebug } from "./context";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";

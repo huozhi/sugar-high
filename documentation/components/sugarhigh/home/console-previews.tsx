@@ -1,22 +1,12 @@
-import { Card, CardContent } from "@/components/ui/card";
-import ShuffleCard, { ListOrderItem } from "@/components/ui/suffle-card";
+import ShuffleCard, { ListOrderItem } from "@/components/ui/shuffle-card";
 import { cn } from "@/lib/utils";
-import {
-  MotionValue,
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-} from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import TerminalConsole from "./console-demo/terminal";
-import { Palette, Preset, usePalette } from "./console-demo/palette/context";
+import { motion, useMotionValue } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Preset, usePalette } from "./console-demo/palette/context";
 import { highlight } from "sugar-high";
 import { ConsoleTerminalDebugProvider } from "./console-demo/debug/context";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { isMobile } from "react-device-detect";
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import useMeasure from "react-use-measure";
 import { Button } from "@/components/ui/button";

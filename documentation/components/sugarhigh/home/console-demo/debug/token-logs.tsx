@@ -5,47 +5,20 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
-import { Separator } from "@/components/ui/separator";
-import {
-  ChevronDownIcon,
-  CircleIcon,
-  CrossCircledIcon,
-  InfoCircledIcon,
-  PlusIcon,
-  StarIcon,
-} from "@radix-ui/react-icons";
+import { CrossCircledIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState, useRef, useEffect, use } from "react";
-import { tokenize, SugarHigh } from "sugar-high";
+import { useState, useRef, useEffect } from "react";
+import { tokenize } from "sugar-high";
 import { cn, debounce } from "@/lib/utils";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Palette, usePalette } from "../palette/context";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Palette, tokenTypes, usePalette } from "../palette/context";
 import DebugToolsCard from "./tools";
 import { useConsoleTerminalDebug } from "./context";
 
@@ -170,8 +143,8 @@ const TokenTableRow: React.FC<TokenTableRowProps> = ({
   }, [isSelected]);
 
   const tokenTypeName =
-    SugarHigh.TokenTypes[tokenType].charAt(0).toUpperCase() +
-    SugarHigh.TokenTypes[tokenType].slice(1);
+    tokenTypes[tokenType].charAt(0).toUpperCase() +
+    tokenTypes[tokenType].slice(1);
 
   return (
     <TableRow
@@ -189,9 +162,8 @@ const TokenTableRow: React.FC<TokenTableRowProps> = ({
           className="border w-full"
           style={{
             borderColor:
-              palette.palette[
-                SugarHigh.TokenTypes[tokenType] as keyof Palette
-              ] + (isSelected ? "FF" : "40"), //Hex 25% Opacity - Not Ideal way to do this :p
+              palette.palette[tokenTypes[tokenType] as keyof Palette] +
+              (isSelected ? "FF" : "40"), //Hex 25% Opacity - Not Ideal way to do this :p
           }}
         >
           <span className="w-full text-center">{tokenTypeName}</span>

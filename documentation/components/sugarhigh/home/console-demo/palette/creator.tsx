@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/popover";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 
 const PaletteCreator = ({ onCancel }: { onCancel: () => void }) => {
   const { addCustomPalette, setSelectedPalette } = usePalette();

@@ -7,21 +7,17 @@ import {
 } from "./navigation";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
 import { GitHubLogoIcon, ArchiveIcon, MarginIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
-import { MobileView, BrowserView } from "react-device-detect";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,

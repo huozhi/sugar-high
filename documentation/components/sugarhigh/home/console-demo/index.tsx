@@ -1,26 +1,13 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  BellIcon,
-  CheckIcon,
-  CopyIcon,
-  CounterClockwiseClockIcon,
-} from "@radix-ui/react-icons";
+"use client";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { CopyIcon, CounterClockwiseClockIcon } from "@radix-ui/react-icons";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn, debounce } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import clipboardCopy from "clipboard-copy";
 import React, { useRef, useState } from "react";
@@ -33,7 +20,6 @@ import { useTextTypingAnimation } from "@/lib/hooks";
 import TokenLogs, { useDebouncedTokenize } from "./debug/token-logs";
 import { ConsoleTerminalDebugProvider } from "./debug/context";
 import CTAArrow from "./cta-arrow";
-import { isDesktop } from "react-device-detect";
 
 type Props = {
   className?: string;

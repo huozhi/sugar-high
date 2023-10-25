@@ -1,4 +1,4 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
+"use client";
 import { cn } from "@/lib/utils";
 import {
   forwardRef,
@@ -9,9 +9,22 @@ import {
   useState,
 } from "react";
 import { Palette, defaultPalette } from "./palette/context";
-import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
-import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
+const DynamicScrollSync = dynamic(
+  () => import("react-scroll-sync").then((mod) => mod.ScrollSync),
+  {
+    ssr: false,
+  }
+);
+
+const DynamicScrollSyncPane = dynamic(
+  () => import("react-scroll-sync").then((mod) => mod.ScrollSyncPane),
+  {
+    ssr: false,
+  }
+);
 import { useConsoleTerminalDebug } from "./debug/context";
+
 interface EditorProps {
   title?: string;
   value?: string;
@@ -90,9 +103,9 @@ const TerminalConsole = forwardRef<TerminalConsoleRef, EditorProps>(
 
     return (
       <>
-        <ScrollSync>
+        <DynamicScrollSync>
           <div className="w-full grid-cols-1 grid h-[300px] relative">
-            <ScrollSyncPane>
+            <DynamicScrollSyncPane>
               <div
                 className="overflow-y-auto overflow-x-hidden scrollbar-thin"
                 ref={scrollAreaRef}
@@ -120,9 +133,9 @@ const TerminalConsole = forwardRef<TerminalConsoleRef, EditorProps>(
                   </pre>
                 </section>
               </div>
-            </ScrollSyncPane>
+            </DynamicScrollSyncPane>
 
-            <ScrollSyncPane>
+            <DynamicScrollSyncPane>
               <textarea
                 ref={textareaRef}
                 className={cn(
@@ -133,9 +146,9 @@ const TerminalConsole = forwardRef<TerminalConsoleRef, EditorProps>(
                 value={text}
                 onChange={onInput}
               ></textarea>
-            </ScrollSyncPane>
+            </DynamicScrollSyncPane>
           </div>
-        </ScrollSync>
+        </DynamicScrollSync>
       </>
     );
   }

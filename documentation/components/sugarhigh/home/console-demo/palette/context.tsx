@@ -1,11 +1,17 @@
-import { Console } from "console";
-import React, {
-  createContext,
-  use,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+"use client";
+import React, { createContext, useContext, useEffect, useState } from "react";
+
+export const tokenTypes = [
+  "identifier",
+  "keyword",
+  "string",
+  "class",
+  "sign",
+  "comment",
+  "break",
+  "space",
+  "jsxliterals",
+];
 
 export type Palette = {
   identifier: string;

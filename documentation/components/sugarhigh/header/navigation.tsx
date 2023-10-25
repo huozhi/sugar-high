@@ -2,9 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-
 import { cn } from "@/lib/utils";
-// import { Icons } from "@/components/icons";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,10 +10,8 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { isMobile } from "react-device-detect";
-import { MarginIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
+import { MarginIcon } from "@radix-ui/react-icons";
 
 export const gettingStarted: {
   title: string;
