@@ -31,9 +31,14 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
-interface PaletteSwitcherProps extends PopoverTriggerProps {}
+interface PaletteSwitcherProps extends PopoverTriggerProps {
+  onClick?: () => void;
+}
 
-export default function PaletteSwitcher({ className }: PaletteSwitcherProps) {
+export default function PaletteSwitcher({
+  className,
+  onClick,
+}: PaletteSwitcherProps) {
   const [open, setOpen] = useState(false);
   const [showNewPaletteDialog, setShowNewPaletteDialog] = useState(false);
   const { palettes, addCustomPalette, selectedPalette, setSelectedPalette } =
@@ -50,6 +55,7 @@ export default function PaletteSwitcher({ className }: PaletteSwitcherProps) {
             aria-label="Select a palette"
             className={cn("w-[200px] justify-between", className)}
             id="palette-switcher"
+            onClick={onClick}
           >
             <div
               className={cn("mr-2 h-5 w-5 rounded-full")}

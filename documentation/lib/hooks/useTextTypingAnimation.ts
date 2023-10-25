@@ -16,7 +16,6 @@ export const useTextTypingAnimation = ({
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    console.log("useEffect triggered");
 
     const typeText = (index: number) => {
       if (index === targetText.length) {

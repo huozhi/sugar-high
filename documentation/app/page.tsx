@@ -31,9 +31,7 @@ export default function Home() {
             </p>
           </div>
           <Glow />
-          <div className="overflow-auto hidden">
-            <ConsoleDemo />
-          </div>
+          <ConsoleDemo />
         </div>
       </PaletteProvider>
     </main>

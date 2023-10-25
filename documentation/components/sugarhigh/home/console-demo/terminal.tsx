@@ -4,12 +4,14 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import { highlight } from "sugar-high";
 import { Palette, defaultPalette } from "./palette/context";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
+import { Button } from "@/components/ui/button";
+import { useConsoleTerminalDebug } from "./debug/context";
 interface EditorProps {
   title?: string;
   value?: string;
@@ -31,26 +33,37 @@ const TerminalConsole = forwardRef<TerminalConsoleRef, EditorProps>(
     const codeRef = useRef<HTMLSpanElement>(null);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
     const [text, setText] = useState(value);
+    const {
+      showEditorTextOnChangeLog,
+      maxCharsPerLine,
+      setMaxCharsPerLine,
+      showMaxCharPerLineLog,
+      showEditorText,
+    } = useConsoleTerminalDebug();
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-    const [maxCharsPerLine, setMaxCharsPerLine] = useState<number | null>(null);
+
+    useEffect(() => {
+      setMaxCharsPerLine(Math.floor(450 / 9));
+    }, []);
 
     const update = (code: string) => {
-      if (maxCharsPerLine) {
-        const lines = code.split("\n");
-        const newLines = lines.map((line) => {
-          if (line.length > maxCharsPerLine) {
-            // Insert line breaks as needed
-            const segments = line.match(
-              new RegExp(`.{1,${maxCharsPerLine}}`, "g")
-            );
-            return segments ? segments.join("\n") : line;
-          }
-          return line;
-        });
-        code = newLines.join("\n");
-        console.log("code", code);
-      }
+      if (showEditorTextOnChangeLog) console.log("Editor:", code);
+      if (showMaxCharPerLineLog)
+        console.log("maxCharsPerLine", maxCharsPerLine); //This is never being triggered
+      const lines = code.split("\n");
+      const newLines = lines.map((line) => {
+        if (line.length > maxCharsPerLine) {
+          // Insert line breaks as needed
+          const segments = line.match(
+            new RegExp(`.{1,${maxCharsPerLine}}`, "g")
+          );
+          return segments ? segments.join("\n") : line;
+        }
+        return line;
+      });
+      code = newLines.join("\n");
+
       const highlighted = highlight(code);
       setText(code);
       onChange(code);
@@ -66,15 +79,9 @@ const TerminalConsole = forwardRef<TerminalConsoleRef, EditorProps>(
       },
     }));
 
-    useEffect(() => {
-      // Calculate maxCharsPerLine based on the scrollArea width
-      if (scrollAreaRef.current) {
-        const width = scrollAreaRef.current.offsetWidth;
-        // Assume each character takes approximately 10px (this is an estimate; adjust as needed)
-        setMaxCharsPerLine(Math.floor(width / 9));
-      }
+    useLayoutEffect(() => {
       update(value ? value : "");
-    }, [value, scrollAreaRef.current]);
+    }, [value]);
 
     const onInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const code = event.target.value || "";
@@ -82,21 +89,18 @@ const TerminalConsole = forwardRef<TerminalConsoleRef, EditorProps>(
     };
 
     return (
-      <ScrollSync>
-        <div className="w-full grid-cols-1 grid h-[300px] relative">
-          <ScrollSyncPane>
-            <div
-              className="overflow-y-auto overflow-x-hidden scrollbar-thin"
-              // ref={scrollAreaRef}s
-            >
-              <section
-                style={{ height: 1000 }}
-                // ref={scrollAreaRef}
-                id="terminal-console"
+      <>
+        <ScrollSync>
+          <div className="w-full grid-cols-1 grid h-[300px] relative">
+            <ScrollSyncPane>
+              <div
+                className="overflow-y-auto overflow-x-hidden scrollbar-thin"
+                ref={scrollAreaRef}
               >
-                <pre className="min-h-[300px] h-full lg:h-[30vh] w-full rounded-md text-left relative">
-                  <style>
-                    {`
+                <section style={{ height: 1000 }} id="terminal-console">
+                  <pre className="min-h-[300px] h-full lg:h-[30vh] w-full rounded-md text-left relative">
+                    <style>
+                      {`
                       ${`
                       .editor {
                         --sh-class: ${palette.class};
@@ -108,84 +112,31 @@ const TerminalConsole = forwardRef<TerminalConsoleRef, EditorProps>(
                         --sh-jsxliterals: ${palette.jsxliterals};
                       }
                       `}`}
-                  </style>
-                  <code
-                    ref={codeRef}
-                    className={cn("mr-2 font-light editor", className)}
-                  />
-                </pre>
-              </section>
-            </div>
-          </ScrollSyncPane>
+                    </style>
+                    <code
+                      ref={codeRef}
+                      className={cn("mr-2 font-light editor", className)}
+                    />
+                  </pre>
+                </section>
+              </div>
+            </ScrollSyncPane>
 
-          <ScrollSyncPane>
-            <textarea
-              ref={textareaRef}
-              className={cn(
-                "absolute top-0 left-0 w-full resize-none h-full font-light text-clip scrollbar-hidden bg-transparent  focus:outline-none selection:text-select selection:bg-select caret-sh-keyword ml-[33px]",
-                false ? "text-transparent" : "text-white/10",
-                className
-              )}
-              value={text}
-              onChange={onInput}
-            ></textarea>
-          </ScrollSyncPane>
-        </div>
-      </ScrollSync>
-      // <ScrollSync>
-      //   <div
-      //     className="w-full grid-cols-1 grid h-[300px] relative"
-      //     id="terminal-console-constraints"
-      //   >
-      //     <ScrollSyncPane>
-      //       <div
-      //         className="overflow-y-auto overflow-x-hidden scrollbar-thin"
-      //         // ref={scrollAreaRef}
-      //       >
-      //         <section style={{ height: 1000 }} id="terminal-console">
-      //           <pre className="min-h-[300px] h-full lg:h-[30vh] w-full rounded-md text-left relative">
-      //             <style>
-      //               {`
-      //                 ${`
-      //                 .editor {
-      //                   --sh-class: ${palette.class};
-      //                   --sh-identifier: ${palette.identifier};
-      //                   --sh-sign: ${palette.sign};
-      //                   --sh-string: ${palette.string};
-      //                   --sh-keyword: ${palette.keyword};
-      //                   --sh-comment: ${palette.comment};
-      //                   --sh-jsxliterals: ${palette.jsxliterals};
-      //                 }
-      //                 `}`}
-      //             </style>
-      //             <code
-      //               ref={codeRef}
-      //               className={cn("mr-2 font-light editor", className)}
-      //             />
-      //           </pre>
-      //         </section>
-      //       </div>
-      //     </ScrollSyncPane>
-
-      //     <ScrollSyncPane>
-      //       <div className="overflow-y-auto overflow-x-hidden scrollbar-hidden absolute top-0 left-0 w-full">
-      //         <section style={{ height: 300 }} className="w-full">
-      //           <textarea
-      //             ref={textareaRef}
-      //             className={cn(
-      //               " absolute top-0 left-0 w-[calc(100%-33px)] resize-none font-light scrollbar-hidden bg-transparent text-clip  focus:outline-none selection:text-select selection:bg-select caret-sh-keyword ml-[33px]",
-      //               false ? "text-transparent" : "text-white/10",
-      //               // "bg-slate-500",
-      //               className
-      //             )}
-      //             value={text}
-      //             onChange={onInput}
-      //           ></textarea>
-      //         </section>
-      //       </div>
-      //     </ScrollSyncPane>
-      //   </div>
-      // </ScrollSync>
+            <ScrollSyncPane>
+              <textarea
+                ref={textareaRef}
+                className={cn(
+                  "absolute top-0 left-0 w-full resize-none h-full font-light text-clip scrollbar-hidden bg-transparent  focus:outline-none selection:text-select selection:bg-select caret-sh-keyword ml-[33px]",
+                  showEditorText ? "text-white/10" : "text-transparent",
+                  className
+                )}
+                value={text}
+                onChange={onInput}
+              ></textarea>
+            </ScrollSyncPane>
+          </div>
+        </ScrollSync>
+      </>
     );
   }
 );

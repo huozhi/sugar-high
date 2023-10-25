@@ -20,7 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 
 const PaletteCreator = ({ onCancel }: { onCancel: () => void }) => {
-  const { addCustomPalette } = usePalette();
+  const { addCustomPalette, setSelectedPalette } = usePalette();
   const { toast } = useToast();
 
   // State to hold the new palette name
