@@ -30,8 +30,8 @@ const customizableColors = Object.entries(SugarHigh.TokenTypes)
 .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
   .sort((a, b) => a - b)
 
-const defaultLiveCode = `\
-export default function App() {
+const defaultLiveCode =
+`export default function App() {
   return <p>hello world</p>
 }`
 

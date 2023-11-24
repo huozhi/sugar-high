@@ -169,15 +169,15 @@ describe('jsx', () => {
   it('parse fold jsx', () => {
     const tokens = tokenize(`// jsx
     const element = (
-      <div>Hello World <Food /><div/>
+      <div>Hello World <Food /></div>
     )`);
     expect(extractTokenValues(tokens)).toEqual([
-      "// jsx", "const", "element", "=", "(", "<", "div", ">", "Hello World", "<", "Food", "/>", "<", "div", "/>", ")"
+      "// jsx", "const", "element", "=", "(", "<", "div", ">", "Hello World", "<", "Food", "/>", "</", "div", ">", ")"
     ])
     expect(extractTokenArray(tokens)).toEqual([
       ["// jsx", "comment"], ["const", "keyword"], ["element", "identifier"], ["=", "sign"], ["(", "sign"], ["<", "sign"],
       ["div", "identifier"], [">", "sign"], ["Hello World", "jsxliterals"], ["<", "sign"], ["Food", "identifier"],
-      ["/>", "sign"], ["<", "sign"], ["div", "identifier"], ["/>", "sign"], ["", "jsxliterals"], [")", "jsxliterals"]
+      ["/>", "sign"], ["</", "sign"], ["div", "identifier"], [">", "sign"], [")", "sign"]
     ])
   })
 
@@ -259,6 +259,32 @@ describe('jsx', () => {
       ["p", "identifier"], [">", "sign"], ["</", "sign"], ["div", "identifier"], [">", "sign"], ["<", "sign"],
       ["p", "identifier"], [">", "sign"], ["Text 2", "jsxliterals"], ["</", "sign"], ["p", "identifier"], [">", "sign"],
       ["</", "sign"], [">", "sign"]
+    ])
+  })
+
+  it('should not affect the function param after closed jsx tag', () => {
+    // issue: (str was treated as string
+    const code =
+      `<a k={v} />
+      function p(str) {}
+      `
+    const tokens = tokenize(code)
+    expect(extractTokenArray(tokens)).toEqual([
+      ['<', 'sign'],
+      ['a', 'identifier'],
+      ['k', 'identifier'],
+      ['=', 'sign'],
+      ['{', 'sign'],
+      ['v', 'identifier'],
+      ['}', 'sign'],
+      ['/>', 'sign'],
+      ['function', 'keyword'],
+      ['p', 'identifier'],
+      ['(', 'sign'],
+      ['str', 'identifier'],
+      [')', 'sign'],
+      ['{', 'sign'],
+      ['}', 'sign'],
     ])
   })
 })
