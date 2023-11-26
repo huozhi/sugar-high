@@ -67,10 +67,12 @@ function useDefaultLiveCode(){
   // Doesn't need to be reactive since we only use it on first load.
   const defaultLiveCodeRef = useRef('')
 
-  if(!defaultLiveCodeRef.current && typeof window !== undefined){
-    defaultLiveCodeRef.current =
-      window.localStorage.getItem(DEFAULT_LIVE_CODE_KEY) || DEFAULT_LIVE_CODE;
-  }
+  useEffect(()=>{
+    if (!defaultLiveCodeRef.current) {
+      defaultLiveCodeRef.current =
+        window.localStorage.getItem(DEFAULT_LIVE_CODE_KEY) || DEFAULT_LIVE_CODE;
+    }
+  },[])
   
   const setDefaultLiveCode = (code) =>
     window.localStorage.setItem(DEFAULT_LIVE_CODE_KEY, code);
