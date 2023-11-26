@@ -30,11 +30,6 @@ const customizableColors = Object.entries(SugarHigh.TokenTypes)
 .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
   .sort((a, b) => a - b)
 
-const defaultLiveCode =
-`export default function App() {
-  return <p>hello world</p>
-}`
-
 function useTextTypingAnimation(targetText, delay, onReady) {
   const [text, setText] = useState('')
   const [isTyping, setIsTyping] = useState(true)
@@ -64,12 +59,35 @@ function useTextTypingAnimation(targetText, delay, onReady) {
 }
 
 
+const DEFAULT_LIVE_CODE = `export default function App() {
+  return <p>hello world</p>
+}`;
+const DEFAULT_LIVE_CODE_KEY = 'defaultLiveCode'
+function useDefaultLiveCode(){
+  // Doesn't need to be reactive since we only use it on first load.
+  const defaultLiveCodeRef = useRef('')
+
+  if(!defaultLiveCodeRef.current && typeof window !== undefined){
+    defaultLiveCodeRef.current =
+      window.localStorage.getItem(DEFAULT_LIVE_CODE_KEY) || DEFAULT_LIVE_CODE;
+  }
+  
+  const setDefaultLiveCode = (code) =>
+    window.localStorage.setItem(DEFAULT_LIVE_CODE_KEY, code);
+
+  return {
+    defaultLiveCode:defaultLiveCodeRef.current,
+    setDefaultLiveCode
+  }
+}
+
 export default function LiveEditor() {
   const editorRef = useRef()
   const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
   const isDebug = process.env.NODE_ENV === 'development'
 
-  const { text: liveCode, setText: setLiveCode } = useTextTypingAnimation(defaultLiveCode, 1000, () => {
+  const {defaultLiveCode, setDefaultLiveCode} = useDefaultLiveCode()
+  const { text: liveCode, setText: setLiveCode, isTyping } = useTextTypingAnimation(defaultLiveCode, 1000, () => {
     if (editorRef.current) {
       // focus needs to be delayed
       setTimeout(() => {
@@ -110,6 +128,7 @@ export default function LiveEditor() {
           value={liveCode}
           onChange={(newCode) => {
             setLiveCode(newCode)
+            !isTyping && setDefaultLiveCode(newCode)
             debouncedTokenize(newCode)
           }}
         />
