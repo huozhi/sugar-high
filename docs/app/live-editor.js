@@ -59,7 +59,8 @@ function useTextTypingAnimation(targetText, delay, onReady) {
 }
 
 
-const DEFAULT_LIVE_CODE = `export default function App() {
+const DEFAULT_LIVE_CODE = 
+`export default function App() {
   return <p>hello world</p>
 }`;
 const DEFAULT_LIVE_CODE_KEY = 'defaultLiveCode'
