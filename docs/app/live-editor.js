@@ -30,6 +30,11 @@ const customizableColors = Object.entries(SugarHigh.TokenTypes)
 .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
   .sort((a, b) => a - b)
 
+const DEFAULT_LIVE_CODE =
+`export default function App() {
+  return <p>hello world</p>
+}`
+
 function useTextTypingAnimation(targetText, delay, onReady) {
   const [text, setText] = useState('')
   const [isTyping, setIsTyping] = useState(true)
@@ -58,30 +63,25 @@ function useTextTypingAnimation(targetText, delay, onReady) {
   return { text, isTyping, setText }
 }
 
-
-const DEFAULT_LIVE_CODE = 
-`export default function App() {
-  return <p>hello world</p>
-}`;
-const DEFAULT_LIVE_CODE_KEY = 'defaultLiveCode'
+const DEFAULT_LIVE_CODE_KEY = '$saved-live-code'
 function useDefaultLiveCode() {
-  const [defaultLiveCode, _setDefaultLiveCode] = useState("");
+  const [defaultCode, setCode] = useState('')
 
   useEffect(() => {
-    if (defaultLiveCode) return;
+    if (defaultCode) return
 
-    _setDefaultLiveCode(
+    setCode(
       window.localStorage.getItem(DEFAULT_LIVE_CODE_KEY) || DEFAULT_LIVE_CODE
-    );
-  }, [defaultLiveCode]);
+    )
+  }, [defaultCode])
 
   const setDefaultLiveCode = (code) =>
-    window.localStorage.setItem(DEFAULT_LIVE_CODE_KEY, code);
+    window.localStorage.setItem(DEFAULT_LIVE_CODE_KEY, code)
 
   return {
-    defaultLiveCode,
+    defaultLiveCode: defaultCode,
     setDefaultLiveCode,
-  };
+  }
 }
 
 export default function LiveEditor() {
@@ -89,7 +89,7 @@ export default function LiveEditor() {
   const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
   const isDebug = process.env.NODE_ENV === 'development'
 
-  const {defaultLiveCode, setDefaultLiveCode} = useDefaultLiveCode()
+  const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode()
   const { text: liveCode, setText: setLiveCode, isTyping } = useTextTypingAnimation(defaultLiveCode, 1000, () => {
     if (editorRef.current) {
       // focus needs to be delayed
