@@ -64,24 +64,24 @@ const DEFAULT_LIVE_CODE =
   return <p>hello world</p>
 }`;
 const DEFAULT_LIVE_CODE_KEY = 'defaultLiveCode'
-function useDefaultLiveCode(){
-  // Doesn't need to be reactive since we only use it on first load.
-  const defaultLiveCodeRef = useRef('')
+function useDefaultLiveCode() {
+  const [defaultLiveCode, _setDefaultLiveCode] = useState("");
 
-  useEffect(()=>{
-    if (!defaultLiveCodeRef.current) {
-      defaultLiveCodeRef.current =
-        window.localStorage.getItem(DEFAULT_LIVE_CODE_KEY) || DEFAULT_LIVE_CODE;
-    }
-  },[])
-  
+  useEffect(() => {
+    if (defaultLiveCode) return;
+
+    _setDefaultLiveCode(
+      window.localStorage.getItem(DEFAULT_LIVE_CODE_KEY) || DEFAULT_LIVE_CODE
+    );
+  }, [defaultLiveCode]);
+
   const setDefaultLiveCode = (code) =>
     window.localStorage.setItem(DEFAULT_LIVE_CODE_KEY, code);
 
   return {
-    defaultLiveCode:defaultLiveCodeRef.current,
-    setDefaultLiveCode
-  }
+    defaultLiveCode,
+    setDefaultLiveCode,
+  };
 }
 
 export default function LiveEditor() {
