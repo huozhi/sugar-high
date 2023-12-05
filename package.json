@@ -1,6 +1,6 @@
 {
   "name": "sugar-high",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "type": "module",
   "types": "./index.d.mts",
   "exports": {
