@@ -2,16 +2,14 @@
   "name": "sugar-high",
   "version": "0.5.6",
   "type": "module",
-  "types": "./index.d.mts",
+  "types": "./lib/index.d.ts",
   "exports": {
-    "types": "./index.d.mts",
+    "types": "./lib/index.d.ts",
     "default": "./lib/index.mjs"
   },
   "description": "Super lightweight JSX syntax highlighter",
   "files": [
-    "lib",
-    "index.d.mts",
-    "*.md"
+    "lib"
   ],
   "license": "MIT",
   "scripts": {
