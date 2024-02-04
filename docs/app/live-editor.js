@@ -30,10 +30,16 @@ const customizableColors = Object.entries(SugarHigh.TokenTypes)
 .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
   .sort((a, b) => a - b)
 
-const DEFAULT_LIVE_CODE =
-`export default function App() {
-  return <p>hello world</p>
-}`
+const DEFAULT_LIVE_CODE = `\
+export default function App() {
+  return (
+    <>
+      <div ref={refs.setReference} />
+      <div ref={refs.setFloating} style={floatingStyles} />
+    </>
+  )
+}
+`
 
 function useTextTypingAnimation(targetText, delay, onReady) {
   const [text, setText] = useState('')
