@@ -144,6 +144,7 @@ textarea {
   right: 0;
   margin: auto;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
+  border-radius: 2px;
 }
 
 .carousel {
@@ -186,6 +187,7 @@ code {
   counter-reset: sh-line-number;
 }
 .codice-editor code {
+  display: block;
   padding-left: 48px;
   min-height: 400px;
   width: 100%;
@@ -257,7 +259,9 @@ pre code .sh__line::before {
   height: 30px;
   margin-right: 8px;
 }
-
+.sh__line {
+  display: flex;
+}
 .live-editor .sh__line {
   color: #333;
 }

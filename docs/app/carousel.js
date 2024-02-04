@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react'
 import { Editor } from 'codice'
 import { highlight } from 'sugar-high'
 
+/**
+ * @type {[string, string, { highlightedLines: number[] }][]} 
+ * @const
+ */
 const EXAMPLE_PAIRS = [
   [
     'install.js',
@@ -15,7 +19,10 @@ import { highlight } from 'sugar-high'
 const html = highlight(code)
 
 document.querySelector('pre > code').innerHTML = html
-  `
+`,
+    {
+      highlightedLines: [5]
+    },
   ],
 
   [
@@ -37,7 +44,11 @@ const element = (
     </h1>
   </>
 )
-  `],
+`,
+    {
+      highlightedLines: []
+    }
+  ],
   [
     `hello.js`,
   `\
@@ -51,7 +62,11 @@ function* foo(index) {
     return void 0
   } while (index < 2)
 }
-  `],
+`,
+    {
+      highlightedLines: []
+    }
+  ],
 
   [
     `klass.js`,
@@ -79,7 +94,11 @@ class SuperArray extends Array {
     ).concat(value)
   }
 }
-  `],
+`,
+    {
+      highlightedLines: [7]
+    }
+  ],
 
   [
     `regex.js`,
@@ -95,42 +114,52 @@ export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
 // Invalid calculation: regex and numbers
 const _in = 123 - /555/ + 444;
 const _iu = /* evaluate */ (19) / 234 + 56 / 7;
-  `]
-  ].map(([name, code]) => [name, code.trim()])
+`,
+    {
+      highlightedLines: [1]
+    }
+  ]
+]
 
-  function CodeFrame({ code, title = 'Untitled' }) {
-    return (
-      <div className='code-frame'>
-        <div className='code-header'>
-          <div className='code-controls'>
-            <div className='code-control' />
-            <div className='code-control' />
-            <div className='code-control' />
-          </div>
-          <div className='code-title'>{title}</div>
+function CodeFrame({ code, title = 'Untitled', highlightedLines = [] }) {
+  return (
+    <div className='code-frame'>
+      <style>
+        {highlightedLines.map(line => 
+          `.sh__line:nth-child(${line}) { background: rgba(0,0,0,.2); }`)
+          .join('\n') + '\n'
+        }
+      </style>
+      <div className='code-header'>
+        <div className='code-controls'>
+          <div className='code-control' />
+          <div className='code-control' />
+          <div className='code-control' />
         </div>
-
-        <Editor
-          className='codice-editor'
-          highlight={highlight}
-          value={code}
-          disabled
-        />
+        <div className='code-title'>{title}</div>
       </div>
-    )
-  }
+
+      <Editor
+        className='codice-editor'
+        highlight={highlight}
+        value={code}
+        disabled
+      />
+    </div>
+  )
+}
 
 
 export default function Carousel() {
   const examples = EXAMPLE_PAIRS
   const [selected, setSelected] = useState(Math.ceil(examples.length / 2))
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSelected((selected + 1) % examples.length)
-    } , 2500)
-    return () => clearInterval(timer)
-  }, [selected])
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setSelected((selected + 1) % examples.length)
+  //   } , 2500)
+  //   return () => clearInterval(timer)
+  // }, [selected])
 
   return (
     <div className="carousel max-width-container">
@@ -194,9 +223,9 @@ export default function Carousel() {
         <p>Code highlight examples built with sugar-high</p>
       </div>
       <div className="cards">
-        {examples.map(([name, code], i) => (
+        {examples.map(([name, code, config], i) => (
           <label key={i} htmlFor={`item-${i}`} className={`code-label ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`} id={`code-${i}`}>
-            <CodeFrame code={code} title={name} />
+            <CodeFrame code={code} title={name} highlightedLines={config.highlightedLines} />
           </label>
         ))}
       </div>
