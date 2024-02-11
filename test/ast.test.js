@@ -99,7 +99,7 @@ describe('jsx', () => {
     expect(extractTokenValues(tokens)).toEqual([
       "// jsx", "const", "element", "=", "(", "<", ">", "<", "Food", "season", "=", "{", "{", "sault",
       ":", "<", "p", "a", "=", "{", "[", "{", "}", "]", "}", "/>", "}", "}", ">", "</", "Food", ">", "{",
-      "/* jsx comment */", "}", "<", "h1", "className", "=", '"', 'title', '"', "data", "-", "title", "=", '"', 'true', '"',
+      "/* jsx comment */", "}", "<", "h1", "className", "=", '"', 'title', '"', "data-", "title", "=", '"', 'true', '"',
       ">", "Read more", "{", "'", "'", "}", "<", "Link", "href", "=", '"', '/posts/first-post', '"', ">", "<", "a", ">",
       "this page! -", "{", "Date", ".", "now", "(", ")", "}", "</", "a", ">", "</", "Link", ">", "</", "h1", ">",
       "</", ">", ")",
@@ -112,7 +112,7 @@ describe('jsx', () => {
       ["{", "sign"], ["[", "sign"], ["{", "sign"], ["}", "sign"], ["]", "sign"], ["}", "sign"], ["/>", "sign"],
       ["}", "sign"], ["}", "sign"], [">", "sign"], ["</", "sign"], ["Food", "entity"], [">", "sign"], ["{", "sign"],
       ["/* jsx comment */", "comment"], ["}", "sign"], ["<", "sign"], ["h1", "entity"], ["className", "property"],
-      ["=", "sign"], ["\"", "string"], ["title", "string"], ["\"", "string"], ["data", "identifier"], ["-", "sign"],
+      ["=", "sign"], ["\"", "string"], ["title", "string"], ["\"", "string"], ["data-", "property"],
       ["title", "property"], ["=", "sign"], ["\"", "string"], ["true", "string"], ["\"", "string"], [">", "sign"],
       ["", "jsxliterals"], ["Read more", "jsxliterals"], ["{", "sign"], ["'", "string"], ["", "string"], ["'", "string"],
       ["}", "sign"], ["", "jsxliterals"], ["", "jsxliterals"], ["<", "sign"], ["Link", "entity"], ["href", "property"],
@@ -211,11 +211,10 @@ describe('jsx', () => {
     const code = '<h1 data-title="true" />'
     const tokens = tokenize(code)
     expect(extractTokenValues(tokens)).toEqual([
-      '<', 'h1', 'data', '-', 'title', '=', '"', 'true', '"', '/>',
+      '<', 'h1', 'data-', 'title', '=', '"', 'true', '"', '/>',
     ])
     expect(extractTokenArray(tokens)).toEqual([
-      // FIXME: data-property -> property
-      ["<", "sign"], ["h1", "entity"], ["data", "identifier"], ["-", "sign"], ["title", "property"], ["=", "sign"],
+      ["<", "sign"], ["h1", "entity"], ["data-", "property"], ["title", "property"], ["=", "sign"],
       ["\"", "string"], ["true", "string"], ["\"", "string"], ["/>", "sign"]
     ])
 
