@@ -226,8 +226,8 @@ describe('jsx', () => {
       '<', 'svg', 'color', '=', '"', 'null', '"', 'height', '=', '"', '24', '"', '/>',
     ])
     expect(extractTokenArray(tokens2)).toEqual([
-      ["<", "sign"], ["svg", "identifier"], ["color", "identifier"], ["=", "sign"], ["\"", "string"], ["null", "string"],
-      ["\"", "string"], ["height", "identifier"], ["=", "sign"], ["\"", "string"], ["24", "string"], ["\"", "string"], ["/>", "sign"]
+      ["<", "sign"], ["svg", "entity"], ["color", "property"], ["=", "sign"], ["\"", "string"], ["null", "string"],
+      ["\"", "string"], ["height", "property"], ["=", "sign"], ["\"", "string"], ["24", "string"], ["\"", "string"], ["/>", "sign"]
     ])
   })
 
@@ -364,7 +364,8 @@ describe('regex', () => {
 
   it('multi line regex tests', () => {
     const code1 =
-      `/reg/.test('str')[]\n` +
+      `/reg/.test('str')\n` +
+      `[]\n` +
       `/reg/.test('str')`
 
     // '[]' consider as a end of the expression
