@@ -35,18 +35,24 @@ Then make your own theme with customized colors by token type and put in global 
  * keyword
  * string
  * Class, number and null
+ * property
+ * entity
+ * jsx literals
  * sign
  * comment
- * jsxliterals
+ * break
+ * space
  */
 :root {
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
   --sh-sign: #8996a3;
+  --sh-property: #0550ae;
+  --sh-entity: #249a97;
+  --sh-jsxliterals: #6266d1;
   --sh-string: #00a99a;
   --sh-keyword: #f47067;
   --sh-comment: #a19595;
-  --sh-jsxliterals: #6266d1;
 }
 ```
 
@@ -67,6 +73,16 @@ pre code {
   margin-right: 24px;
   text-align: right;
   color: #a4a4a4;
+}
+```
+
+### Line Highlight
+
+Use `.sh__line:nth-child(<line number>)` to highlight specific line.
+
+```css
+.sh__line:nth-child(5) {
+  background: #f5f5f5;
 }
 ```
 
