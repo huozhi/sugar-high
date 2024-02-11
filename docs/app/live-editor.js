@@ -36,10 +36,11 @@ const DEFAULT_LIVE_CODE = `\
 export default function App() {
   return (
     <>
-      <div>
-        <span>text</span>
-      </div>
-      <div ref={refs.setFloating} style={styles} />
+      <h1>
+        Hello
+        <span className="small"> world</span>
+      </h1>
+      <div style={styles.bar} />
     </>
   )
 }
@@ -47,18 +48,25 @@ export default function App() {
 `
 
 function useTextTypingAnimation(targetText, delay, onReady) {
+  
   const [text, setText] = useState('')
   const [isTyping, setIsTyping] = useState(true)
   const animationDuration = delay / targetText.length
   let timeoutId = useRef(null)
   
   useEffect(() => {
-    if (isTyping) {
-      if (text.length < targetText.length && !timeoutId.current) {
+    if (isTyping && targetText.length) {
+      if (text.length < targetText.length) {
+        const nextText = targetText.substring(0, text.length + 1)
+        if (timeoutId.current) {
+          clearTimeout(timeoutId.current)
+          timeoutId.current = null
+        }
         timeoutId.current = setTimeout(() => {
-          setText(targetText.substring(0, text.length + 1))
+          setText(nextText)
         }, animationDuration)
-      } else if (text.length < targetText.length) {
+
+      } else if (text.length === targetText.length) {
         setIsTyping(false)
         onReady()
       }
@@ -69,7 +77,7 @@ function useTextTypingAnimation(targetText, delay, onReady) {
         timeoutId.current = null
       }
     }
-  }, [targetText, text])
+  }, [targetText, text, timeoutId.current])
 
   return { text, isTyping, setText }
 }
@@ -144,8 +152,8 @@ export default function LiveEditor() {
           value={liveCode}
           onChange={(newCode) => {
             setLiveCode(newCode)
-            !isTyping && setDefaultLiveCode(newCode)
             debouncedTokenize(newCode)
+            if (!isTyping) setDefaultLiveCode(newCode)
           }}
         />
 
