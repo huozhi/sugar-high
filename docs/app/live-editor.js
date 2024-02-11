@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { highlight, tokenize, SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
 
@@ -8,10 +8,11 @@ const defaultColorPlateColors = {
   class: '#8d85ff',
   identifier: '#354150',
   sign: '#8996a3',
+  entity: '#249a97',
+  jsxliterals: '#bf7db6',
   string: '#00a99a',
   keyword: '#f47067',
   comment: '#a19595',
-  jsxliterals: '#bf7db6',
   break: '#ffffff',
   space: '#ffffff',
 }
@@ -34,37 +35,36 @@ const DEFAULT_LIVE_CODE = `\
 export default function App() {
   return (
     <>
-      <div ref={refs.setReference} />
+      <div>
+        <span>text</span>
+      </div>
       <div ref={refs.setFloating} style={floatingStyles} />
     </>
   )
 }
+
 `
 
 function useTextTypingAnimation(targetText, delay, onReady) {
   const [text, setText] = useState('')
   const [isTyping, setIsTyping] = useState(true)
+  
+  const typeText = useCallback((index) => {
+    if (text.length === targetText.length) {
+      setIsTyping(false)
+      onReady()
+      return
+    }
 
+    setText(targetText.substring(0, index + 1))
+    setTimeout(() => typeText(index + 1), delay / targetText.length)
+  }, [targetText, text])
+  
   useEffect(() => {
-    let timeoutId
-
-    const typeText = (index) => {
-      if (index === targetText.length) {
-        setIsTyping(false)
-        onReady()
-        return
-      }
-
-      setText(targetText.substring(0, index + 1))
-      timeoutId = setTimeout(() => typeText(index + 1), delay / targetText.length)
+    if (!text.length) {
+      typeText(0)
     }
-
-    typeText(0)
-
-    return () => {
-      clearTimeout(timeoutId)
-    }
-  }, [targetText, delay])
+  }, [targetText, text])
 
   return { text, isTyping, setText }
 }
@@ -121,6 +121,7 @@ export default function LiveEditor() {
           --sh-class: ${colorPlateColors.class};
           --sh-identifier: ${colorPlateColors.identifier};
           --sh-sign: ${colorPlateColors.sign};
+          --sh-entity: ${colorPlateColors.entity};
           --sh-string: ${colorPlateColors.string};
           --sh-keyword: ${colorPlateColors.keyword};
           --sh-comment: ${colorPlateColors.comment};
