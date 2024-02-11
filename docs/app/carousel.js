@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Editor } from 'codice'
 import { highlight } from 'sugar-high'
 
-const EXAMPLE_PAIRS =[]; [
+const EXAMPLE_PAIRS = [
   [
     'install.js',
     `\

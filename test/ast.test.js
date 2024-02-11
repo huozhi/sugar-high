@@ -107,10 +107,9 @@ describe('jsx', () => {
     expect(extractTokenArray(tokens)).toEqual([
       ["// jsx", "comment"], ["const", "keyword"], ["element", "identifier"], ["=", "sign"], ["(", "sign"], ["<", "sign"],
       [">", "sign"], ["<", "sign"], ["Food", "entity"], ["season", "property"], ["=", "sign"], ["{", "sign"],
-      ["{", "sign"], ["sault", "identifier"], [":", "sign"], ["<", "sign"], ["p", "entity"], 
-      // FIXME: a is a property
-      ["a", "identifier"],
-      ["=", "sign"], ["{", "sign"], ["[", "sign"], ["{", "sign"], ["}", "sign"], ["]", "sign"], ["}", "sign"], ["/>", "sign"],
+      ["{", "sign"], ["sault", "identifier"], [":", "sign"], 
+      ["<", "sign"], ["p", "entity"], ["a", "property"], ["=", "sign"], 
+      ["{", "sign"], ["[", "sign"], ["{", "sign"], ["}", "sign"], ["]", "sign"], ["}", "sign"], ["/>", "sign"],
       ["}", "sign"], ["}", "sign"], [">", "sign"], ["</", "sign"], ["Food", "entity"], [">", "sign"], ["{", "sign"],
       ["/* jsx comment */", "comment"], ["}", "sign"], ["<", "sign"], ["h1", "entity"], ["className", "property"],
       ["=", "sign"], ["\"", "string"], ["title", "string"], ["\"", "string"], ["data", "identifier"], ["-", "sign"],
@@ -275,7 +274,7 @@ describe('jsx', () => {
     expect(extractTokenArray(tokens)).toEqual([
       ['<', 'sign'],
       ['a', 'entity'],
-      ['k', 'identifier'],
+      ['k', 'property'],
       ['=', 'sign'],
       ['{', 'sign'],
       ['v', 'identifier'],
@@ -288,6 +287,22 @@ describe('jsx', () => {
       [')', 'sign'],
       ['{', 'sign'],
       ['}', 'sign'],
+    ])
+  })
+
+  it('should handle object spread correctly', () => {
+    const code = `<Component {...props} />`
+    const tokens = tokenize(code)
+    expect(extractTokenArray(tokens)).toEqual([
+      ['<', 'sign'],
+      ['Component', 'entity'],
+      ['{', 'sign'],
+      ['.', 'sign'],
+      ['.', 'sign'],
+      ['.', 'sign'],
+      ['props', 'identifier'],
+      ['}', 'sign'],
+      ['/>', 'sign'],
     ])
   })
 })
