@@ -187,7 +187,8 @@ code {
   counter-reset: sh-line-number;
 }
 .codice-editor code {
-  display: block;
+  display: flex !important;
+  flex-direction: column;
   padding-left: 48px;
   min-height: 400px;
   width: 100%;
@@ -260,7 +261,7 @@ pre code .sh__line::before {
   margin-right: 8px;
 }
 .sh__line {
-  display: flex;
+  display: block;
 }
 .live-editor .sh__line {
   color: #333;

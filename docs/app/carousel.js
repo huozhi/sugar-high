@@ -116,17 +116,17 @@ const _in = 123 - /555/ + 444;
 const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 `,
     {
-      highlightedLines: [1]
+      highlightedLines: [9]
     }
   ]
 ]
 
-function CodeFrame({ code, title = 'Untitled', highlightedLines = [] }) {
+function CodeFrame({ code, title = 'Untitled', index, highlightedLines = [] }) {
   return (
     <div className='code-frame'>
       <style>
         {highlightedLines.map(line => 
-          `.sh__line:nth-child(${line}) { background: rgba(0,0,0,.2); }`)
+          `.code-label--${index} .code-frame .sh__line:nth-child(${line}) { background: rgba(0,0,0,.1); }`)
           .join('\n') + '\n'
         }
       </style>
@@ -154,12 +154,12 @@ export default function Carousel() {
   const examples = EXAMPLE_PAIRS
   const [selected, setSelected] = useState(Math.ceil(examples.length / 2))
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setSelected((selected + 1) % examples.length)
-  //   } , 2500)
-  //   return () => clearInterval(timer)
-  // }, [selected])
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSelected((selected + 1) % examples.length)
+    } , 2500)
+    return () => clearInterval(timer)
+  }, [selected])
 
   return (
     <div className="carousel max-width-container">
@@ -224,8 +224,8 @@ export default function Carousel() {
       </div>
       <div className="cards">
         {examples.map(([name, code, config], i) => (
-          <label key={i} htmlFor={`item-${i}`} className={`code-label ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`} id={`code-${i}`}>
-            <CodeFrame code={code} title={name} highlightedLines={config.highlightedLines} />
+          <label key={i} htmlFor={`item-${i}`} className={`code-label code-label--${i} ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`} id={`code-${i}`}>
+            <CodeFrame code={code} title={name} index={i} highlightedLines={config.highlightedLines} />
           </label>
         ))}
       </div>
