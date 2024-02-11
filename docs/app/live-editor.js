@@ -9,6 +9,7 @@ const defaultColorPlateColors = {
   identifier: '#354150',
   sign: '#8996a3',
   entity: '#249a97',
+  property: '#0550ae',
   jsxliterals: '#bf7db6',
   string: '#00a99a',
   keyword: '#f47067',
@@ -122,6 +123,7 @@ export default function LiveEditor() {
           --sh-identifier: ${colorPlateColors.identifier};
           --sh-sign: ${colorPlateColors.sign};
           --sh-entity: ${colorPlateColors.entity};
+          --sh-property: ${colorPlateColors.property};
           --sh-string: ${colorPlateColors.string};
           --sh-keyword: ${colorPlateColors.keyword};
           --sh-comment: ${colorPlateColors.comment};
