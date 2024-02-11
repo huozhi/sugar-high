@@ -91,7 +91,7 @@ input[type="checkbox"]:checked {
   background-color: #f6f6f6;
   border: none;
   font-size: 16px;
-  line-height: 1.25em;
+  line-height: 1.5em;
   caret-color: #333;
   outline: none;
   scrollbar-width: none;
@@ -223,7 +223,7 @@ pre code .sh__line::before {
 
 .codice-editor code,
 .codice-editor textarea {
-  padding: 24px 48px;
+  padding: 24px 12px 24px 48px;
 }
 
 .live-editor__color {
@@ -262,7 +262,6 @@ pre code .sh__line::before {
 }
 .sh__line {
   display: block;
-  line-height: 1.5em;
 }
 .live-editor .sh__line {
   color: #333;
