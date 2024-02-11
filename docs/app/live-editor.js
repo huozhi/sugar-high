@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { highlight, tokenize, SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
 
@@ -39,7 +39,7 @@ export default function App() {
       <div>
         <span>text</span>
       </div>
-      <div ref={refs.setFloating} style={floatingStyles} />
+      <div ref={refs.setFloating} style={styles} />
     </>
   )
 }
