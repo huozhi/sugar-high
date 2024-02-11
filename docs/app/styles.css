@@ -160,10 +160,12 @@ textarea {
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
   --sh-sign: #8996a3;
+  --sh-property: #0550ae;
+  --sh-entity: #249a97;
+  --sh-jsxliterals: #6266d1;
   --sh-string: #00a99a;
   --sh-keyword: #f47067;
   --sh-comment: #a19595;
-  --sh-jsxliterals: #6266d1;
   --editor-background-color: transparent;
 
   position: relative;
@@ -185,7 +187,7 @@ code {
 }
 .codice-editor code {
   padding-left: 48px;
-  min-height: 360px;
+  min-height: 400px;
   width: 100%;
 }
 
@@ -260,25 +262,7 @@ pre code .sh__line::before {
   color: #333;
 }
 
-.live-editor-section .live-editor__color__item__indicator--class {
-  background-color: currentColor;
-}
-.live-editor-section .live-editor__color__item__indicator--identifier {
-  background-color: currentColor;
-}
-.live-editor-section .live-editor__color__item__indicator--sign {
-  background-color: currentColor;
-}
-.live-editor-section .live-editor__color__item__indicator--string {
-  background-color: currentColor;
-}
-.live-editor-section .live-editor__color__item__indicator--keyword {
-  background-color: currentColor;
-}
-.live-editor-section .live-editor__color__item__indicator--comment {
-  background-color: currentColor;
-}
-.live-editor-section .live-editor__color__item__indicator--jsxliterals {
+.live-editor-section .live-editor__color__item__indicator {
   background-color: currentColor;
 }
 

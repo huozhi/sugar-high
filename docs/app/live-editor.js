@@ -8,10 +8,12 @@ const defaultColorPlateColors = {
   class: '#8d85ff',
   identifier: '#354150',
   sign: '#8996a3',
+  entity: '#6eafad',
+  property: '#4e8fdf',
+  jsxliterals: '#bf7db6',
   string: '#00a99a',
   keyword: '#f47067',
   comment: '#a19595',
-  jsxliterals: '#bf7db6',
   break: '#ffffff',
   space: '#ffffff',
 }
@@ -27,38 +29,55 @@ function debounce(func, timeout = 200){
 }
 
 const customizableColors = Object.entries(SugarHigh.TokenTypes)
-.filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
+  .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
   .sort((a, b) => a - b)
 
-const DEFAULT_LIVE_CODE =
-`export default function App() {
-  return <p>hello world</p>
-}`
+const DEFAULT_LIVE_CODE = `\
+export default function App() {
+  return (
+    <>
+      <h1>
+        Hello
+        <span className="small"> world</span>
+      </h1>
+      <div style={styles.bar} />
+    </>
+  )
+}
+
+`
 
 function useTextTypingAnimation(targetText, delay, onReady) {
+  
   const [text, setText] = useState('')
   const [isTyping, setIsTyping] = useState(true)
-
+  const animationDuration = delay / targetText.length
+  let timeoutId = useRef(null)
+  
   useEffect(() => {
-    let timeoutId
+    if (isTyping && targetText.length) {
+      if (text.length < targetText.length) {
+        const nextText = targetText.substring(0, text.length + 1)
+        if (timeoutId.current) {
+          clearTimeout(timeoutId.current)
+          timeoutId.current = null
+        }
+        timeoutId.current = setTimeout(() => {
+          setText(nextText)
+        }, animationDuration)
 
-    const typeText = (index) => {
-      if (index === targetText.length) {
+      } else if (text.length === targetText.length) {
         setIsTyping(false)
         onReady()
-        return
       }
-
-      setText(targetText.substring(0, index + 1))
-      timeoutId = setTimeout(() => typeText(index + 1), delay / targetText.length)
     }
-
-    typeText(0)
-
     return () => {
-      clearTimeout(timeoutId)
+      if (timeoutId.current) {
+        clearTimeout(timeoutId.current)
+        timeoutId.current = null
+      }
     }
-  }, [targetText, delay])
+  }, [targetText, text, timeoutId.current])
 
   return { text, isTyping, setText }
 }
@@ -115,6 +134,8 @@ export default function LiveEditor() {
           --sh-class: ${colorPlateColors.class};
           --sh-identifier: ${colorPlateColors.identifier};
           --sh-sign: ${colorPlateColors.sign};
+          --sh-property: ${colorPlateColors.property};
+          --sh-entity: ${colorPlateColors.entity};
           --sh-string: ${colorPlateColors.string};
           --sh-keyword: ${colorPlateColors.keyword};
           --sh-comment: ${colorPlateColors.comment};
@@ -131,8 +152,8 @@ export default function LiveEditor() {
           value={liveCode}
           onChange={(newCode) => {
             setLiveCode(newCode)
-            !isTyping && setDefaultLiveCode(newCode)
             debouncedTokenize(newCode)
+            if (!isTyping) setDefaultLiveCode(newCode)
           }}
         />
 
@@ -165,10 +186,10 @@ export default function LiveEditor() {
       {isDebug &&
         <div className='editor-tokens'>
           <pre>
-            {liveCodeTokens.map(([tokenType, token], i) => {
+            {liveCodeTokens.map(([tokenType, token], index) => {
               const tokenTypeName = SugarHigh.TokenTypes[tokenType]
               return (
-                <div key={i}>{tokenTypeName}{' '.repeat(12 - tokenTypeName.length)} {token}</div>
+                <div key={index}>{tokenTypeName}{' '.repeat(12 - tokenTypeName.length)} {token}</div>
               )
             })}
           </pre>
