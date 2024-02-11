@@ -262,6 +262,7 @@ pre code .sh__line::before {
 }
 .sh__line {
   display: block;
+  line-height: 1.5em;
 }
 .live-editor .sh__line {
   color: #333;
