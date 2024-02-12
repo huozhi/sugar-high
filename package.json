@@ -1,6 +1,6 @@
 {
   "name": "sugar-high",
-  "version": "0.5.6",
+  "version": "0.6.0",
   "type": "module",
   "types": "./lib/index.d.ts",
   "exports": {
