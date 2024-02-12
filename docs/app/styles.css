@@ -112,7 +112,7 @@ textarea {
   position: relative;
   display: flex;
   background-color: #f6f6f6;
-  padding: 16px 22px;
+  padding: 16px 22px 0;
 }
 .code-control {
   display: flex;
@@ -223,7 +223,8 @@ pre code .sh__line::before {
 
 .codice-editor code,
 .codice-editor textarea {
-  padding: 24px 12px 24px 48px;
+  padding: 24px;
+  padding-left: 48px;
 }
 
 .live-editor__color {

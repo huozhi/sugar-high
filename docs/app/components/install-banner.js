@@ -1,4 +1,28 @@
+'use client'
+
+import { CopyButton } from './copy-button'
 import './install-banner.css'
+
+const cssCode = `\
+/* styles.css */
+:root {
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-property: #0550ae;
+  --sh-entity: #249a97;
+  --sh-jsxliterals: #6266d1;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
+}
+`
+
+const usageCode = `\
+import { highlight } from 'sugar-high'
+
+const html = highlight(code)
+`
 
 export default function InstallBanner() {
   return (
@@ -12,8 +36,16 @@ export default function InstallBanner() {
       <div className="max-width-container">
         <div className="install-banner__code">
           <code>
-            <pre>{`import { highlight } from 'sugar-high'` + '\n\n' + `const html = highlight(code)`}</pre>
+            <pre>{usageCode}</pre>
           </code>
+          <CopyButton codeSnippet={usageCode} />
+        </div>
+        <br />
+        <div className="install-banner__code install-banner__code--dimmed">
+          <code>
+            <pre>{cssCode}</pre>
+          </code>
+          <CopyButton codeSnippet={cssCode} />
         </div>
       </div>
     </div>
