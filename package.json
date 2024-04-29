@@ -15,7 +15,8 @@
   "scripts": {
     "test": "vitest run",
     "dev": "next dev docs",
-    "build": "next build docs"
+    "build": "next build docs",
+    "start": "next start docs -p 3002"
   },
   "devDependencies": {
     "codice": "^0.2.0",

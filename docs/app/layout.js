@@ -5,7 +5,7 @@ const imgUrl = 'https://repository-images.githubusercontent.com/453236442/aa0db6
 export default function Layout({ children }) {
   return (
     <html>
-      <body>
+      <body suppressHydrationWarning>
         {children}
       </body>
     </html>

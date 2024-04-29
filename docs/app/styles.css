@@ -231,8 +231,13 @@ pre code .sh__line::before {
   margin: 24px 0;
   padding: 0 24px;
 }
-.live-editor__color h3 {
-  margin: 0 0 24px;
+
+.live-editor__color .color-palette {
+  display: flex;
+  flex-wrap: nowrap;
+  item-align: center;
+  justify-content: center;
+  gap: 8px;
 }
 .live-editor__color input[type="color"] {
   display: inline;
@@ -249,7 +254,14 @@ pre code .sh__line::before {
   align-items: center;
   color: #666;
   margin: 4px 0;
+}
 
+.live-editor__color__item .copy-button {
+  visibility: hidden;
+}
+
+.live-editor__color__item:hover .copy-button {
+  visibility: visible;
 }
 .live-editor__color__item:hover,
 .live-editor__color__item:hover label {

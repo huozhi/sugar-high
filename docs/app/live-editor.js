@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { highlight, tokenize, SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
+import { CopyButton } from './components/copy-button'
 
 const defaultColorPlateColors = {
   class: '#8d85ff',
@@ -48,12 +49,12 @@ export default function App() {
 `
 
 function useTextTypingAnimation(targetText, delay, onReady) {
-  
+
   const [text, setText] = useState('')
   const [isTyping, setIsTyping] = useState(true)
   const animationDuration = delay / targetText.length
   let timeoutId = useRef(null)
-  
+
   useEffect(() => {
     if (isTyping && targetText.length) {
       if (text.length < targetText.length) {
@@ -126,6 +127,13 @@ export default function LiveEditor() {
   }))
   const debouncedTokenize = debouncedTokenizeRef.current
 
+  const customizableColorsString=useMemo(()=>{
+    return customizableColors.map(([tokenType, tokenTypeName]) => {
+      return `--sh-${tokenTypeName}: ${colorPlateColors[tokenTypeName]};`
+    }).join('\n')
+  },[colorPlateColors])
+
+
   return (
     <div className={`max-width-container live-editor-section`}>
       <style>{`
@@ -158,7 +166,10 @@ export default function LiveEditor() {
         />
 
         <ul className='live-editor__color'>
-          <h3>Color palette</h3>
+          <div className='color-palette'>
+            <h3>Color palette</h3>
+            <CopyButton codeSnippet={customizableColorsString}/>
+          </div>
           {customizableColors.map(([tokenType, tokenTypeName]) => {
             const inputId = `live-editor-color__input--${tokenTypeName}`
             return (
@@ -167,6 +178,7 @@ export default function LiveEditor() {
                   <span className={`live-editor__color__item__indicator live-editor__color__item__indicator--${tokenTypeName}`} style={{ color: colorPlateColors[tokenTypeName] }} />
                   {tokenTypeName}
                 </label>
+
                 <input
                   type='color'
                   defaultValue={colorPlateColors[tokenTypeName]}
@@ -178,6 +190,8 @@ export default function LiveEditor() {
                     })
                   }}
                 />
+                <span>{colorPlateColors[tokenTypeName]}</span>
+                {/* <CopyButton codeSnippet={`${tokenTypeName}--sh-: ${colorPlateColors[tokenTypeName]}`}/> */}
               </li>
             )
           })}
