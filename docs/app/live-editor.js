@@ -127,7 +127,7 @@ export default function LiveEditor() {
   }))
   const debouncedTokenize = debouncedTokenizeRef.current
 
-  const customizableColorsString=useMemo(()=>{
+  const customizableColorsString= useMemo(() => {
     return customizableColors.map(([tokenType, tokenTypeName]) => {
       return `--sh-${tokenTypeName}: ${colorPlateColors[tokenTypeName]};`
     }).join('\n')
@@ -153,6 +153,7 @@ export default function LiveEditor() {
       }</style>
 
       <div className='flex live-editor'>
+
         <Editor
           ref={editorRef}
           className='codice-editor flex-1'
