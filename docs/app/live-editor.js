@@ -191,7 +191,6 @@ export default function LiveEditor() {
                   }}
                 />
                 <span>{colorPlateColors[tokenTypeName]}</span>
-                {/* <CopyButton codeSnippet={`${tokenTypeName}--sh-: ${colorPlateColors[tokenTypeName]}`}/> */}
               </li>
             )
           })}
