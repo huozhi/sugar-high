@@ -17,7 +17,9 @@
 }
 
 html {
-  font-family: "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
 }
 body {
   margin: 0;
@@ -27,7 +29,7 @@ body {
   padding: 0 10px 40px;
   margin: auto;
 }
-input[type=radio] {
+input[type="radio"] {
   display: none;
 }
 .flex {
@@ -194,7 +196,6 @@ code {
   width: 100%;
 }
 
-
 pre code .sh__line::before {
   counter-increment: sh-line-number 1;
   content: counter(sh-line-number);
@@ -231,8 +232,11 @@ pre code .sh__line::before {
   margin: 24px 0;
   padding: 0 24px;
 }
+
 .live-editor__color h3 {
   margin: 0 0 24px;
+  display: flex;
+  gap: 8px;
 }
 .live-editor__color input[type="color"] {
   display: inline;
@@ -249,7 +253,14 @@ pre code .sh__line::before {
   align-items: center;
   color: #666;
   margin: 4px 0;
+}
 
+.live-editor__color__item .copy-button {
+  visibility: hidden;
+}
+
+.live-editor__color__item:hover .copy-button {
+  visibility: visible;
 }
 .live-editor__color__item:hover,
 .live-editor__color__item:hover label {
