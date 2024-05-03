@@ -1,40 +1,37 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useRef, useMemo } from "react";
-import { highlight, tokenize, SugarHigh } from "sugar-high";
-import { Editor } from "codice";
-import { CopyButton } from "./components/copy-button";
+import { useState, useEffect, useRef, useMemo } from 'react'
+import { highlight, tokenize, SugarHigh } from 'sugar-high'
+import { Editor } from 'codice'
+import { CopyButton } from './components/copy-button'
 
 const defaultColorPlateColors = {
-  class: "#8d85ff",
-  identifier: "#354150",
-  sign: "#8996a3",
-  entity: "#6eafad",
-  property: "#4e8fdf",
-  jsxliterals: "#bf7db6",
-  string: "#00a99a",
-  keyword: "#f47067",
-  comment: "#a19595",
-  break: "#ffffff",
-  space: "#ffffff",
-};
+  class: '#8d85ff',
+  identifier: '#354150',
+  sign: '#8996a3',
+  entity: '#6eafad',
+  property: '#4e8fdf',
+  jsxliterals: '#bf7db6',
+  string: '#00a99a',
+  keyword: '#f47067',
+  comment: '#a19595',
+  break: '#ffffff',
+  space: '#ffffff',
+}
 
 function debounce(func, timeout = 200) {
-  let timer;
+  let timer
   return (...args) => {
-    clearTimeout(timer);
+    clearTimeout(timer)
     timer = setTimeout(() => {
-      func.apply(this, args);
-    }, timeout);
-  };
+      func.apply(this, args)
+    }, timeout)
+  }
 }
 
 const customizableColors = Object.entries(SugarHigh.TokenTypes)
-  .filter(
-    ([, tokenTypeName]) =>
-      tokenTypeName !== "break" && tokenTypeName !== "space"
-  )
-  .sort((a, b) => a - b);
+  .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
+  .sort((a, b) => a - b)
 
 const DEFAULT_LIVE_CODE = `\
 export default function App() {
@@ -49,70 +46,65 @@ export default function App() {
   )
 }
 
-`;
+`
 
 function useTextTypingAnimation(targetText, delay, onReady) {
-  const [text, setText] = useState("");
-  const [isTyping, setIsTyping] = useState(true);
-  const animationDuration = delay / targetText.length;
-  let timeoutId = useRef(null);
+  const [text, setText] = useState('')
+  const [isTyping, setIsTyping] = useState(true)
+  const animationDuration = delay / targetText.length
+  let timeoutId = useRef(null)
 
   useEffect(() => {
     if (isTyping && targetText.length) {
       if (text.length < targetText.length) {
-        const nextText = targetText.substring(0, text.length + 1);
+        const nextText = targetText.substring(0, text.length + 1)
         if (timeoutId.current) {
-          clearTimeout(timeoutId.current);
-          timeoutId.current = null;
+          clearTimeout(timeoutId.current)
+          timeoutId.current = null
         }
         timeoutId.current = setTimeout(() => {
-          setText(nextText);
-        }, animationDuration);
+          setText(nextText)
+        }, animationDuration)
       } else if (text.length === targetText.length) {
-        setIsTyping(false);
-        onReady();
+        setIsTyping(false)
+        onReady()
       }
     }
     return () => {
       if (timeoutId.current) {
-        clearTimeout(timeoutId.current);
-        timeoutId.current = null;
+        clearTimeout(timeoutId.current)
+        timeoutId.current = null
       }
-    };
-  }, [targetText, text, timeoutId.current]);
+    }
+  }, [targetText, text, timeoutId.current])
 
-  return { text, isTyping, setText };
+  return { text, isTyping, setText }
 }
 
-const DEFAULT_LIVE_CODE_KEY = "$saved-live-code";
+const DEFAULT_LIVE_CODE_KEY = '$saved-live-code'
 function useDefaultLiveCode() {
-  const [defaultCode, setCode] = useState("");
+  const [defaultCode, setCode] = useState('')
 
   useEffect(() => {
-    if (defaultCode) return;
+    if (defaultCode) return
 
-    setCode(
-      window.localStorage.getItem(DEFAULT_LIVE_CODE_KEY) || DEFAULT_LIVE_CODE
-    );
-  }, [defaultCode]);
+    setCode(window.localStorage.getItem(DEFAULT_LIVE_CODE_KEY) || DEFAULT_LIVE_CODE)
+  }, [defaultCode])
 
-  const setDefaultLiveCode = (code) =>
-    window.localStorage.setItem(DEFAULT_LIVE_CODE_KEY, code);
+  const setDefaultLiveCode = (code) => window.localStorage.setItem(DEFAULT_LIVE_CODE_KEY, code)
 
   return {
     defaultLiveCode: defaultCode,
     setDefaultLiveCode,
-  };
+  }
 }
 
 export default function LiveEditor() {
-  const editorRef = useRef();
-  const [colorPlateColors, setColorPlateColors] = useState(
-    defaultColorPlateColors
-  );
-  const isDebug = process.env.NODE_ENV === "development";
+  const editorRef = useRef()
+  const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
+  const isDebug = process.env.NODE_ENV === 'development'
 
-  const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode();
+  const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode()
   const {
     text: liveCode,
     setText: setLiveCode,
@@ -121,27 +113,27 @@ export default function LiveEditor() {
     if (editorRef.current) {
       // focus needs to be delayed
       setTimeout(() => {
-        editorRef.current.focus();
-      });
+        editorRef.current.focus()
+      })
     }
-  });
+  })
 
-  const [liveCodeTokens, setLiveCodeTokens] = useState([]);
+  const [liveCodeTokens, setLiveCodeTokens] = useState([])
   const debouncedTokenizeRef = useRef(
     debounce((c) => {
-      const tokens = tokenize(c);
-      setLiveCodeTokens(tokens);
+      const tokens = tokenize(c)
+      setLiveCodeTokens(tokens)
     })
-  );
-  const debouncedTokenize = debouncedTokenizeRef.current;
+  )
+  const debouncedTokenize = debouncedTokenizeRef.current
 
   const customizableColorsString = useMemo(() => {
     return customizableColors
       .map(([tokenType, tokenTypeName]) => {
-        return `--sh-${tokenTypeName}: ${colorPlateColors[tokenTypeName]};`;
+        return `--sh-${tokenTypeName}: ${colorPlateColors[tokenTypeName]};`
       })
-      .join("\n");
-  }, [colorPlateColors]);
+      .join('\n')
+  }, [colorPlateColors])
 
   return (
     <div className={`max-width-container live-editor-section`}>
@@ -167,9 +159,9 @@ export default function LiveEditor() {
           highlight={highlight}
           value={liveCode}
           onChange={(newCode) => {
-            setLiveCode(newCode);
-            debouncedTokenize(newCode);
-            if (!isTyping) setDefaultLiveCode(newCode);
+            setLiveCode(newCode)
+            debouncedTokenize(newCode)
+            if (!isTyping) setDefaultLiveCode(newCode)
           }}
         />
 
@@ -178,7 +170,7 @@ export default function LiveEditor() {
             Color palette <CopyButton codeSnippet={customizableColorsString} />
           </h3>
           {customizableColors.map(([tokenType, tokenTypeName]) => {
-            const inputId = `live-editor-color__input--${tokenTypeName}`;
+            const inputId = `live-editor-color__input--${tokenTypeName}`
             return (
               <li key={tokenType} className="live-editor__color__item">
                 <label htmlFor={inputId} className="flex align-center">
@@ -197,12 +189,12 @@ export default function LiveEditor() {
                     setColorPlateColors({
                       ...colorPlateColors,
                       [tokenTypeName]: e.target.value,
-                    });
+                    })
                   }}
                 />
                 <span>{colorPlateColors[tokenTypeName]}</span>
               </li>
-            );
+            )
           })}
         </ul>
       </div>
@@ -210,17 +202,17 @@ export default function LiveEditor() {
         <div className="editor-tokens">
           <pre>
             {liveCodeTokens.map(([tokenType, token], index) => {
-              const tokenTypeName = SugarHigh.TokenTypes[tokenType];
+              const tokenTypeName = SugarHigh.TokenTypes[tokenType]
               return (
                 <div key={index}>
                   {tokenTypeName}
-                  {" ".repeat(12 - tokenTypeName.length)} {token}
+                  {' '.repeat(12 - tokenTypeName.length)} {token}
                 </div>
-              );
+              )
             })}
           </pre>
         </div>
       )}
     </div>
-  );
+  )
 }
