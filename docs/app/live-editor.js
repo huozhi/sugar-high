@@ -37,9 +37,9 @@ const DEFAULT_LIVE_CODE = `\
 export default function App() {
   return (
     <>
-      <h1>
+      <h1 id="title">
         Hello
-        <span className="small"> world</span>
+        <span> world</span>
       </h1>
       <div style={styles.bar} />
     </>
