@@ -304,6 +304,21 @@ describe('jsx', () => {
       ['/>', 'sign'],
     ])
   })
+
+  it('should handle tailwind properties well', () => {
+    const code = `<div className="data-[layout=grid]:grid" />`
+    const tokens = tokenize(code)
+    expect(extractTokenArray(tokens)).toEqual([
+      ['<', 'sign'],
+      ['div', 'entity'],
+      ['className', 'property'],
+      ['=', 'sign'],
+      ['"', 'string'],
+      ['data-[layout=grid]:grid', 'string'],
+      ['"', 'string'],
+      ['/>', 'sign'],
+    ])
+  })
 })
 
 describe('comments', () => {
