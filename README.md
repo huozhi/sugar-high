@@ -25,7 +25,7 @@ document.querySelector('pre > code').innerHTML = codeHTML
 
 ### Highlight with CSS
 
-Then make your own theme with customized colors by token type and put in global CSS. The corresponding class names star with `sh__` prefix.
+Then make your own theme with customized colors by token type and put in global CSS. The corresponding class names start with `--sh-` prefix.
 
 ```css
 /**
