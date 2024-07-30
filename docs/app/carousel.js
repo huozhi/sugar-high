@@ -46,7 +46,7 @@ const element = (
 )
 `,
     {
-      highlightedLines: []
+      highlightedLines: [7]
     }
   ],
   [
@@ -64,7 +64,7 @@ function* foo(index) {
 }
 `,
     {
-      highlightedLines: []
+      highlightedLines: [2]
     }
   ],
 
@@ -126,7 +126,9 @@ function CodeFrame({ code, title = 'Untitled', index, highlightedLines = [] }) {
     <div className='code-frame'>
       <style>
         {highlightedLines.map(line => 
-          `.code-label--${index} .code-frame .sh__line:nth-child(${line}) { background: rgba(0,0,0,.1); }`)
+          `.code-label--${index} .code-frame .sh__line:nth-child(${line}) {
+            background: #fcf5dc;
+          }`)
           .join('\n') + '\n'
         }
       </style>
@@ -156,7 +158,7 @@ export default function Carousel() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setSelected((selected + 1) % examples.length)
+      // setSelected((selected + 1) % examples.length)
     } , 2500)
     return () => clearInterval(timer)
   }, [selected])
