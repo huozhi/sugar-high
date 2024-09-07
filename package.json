@@ -1,29 +1,23 @@
 {
-  "name": "sugar-high",
-  "version": "0.7.0",
+  "name": "code-syntactic-sugar",
+  "version": "0.0.1",
   "type": "module",
   "types": "./lib/index.d.ts",
   "exports": {
     "types": "./lib/index.d.ts",
     "default": "./lib/index.js"
   },
-  "description": "Super lightweight JSX syntax highlighter",
+  "description": "Fork of sugar-high package with extra features such as line highlighting",
   "files": [
     "lib"
   ],
   "license": "MIT",
+  "author": "Nikhil S",
   "scripts": {
-    "test": "vitest run",
-    "dev": "next dev docs",
-    "build": "next build docs"
+    "test": "vitest run"
   },
   "devDependencies": {
-    "codice": "^0.2.0",
-    "next": "14.2.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "sugar-high": "link:./",
-    "vitest": "^1.2.2"
+    "vitest": "^2"
   },
-  "packageManager": "pnpm@8.7.1"
+  "packageManager": "pnpm@9.9.0"
 }

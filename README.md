@@ -1,22 +1,20 @@
-# Sugar High
+# Code Syntactic Sugar
 
-[![Build][build-badge]][build]
-[![Coverage][coverage-badge]][coverage]
 
 ### Introduction
 
-Super lightweight JSX syntax highlighter, around 1KB after minified and gzipped
+Fork of [sugar-high](https://github.com/huozhi/sugar-high) package with extra features such as line highlighting
 
 ![img](https://repository-images.githubusercontent.com/453236442/aa0db684-bad3-4cd3-a420-f4e53b8c6757)
 
 ### Usage
 
 ```sh
-npm install --save sugar-high
+npm install --save code-syntactic-sugar
 ```
 
 ```js
-import { highlight } from 'sugar-high'
+import { highlight } from 'code-syntactic-sugar'
 
 const codeHTML = highlight(code)
 
@@ -100,16 +98,4 @@ You can use `.sh__token--<token type>` to customize the output node of each toke
 
 MIT
 
-<!-- Definitions -->
 
-[build-badge]: https://github.com/huozhi/sugar-high/workflows/Test/badge.svg
-
-[build]: https://github.com/huozhi/sugar-high/actions
-
-[coverage-badge]: https://badge.fury.io/js/sugar-high.svg
-
-[coverage]: https://codecov.io/github/huozhi/sugar-high
-
-[downloads-badge]: https://img.shields.io/npm/dm/sugar-high.svg
-
-[downloads]: https://www.npmjs.com/package/sugar-high
