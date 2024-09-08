@@ -1,6 +1,6 @@
 {
   "name": "code-syntactic-sugar",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Fork of sugar-high package with extra features such as line highlighting",
   "keywords": [
     "syntax-highlighting"
