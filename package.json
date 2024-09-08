@@ -1,22 +1,43 @@
 {
   "name": "code-syntactic-sugar",
   "version": "0.0.1",
-  "type": "module",
-  "types": "./lib/index.d.ts",
-  "exports": {
-    "types": "./lib/index.d.ts",
-    "default": "./lib/index.js"
-  },
   "description": "Fork of sugar-high package with extra features such as line highlighting",
-  "files": [
-    "lib"
+  "keywords": [
+    "syntax-highlighting"
   ],
+  "homepage": "https://github.com/nikhilsnayak/code-syntactic-sugar#readme",
+  "bugs": {
+    "url": "https://github.com/nikhilsnayak/code-syntactic-sugar/issues"
+  },
+  "author": "Nikhil S <nikhilsnayak3473@gmail.com> (https://www.nikhilsnayak.dev/)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nikhilsnayak/code-syntactic-sugar"
+  },
   "license": "MIT",
-  "author": "Nikhil S",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
+  },
   "scripts": {
-    "test": "vitest run"
+    "dev": "vitest",
+    "build": "tsc",
+    "check": "biome check --write ./src",
+    "test": "vitest run",
+    "ci": "pnpm run build && pnpm run check && pnpm run test",
+    "local-release": "changeset version && changeset publish",
+    "prepublishOnly": "pnpm run ci"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@changesets/cli": "^2.27.8",
+    "typescript": "^5",
     "vitest": "^2"
   },
   "packageManager": "pnpm@9.9.0"

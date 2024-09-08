@@ -1,101 +1,96 @@
 # Code Syntactic Sugar
 
-
 ### Introduction
 
-Fork of [sugar-high](https://github.com/huozhi/sugar-high) package with extra features such as line highlighting
+This is a fork of the [sugar-high](https://github.com/huozhi/sugar-high) package with extra features.
 
-![img](https://repository-images.githubusercontent.com/453236442/aa0db684-bad3-4cd3-a420-f4e53b8c6757)
+Special thanks to [Jiachi Liu](https://github.com/huozhi), the original author of [sugar-high](https://github.com/huozhi/sugar-high).
 
-### Usage
+### Installation
+
+To install the package, run:
 
 ```sh
 npm install --save code-syntactic-sugar
 ```
 
+### Basic Usage
+
+To use Code Syntactic Sugar:
+
 ```js
-import { highlight } from 'code-syntactic-sugar'
+import { highlight } from 'code-syntactic-sugar';
 
-const codeHTML = highlight(code)
+const codeHTML = highlight(code);
 
-document.querySelector('pre > code').innerHTML = codeHTML
+document.querySelector('pre > code').innerHTML = codeHTML;
 ```
 
-### Highlight with CSS
+### Additional Features
 
-Then make your own theme with customized colors by token type and put in global CSS. The corresponding class names start with `--sh-` prefix.
+- More features to be added soon!
+
+### Customizing Highlighting with CSS
+
+Create your own theme by customizing colors for different token types. Add the following CSS to your global stylesheet. The class names start with the `--css-` (code-syntactic-sugar) prefix.
 
 ```css
 /**
- * Types that sugar-high have:
+ * Token types in Code Syntactic Sugar:
  *
  * identifier
  * keyword
  * string
- * Class, number and null
+ * class, number, null
  * property
  * entity
- * jsx literals
+ * JSX literals
  * sign
  * comment
  * break
  * space
  */
 :root {
-  --sh-class: #2d5e9d;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-property: #0550ae;
-  --sh-entity: #249a97;
-  --sh-jsxliterals: #6266d1;
-  --sh-string: #00a99a;
-  --sh-keyword: #f47067;
-  --sh-comment: #a19595;
+  --css-class: #2d5e9d;
+  --css-identifier: #354150;
+  --css-sign: #8996a3;
+  --css-property: #0550ae;
+  --css-entity: #249a97;
+  --css-jsxliterals: #6266d1;
+  --css-string: #00a99a;
+  --css-keyword: #f47067;
+  --css-comment: #a19595;
 }
 ```
 
-### Features
+### Line Numbers
 
-#### Line number
-
-Sugar high provide `.sh_line` class name for each line. To display line number, define the `.sh_line::before` element with CSS will enable line numbers automatically.
+The `.css_line` class name is provided for each line. To display line numbers, use the following CSS:
 
 ```css
 pre code {
-  counter-reset: sh-line-number;
+  counter-reset: css-line-number;
 }
 
-.sh__line::before {
-  counter-increment: sh-line-number 1;
-  content: counter(sh-line-number);
+.css_line::before {
+  counter-increment: css-line-number 1;
+  content: counter(css-line-number);
   margin-right: 24px;
   text-align: right;
   color: #a4a4a4;
 }
 ```
 
-### Line Highlight
+### CSS Class Names
 
-Use `.sh__line:nth-child(<line number>)` to highlight specific line.
-
-```css
-.sh__line:nth-child(5) {
-  background: #f5f5f5;
-}
-```
-
-#### CSS Class Names
-
-You can use `.sh__token--<token type>` to customize the output node of each token.
+Customize the styling of each token by using the `.css__token--<token type>` class names:
 
 ```css
-.sh__token--keyword {
+.css__token--keyword {
   background: #f47067;
 }
 ```
 
-### LICENSE
+### License
 
-MIT
-
-
+This project is licensed under the [MIT License](./LICENSE).
