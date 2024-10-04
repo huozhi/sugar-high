@@ -194,6 +194,22 @@ describe('jsx', () => {
     ])
   })
 
+  it('parse svg with break lines', () => {
+    const code = `\
+      <svg>
+        <path
+          d='M12'/></svg>
+      `
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      '<', 'svg', '>', '<', 'path', 'd', '=', "'", 'M12', "'", '/>', '</', 'svg', '>',
+    ])
+    expect(extractTokenArray(tokens)).toEqual([
+      ["<", "sign"], ["svg", "entity"], [">", "sign"], ["", "jsxliterals"], ["", "jsxliterals"], ["<", "sign"], ["path", "entity"], ["d", "property"],
+      ["=", "sign"], ["'", "string"], ["M12", "string"], ["'", "string"], ["/>", "sign"], ["</", "sign"], ["svg", "entity"], [">", "sign"]
+    ])
+  })
+
   it('parse arrow function in jsx correctly', () => {
     const code = '<button onClick={() => {}}>click</button>'
     const tokens = tokenize(code)

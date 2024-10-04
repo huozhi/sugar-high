@@ -48,7 +48,14 @@ export default function App() {
 
 `
 
-function useTextTypingAnimation(targetText, delay, onReady) {
+function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onReady) {
+  if (!enableTypingAnimation) {
+    return {
+      text: targetText,
+      isTyping: false,
+      setText: () => {},
+    }
+  }
   const [text, setText] = useState('')
   const [isTyping, setIsTyping] = useState(true)
   const animationDuration = delay / targetText.length
@@ -82,8 +89,8 @@ function useTextTypingAnimation(targetText, delay, onReady) {
 }
 
 const DEFAULT_LIVE_CODE_KEY = '$saved-live-code'
-function useDefaultLiveCode() {
-  const [defaultCode, setCode] = useState('')
+function useDefaultLiveCode(defaultCodeText) {
+  const [defaultCode, setCode] = useState(defaultCodeText || '')
 
   useEffect(() => {
     if (defaultCode) return
@@ -99,17 +106,20 @@ function useDefaultLiveCode() {
   }
 }
 
-export default function LiveEditor() {
+export default function LiveEditor({
+  enableTypingAnimation = true,
+  defaultCode = DEFAULT_LIVE_CODE,
+}) {
   const editorRef = useRef()
   const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
   const isDebug = process.env.NODE_ENV === 'development'
 
-  const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode()
+  const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode(defaultCode)
   const {
     text: liveCode,
     setText: setLiveCode,
     isTyping,
-  } = useTextTypingAnimation(defaultLiveCode, 1000, () => {
+  } = useTextTypingAnimation(defaultLiveCode, 1000, enableTypingAnimation, () => {
     if (editorRef.current) {
       // focus needs to be delayed
       setTimeout(() => {
