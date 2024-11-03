@@ -386,6 +386,17 @@ describe('regex', () => {
     expect(extractTokenArray(tokenize(reg2))).toEqual([["/^\\w+[a-z0-9]/ig", "string"]])
   })
 
+  it('contain angle brackets', () => {
+    const code = `/^\\w+<a>\\/$/`
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      '/^\\w+<a>\\/$/',
+    ])
+    expect(extractTokenArray(tokens)).toEqual([
+      ["/^\\w+<a>\\/$/", "string"]
+    ])
+  })
+
   it('regex plus operators', () => {
     const code = `/^\\/[0-5]\\/$/ + /^\\/\w+\\/$/gi`
     expect(extractTokenValues(tokenize(code))).toEqual([
@@ -452,6 +463,28 @@ describe('strings', () => {
     expect(extractTokenArray(tokens)).toEqual([
       ["import", "keyword"], ["mod", "identifier"], ["from", "keyword"], ["\"", "string"], ["../../mod", "string"],
       ["\"", "string"]
+    ])
+  })
+
+  it('contains curly brackets', () => {
+    const code = `const str = 'hello {world}'`
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      'const', 'str', '=', "'", 'hello {world}', "'",
+    ])
+    expect(extractTokenArray(tokens)).toEqual([
+      ["const", "keyword"], ["str", "identifier"], ["=", "sign"], ["'", "string"], ["hello {world}", "string"], ["'", "string"]
+    ])
+  })
+
+  it('contains angle brackets', () => {
+    const code = `const str = 'hello <world>'`
+    const tokens = tokenize(code)
+    expect(extractTokenValues(tokens)).toEqual([
+      'const', 'str', '=', "'", 'hello <world>', "'",
+    ])
+    expect(extractTokenArray(tokens)).toEqual([
+      ["const", "keyword"], ["str", "identifier"], ["=", "sign"], ["'", "string"], ["hello <world>", "string"], ["'", "string"]
     ])
   })
 
