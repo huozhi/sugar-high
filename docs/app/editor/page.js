@@ -1,10 +1,6 @@
 import LiveEditor from '../live-editor'
 
-const code = `\
-<svg>
-  <path 
-    d='M12'/></svg>
-`
+const code = ``
 
 export default function Page() {
   return (
