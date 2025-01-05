@@ -1,5 +1,6 @@
 type HighlightOptions = {
   keywords?: Set<string>
+  onCommentStart?: (curr: string, next: string) => boolean
 }
 
 export function highlight(code: string, options?: HighlightOptions): string
