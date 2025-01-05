@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize } from '../lib'
-import { extractTokenArray, extractTokenValues } from './testing-utils'
+import { 
+  extractTokenArray, 
+  extractTokenValues,
+  getTokenValues,
+  getTokenArray,
+} from './testing-utils'
 
 describe('function calls', () => {
   it('dot catch should not be determined as keyword', () => {

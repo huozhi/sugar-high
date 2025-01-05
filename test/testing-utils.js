@@ -40,5 +40,7 @@ function getTokensPairs(tokens) {
 export {
   extractTokenArray,
   extractTokenValues,
+  getTokenValues,
   getTokensPairs,
+  getTokenArray,
 }
