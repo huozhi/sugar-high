@@ -32,7 +32,8 @@ function extractTokenArray(tokens) {
     .filter(([_, type]) => type !== 'space' && type !== 'break')
 }
 
-function getTokensPairs(tokens) {
+// Generate the string representation of the tokens
+function getTokensAsString(tokens) {
   const extracted = extractTokenArray(tokens)
   return extracted.map(([value, type]) => `${value} => ${type}`)
 }
@@ -41,6 +42,6 @@ export {
   extractTokenArray,
   extractTokenValues,
   getTokenValues,
-  getTokensPairs,
+  getTokensAsString,
   getTokenArray,
 }
