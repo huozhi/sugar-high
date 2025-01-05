@@ -39,8 +39,7 @@ describe('tokenize - customized comment rule', () => {
         ": => sign",
         "return => keyword",
         "2 => class",
-        "# => sign",
-        "this is a comment => comment",
+        "# this is a comment => comment",
       ]
     `)
   })
