@@ -20,3 +20,28 @@ describe('tokenize - customized keywords', () => {
     `)
   })
 })
+
+
+describe('tokenize - customized comment rule', () => {
+  it('should tokenize the input string with the given comment rule', () => {
+    const input = `def f(): return 2 # this is a comment`
+    const keywords = new Set(['def', 'return'])
+    const onCommentStart = (curr, next) => {
+      return curr === '#'
+    }
+    const actual = getTokensAsString(tokenize(input, { keywords, onCommentStart }))
+    expect(actual).toMatchInlineSnapshot(`
+      [
+        "def => keyword",
+        "f => identifier",
+        "( => sign",
+        ") => sign",
+        ": => sign",
+        "return => keyword",
+        "2 => class",
+        "# => sign",
+        "this is a comment => comment",
+      ]
+    `)
+  })
+})
