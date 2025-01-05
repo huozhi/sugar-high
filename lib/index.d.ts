@@ -1,6 +1,7 @@
 type HighlightOptions = {
   keywords?: Set<string>
-  onCommentStart?: (curr: string, next: string) => boolean
+  onCommentStart?: (curr: string, next: string) => number | boolean
+  onCommentEnd?: (curr: string, prev: string) => number | boolean
 }
 
 export function highlight(code: string, options?: HighlightOptions): string
