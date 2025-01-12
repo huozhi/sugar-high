@@ -34,6 +34,15 @@
   border-radius: 2px;
 }
 
+.install-banner__block {
+  position: relative;
+  font-size: 1rem;
+  padding: 8px 16px;
+  width: 600px;
+  max-width: calc(100vw - 48px);
+  border-radius: 2px;
+}
+
 /* copy code button */
 .install-banner__code button {
   position: absolute;
@@ -50,6 +59,10 @@
 
 .install-banner__code--dimmed {
   color: #afafaf;  
+}
+
+.install-banner a:hover {
+  color: #fff;
 }
 
 @media screen and (max-width: 600px) {  

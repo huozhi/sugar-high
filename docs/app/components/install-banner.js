@@ -47,6 +47,14 @@ export default function InstallBanner() {
           </code>
           <CopyButton codeSnippet={cssCode} />
         </div>
+
+        <div className="install-banner__block install-banner__code--dimmed">
+          <h2>Usage with remark.js</h2>
+          <p>
+            <a href='https://remark.js.org/' target='_blank' rel='noreferrer'>Remark.js</a>{' '}
+            is a powerful markdown processor, you can use the <a href='https://remark-sugar-high.vercel.app/' target='_blank' rel='noreferrer'>sugar-high remark plugin</a> with remark.js to highlight code blocks in markdown.
+          </p>
+        </div>
       </div>
     </div>
   )

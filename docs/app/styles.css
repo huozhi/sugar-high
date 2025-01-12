@@ -24,6 +24,17 @@ html {
 body {
   margin: 0;
 }
+a {
+  color: #888;
+  text-decoration: underline solid currentColor;
+  text-underline-position: from-font;
+  text-decoration-thickness: from-font;
+}
+
+a:hover {
+  color: #333;
+}
+
 .max-width-container {
   max-width: 960px;
   padding: 0 10px 40px;
@@ -297,3 +308,5 @@ pre code .sh__line::before {
     display: none;
   }
 }
+
+
