@@ -270,9 +270,7 @@ code .sh__line::before {
   outline: none;
   scrollbar-width: none;
 }
-.editor pre {
-  padding: 24px;
-}
+
 .code-snippet pre {
   padding-bottom: 24px;
 
