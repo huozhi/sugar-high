@@ -370,6 +370,34 @@ describe('jsx', () => {
     `)
   })
 
+  it('parse arrow function prop of jsx correctly', () => {
+    const code = `<Editor onChange={(text) => 1)} />`
+
+    const tokens = tokenize(code)
+    expect(getTokensAsString(tokens, { filterSpaces: false })).toMatchInlineSnapshot(`
+      [
+        "< => sign",
+        "Editor => entity",
+        " => space",
+        "onChange => property",
+        "= => sign",
+        "{ => sign",
+        "( => sign",
+        "text => identifier",
+        ") => sign",
+        " => space",
+        "= => sign",
+        "> => sign",
+        " => space",
+        "1 => identifier",
+        ") => sign",
+        "} => sign",
+        " => space",
+        "/> => sign",
+      ]
+    `)
+  })
+
   it('should render string for any jsx attribute values', () => {
     const code = '<h1 data-title="true" />'
     const tokens = tokenize(code)

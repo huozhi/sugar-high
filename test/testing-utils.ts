@@ -26,15 +26,20 @@ function getTokenArray(tokens) {
   return tokens.map((tk) => [tk[1], getTypeName(tk)]);
 }
 
-function extractTokenArray(tokens) {
+function extractTokenArray(tokens, options: { filterSpaces?: boolean } = {}) {
+  const { filterSpaces = true } = options
   return tokens
     .map((tk) => [mergeSpaces(tk[1]), getTypeName(tk)])
-    .filter(([_, type]) => type !== 'space' && type !== 'break')
+    .filter(([_, type]) => 
+      filterSpaces
+        ? type !== 'space' && type !== 'break'
+        : true
+    )
 }
 
 // Generate the string representation of the tokens
-function getTokensAsString(tokens) {
-  const extracted = extractTokenArray(tokens)
+function getTokensAsString(tokens: any[], options: { filterSpaces?: boolean } = {}) {
+  const extracted = extractTokenArray(tokens, options)
   return extracted.map(([value, type]) => `${value} => ${type}`)
 }
 
