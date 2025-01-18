@@ -370,6 +370,33 @@ describe('jsx', () => {
     `)
   })
 
+  it('preserve spaces in arrow function jsx prop correctly', () => {
+    const code = '<Foo prop={(v) => 1)} />'
+
+    const tokens = tokenize(code)
+    expect(getTokensAsString(tokens, { filterSpaces: false })).toMatchInlineSnapshot(`
+      [
+        "< => sign",
+        "Foo => entity",
+        " => space",
+        "prop => property",
+        "= => sign",
+        "{ => sign",
+        "( => sign",
+        "v => identifier",
+        ") => sign",
+        "= => sign",
+        "> => sign",
+        " => space",
+        "1 => identifier",
+        ") => sign",
+        "} => sign",
+        " => space",
+        "/> => sign",
+      ]
+    `)
+  })
+
   it('should render string for any jsx attribute values', () => {
     const code = '<h1 data-title="true" />'
     const tokens = tokenize(code)
