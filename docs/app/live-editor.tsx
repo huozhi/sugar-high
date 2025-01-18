@@ -209,18 +209,23 @@ export default function LiveEditor({
           })}
         </ul>
       </div>
-      {isDebug && (
-        <div className="editor-tokens">
-          {liveCodeTokens.map(([tokenType, token], index) => {
-            const tokenTypeName = SugarHigh.TokenTypes[tokenType]
-            return (
-              <span className={`editor-token editor-token--${tokenTypeName}`} key={index}>
-                {token}{` `}
-              </span>
-            )
-          })}
-        </div>
-      )}
+      {/* show tokens */}
+      <div className="editor-tokens">
+        {liveCodeTokens.map(([tokenType, token], index) => {
+          const tokenTypeName = SugarHigh.TokenTypes[tokenType]
+          if (
+            tokenTypeName === 'break' || 
+            tokenTypeName === 'space' ||
+            token === '\n' ||
+            token.trim() === ''
+          ) return null
+          return (
+            <span className={`editor-token editor-token--${tokenTypeName}`} key={index}>
+              {token}{` `}
+            </span>
+          )
+        })}
+      </div>
     </div>
   )
 }

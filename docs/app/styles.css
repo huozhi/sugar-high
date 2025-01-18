@@ -18,9 +18,8 @@
 }
 
 html {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 body {
   margin: 0;
@@ -41,7 +40,7 @@ a:hover {
   padding: 0 10px 40px;
   margin: auto;
 }
-input[type="radio"] {
+input[type='radio'] {
   display: none;
 }
 .flex {
@@ -64,7 +63,7 @@ input[type="radio"] {
   align-items: center;
   margin: 8px auto;
 }
-input[type="checkbox"] {
+input[type='checkbox'] {
   cursor: pointer;
   appearance: none;
   background-color: transparent;
@@ -76,22 +75,28 @@ input[type="checkbox"] {
   margin-right: 8px;
 }
 
-input[type="checkbox"]:checked {
+input[type='checkbox']:checked {
   background-color: currentColor;
 }
-
+.hover-shadow {
+  transition: all 0.2s ease;
+}
+.hover-shadow:hover {
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  transform: scale(1.02);
+}
 .header {
   margin-top: 1rem;
   padding: 0px 8px;
   text-align: center;
 }
-.header h1 {
+.header h1 span {
   font-size: 64px;
   font-weight: 800;
   text-align: center;
   margin: 1rem;
   padding: 16px 0;
-  flex-direction: column;
+  flex-direction: column; 
 }
 .cards .editor {
   position: relative;
@@ -161,8 +166,6 @@ code .sh__line::before {
   margin-left: -42px;
   color: #a4a4a4;
 }
-.editor code .sh__line::before {
-}
 
 .live-editor {
   flex: 1;
@@ -183,7 +186,7 @@ code .sh__line::before {
   display: flex;
   gap: 8px;
 }
-.live-editor__color input[type="color"] {
+.live-editor__color input[type='color'] {
   display: inline;
   width: 0;
   height: 0;
@@ -243,11 +246,7 @@ code .sh__line::before {
 [data-codice-editor] code {
   width: 100%;
 }
-[data-codice-editor] code,
-[data-codice-code] code {
-  /* TODO: potentially upstream */
-  display: inline-block;
-}
+
 .editor.codice[data-codice-editor] code {
   min-height: 400px;
   background-color: #f6f6f6;
@@ -261,7 +260,7 @@ code .sh__line::before {
 }
 .codice[data-codice-code] code,
 .codice[data-codice-code] textarea {
-  font-family: Consolas, Monaco, monospace;  
+  font-family: Consolas, Monaco, monospace;
   padding: 10px;
   border: none;
   font-size: 16px;
@@ -273,7 +272,6 @@ code .sh__line::before {
 
 .code-snippet pre {
   padding-bottom: 24px;
-
 }
 .codice[data-codice-code] pre {
   padding-left: 48px;
@@ -288,19 +286,18 @@ code .sh__line::before {
   background-color: #f6f6f6;
 }
 
-/* TODO: default color variable */
-.codice [data-codice-editor-controls] span {
-  background-color: rgba(0,0,0,.34);
+.codice [data-codice-editor-control] {
+  background-color: rgba(0, 0, 0, 0.34);
 }
 .codice [data-codice-editor-title] {
-  color: rgba(0,0,0,.34);
+  color: rgba(0, 0, 0, 0.34);
 }
 
-/* debug */
 .editor-token {
+  display: inline-block;
   padding: 4px 8px;
-  margin: 8px;
   background-color: #d4d1d1;
+  color: #524f4f;
 }
 .editor-token--keyword {
   background-color: #f47067;
@@ -312,7 +309,7 @@ code .sh__line::before {
   background-color: #a19595;
 }
 .editor-token--property {
-  background-color: #0550ae;
+  background-color: #89aedd;
 }
 .editor-token--entity {
   background-color: #249a97;
