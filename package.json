@@ -3,24 +3,21 @@
   "version": "0.8.2",
   "type": "module",
   "types": "./lib/index.d.ts",
-  "exports": {
-    "types": "./lib/index.d.ts",
-    "default": "./lib/index.js"
-  },
+  "main": "./lib/index.js",
   "description": "Super lightweight JSX syntax highlighter",
   "files": [
     "lib"
   ],
   "license": "MIT",
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest",
     "dev": "next dev docs",
     "build": "next build docs"
   },
   "devDependencies": {
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
-    "codice": "^0.4.2",
+    "codice": "^0.4.3",
     "next": "15.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
