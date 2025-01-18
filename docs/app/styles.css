@@ -99,15 +99,6 @@ input[type="checkbox"]:checked {
   scrollbar-width: none;
 }
 
-textarea {
-  padding-left: 48px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
 .code-frame {
   position: relative;
 }
@@ -268,7 +259,6 @@ code .sh__line::before {
 .code-snippet[data-codice-code] pre {
   background-color: #f6f6f6;
 }
-
 .codice[data-codice-code] code,
 .codice[data-codice-code] textarea {
   font-family: Consolas, Monaco, monospace;  
@@ -278,11 +268,16 @@ code .sh__line::before {
   line-height: 1.5em;
   caret-color: #333;
   outline: none;
-  /* background-color: #f6f6f6; */
   scrollbar-width: none;
 }
+.editor pre {
+  padding: 24px;
+}
+.code-snippet pre {
+  padding-bottom: 24px;
+
+}
 .codice[data-codice-code] pre {
-  padding: 0;
   padding-left: 48px;
 }
 .codice[data-codice-code] code::selection {
