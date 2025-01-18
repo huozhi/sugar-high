@@ -370,22 +370,21 @@ describe('jsx', () => {
     `)
   })
 
-  it('parse arrow function prop of jsx correctly', () => {
-    const code = `<Editor onChange={(text) => 1)} />`
+  it('preserve spaces in arrow function jsx prop correctly', () => {
+    const code = '<Foo prop={(v) => 1)} />'
 
     const tokens = tokenize(code)
     expect(getTokensAsString(tokens, { filterSpaces: false })).toMatchInlineSnapshot(`
       [
         "< => sign",
-        "Editor => entity",
+        "Foo => entity",
         " => space",
-        "onChange => property",
+        "prop => property",
         "= => sign",
         "{ => sign",
         "( => sign",
-        "text => identifier",
+        "v => identifier",
         ") => sign",
-        " => space",
         "= => sign",
         "> => sign",
         " => space",
