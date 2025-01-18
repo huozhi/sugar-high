@@ -567,6 +567,22 @@ describe('comments', () => {
       ]
     `)
   })
+
+  it('multi-line comments with annotations', () => {
+    const code = `/**
+ * @param {string} names
+ * @return {Promise<string[]>}
+ */`
+    const tokens = tokenize(code)
+    expect(getTokensAsString(tokens)).toMatchInlineSnapshot(`
+      [
+        "/**
+       * @param {string} names
+       * @return {Promise<string[]>}
+       */ => comment",
+      ]
+    `)
+  })
 })
 
 describe('regex', () => {
