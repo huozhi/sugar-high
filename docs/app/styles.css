@@ -1,6 +1,7 @@
 :root {
-  --editor-background-color: transparent;
-  --editor-text-color: transparent;
+  --codice-editor-text-color: transparent;
+  --codice-editor-background-color: transparent;
+  --codice-editor-caret-color: #333;
 }
 
 ::selection {
@@ -8,7 +9,7 @@
   color: #ddd;
 }
 
-.codice-editor ::selection {
+.codice ::selection {
   background-color: #e2ffea;
 }
 
@@ -97,18 +98,7 @@ input[type="checkbox"]:checked {
   overflow-y: scroll;
   scrollbar-width: none;
 }
-.codice-editor code,
-.codice-editor textarea {
-  font-family: Consolas, Monaco, monospace;
-  padding: 10px;
-  background-color: #f6f6f6;
-  border: none;
-  font-size: 16px;
-  line-height: 1.5em;
-  caret-color: #333;
-  outline: none;
-  scrollbar-width: none;
-}
+
 textarea {
   padding-left: 48px;
   position: absolute;
@@ -121,35 +111,6 @@ textarea {
 .code-frame {
   position: relative;
 }
-.code-header {
-  position: relative;
-  display: flex;
-  background-color: #f6f6f6;
-  padding: 16px 22px 0;
-}
-.code-control {
-  display: flex;
-  width: 12px;
-  height: 12px;
-  margin: 4px;
-  background-color: hsl(0deg 0% 0% / 34%);
-  border-radius: 50%;
-}
-.code-controls {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translate(16px, -50%);
-}
-.code-title {
-  flex: 1 0;
-  text-align: center;
-  color: hsl(0deg 0% 0% / 34%);
-}
-
 .code-label {
   position: absolute;
   height: 100%;
@@ -199,23 +160,17 @@ textarea {
 code {
   counter-reset: sh-line-number;
 }
-.codice-editor code {
-  display: flex !important;
-  flex-direction: column;
-  padding-left: 48px;
-  min-height: 400px;
-  width: 100%;
-}
-
-pre code .sh__line::before {
+code .sh__line::before {
   counter-increment: sh-line-number 1;
   content: counter(sh-line-number);
-  width: 24px;
   display: inline-block;
+  text-align: right;
+  width: 24px;
   margin-right: 18px;
   margin-left: -42px;
-  text-align: right;
   color: #a4a4a4;
+}
+.editor code .sh__line::before {
 }
 
 .live-editor {
@@ -225,18 +180,6 @@ pre code .sh__line::before {
   cursor: default;
   margin: 8rem auto;
   max-width: 720px;
-}
-.codice-editor code::selection {
-  color: transparent;
-}
-.codice-editor textarea::selection {
-  color: #2c7ea163;
-}
-
-.codice-editor code,
-.codice-editor textarea {
-  padding: 24px;
-  padding-left: 48px;
 }
 
 .live-editor__color {
@@ -283,9 +226,6 @@ pre code .sh__line::before {
   height: 30px;
   margin-right: 8px;
 }
-.sh__line {
-  display: block;
-}
 .live-editor .sh__line {
   color: #333;
 }
@@ -309,4 +249,81 @@ pre code .sh__line::before {
   }
 }
 
+[data-codice-editor] code {
+  width: 100%;
+}
+[data-codice-editor] code,
+[data-codice-code] code {
+  /* TODO: potentially upstream */
+  display: inline-block;
+}
+.editor.codice[data-codice-editor] code {
+  min-height: 400px;
+  background-color: #f6f6f6;
+}
+.editor.codice[data-codice-editor] code,
+.editor.codice[data-codice-editor] textarea {
+  padding: 24px 24px 24px 48px;
+}
+.code-snippet[data-codice-code] pre {
+  background-color: #f6f6f6;
+}
 
+.codice[data-codice-code] code,
+.codice[data-codice-code] textarea {
+  font-family: Consolas, Monaco, monospace;  
+  padding: 10px;
+  border: none;
+  font-size: 16px;
+  line-height: 1.5em;
+  caret-color: #333;
+  outline: none;
+  /* background-color: #f6f6f6; */
+  scrollbar-width: none;
+}
+.codice[data-codice-code] pre {
+  padding: 0;
+  padding-left: 48px;
+}
+.codice[data-codice-code] code::selection {
+  color: transparent;
+}
+.codice[data-codice-code] textarea::selection {
+  color: #2c7ea163;
+}
+.code-snippet [data-codice-editor-header] {
+  background-color: #f6f6f6;
+}
+
+/* TODO: default color variable */
+.codice [data-codice-editor-controls] span {
+  background-color: rgba(0,0,0,.34);
+}
+.codice [data-codice-editor-title] {
+  color: rgba(0,0,0,.34);
+}
+
+/* debug */
+.editor-token {
+  padding: 4px 8px;
+  margin: 8px;
+  background-color: #d4d1d1;
+}
+.editor-token--keyword {
+  background-color: #f47067;
+}
+.editor-token--string {
+  background-color: #00a99a;
+}
+.editor-token--comment {
+  background-color: #a19595;
+}
+.editor-token--property {
+  background-color: #0550ae;
+}
+.editor-token--entity {
+  background-color: #249a97;
+}
+.editor-token--jsxliterals {
+  background-color: #6266d1;
+}

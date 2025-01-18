@@ -31,7 +31,7 @@ function debounce(func, timeout = 200) {
 
 const customizableColors = Object.entries(SugarHigh.TokenTypes)
   .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
-  .sort((a, b) => a - b)
+  .sort((a, b) => Number(a) - Number(b))
 
 const DEFAULT_LIVE_CODE = `\
 export default function App() {
@@ -110,7 +110,7 @@ export default function LiveEditor({
   enableTypingAnimation = true,
   defaultCode = DEFAULT_LIVE_CODE,
 }) {
-  const editorRef = useRef()
+  const editorRef = useRef(null)
   const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
   const isDebug = process.env.NODE_ENV === 'development'
 
@@ -139,7 +139,7 @@ export default function LiveEditor({
 
   const customizableColorsString = useMemo(() => {
     return customizableColors
-      .map(([tokenType, tokenTypeName]) => {
+      .map(([_tokenType, tokenTypeName]) => {
         return `--sh-${tokenTypeName}: ${colorPlateColors[tokenTypeName]};`
       })
       .join('\n')
@@ -165,8 +165,9 @@ export default function LiveEditor({
       <div className="flex live-editor">
         <Editor
           ref={editorRef}
-          className="codice-editor flex-1"
+          className="codice editor flex-1"
           highlight={highlight}
+          controls={false}
           value={liveCode}
           onChange={(newCode) => {
             setLiveCode(newCode)
@@ -210,17 +211,14 @@ export default function LiveEditor({
       </div>
       {isDebug && (
         <div className="editor-tokens">
-          <pre>
-            {liveCodeTokens.map(([tokenType, token], index) => {
-              const tokenTypeName = SugarHigh.TokenTypes[tokenType]
-              return (
-                <div key={index}>
-                  {tokenTypeName}
-                  {' '.repeat(12 - tokenTypeName.length)} {token}
-                </div>
-              )
-            })}
-          </pre>
+          {liveCodeTokens.map(([tokenType, token], index) => {
+            const tokenTypeName = SugarHigh.TokenTypes[tokenType]
+            return (
+              <span className={`editor-token editor-token--${tokenTypeName}`} key={index}>
+                {token}{` `}
+              </span>
+            )
+          })}
         </div>
       )}
     </div>
