@@ -1,13 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Editor } from 'codice'
+import { Editor, Code } from 'codice'
 import { highlight } from 'sugar-high'
 
-/**
- * @type {[string, string, { highlightedLines: number[] }][]} 
- * @const
- */
 const EXAMPLE_PAIRS = [
   [
     'install.js',
@@ -119,9 +115,20 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
       highlightedLines: [9]
     }
   ]
-]
+] as const
 
-function CodeFrame({ code, title = 'Untitled', index, highlightedLines = [] }) {
+function CodeFrame(
+  { 
+    code, 
+    title = 'Untitled', 
+    index, 
+    highlightedLines = [] 
+  }: { 
+    code: string, 
+    title: string, 
+    index: number, 
+    highlightedLines: readonly number[] | number[]
+  }) {
   return (
     <div className='code-frame'>
       <style>
@@ -132,21 +139,14 @@ function CodeFrame({ code, title = 'Untitled', index, highlightedLines = [] }) {
           .join('\n') + '\n'
         }
       </style>
-      <div className='code-header'>
-        <div className='code-controls'>
-          <div className='code-control' />
-          <div className='code-control' />
-          <div className='code-control' />
-        </div>
-        <div className='code-title'>{title}</div>
-      </div>
-
-      <Editor
-        className='codice-editor'
-        highlight={highlight}
-        value={code}
-        disabled
-      />
+      <Code
+        controls
+        title={title}
+        className='codice code-snippet'
+        data-disabled="true"
+      >
+        {highlight(code)}
+      </Code>
     </div>
   )
 }
@@ -175,8 +175,8 @@ export default function Carousel() {
           const isShown = isAdjacent || isSelected
 
           let translate = '0%, 0%'
-          let scale = 1
-          let opacity = 1
+          let scale = '1'
+          let opacity = '1'
           if (i == left) {
             translate = '-40%, 60px'
             scale = '0.8'
@@ -198,7 +198,7 @@ export default function Carousel() {
 
           if (isAdjacent || i === selected) {
             r += `.code-label#code-${i}:hover {
-              transform: translate(${translate}) scale(${scale * 1.1});
+              transform: translate(${translate}) scale(${Number(scale) * 1.1});
             }`
           }
 
