@@ -1,8 +1,8 @@
 <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_4545_13)">
-<circle cx="104.752" cy="100.252" r="71.0642" transform="rotate(-45 104.752 100.252)" fill="#F6F6F6"/>
-<circle cx="99.9012" cy="103.886" r="31.8198" transform="rotate(-45 99.9012 103.886)" fill="#F3F893"/>
-<ellipse cx="77.4012" cy="126.386" rx="9.54594" ry="21.2132" transform="rotate(-45 77.4012 126.386)" fill="#FF7878"/>
+<circle cx="100" cy="100" r="98" transform="rotate(-90 100 100)" fill="#F6F6F6" stroke="#C9C9C9" stroke-width="4"/>
+<circle cx="105.798" cy="96.1653" r="44.7761" transform="rotate(-30 105.798 96.1653)" fill="#F3F893"/>
+<ellipse cx="67.0212" cy="118.553" rx="13.4328" ry="29.8508" transform="rotate(-30 67.0212 118.553)" fill="#FF7878"/>
 </g>
 <defs>
 <clipPath id="clip0_4545_13">
