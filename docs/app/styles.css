@@ -251,7 +251,6 @@ code {
 .codice[data-codice-code] code,
 .codice[data-codice-code] textarea {
   font-family: Consolas, Monaco, monospace;
-  padding: 10px;
   border: none;
   font-size: 16px;
   line-height: 1.5em;
@@ -260,11 +259,9 @@ code {
   scrollbar-width: none;
 }
 
-.code-snippet pre {
-  padding-bottom: 24px;
-}
-.codice[data-codice-code] pre {
-  padding-left: 48px;
+.code-snippet [data-codice-code-content] {
+  padding: 24px;
+  padding-bottom: 36px;
 }
 .codice[data-codice-code] code::selection {
   color: transparent;
@@ -306,4 +303,9 @@ code {
 }
 .editor-token--jsxliterals {
   background-color: #6266d1;
+}
+
+.sh__line {
+  display: inline-block; /* TODO: upstream to codice */
+  width: 100%;
 }
