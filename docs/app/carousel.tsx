@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Editor, Code } from 'codice'
-import { highlight } from 'sugar-high'
+import { Code } from 'codice'
 
 const EXAMPLE_PAIRS = [
   [
@@ -145,7 +144,7 @@ function CodeFrame(
         className='codice code-snippet'
         data-disabled="true"
       >
-        {highlight(code)}
+        {code}
       </Code>
     </div>
   )

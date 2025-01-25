@@ -1,7 +1,5 @@
 :root {
-  --codice-editor-text-color: transparent;
-  --codice-editor-background-color: transparent;
-  --codice-editor-caret-color: #333;
+  --codice-caret-color: #333;
 }
 
 ::selection {
@@ -233,16 +231,16 @@ code {
   }
 }
 
-[data-codice-editor] code {
+[data-codice="editor"] code {
   width: 100%;
 }
 
-.editor.codice[data-codice-editor] code {
+.editor.codice[data-codice="editor"] code {
   min-height: 400px;
   background-color: #f6f6f6;
 }
-.editor.codice[data-codice-editor] code,
-.editor.codice[data-codice-editor] textarea {
+.editor.codice[data-codice="editor"] code,
+.editor.codice[data-codice="editor"] textarea {
   padding: 24px 24px 24px 48px;
 }
 .code-snippet[data-codice-code] pre {
@@ -269,14 +267,14 @@ code {
 .codice[data-codice-code] textarea::selection {
   color: #2c7ea163;
 }
-.code-snippet [data-codice-editor-header] {
+.code-snippet [data-codice-header] {
   background-color: #f6f6f6;
 }
 
-.codice [data-codice-editor-control] {
+.codice [data-codice-control] {
   background-color: rgba(0, 0, 0, 0.34);
 }
-.codice [data-codice-editor-title] {
+.codice [data-codice-title] {
   color: rgba(0, 0, 0, 0.34);
 }
 
@@ -303,9 +301,4 @@ code {
 }
 .editor-token--jsxliterals {
   background-color: #6266d1;
-}
-
-.sh__line {
-  display: inline-block; /* TODO: upstream to codice */
-  width: 100%;
 }

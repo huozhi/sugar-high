@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { highlight, tokenize, SugarHigh } from 'sugar-high'
+import { tokenize, SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
 import { CopyButton } from './components/copy-button'
 
@@ -112,8 +112,6 @@ export default function LiveEditor({
 }) {
   const editorRef = useRef(null)
   const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
-  const isDebug = process.env.NODE_ENV === 'development'
-
   const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode(defaultCode)
   const {
     text: liveCode,
@@ -166,7 +164,6 @@ export default function LiveEditor({
         <Editor
           ref={editorRef}
           className="codice editor flex-1"
-          highlight={highlight}
           controls={false}
           value={liveCode}
           onChange={(newCode) => {

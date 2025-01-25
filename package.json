@@ -17,13 +17,16 @@
   "devDependencies": {
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
-    "codice": "^0.5.0",
+    "codice": "^1.0.0-beta.0",
     "next": "15.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sugar-high": "link:./",
     "typescript": "5.7.3",
     "vitest": "^3.0.2"
+  },
+  "resolutions": {
+    "sugar-high": "link:./"
   },
   "packageManager": "pnpm@8.7.1"
 }
