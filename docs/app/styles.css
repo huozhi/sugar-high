@@ -239,10 +239,6 @@ code {
   min-height: 400px;
   background-color: #f6f6f6;
 }
-.editor.codice[data-codice="editor"] code,
-.editor.codice[data-codice="editor"] textarea {
-  padding: 24px 24px 24px 48px;
-}
 .code-snippet[data-codice-code] pre {
   background-color: #f6f6f6;
 }
