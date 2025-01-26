@@ -15,8 +15,8 @@ devDependencies:
     specifier: 19.0.7
     version: 19.0.7
   codice:
-    specifier: ^1.0.0-beta.0
-    version: 1.0.0-beta.0(react@19.0.0)
+    specifier: ^1.0.0
+    version: 1.0.0(react@19.0.0)
   next:
     specifier: 15.1.5
     version: 15.1.5(react-dom@19.0.0)(react@19.0.0)
@@ -728,8 +728,8 @@ packages:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
     dev: true
 
-  /codice@1.0.0-beta.0(react@19.0.0):
-    resolution: {integrity: sha512-prJYE9Rs+t48lFlOoWOIF9UOpCz5+k4cHn/KdR7RpBRI45DsfR2TlH+9T01KgpslUsfQVv1uPFJSVFFuQ9iX/Q==}
+  /codice@1.0.0(react@19.0.0):
+    resolution: {integrity: sha512-jaaDR+b80oA61IJ6WR2VurWiYCM9fgEYSPak722YJE+UW9P3veIRJwWDEgdn8Dm9GL+HJDV3VJ2BfN1PpikdbQ==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
     dependencies:
