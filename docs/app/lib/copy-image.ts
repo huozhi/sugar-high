@@ -27,19 +27,20 @@ async function copyImageForSafari(dataUrl: string) {
     canvas.width = img.width
     canvas.height = img.height
     ctx.drawImage(img, 0, 0)
+    fallbackCopyImage(canvas)
 
-    canvas.toBlob(async (blob) => {
-      if (navigator.clipboard && navigator.clipboard.write) {
-        try {
-          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-        } catch (error) {
-          console.error(error)
-          fallbackCopyImage(canvas)
-        }
-      } else {
-        fallbackCopyImage(canvas)
-      }
-    })
+    // canvas.toBlob(async (blob) => {
+    //   if (navigator.clipboard && navigator.clipboard.write) {
+    //     try {
+    //       await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+    //     } catch (error) {
+    //       console.error(error)
+    //       fallbackCopyImage(canvas)
+    //     }
+    //   } else {
+    //     fallbackCopyImage(canvas)
+    //   }
+    // })
   }
 }
 
