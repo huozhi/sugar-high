@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { startTransition, useActionState, useEffect, useState } from 'react'
 import domToImage from 'dom-to-image'
 import { Code } from 'codice'
+import { copyImageDataUrl } from './lib/copy-image'
 
 const EXAMPLE_PAIRS = [
   [
@@ -225,46 +226,31 @@ export default function Carousel() {
         <p>Code highlight examples built with sugar-high</p>
       </div>
       <div className="cards">
-        {examples.map(([name, code, config], i) => (
-          
-          <label 
-            key={i} 
-            htmlFor={`item-${i}`}
-            className={`code-label code-label--${i} ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`}
-            id={`code-${i}`}
-          >
-            <CodeFrame
-              code={code} 
-              title={name} 
-              index={i} 
-              highlightedLines={config.highlightedLines}
-            />
-            {/* copy button floating on the top right */}
-            <button
-              className='code-copy-pic-button'
-              onClick={async () => {
-                const domNode = document.querySelector(`#code-frame-${i}`)
-                try {
-                  const dataUrl = await domToImage.toPng(domNode)
-                  const blob = await (await fetch(dataUrl)).blob();
-                  const item = new ClipboardItem({ "image/png": blob });
-            
-                  await navigator.clipboard.write([item])
-                } catch (error) {
-                  console.error(error)
-                }
-              }}
+        {examples.map(([name, code, config], i) => {
+          function handleCopyImage() {
+            const domNode = document.querySelector(`#code-frame-${i}`)
+            return domToImage.toPng(domNode).then(dataUrl => {
+              return copyImageDataUrl(dataUrl).then(() => true, () => false)
+            })
+          }
+
+          return (
+            <label 
+              key={i} 
+              htmlFor={`item-${i}`}
+              className={`code-label code-label--${i} ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`}
+              id={`code-${i}`}
             >
-              <CameraIcon
-                width={24}
-                height={24}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
+              <CodeFrame
+                code={code} 
+                title={name} 
+                index={i} 
+                highlightedLines={config.highlightedLines}
               />
-            </button>
-          </label>
-        ))}
+              <CopyImageButton onCopy={handleCopyImage} />
+            </label>
+          )}
+        )}
       </div>
     </div>
   )
@@ -276,5 +262,77 @@ function CameraIcon({ ...props }: React.SVGProps<SVGSVGElement>) {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 18V9a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 10.07 4h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 18.07 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
       <circle cx="12" cy="13" r="3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
     </svg>
+  )
+}
+
+function cx(...args: any[]) {
+  return args.filter(Boolean).join(' ')
+}
+
+
+function CopyImageButton({ onCopy } : { onCopy: () => Promise<boolean> }) {
+  
+  function handleActionState(state, action) {
+    if (action === 'copy') {
+      return onCopy().then(
+        () => {
+          console.log('copied')
+          return 1
+        },
+        () => {
+          console.log('copy failed')
+          return 2
+        }
+      )
+    } else if (action === 'reset') {
+      return 0
+    }
+    return state
+  }
+  // 0: idle, 1: success, 2: error
+  const [copyState, dispatch, isPending] = useActionState(handleActionState, 0)
+  function copy() {
+    startTransition(() => {
+      dispatch('copy')
+    })
+  }
+  const reset = () => dispatch('reset')
+
+  useEffect(() => {
+    if (copyState === 1) {
+      const timer = setTimeout(() => {
+        reset()
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  })
+
+  return (
+    <button
+      className='code-copy-pic-button'
+      onClick={() => {
+        copy()
+      }}
+      title={
+        isPending ? 'Copying...' :
+        copyState === 1 ? 'Copied!' :
+        copyState === 2 ? 'Copy failed' : 'Copy image'
+      }
+    >
+      <CameraIcon
+        className={cx(
+          'code-copy-pic-icon',
+          isPending ? 'code-copy-pic-icon--pending' :
+          copyState === 1 ? 'code-copy-pic-icon--success' :
+          copyState === 2 && 'code-copy-pic-icon--error'
+        )}
+        
+        width={24}
+        height={24}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+    </button>
   )
 }

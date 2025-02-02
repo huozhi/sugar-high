@@ -123,12 +123,23 @@ input[type='checkbox']:checked {
   border-radius: 4px;
   border: none;
 }
+/* svg change colors based on state */
+.code-copy-pic-icon:hover {
+  color: #333;
+}
+.code-copy-pic-icon.code-copy-pic-icon--pending {
+  color: #666;
+}
+.code-copy-pic-icon.code-copy-pic-icon--success {
+  color: #00a99a;
+}
+.code-copy-pic-icon.code-copy-pic-icon--error {
+  color: #f47067;
+}
 .code-copy-pic-button:hover {
   background-color: #ffffff1f;
 }
-.code-copy-pic-button:hover svg {
-  color: #333;
-}
+
 .code-copy-pic-button:active {
   background-color: #ffffff2f;
 }
