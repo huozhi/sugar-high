@@ -1,6 +1,7 @@
 export async function copyImageDataUrl(dataUrl: string) {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
   try {
-    if (navigator.clipboard && window.ClipboardItem) {
+    if (navigator.clipboard && window.ClipboardItem && !isSafari) {
       // Modern browsers: Use Clipboard API
       const blob = await (await fetch(dataUrl)).blob()
       const item = new ClipboardItem({ 'image/png': blob })
@@ -11,7 +12,7 @@ export async function copyImageDataUrl(dataUrl: string) {
     }
   } catch (error) {
     await copyImageForSafari(dataUrl)
-    console.log(error)
+    console.error(error)
   }
 }
 

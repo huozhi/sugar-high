@@ -276,11 +276,9 @@ function CopyImageButton({ onCopy } : { onCopy: () => Promise<boolean> }) {
     if (action === 'copy') {
       return onCopy().then(
         () => {
-          console.log('copied')
           return 1
         },
         () => {
-          console.log('copy failed')
           return 2
         }
       )
