@@ -33,6 +33,7 @@ async function copyImageForSafari(dataUrl: string) {
         try {
           await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
         } catch (error) {
+          console.error(error)
           fallbackCopyImage(canvas)
         }
       } else {
