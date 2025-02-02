@@ -4,6 +4,16 @@
   "type": "module",
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./presets": {
+      "types": "./lib/presets/index.d.ts",
+      "default": "./lib/presets/index.js"
+    }
+  },
   "description": "Super lightweight JSX syntax highlighter",
   "files": [
     "lib"
