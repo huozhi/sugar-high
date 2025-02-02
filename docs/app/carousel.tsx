@@ -230,7 +230,13 @@ export default function Carousel() {
           function handleCopyImage() {
             const domNode = document.querySelector(`#code-frame-${i}`)
             return domToImage.toPng(domNode).then(dataUrl => {
-              return copyImageDataUrl(dataUrl).then(() => true, () => false)
+              return copyImageDataUrl(dataUrl).then(
+                () => {
+                  return true
+                }, () => {
+                  return false
+                }
+              )
             })
           }
 
@@ -271,16 +277,10 @@ function cx(...args: any[]) {
 
 
 function CopyImageButton({ onCopy } : { onCopy: () => Promise<boolean> }) {
-  
   function handleActionState(state, action) {
     if (action === 'copy') {
       return onCopy().then(
-        () => {
-          return 1
-        },
-        () => {
-          return 2
-        }
+        result => result ? 1 : 2,
       )
     } else if (action === 'reset') {
       return 0
