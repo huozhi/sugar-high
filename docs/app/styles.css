@@ -101,10 +101,6 @@ input[type='checkbox']:checked {
   overflow-y: scroll;
   scrollbar-width: none;
 }
-
-.code-frame {
-  position: relative;
-}
 .code-label {
   position: absolute;
   height: 100%;
@@ -114,7 +110,32 @@ input[type='checkbox']:checked {
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   border-radius: 2px;
 }
-
+.code-frame {
+  position: relative;
+}
+.code-copy-pic-button {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  padding: 4px 8px;
+  cursor: pointer;
+  background-color: #ffffff0f;
+  border-radius: 4px;
+  border: none;
+}
+.code-copy-pic-button:hover {
+  background-color: #ffffff1f;
+}
+.code-copy-pic-button:hover svg {
+  color: #333;
+}
+.code-copy-pic-button:active {
+  background-color: #ffffff2f;
+}
+.code-copy-pic-button svg {
+  color: #666;
+  vertical-align: middle;
+}
 .carousel {
   margin: 8rem auto;
   width: 100%;
