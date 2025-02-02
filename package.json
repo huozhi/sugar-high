@@ -28,6 +28,7 @@
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
     "codice": "^1.0.0",
+    "dom-to-image": "^2.6.0",
     "next": "15.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

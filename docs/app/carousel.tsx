@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import domToImage from 'dom-to-image'
 import { Code } from 'codice'
 
 const EXAMPLE_PAIRS = [
@@ -129,7 +130,7 @@ function CodeFrame(
     highlightedLines: readonly number[] | number[]
   }) {
   return (
-    <div className='code-frame'>
+    <div className='code-frame' id={`code-frame-${index}`}>
       <style>
         {highlightedLines.map(line => 
           `.code-label--${index} .code-frame .sh__line:nth-child(${line}) {
@@ -225,11 +226,55 @@ export default function Carousel() {
       </div>
       <div className="cards">
         {examples.map(([name, code, config], i) => (
-          <label key={i} htmlFor={`item-${i}`} className={`code-label code-label--${i} ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`} id={`code-${i}`}>
-            <CodeFrame code={code} title={name} index={i} highlightedLines={config.highlightedLines} />
+          
+          <label 
+            key={i} 
+            htmlFor={`item-${i}`}
+            className={`code-label code-label--${i} ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`}
+            id={`code-${i}`}
+          >
+            <CodeFrame
+              code={code} 
+              title={name} 
+              index={i} 
+              highlightedLines={config.highlightedLines}
+            />
+            {/* copy button floating on the top right */}
+            <button
+              className='code-copy-pic-button'
+              onClick={async () => {
+                const domNode = document.querySelector(`#code-frame-${i}`)
+                try {
+                  const dataUrl = await domToImage.toPng(domNode)
+                  const blob = await (await fetch(dataUrl)).blob();
+                  const item = new ClipboardItem({ "image/png": blob });
+            
+                  await navigator.clipboard.write([item])
+                } catch (error) {
+                  console.error(error)
+                }
+              }}
+            >
+              <CameraIcon
+                width={24}
+                height={24}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+            </button>
           </label>
         ))}
       </div>
     </div>
+  )
+}
+
+function CameraIcon({ ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" {...props}>
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 18V9a2 2 0 0 1 2-2h.93a2 2 0 0 0 1.664-.89l.812-1.22A2 2 0 0 1 10.07 4h3.86a2 2 0 0 1 1.664.89l.812 1.22A2 2 0 0 0 18.07 7H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <circle cx="12" cy="13" r="3" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+    </svg>
   )
 }

@@ -17,6 +17,9 @@ devDependencies:
   codice:
     specifier: ^1.0.0
     version: 1.0.0(react@19.0.0)
+  dom-to-image:
+    specifier: ^2.6.0
+    version: 2.6.0
   next:
     specifier: 15.1.5
     version: 15.1.5(react-dom@19.0.0)(react@19.0.0)
@@ -798,6 +801,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /dom-to-image@2.6.0:
+    resolution: {integrity: sha512-Dt0QdaHmLpjURjU7Tnu3AgYSF2LuOmksSGsUcE6ItvJoCWTBEmiMXcqBdNSAm9+QbbwD7JMoVsuuKX6ZVQv1qA==}
+    dev: true
 
   /es-module-lexer@1.6.0:
     resolution: {integrity: sha512-qqnD1yMU6tk/jnaMosogGySTZP8YtUgAffA9nMN+E/rjxcfRQ6IEk7IiozUjgxKoFHBGjTLnrHB/YC45r/59EQ==}
