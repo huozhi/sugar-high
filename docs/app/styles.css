@@ -190,19 +190,20 @@ code {
 .live-editor {
   flex: 1;
   cursor: default;
-  box-shadow: -5px 5px 89px rgba(0, 0, 0, 0.5);
-  cursor: default;
+  box-shadow: -5px 12px 60px #8888887a;
   margin: 8rem auto;
   max-width: 720px;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .live-editor__color {
-  margin: 24px 0;
+  margin: 0;
   padding: 0 24px;
 }
 
 .live-editor__color h3 {
-  margin: 0 0 24px;
+  margin: 16px 0;
   display: flex;
   gap: 8px;
 }
@@ -221,6 +222,7 @@ code {
   align-items: center;
   color: #666;
   margin: 4px 0;
+  width: 100%;
 }
 
 .live-editor__color__item .copy-button {
@@ -239,6 +241,12 @@ code {
   width: 30px;
   height: 30px;
   margin-right: 8px;
+}
+.live-editor__color__item__name {
+  margin-right: 12px;
+}
+.live-editor__color__item__color {
+  color: #ddd;
 }
 .live-editor .sh__line {
   color: #333;
@@ -309,8 +317,12 @@ code {
 .editor-token {
   display: inline-block;
   padding: 4px 8px;
-  background-color: #d4d1d1;
+  background-color: #e5e5e5;
   color: #524f4f;
+}
+.editor-token--class {
+  background-color: #2d5e9d;
+  color: #ddd;
 }
 .editor-token--keyword {
   background-color: #f47067;
@@ -329,4 +341,5 @@ code {
 }
 .editor-token--jsxliterals {
   background-color: #6266d1;
+  color: #ddd;
 }
