@@ -15,8 +15,8 @@ devDependencies:
     specifier: 19.0.7
     version: 19.0.7
   codice:
-    specifier: ^1.0.0
-    version: 1.0.0(react@19.0.0)
+    specifier: ^1.1.0
+    version: 1.1.0(react@19.0.0)
   dom-to-image:
     specifier: ^2.6.0
     version: 2.6.0
@@ -731,8 +731,8 @@ packages:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
     dev: true
 
-  /codice@1.0.0(react@19.0.0):
-    resolution: {integrity: sha512-jaaDR+b80oA61IJ6WR2VurWiYCM9fgEYSPak722YJE+UW9P3veIRJwWDEgdn8Dm9GL+HJDV3VJ2BfN1PpikdbQ==}
+  /codice@1.1.0(react@19.0.0):
+    resolution: {integrity: sha512-M97Qyn8wNxYtFfz7D3aaEDpErYC+0KtAxEt035giz37jZHdU6NlOq7iGYIA8nAu0ZI9y/Znz1DjHcWEEcBX8hQ==}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
     dependencies:

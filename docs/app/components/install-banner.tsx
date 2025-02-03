@@ -35,6 +35,10 @@ export default function InstallBanner() {
           --sh-string: #88bbb6;
           --sh-comment:#7c7c7c;
         }
+
+        :scope [data-codice-header] {
+          display: none;
+        }
         `}
       </style>
       <h1 className="install-banner__command">
