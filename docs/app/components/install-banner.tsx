@@ -1,6 +1,7 @@
 'use client'
 
 import { CopyButton } from './copy-button'
+import { Code } from 'codice'
 import './install-banner.css'
 
 const cssCode = `\
@@ -27,6 +28,19 @@ const html = highlight(code)
 export default function InstallBanner() {
   return (
     <div className="install-banner">
+      <style>
+        {`
+        :scope {
+          --sh-keyword: #ffada8;
+          --sh-string: #88bbb6;
+          --sh-comment:#7c7c7c;
+        }
+
+        :scope [data-codice-header] {
+          display: none;
+        }
+        `}
+      </style>
       <h1 className="install-banner__command">
         Highlight your code with{' '}
         <a href='https://github.com/huozhi/sugar-high' target='_blank' rel='noreferrer'>
@@ -35,16 +49,16 @@ export default function InstallBanner() {
       </h1>
       <div className="max-width-container">
         <div className="install-banner__code">
-          <code>
-            <pre>{usageCode}</pre>
-          </code>
+          <Code title='install.sh'>
+            {usageCode}
+          </Code>
           <CopyButton codeSnippet={usageCode} />
         </div>
         <br />
         <div className="install-banner__code install-banner__code--dimmed">
-          <code>
-            <pre>{cssCode}</pre>
-          </code>
+          <Code title='color.css'>
+            {cssCode}
+          </Code>
           <CopyButton codeSnippet={cssCode} />
         </div>
 

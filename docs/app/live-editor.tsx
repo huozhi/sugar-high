@@ -182,11 +182,13 @@ export default function LiveEditor({
             return (
               <li key={tokenType} className="live-editor__color__item">
                 <label htmlFor={inputId} className="flex align-center">
+                
                   <span
                     className={`live-editor__color__item__indicator live-editor__color__item__indicator--${tokenTypeName}`}
                     style={{ color: colorPlateColors[tokenTypeName] }}
                   />
-                  {tokenTypeName}
+                  <span className='live-editor__color__item__name'>{tokenTypeName}</span>
+                  <span className='live-editor__color__item__color'>{colorPlateColors[tokenTypeName]}</span>
                 </label>
 
                 <input
@@ -200,7 +202,6 @@ export default function LiveEditor({
                     })
                   }}
                 />
-                <span>{colorPlateColors[tokenTypeName]}</span>
               </li>
             )
           })}
