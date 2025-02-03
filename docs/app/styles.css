@@ -207,6 +207,8 @@ code {
   margin: 16px 0;
   display: flex;
   gap: 8px;
+  color: #68727f;
+  font-size: 16px;
 }
 .live-editor__color input[type='color'] {
   display: inline;
@@ -222,7 +224,7 @@ code {
   display: flex;
   align-items: center;
   color: #666;
-  margin: 4px 0;
+  margin: 6px 0;
   width: 100%;
 }
 
@@ -242,13 +244,14 @@ code {
   width: 30px;
   height: 30px;
   margin-right: 8px;
+  border-radius: 999px;
 }
 .live-editor__color__item__name {
   margin-right: 12px;
+  color: #a4a4a4;
 }
 .live-editor__color__item__color {
   display: none;
-  color: #ddd;
 }
 .live-editor .sh__line {
   color: #333;
