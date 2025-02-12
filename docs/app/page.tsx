@@ -9,7 +9,7 @@ export default function Page() {
         <h1>
           <span className='hover-shadow'>Sugar High</span>
         </h1>
-        <p>Super lightweight syntax highlighter for JSX, <b>1KB</b> after minified and gizpped.</p>
+        <p>Super lightweight syntax highlighter</p>
       </div>
 
       <LiveEditor />

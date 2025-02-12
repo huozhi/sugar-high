@@ -16,7 +16,7 @@
 }
 
 html {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
     'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 body {
@@ -77,24 +77,28 @@ input[type='checkbox']:checked {
   background-color: currentColor;
 }
 .hover-shadow {
+  text-shadow: 0 0px 2px #2a77e7;
   transition: all 0.2s ease;
 }
 .hover-shadow:hover {
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 2px 3px #2a77e7;
   transform: scale(1.02);
 }
 .header {
-  margin-top: 1rem;
-  padding: 0px 8px;
+  margin: 1rem auto; 
   text-align: center;
+  padding: 2rem 0;
+  color: #354150;
+  max-height: 50vmin;
 }
 .header h1 span {
-  font-size: 64px;
+  font-size: 5rem;
   font-weight: 800;
   text-align: center;
   margin: 1rem;
-  padding: 16px 0;
-  flex-direction: column; 
+}
+.header p {
+  font-size: 1.5rem;
 }
 .cards .editor {
   position: relative;
@@ -261,7 +265,7 @@ code {
   background-color: currentColor;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 640px) {
   .cards {
     width: 100%;
   }
@@ -273,6 +277,9 @@ code {
   }
   .live-editor__color {
     display: none;
+  }
+  .header h1 span {
+    font-size: 200%;
   }
 }
 
