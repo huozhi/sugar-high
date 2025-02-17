@@ -1,7 +1,6 @@
 # Sugar High
 
 [![Build][build-badge]][build]
-[![Coverage][coverage-badge]][coverage]
 
 ### Introduction
 
