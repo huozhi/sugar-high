@@ -76,13 +76,9 @@ input[type='checkbox'] {
 input[type='checkbox']:checked {
   background-color: currentColor;
 }
-.hover-shadow {
-  text-shadow: 0 0px 2px #2a77e7;
-  transition: all 0.2s ease;
-}
-.hover-shadow:hover {
-  text-shadow: 0 2px 3px #2a77e7;
-  transform: scale(1.02);
+.big-title {
+  line-height: 1.2;
+  transition: all 0.2s ease;  
 }
 .header {
   margin: 1rem auto; 
@@ -99,6 +95,7 @@ input[type='checkbox']:checked {
 }
 .header p {
   font-size: 1.5rem;
+  color: #808c97;
 }
 .cards .editor {
   position: relative;
@@ -114,12 +111,36 @@ input[type='checkbox']:checked {
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   border-radius: 2px;
 }
+
+.card-indicator-dots {
+  margin: auto;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 8px;
+  background-color: #ffffff1f;
+  border-radius: 4px;
+}
+.card-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #bababa;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+.card-indicator--selected {
+  background-color: #354150;
+}
+.code-label {
+  border-radius: 6px;
+}
 .code-frame {
   position: relative;
 }
 .code-copy-pic-button {
   position: absolute;
-  top: 10px;
+  top: 6px;
   right: 16px;
   padding: 4px 8px;
   cursor: pointer;
@@ -153,7 +174,6 @@ input[type='checkbox']:checked {
 }
 .carousel {
   margin: 8rem auto;
-  width: 100%;
   transform-style: preserve-3d;
   display: flex;
   justify-content: center;
@@ -181,10 +201,6 @@ input[type='checkbox']:checked {
 .cards textarea {
   /* disable text area */
   pointer-events: none;
-}
-
-.live-editor-section {
-  margin-top: 80px;
 }
 
 code {
@@ -261,6 +277,10 @@ code {
   color: #333;
 }
 
+.live-editor-section {
+  margin-top: 80px;
+}
+
 .live-editor-section .live-editor__color__item__indicator {
   background-color: currentColor;
 }
@@ -287,20 +307,16 @@ code {
   width: 100%;
 }
 
-.editor {
+.editor,
+.code-frame {
   background-color: #f6f6f6; 
 }
-.editor.codice[data-codice="editor"] code {
-  background-color: #f6f6f6;
-}
-.code-snippet[data-codice-code] pre {
-  background-color: #f6f6f6;
-}
+
 .codice[data-codice-code] code,
 .codice[data-codice-code] textarea {
   font-family: Consolas, Monaco, monospace;
   border: none;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5em;
   caret-color: #333;
   outline: none;
@@ -316,9 +332,6 @@ code {
 }
 .codice[data-codice-code] textarea::selection {
   color: #2c7ea163;
-}
-.code-snippet [data-codice-header] {
-  background-color: #f6f6f6;
 }
 
 .codice [data-codice-control] {
@@ -356,4 +369,15 @@ code {
 .editor-token--jsxliterals {
   background-color: #6266d1;
   color: #ddd;
+}
+
+.show-case-title h1 {
+  color: #354150;
+}
+.show-case-title p {
+  color: #5b626d;
+}
+
+.editor-tokens {
+  font-size: 14px;
 }

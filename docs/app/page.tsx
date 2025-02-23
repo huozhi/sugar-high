@@ -7,7 +7,7 @@ export default function Page() {
     <>
       <div className="max-width-container header">
         <h1>
-          <span className='hover-shadow'>Sugar High</span>
+          <span className='big-title'>Sugar High</span>
         </h1>
         <p>Super lightweight syntax highlighter</p>
       </div>

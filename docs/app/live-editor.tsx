@@ -166,6 +166,8 @@ export default function LiveEditor({
           className="codice editor flex-1"
           controls={false}
           value={liveCode}
+          fontSize={14}
+          lineNumbersWidth='2rem'
           onChange={(newCode) => {
             setLiveCode(newCode)
             debouncedTokenize(newCode)

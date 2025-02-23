@@ -221,9 +221,18 @@ export default function Carousel() {
           />
         ))}
       </>
-      <div className='align-start'>
+      <div className='show-case-title align-start'>
         <h1>Showcase</h1>
         <p>Code highlight examples built with sugar-high</p>
+      </div>
+      <div className='card-indicator-dots'>
+        {examples.map((_, i) => (
+          <label 
+            key={i} 
+            htmlFor={`item-${i}`}
+            className={`card-indicator ${i === selected ? `card-indicator--selected` : ''}`}
+          />
+        ))}
       </div>
       <div className="cards">
         {examples.map(([name, code, config], i) => {
@@ -325,8 +334,8 @@ function CopyImageButton({ onCopy } : { onCopy: () => Promise<boolean> }) {
           copyState === 2 && 'code-copy-pic-icon--error'
         )}
         
-        width={24}
-        height={24}
+        width={'1rem'}
+        height={'1rem'}
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"
