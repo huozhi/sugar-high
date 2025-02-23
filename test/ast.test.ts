@@ -554,6 +554,32 @@ describe('jsx', () => {
       ]
     `)
   })
+
+  it('should preserve the spaces in jsx prop', () => {
+    const code = `<p foo={(a) => f(a)} />`
+    const tokens = tokenize(code)
+    expect(getTokensAsString(tokens)).toMatchInlineSnapshot(`
+      [
+        "< => sign",
+        "p => entity",
+        "foo => property",
+        " => space",
+        "= => sign",
+        "{ => sign",
+        "( => sign",
+        "a => identifier",
+        ") => sign",
+        "= => sign",
+        "> => sign",
+        "f => identifier",
+        "( => sign",
+        "a => identifier",
+        ") => sign",
+        "} => sign",
+        "/> => sign",
+      ]
+    `)
+  })
 })
 
 describe('comments', () => {
