@@ -1,43 +1,17 @@
 {
-  "name": "sugar-high",
-  "version": "0.9.3",
+  "name": "sugar-high-monorepo",
+  "private": true,
+  "description": "Monorepo for sugar-high and remark-sugar-high packages",
   "type": "module",
-  "types": "./lib/index.d.ts",
-  "main": "./lib/index.js",
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    },
-    "./presets": {
-      "types": "./lib/presets/index.d.ts",
-      "default": "./lib/presets/index.js"
-    }
-  },
-  "description": "Super lightweight JSX syntax highlighter",
-  "files": [
-    "lib"
-  ],
-  "license": "MIT",
   "scripts": {
-    "test": "vitest",
-    "dev": "next dev docs",
-    "build": "next build docs"
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "dev": "pnpm -r run dev",
+    "clean": "pnpm -r run clean",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build"
   },
-  "devDependencies": {
-    "@types/node": "22.10.7",
-    "@types/react": "19.0.7",
-    "codice": "^1.3.1",
-    "dom-to-image": "^2.6.0",
-    "next": "15.1.5",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "sugar-high": "link:./",
-    "typescript": "5.7.3",
-    "vitest": "^3.0.2"
-  },
-  "resolutions": {
-    "sugar-high": "link:./"
-  },
-  "packageManager": "pnpm@8.7.1"
+  "packageManager": "pnpm@9.12.2",
+  "license": "MIT",
+  "author": "huozhi"
 }

@@ -1,0 +1,106 @@
+/** CSS Reset from https://www.joshwcomeau.com/css/custom-css-reset <3 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/** Styles */
+body {
+  font-variant: common-ligatures contextual;
+  letter-spacing: -0.01em;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.15rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+p,
+pre {
+  margin-bottom: 0.75rem;
+  max-width: 100%;
+}
+
+a {
+  text-decoration: underline solid currentColor;
+  text-underline-position: from-font;
+  text-decoration-thickness: from-font;
+}
+
+code {
+  font-family: var(--font-geist-mono), menlo, 'Courier New', Courier, monospace;
+  letter-spacing: 0;
+  font-size: 0.95em;
+}
+
+pre {
+  display: inline-block;
+  border-radius: 3px;
+  padding: 0.3em 0;
+  max-width: 100%;
+  white-space: pre-wrap;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+
+footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  max-width: 100%;
+}
+
+ul {
+  padding-left: 1rem;
+}
+
+li {
+  list-style: '•  ';
+}

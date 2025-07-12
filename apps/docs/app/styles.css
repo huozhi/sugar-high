@@ -1,5 +1,8 @@
 :root {
   --codice-caret-color: #333;
+  --codice-code-line-number-color: #a4a4a4;
+  --codice-code-highlight-color: #555555;
+  --codice-control-color: #8d8989;
 }
 
 ::selection {
@@ -380,4 +383,52 @@ code {
 
 .editor-tokens {
   font-size: 14px;
+}
+
+/* Remark page specific styles */
+.code {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+div[data-codice-editor-header="true"] {
+  background-color: #d6e1eb;
+  padding: 4px 6px;
+  color: #507a99;
+  margin: 0;
+}
+/* Override */
+[data-codice-code] pre,
+[data-codice-code] code {
+  width: 100%;
+}
+.code[data-codice-code="true"] pre {
+  padding: 8px 0;
+}
+.sh__line {
+  display: block;
+  padding: 0 0.5em;
+}
+.sh__line--highlighted {
+  background-color: #dff1ff;
+}
+
+/* Navigation styles */
+.navigation {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 0;
+}
+.navigation .max-width-container {
+  display: flex;
+  gap: 2rem;
+}
+.nav-link {
+  color: #495057;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.nav-link:hover {
+  color: #212529;
 }

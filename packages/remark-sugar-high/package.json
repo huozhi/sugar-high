@@ -1,0 +1,31 @@
+{
+  "name": "remark-sugar-high",
+  "version": "0.6.0",
+  "description": "remark plugin of sugar high syntax highlighter",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "bunchee",
+    "prepublishOnly": "pnpm build"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "remark-plugin"
+  ],
+  "author": "huozhi",
+  "license": "MIT",
+  "packageManager": "pnpm@9.12.2",
+  "dependencies": {
+    "parse-numeric-range": "^1.3.0",
+    "sugar-high": "workspace:*",
+    "unist-util-map": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "bunchee": "^6.3.1",
+    "typescript": "^5.7.2"
+  }
+}

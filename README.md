@@ -1,120 +1,70 @@
-# Sugar High
+# Sugar High Monorepo
 
-[![Build][build-badge]][build]
+This monorepo contains packages and applications for the Sugar High syntax highlighter ecosystem.
 
-### Introduction
+## Packages
 
-Super lightweight JSX syntax highlighter, around 1KB after minified and gzipped
+- **[sugar-high](./packages/sugar-high)** - Super lightweight JSX syntax highlighter
+- **[remark-sugar-high](./packages/remark-sugar-high)** - Remark plugin for sugar-high syntax highlighter
 
-![img](https://repository-images.githubusercontent.com/453236442/aa0db684-bad3-4cd3-a420-f4e53b8c6757)
+## Applications
 
-### Usage
+- **[docs](./apps/docs)** - Documentation and demo website
 
-```sh
-npm install --save sugar-high
+## Development
+
+This monorepo uses pnpm workspaces. To get started:
+
+```bash
+# Install dependencies for all packages
+pnpm install
+
+# Build all packages
+pnpm build
+
+# Run tests for all packages
+pnpm test
+
+# Run development server for docs
+pnpm docs:dev
+
+# Build docs
+pnpm docs:build
 ```
 
-```js
-import { highlight } from 'sugar-high'
+## Working with individual packages
 
-const codeHTML = highlight(code)
+You can also work with individual packages:
 
-document.querySelector('pre > code').innerHTML = codeHTML
+```bash
+# Work with sugar-high
+cd packages/sugar-high
+pnpm test
+
+# Work with remark-sugar-high
+cd packages/remark-sugar-high
+pnpm build
+
+# Work with docs
+cd apps/docs
+pnpm dev
 ```
 
-### Highlight with CSS
+## Publishing
 
-Then make your own theme with customized colors by token type and put in global CSS. The corresponding class names start with `--sh-` prefix.
+Each package can be published separately:
 
-```css
-/**
- * Types that sugar-high have:
- *
- * identifier
- * keyword
- * string
- * Class, number and null
- * property
- * entity
- * jsx literals
- * sign
- * comment
- * break
- * space
- */
-:root {
-  --sh-class: #2d5e9d;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-property: #0550ae;
-  --sh-entity: #249a97;
-  --sh-jsxliterals: #6266d1;
-  --sh-string: #00a99a;
-  --sh-keyword: #f47067;
-  --sh-comment: #a19595;
-}
+```bash
+# Publish sugar-high
+cd packages/sugar-high
+pnpm publish
+
+# Publish remark-sugar-high
+cd packages/remark-sugar-high
+pnpm publish
 ```
 
-### Features
-
-#### Line number
-
-Sugar high provide `.sh_line` class name for each line. To display line number, define the `.sh_line::before` element with CSS will enable line numbers automatically.
-
-```css
-pre code {
-  counter-reset: sh-line-number;
-}
-
-.sh__line::before {
-  counter-increment: sh-line-number 1;
-  content: counter(sh-line-number);
-  margin-right: 24px;
-  text-align: right;
-  color: #a4a4a4;
-}
-```
-
-### Line Highlight
-
-Use `.sh__line:nth-child(<line number>)` to highlight specific line.
-
-```css
-.sh__line:nth-child(5) {
-  background: #f5f5f5;
-}
-```
-
-#### CSS Class Names
-
-You can use `.sh__token--<token type>` to customize the output node of each token.
-
-```css
-.sh__token--keyword {
-  background: #f47067;
-}
-```
-
-### Use With Remark.js
-
-[Remark.js](https://remark.js.org/) is a powerful markdown processor, you can use the [sugar-high remark plugin](https://remark-sugar-high.vercel.app/) with remark.js to highlight code blocks in markdown.
-
-Check out the [documentation](https://remark-sugar-high.vercel.app/) for more details.
-
-### LICENSE
+## License
 
 MIT
 
-<!-- Definitions -->
-
-[build-badge]: https://github.com/huozhi/sugar-high/workflows/Test/badge.svg
-
-[build]: https://github.com/huozhi/sugar-high/actions
-
-[coverage-badge]: https://badge.fury.io/js/sugar-high.svg
-
-[coverage]: https://codecov.io/github/huozhi/sugar-high
-
-[downloads-badge]: https://img.shields.io/npm/dm/sugar-high.svg
-
-[downloads]: https://www.npmjs.com/package/sugar-high

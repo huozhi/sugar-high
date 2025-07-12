@@ -1,0 +1,65 @@
+.remark-page {
+  font-family: var(--font-geist-sans), system-ui, -apple-system,
+    BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans,
+    sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,
+    Noto Color Emoji;
+  font-feature-settings: 'liga', 'clig', 'calt';
+  
+  padding: 2rem;
+  background-color: #f7fcfc;
+
+  /* theme */
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-property: #0550ae;
+  --sh-entity: #9eb8d6;
+  --sh-jsxliterals: #6266d1;
+  --sh-string: #73747c;
+  --sh-keyword: #2876db;
+  --sh-comment: #a19595;
+  /* codice */
+  --codice-code-padding: 0;
+}
+
+.remark-page main {
+  width: 600px;
+}
+
+.remark-page a {
+  color: #888;
+}
+.remark-page a:hover {
+  color: #333;
+}
+
+.remark-page pre {
+  background-color: #ffffff;
+}
+
+.code {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+div[data-codice-editor-header="true"] {
+  background-color: #d6e1eb;
+  padding: 4px 6px;
+  color: #507a99;
+  margin: 0;
+}
+/* Override */
+[data-codice-code] pre,
+[data-codice-code] code {
+  width: 100%;
+}
+.code[data-codice-code="true"] pre {
+  padding: 8px 0;
+}
+.sh__line {
+  display: block;
+  padding: 0 0.5em;
+}
+.sh__line--highlighted {
+  background-color: #dff1ff;
+}
