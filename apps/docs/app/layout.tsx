@@ -1,3 +1,4 @@
+import './global.css'
 import './styles.css'
 
 const imgUrl = 'https://repository-images.githubusercontent.com/453236442/aa0db684-bad3-4cd3-a420-f4e53b8c6757'
