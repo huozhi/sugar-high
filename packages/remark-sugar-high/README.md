@@ -2,7 +2,7 @@
 
 Remark plugin for [Sugar High](https://sugar-high.vercel.app) syntax highlighter.
 
-[Website](https://remark-sugar-high.vercel.app/)
+[Website](https://sugar-high.vercel.app/remark)
 
 
 ## Installation
