@@ -99,7 +99,7 @@ You can use `.sh__token--<token type>` to customize the output node of each toke
 
 [Remark.js](https://remark.js.org/) is a powerful markdown processor, you can use the [sugar-high remark plugin](https://sugar-high.vercel.app/remark) with remark.js to highlight code blocks in markdown.
 
-Check out the [documentation](https://sugar-high.vercel.app/remark) for more details.
+Check out the [readme](https://github.com/huozhi/sugar-high/tree/main/packages/remark-sugar-high) for more details.
 
 ### LICENSE
 
