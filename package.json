@@ -15,6 +15,9 @@
   "license": "MIT",
   "author": "huozhi",
   "devDependencies": {
-    "next": "15.4.0-canary.128"
+    "next": "15.4.2-canary.1"
+  },
+  "resolutions": {
+    "next": "15.4.2-canary.1"
   }
 }
