@@ -737,7 +737,12 @@ function toHtml(lines) {
 /**
  *
  * @param {string} code
- * @param {{ keywords: Set<string> } | undefined} options
+ * @param {
+ * {
+ *   keywords: Set<string>
+ *   onCommentStart?: (curr: string, next: string) => number | boolean
+ *   onCommentEnd?: (curr: string, prev: string) => number | boolean
+ * } | undefined} options
  * @returns {string}
  */
 function highlight(code, options) {
