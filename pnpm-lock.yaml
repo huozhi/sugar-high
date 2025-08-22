@@ -18,8 +18,8 @@ importers:
   apps/docs:
     dependencies:
       codice:
-        specifier: ^1.5.1
-        version: 1.5.1(react@19.0.0)
+        specifier: ^1.5.2
+        version: 1.5.2(react@19.0.0)
       dom-to-image:
         specifier: ^2.6.0
         version: 2.6.0
@@ -835,8 +835,8 @@ packages:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
     engines: {node: '>=12'}
 
-  codice@1.5.1:
-    resolution: {integrity: sha512-ORVSQ9axGGkAwZS5BozJzLLJOXD2Q9xG/yqdzIbAli+sFlfviOzg6B0sXfoektgEtdQbwDQw9/upt5TpVrKF0Q==}
+  codice@1.5.2:
+    resolution: {integrity: sha512-JZRiFAQoE6M3nPFK62esI7qR26UIlcnlAfXPwMyG/yuJlvMcRT84Bds9ZCHD/NrYCXD0khOCcMAwo32gbgfxEQ==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
@@ -2145,7 +2145,7 @@ snapshots:
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
 
-  codice@1.5.1(react@19.0.0):
+  codice@1.5.2(react@19.0.0):
     dependencies:
       react: 19.0.0
       sugar-high: 0.9.3
