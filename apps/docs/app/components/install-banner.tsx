@@ -2,8 +2,8 @@
 
 import { CopyButton } from './copy-button'
 import { Code } from 'codice'
-import './install-banner.css'
 import Link from 'next/link'
+import './install-banner.css'
 
 const cssCode = `\
 /* styles.css */
