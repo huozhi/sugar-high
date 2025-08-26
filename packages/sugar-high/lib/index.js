@@ -43,6 +43,7 @@ const Keywords_Js = new Set([
   'export',
   'from',
   'static',
+  'fetch',
 ])
 
 const Signs = new Set([
