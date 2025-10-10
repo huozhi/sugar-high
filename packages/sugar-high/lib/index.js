@@ -275,7 +275,7 @@ function tokenize(code, options) {
     if (isJsxLiterals) return T_JSX_LITERALS
 
     // Determine strings first before other types
-    if (inStringQuotes()) {
+    if (inStringQuotes() || inStrTemplateLiterals()) {
       return T_STRING
     } else if (keywords.has(token)) {
       return last[1] === '.' ? T_IDENTIFIER : T_KEYWORD
@@ -326,9 +326,9 @@ function tokenize(code, options) {
     const p_c = prev + curr // previous and current
     const c_n = curr + next // current and next
 
-    // Determine string quotation outside of jsx literals.
-    // Inside jsx literals, string quotation is still part of it.
-    if (isSingleQuotes(curr) && !inJsxLiterals()) {
+    // Determine string quotation outside of jsx literals and template literals.
+    // Inside jsx literals or template literals, string quotation is still part of it.
+    if (isSingleQuotes(curr) && !inJsxLiterals() && !inStrTemplateLiterals()) {
       append()
       if (prev !== `\\`) {
         if (__strQuote && curr === __strQuote) {
@@ -599,6 +599,8 @@ function tokenize(code, options) {
       } else if (
         // it's jsx literals and is not a jsx bracket
         (isJsxLiterals && !JSXBrackets.has(curr)) ||
+        // it's template literal content (including quotes)
+        inStrTemplateLiterals() ||
         // same type char as previous one in current token
         ((isWord(curr) === isWord(current[current.length - 1]) || __jsxChild()) && !Signs.has(curr))
       ) {

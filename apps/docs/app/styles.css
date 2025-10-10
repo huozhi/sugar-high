@@ -443,6 +443,7 @@ div[data-codice-editor-header="true"] {
 .sh__line {
   display: block;
   margin-left: 2px;
+  min-height: 21px; /* match line height */
 }
 .live-editor [data-codice-editor] code {
   margin-left: 0 !important;
