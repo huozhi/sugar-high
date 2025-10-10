@@ -15,11 +15,11 @@
   "license": "MIT",
   "author": "huozhi",
   "devDependencies": {
-    "next": "15.5.1-canary.4"
+    "next": "16.0.0-canary.0"
   },
   "pnpm": {
     "overrides": {
-      "next": "15.5.1-canary.4",
+      "next": "16.0.0-canary.0",
       "sugar-high": "workspace:*"
     },
     "packageExtensions": {
