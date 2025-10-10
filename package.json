@@ -17,7 +17,17 @@
   "devDependencies": {
     "next": "15.5.1-canary.4"
   },
-  "resolutions": {
-    "next": "15.5.1-canary.4"
+  "pnpm": {
+    "overrides": {
+      "next": "15.5.1-canary.4",
+      "sugar-high": "workspace:*"
+    },
+    "packageExtensions": {
+      "codice@*": {
+        "dependencies": {
+          "sugar-high": "workspace:*"
+        }
+      }
+    }
   }
 }

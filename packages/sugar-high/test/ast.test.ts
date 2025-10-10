@@ -74,6 +74,33 @@ describe('calculation expression', () => {
       ]
     `)
   })
+
+  it('complex expression with string concatenation and function calls', () => {
+    const code = "`e's a` + a('.cls').oo, ); foo(arg)"
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "\` => string",
+        "e's a => string",
+        "\` => string",
+        "+ => sign",
+        "a => identifier",
+        "( => sign",
+        "' => string",
+        ".cls => string",
+        "' => string",
+        ") => sign",
+        ". => sign",
+        "oo => identifier",
+        ", => sign",
+        ") => sign",
+        "; => sign",
+        "foo => identifier",
+        "( => sign",
+        "arg => identifier",
+        ") => sign",
+      ]
+    `)
+  })
 })
 
 describe('jsx', () => {
@@ -664,7 +691,7 @@ describe('regex', () => {
         "\` => string",
         "" => string",
         "\` => string",
-        ") => string",
+        ") => sign",
       ]
     `)
   })
