@@ -113,6 +113,7 @@ input[type='checkbox']:checked {
   margin: auto;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   border-radius: 2px;
+  overflow: hidden;
 }
 
 .card-indicator-dots {
