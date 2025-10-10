@@ -112,6 +112,12 @@ export default function LiveEditor({
 }) {
   const editorRef = useRef(null)
   const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
+  const [textareaColor, setTextareaColor] = useState('transparent')
+  
+  const toggleTextareaColor = () => {
+    setTextareaColor(prev => prev === 'transparent' ? '#666' : 'transparent')
+  }
+  
   const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode(defaultCode)
   const {
     text: liveCode,
@@ -158,9 +164,21 @@ export default function LiveEditor({
           --sh-comment: ${colorPlateColors.comment};
           --sh-jsxliterals: ${colorPlateColors.jsxliterals};
         }
+        .live-editor-section .live-editor textarea {
+          color: ${textareaColor} !important;
+        }
         `}`}</style>
 
+      <div className="textarea-color-toggle-container">
+        <button 
+          onClick={toggleTextareaColor}
+          className="textarea-color-toggle"
+        >
+          Match text × code colors
+        </button>
+      </div>
       <div className="flex live-editor">
+        
         <Editor
           ref={editorRef}
           className="codice editor flex-1"
