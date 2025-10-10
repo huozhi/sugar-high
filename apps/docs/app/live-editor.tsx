@@ -118,6 +118,9 @@ export default function LiveEditor({
     setTextareaColor(prev => prev === 'transparent' ? '#666' : 'transparent')
   }
   
+  const isInspecting = textareaColor !== 'transparent'
+  const buttonText = isInspecting ? '👁️ Matching' : 'Match Text'
+  
   const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode(defaultCode)
   const {
     text: liveCode,
@@ -169,16 +172,15 @@ export default function LiveEditor({
         }
         `}`}</style>
 
-      <div className="textarea-color-toggle-container">
-        <button 
-          onClick={toggleTextareaColor}
-          className="textarea-color-toggle"
-        >
-          Match text × code colors
-        </button>
-      </div>
-      <div className="flex live-editor">
-        
+        <div className="textarea-color-toggle-container">
+          <button 
+            onClick={toggleTextareaColor}
+            className={`textarea-color-toggle ${isInspecting ? 'textarea-color-toggle--active' : ''}`}
+          >
+            {buttonText}
+          </button>
+        </div>
+      <div className="flex live-editor">        
         <Editor
           ref={editorRef}
           className="codice editor flex-1"

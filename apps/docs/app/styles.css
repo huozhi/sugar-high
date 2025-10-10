@@ -240,11 +240,14 @@ code {
   border: none;
   color: #a4a4a4;
   font-size: 12px;
+  width: 100px;
   padding: 4px 12px;
   margin-left: 16px;
   cursor: pointer;
   border-radius: 3px;
   transition: all 0.2s ease;
+  text-align: left;
+  border-radius: 8px;
 }
 
 .textarea-color-toggle:hover {
@@ -252,8 +255,17 @@ code {
   color: #68727f;
 }
 
+.textarea-color-toggle--active {
+  background-color: #f8f8f8;
+}
+
+.textarea-color-toggle--active:hover {
+  background-color: #f8f8f8;
+}
 .textarea-color-toggle-container {
-  margin-left: 6rem;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 8rem;
 }
 .live-editor__color input[type='color'] {
   display: inline;
