@@ -113,6 +113,7 @@ input[type='checkbox']:checked {
   margin: auto;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   border-radius: 2px;
+  overflow: hidden;
 }
 
 .card-indicator-dots {
@@ -214,11 +215,12 @@ code {
   flex: 1;
   cursor: default;
   box-shadow: -5px 12px 60px #8888887a;
-  margin: 6rem auto;
+  margin: 2rem auto 6rem;
   max-width: 720px;
   border-radius: 6px;
   resize: both;
   overflow: auto;
+  position: relative;
 }
 
 .live-editor__color {
@@ -232,6 +234,39 @@ code {
   gap: 8px;
   color: #68727f;
   font-size: 16px;
+}
+
+.textarea-color-toggle {
+  background: none;
+  border: none;
+  color: #a4a4a4;
+  font-size: 12px;
+  width: 100px;
+  padding: 4px 12px;
+  margin-left: 16px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  text-align: left;
+  border-radius: 8px;
+}
+
+.textarea-color-toggle:hover {
+  background-color: #f8f8f8;
+  color: #68727f;
+}
+
+.textarea-color-toggle--active {
+  background-color: #f8f8f8;
+}
+
+.textarea-color-toggle--active:hover {
+  background-color: #f8f8f8;
+}
+.textarea-color-toggle-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 8rem;
 }
 .live-editor__color input[type='color'] {
   display: inline;
@@ -407,7 +442,13 @@ div[data-codice-editor-header="true"] {
 }
 .sh__line {
   display: block;
-  padding: 0 0.5em;
+  margin-left: 2px;
+}
+.live-editor [data-codice-editor] code {
+  margin-left: 0 !important;
+}
+.sh__line [data-codice-code-line-number] {
+  position: absolute;
 }
 .sh__line--highlighted {
   background-color: #dff1ff;
