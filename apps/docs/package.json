@@ -5,10 +5,9 @@
   "description": "Documentation website for sugar-high packages",
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
     "sugar-high": "workspace:*",
@@ -16,8 +15,8 @@
     "codice": "^1.5.2",
     "dom-to-image": "^2.6.0",
     "next": "canary",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
     "remark-html": "^16.0.1"
