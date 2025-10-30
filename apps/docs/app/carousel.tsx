@@ -192,8 +192,7 @@ export default function Carousel() {
             opacity: ${isShown ? opacity : 0};
             z-index: ${isSelected ? 1 : 0};
             height: ${isSelected ? 'auto' : '300px'};
-            overflow: ${isSelected ? 'auto' : 'hidden'};
-            box-shadow: -5px 12px 60px rgba(0, 0, 0, 0.5);
+            overflow-y: ${isSelected ? 'auto' : 'hidden'};
             ${isSelected ? '' : `cursor: pointer; user-select: none;`}
           }`
 

@@ -24,6 +24,7 @@ html {
 }
 body {
   margin: 0;
+  overflow-x: hidden;
 }
 a {
   color: #888;
@@ -113,7 +114,8 @@ input[type='checkbox']:checked {
   margin: auto;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   border-radius: 2px;
-  overflow: hidden;
+  overflow-x: hidden;
+  box-shadow: -5px 12px 60px rgba(0, 0, 0, 0.5);
 }
 
 .card-indicator-dots {
