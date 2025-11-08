@@ -678,9 +678,13 @@ function generate(tokens) {
   }
   /** @type {Array<[number, string]>} */
   const lineTokens = []
+  let lastWasBreak = false
+  
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i]
     const [type, value] = token
+    const isLastToken = i === tokens.length - 1
+    
     if (type !== T_BREAK) {
       // Divide multi-line token into multi-line code
       if (value.includes('\n')) {
@@ -695,15 +699,30 @@ function generate(tokens) {
       } else {
         lineTokens.push(token)
       }
+      lastWasBreak = false
     } else {
-      lineTokens.push([type, ''])
-      flushLine(lineTokens)
-      lineTokens.length = 0
+      if (lastWasBreak) {
+        // Consecutive break - create empty line
+        flushLine([])
+      } else {
+        // First break after content - flush current line
+        flushLine(lineTokens)
+        lineTokens.length = 0
+      }
+      
+      // If this is the last token and it's a break, create an empty line
+      if (isLastToken) {
+        flushLine([])
+      }
+      
+      lastWasBreak = true
     }
   }
 
-  if (lineTokens.length)
+  // Flush remaining tokens if any
+  if (lineTokens.length) {
     flushLine(lineTokens)
+  }
 
   return lines
 }

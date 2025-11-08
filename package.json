@@ -8,7 +8,7 @@
     "test": "pnpm -r run test",
     "dev": "pnpm -r run dev",
     "clean": "pnpm -r run clean",
-    "docs:dev": "pnpm --filter docs dev",
+    "site": "pnpm --filter docs dev",
     "docs:build": "pnpm build && pnpm --filter docs build"
   },
   "packageManager": "pnpm@9.12.2",
