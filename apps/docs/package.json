@@ -12,7 +12,7 @@
   "dependencies": {
     "sugar-high": "workspace:*",
     "remark-sugar-high": "workspace:*",
-    "codice": "^1.5.2",
+    "codice": "^1.5.4",
     "dom-to-image": "^2.6.0",
     "next": "canary",
     "react": "^19.2.0",
