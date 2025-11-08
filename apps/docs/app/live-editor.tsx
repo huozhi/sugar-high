@@ -115,7 +115,7 @@ export default function LiveEditor({
   const [textareaColor, setTextareaColor] = useState('transparent')
   
   const toggleTextareaColor = () => {
-    setTextareaColor(prev => prev === 'transparent' ? '#666' : 'transparent')
+    setTextareaColor(prev => prev === 'transparent' ? '#66666682' : 'transparent')
   }
   
   const isInspecting = textareaColor !== 'transparent'
