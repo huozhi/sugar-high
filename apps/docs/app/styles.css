@@ -341,6 +341,10 @@ code {
   .header h1 span {
     font-size: 200%;
   }
+  /* Prevent zoom on mobile when clicking editor */
+  .codice[data-codice-code] textarea {
+    font-size: 16px !important;
+  }
 }
 
 [data-codice="editor"] code {

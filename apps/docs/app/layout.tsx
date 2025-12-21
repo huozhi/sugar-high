@@ -30,3 +30,9 @@ export const metadata = {
     description: 'Super lightweight JSX syntax highlighter, around 1KB after minified and gzipped',
   },
 }
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
