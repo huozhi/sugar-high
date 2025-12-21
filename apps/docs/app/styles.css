@@ -37,9 +37,14 @@ a:hover {
   color: #333;
 }
 
-.max-width-container {
+.container-960 {
   max-width: 960px;
   padding: 0 10px 40px;
+  margin: auto;
+}
+.container-720 {
+  max-width: 720px;
+  padding: 0 16px 24px;
   margin: auto;
 }
 input[type='radio'] {
@@ -82,10 +87,10 @@ input[type='checkbox']:checked {
 }
 .big-title {
   line-height: 1.2;
-  transition: all 0.2s ease;  
+  transition: all 0.2s ease;
 }
 .header {
-  margin: 1rem auto; 
+  margin: 1rem auto;
   text-align: center;
   padding: 2rem 0;
   color: #354150;
@@ -214,7 +219,6 @@ code {
 }
 
 .live-editor {
-  flex: 1;
   cursor: default;
   box-shadow: -5px 12px 60px #8888887a;
   margin: 2rem auto 6rem;
@@ -227,11 +231,12 @@ code {
 
 .live-editor__color {
   margin: 0;
-  padding: 0 24px 24px;
+  /* Give extra bottom padding to visually align with the top title */
+  padding: 8px 24px 16px;
 }
 
 .live-editor__color h3 {
-  margin: 16px 0;
+  margin: 8px 0;
   display: flex;
   gap: 8px;
   color: #68727f;
@@ -243,7 +248,7 @@ code {
   border: none;
   color: #a4a4a4;
   font-size: 12px;
-  width: 100px;
+  width: 80px;
   padding: 4px 12px;
   margin-left: 16px;
   cursor: pointer;
@@ -268,7 +273,6 @@ code {
 .textarea-color-toggle-container {
   display: flex;
   justify-content: flex-end;
-  margin-right: 8rem;
 }
 .live-editor__color input[type='color'] {
   display: inline;
@@ -301,8 +305,8 @@ code {
 }
 .live-editor__color__item__indicator {
   display: inline-block;
-  width: 30px;
-  height: 30px;
+  width: 16px;
+  height: 16px;
   margin-right: 8px;
   border-radius: 999px;
 }
@@ -349,7 +353,7 @@ code {
 
 .editor,
 .code-frame {
-  background-color: #f6f6f6; 
+  background-color: #f6f6f6;
 }
 
 .codice[data-codice-code] code,
@@ -462,7 +466,7 @@ div[data-codice-editor-header="true"] {
   border-bottom: 1px solid #e9ecef;
   padding: 1rem 0;
 }
-.navigation .max-width-container {
+.navigation .container-960 {
   display: flex;
   gap: 2rem;
 }

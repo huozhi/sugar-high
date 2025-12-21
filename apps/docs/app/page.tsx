@@ -5,7 +5,7 @@ import InstallBanner from './components/install-banner'
 export default function Page() {
   return (
     <>
-      <div className="max-width-container header">
+      <div className="container-960 header">
         <h1>
           <span className='big-title'>Sugar High</span>
         </h1>

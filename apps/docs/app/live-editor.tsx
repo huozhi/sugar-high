@@ -113,14 +113,14 @@ export default function LiveEditor({
   const editorRef = useRef(null)
   const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
   const [textareaColor, setTextareaColor] = useState('transparent')
-  
+
   const toggleTextareaColor = () => {
     setTextareaColor(prev => prev === 'transparent' ? '#66666682' : 'transparent')
   }
-  
+
   const isInspecting = textareaColor !== 'transparent'
-  const buttonText = isInspecting ? '👁️ Matching' : 'Match Text'
-  
+  const buttonText = isInspecting ? 'Matching' : 'Matched'
+
   const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode(defaultCode)
   const {
     text: liveCode,
@@ -153,7 +153,7 @@ export default function LiveEditor({
   }, [colorPlateColors])
 
   return (
-    <div className={`max-width-container live-editor-section`}>
+    <div className={`container-720 live-editor-section`}>
       <style>{`
         ${`
         .live-editor-section {
@@ -172,15 +172,17 @@ export default function LiveEditor({
         }
         `}`}</style>
 
-        <div className="textarea-color-toggle-container">
-          <button 
-            onClick={toggleTextareaColor}
-            className={`textarea-color-toggle ${isInspecting ? 'textarea-color-toggle--active' : ''}`}
-          >
-            {buttonText}
-          </button>
-        </div>
-      <div className="flex live-editor">        
+        {process.env.NODE_ENV === 'development' && (
+          <div className="textarea-color-toggle-container">
+            <button
+              onClick={toggleTextareaColor}
+              className={`textarea-color-toggle ${isInspecting ? 'textarea-color-toggle--active' : ''}`}
+            >
+              {buttonText}
+            </button>
+          </div>
+        )}
+      <div className="flex live-editor">
         <Editor
           ref={editorRef}
           className="codice editor flex-1"
@@ -233,7 +235,7 @@ export default function LiveEditor({
         {liveCodeTokens.map(([tokenType, token], index) => {
           const tokenTypeName = SugarHigh.TokenTypes[tokenType]
           if (
-            tokenTypeName === 'break' || 
+            tokenTypeName === 'break' ||
             tokenTypeName === 'space' ||
             token === '\n' ||
             token.trim() === ''

@@ -119,21 +119,21 @@ const _iu = /* evaluate */ (19) / 234 + 56 / 7;
 ] as const
 
 function CodeFrame(
-  { 
-    code, 
-    title = 'Untitled', 
-    index, 
-    highlightedLines = [] 
-  }: { 
-    code: string, 
-    title: string, 
-    index: number, 
+  {
+    code,
+    title = 'Untitled',
+    index,
+    highlightedLines = []
+  }: {
+    code: string,
+    title: string,
+    index: number,
     highlightedLines: readonly number[] | number[]
   }) {
   return (
     <div className='code-frame' id={`code-frame-${index}`}>
       <style>
-        {highlightedLines.map(line => 
+        {highlightedLines.map(line =>
           `.code-label--${index} .code-frame .sh__line:nth-child(${line}) {
             background: #fcf5dc;
           }`)
@@ -157,15 +157,8 @@ export default function Carousel() {
   const examples = EXAMPLE_PAIRS
   const [selected, setSelected] = useState(Math.ceil(examples.length / 2))
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      // setSelected((selected + 1) % examples.length)
-    } , 2500)
-    return () => clearInterval(timer)
-  }, [selected])
-
   return (
-    <div className="carousel max-width-container">
+    <div className="carousel container-960">
       <style>
         {`
         ${examples.reduce((r, c, i) => {
@@ -226,8 +219,8 @@ export default function Carousel() {
       </div>
       <div className='card-indicator-dots'>
         {examples.map((_, i) => (
-          <label 
-            key={i} 
+          <label
+            key={i}
             htmlFor={`item-${i}`}
             className={`card-indicator ${i === selected ? `card-indicator--selected` : ''}`}
           />
@@ -249,16 +242,16 @@ export default function Carousel() {
           }
 
           return (
-            <label 
-              key={i} 
+            <label
+              key={i}
               htmlFor={`item-${i}`}
               className={`code-label code-label--${i} ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`}
               id={`code-${i}`}
             >
               <CodeFrame
-                code={code} 
-                title={name} 
-                index={i} 
+                code={code}
+                title={name}
+                index={i}
                 highlightedLines={config.highlightedLines}
               />
               <CopyImageButton onCopy={handleCopyImage} />
@@ -332,7 +325,7 @@ function CopyImageButton({ onCopy } : { onCopy: () => Promise<boolean> }) {
           copyState === 1 ? 'code-copy-pic-icon--success' :
           copyState === 2 && 'code-copy-pic-icon--error'
         )}
-        
+
         width={'1rem'}
         height={'1rem'}
         fill="none"

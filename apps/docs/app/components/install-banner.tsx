@@ -17,14 +17,12 @@ const cssCode = `\
   --sh-string: #00a99a;
   --sh-keyword: #f47067;
   --sh-comment: #a19595;
-}
-`
+}`
 
 const usageCode = `\
 import { highlight } from 'sugar-high'
 
-const html = highlight(code)
-`
+const html = highlight(code)`
 
 export default function InstallBanner() {
   return (
@@ -48,7 +46,7 @@ export default function InstallBanner() {
           sugar-high
         </a>
       </h1>
-      <div className="max-width-container">
+      <div className="container-960">
         <div className="install-banner__code">
           <Code title='install.sh'>
             {usageCode}
