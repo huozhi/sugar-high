@@ -321,10 +321,6 @@ code {
   color: #333;
 }
 
-.live-editor-section {
-  margin-top: 80px;
-}
-
 .live-editor-section .live-editor__color__item__indicator {
   background-color: currentColor;
 }
