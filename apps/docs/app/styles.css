@@ -220,7 +220,6 @@ code {
 
 .live-editor {
   cursor: default;
-  /* box-shadow: -5px 12px 60px #8888887a; */
   margin: 2rem auto 6rem;
   max-width: 720px;
   border-radius: 6px;
