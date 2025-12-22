@@ -5,6 +5,7 @@ import { tokenize, SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
 import { CopyButton } from './components/copy-button'
 
+// Original colorful theme
 const defaultColorPlateColors = {
   class: '#8d85ff',
   identifier: '#354150',
@@ -19,6 +20,43 @@ const defaultColorPlateColors = {
   space: '#ffffff',
 }
 
+// Minimal gray theme with 3 colors
+const minimalGrayTheme = {
+  name: 'Minimal Gray',
+  colors: {
+    primary: '#2d2d2d',    // Dark gray for keywords, class
+    secondary: '#6b6b6b',  // Medium gray for identifiers, properties
+    tertiary: '#9a9a9a',  // Light gray for comments, signs
+  }
+}
+
+// Map token types to minimal gray theme colors
+function getMinimalThemeColors() {
+  const { primary, secondary, tertiary } = minimalGrayTheme.colors
+  return {
+    class: primary,
+    identifier: secondary,
+    sign: tertiary,
+    entity: secondary,
+    property: secondary,
+    jsxliterals: primary,
+    string: secondary,
+    keyword: primary,
+    comment: tertiary,
+    break: '#ffffff',
+    space: '#ffffff',
+  }
+}
+
+const themes = [
+  { name: 'Stylish', colors: defaultColorPlateColors },
+  { name: 'Minimal', colors: getMinimalThemeColors() },
+]
+
+const customizableColors = Object.entries(SugarHigh.TokenTypes)
+  .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
+  .sort((a, b) => Number(a) - Number(b))
+
 function debounce(func, timeout = 200) {
   let timer
   return (...args) => {
@@ -28,10 +66,6 @@ function debounce(func, timeout = 200) {
     }, timeout)
   }
 }
-
-const customizableColors = Object.entries(SugarHigh.TokenTypes)
-  .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
-  .sort((a, b) => Number(a) - Number(b))
 
 const DEFAULT_LIVE_CODE = `\
 export default function App() {
@@ -111,8 +145,20 @@ export default function LiveEditor({
   defaultCode = DEFAULT_LIVE_CODE,
 }) {
   const editorRef = useRef(null)
-  const [colorPlateColors, setColorPlateColors] = useState(defaultColorPlateColors)
+  const [currentThemeIndex, setCurrentThemeIndex] = useState(0)
+  const [colorPlateColors, setColorPlateColors] = useState(() => themes[0].colors)
   const [textareaColor, setTextareaColor] = useState('transparent')
+
+  const currentTheme = themes[currentThemeIndex]
+  const isMinimalMode = currentThemeIndex === 1
+
+  const toggleTheme = () => {
+    setCurrentThemeIndex((prev) => (prev === 0 ? 1 : 0))
+  }
+
+  useEffect(() => {
+    setColorPlateColors(themes[currentThemeIndex].colors)
+  }, [currentThemeIndex])
 
   const toggleTextareaColor = () => {
     setTextareaColor(prev => prev === 'transparent' ? '#66666682' : 'transparent')
@@ -172,16 +218,16 @@ export default function LiveEditor({
         }
         `}`}</style>
 
-        {process.env.NODE_ENV === 'development' && (
-          <div className="textarea-color-toggle-container">
-            <button
-              onClick={toggleTextareaColor}
-              className={`textarea-color-toggle ${isInspecting ? 'textarea-color-toggle--active' : ''}`}
-            >
-              {buttonText}
-            </button>
-          </div>
-        )}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="textarea-color-toggle-container">
+          <button
+            onClick={toggleTextareaColor}
+            className={`textarea-color-toggle ${isInspecting ? 'textarea-color-toggle--active' : ''}`}
+          >
+            {buttonText}
+          </button>
+        </div>
+      )}
       <div className="flex live-editor">
         <Editor
           ref={editorRef}
@@ -198,9 +244,16 @@ export default function LiveEditor({
         />
 
         <ul className="live-editor__color">
-          <h3>
-            Color palette <CopyButton codeSnippet={customizableColorsString} />
-          </h3>
+          <div className="color-theme-title">
+            <button
+              onClick={toggleTheme}
+              className={`theme-mode-button ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
+              aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
+            >
+              {currentTheme.name}
+            </button>
+            <CopyButton codeSnippet={customizableColorsString} />
+          </div>
           {customizableColors.map(([tokenType, tokenTypeName]) => {
             const inputId = `live-editor-color__input--${tokenTypeName}`
             return (
