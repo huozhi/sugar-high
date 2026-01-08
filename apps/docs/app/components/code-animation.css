@@ -1,0 +1,131 @@
+/* Code animation styles */
+.code-animation-container {
+  /* Define sugar-high colors locally for this component */
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-property: #0550ae;
+  --sh-entity: #249a97;
+  --sh-jsxliterals: #6266d1;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
+  --code-background: #f6f6f6;
+
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.code-block {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  line-height: 1.6;
+  overflow-x: auto;
+  overflow-y: hidden;
+  user-select: none;
+  min-width: 0;
+  box-sizing: border-box;
+  position: relative;
+  padding: 8px 32px;
+  border-radius: 4px;
+  cursor: default;
+  /* Ensure block takes up space based on content */
+  width: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .code-block {
+    padding: 8px 16px;
+  }
+}
+
+.code-block-colored {
+  opacity: 0.75;
+  filter: grayscale(100%);
+  transition: opacity 0.3s ease, filter 0.7s ease;
+}
+
+.code-block-hovered {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+/* Override previous colored class to handle transition */
+.code-block-colored {
+  opacity: 0.75;
+  filter: grayscale(100%);
+  transition: opacity 0.3s ease, filter 0.7s ease;
+}
+
+/* If live/decoded, apply styles immediately or via transition */
+.code-block-colored.code-block-live {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+.code-line {
+  font-family: inherit;
+  font-size: 0.9rem; /* Slightly larger for hero */
+  position: relative;
+  will-change: transform, opacity;
+  white-space: pre;
+  min-height: 1.6em;
+}
+
+.code-line-invisible {
+  opacity: 0;
+  pointer-events: none;
+  display: inline-block;
+  min-width: 100%;
+}
+
+.code-line-encoded {
+  color: #8996a3;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.code-line-colored {
+  opacity: 0;
+  width: 100%;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 0.4s ease;
+}
+
+.code-line-colored-visible {
+  opacity: 1;
+}
+
+/* Ensure tokens have colors */
+.code-block-colored .sh__token--class { color: var(--sh-class); }
+.code-block-colored .sh__token--identifier { color: var(--sh-identifier); }
+.code-block-colored .sh__token--sign { color: var(--sh-sign); }
+.code-block-colored .sh__token--property { color: var(--sh-property); }
+.code-block-colored .sh__token--entity { color: var(--sh-entity); }
+.code-block-colored .sh__token--jsxliterals { color: var(--sh-jsxliterals); }
+.code-block-colored .sh__token--string { color: var(--sh-string); }
+.code-block-colored .sh__token--keyword { color: var(--sh-keyword); }
+.code-block-colored .sh__token--comment { color: var(--sh-comment); }
+
+/* Apply colors only when decoded/hovered if we want grayscale otherwise?
+   The .code-block-colored has filter: grayscale(100%), so colors won't show up until hovered.
+   That matches the original behavior.
+*/
+
+@keyframes slideUpLine {
+  from {
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+

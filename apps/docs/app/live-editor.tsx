@@ -141,7 +141,7 @@ function useDefaultLiveCode(defaultCodeText) {
 }
 
 export default function LiveEditor({
-  enableTypingAnimation = true,
+  enableTypingAnimation = false,
   defaultCode = DEFAULT_LIVE_CODE,
 }) {
   const editorRef = useRef(null)
