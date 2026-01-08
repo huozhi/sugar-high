@@ -94,7 +94,6 @@ input[type='checkbox']:checked {
   text-align: center;
   padding: 2rem 0;
   color: #354150;
-  max-height: 50vmin;
 }
 .header h1 span {
   font-size: 5rem;

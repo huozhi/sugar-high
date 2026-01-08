@@ -14,7 +14,6 @@
 
   display: flex;
   justify-content: center;
-  margin-bottom: 2rem;
   text-align: left;
 }
 
@@ -23,14 +22,11 @@
   line-height: 1.6;
   overflow-x: auto;
   overflow-y: hidden;
-  user-select: none;
   min-width: 0;
   box-sizing: border-box;
   position: relative;
   padding: 8px 32px;
   border-radius: 4px;
-  cursor: default;
-  /* Ensure block takes up space based on content */
   width: auto;
   max-width: 100%;
 }

@@ -139,7 +139,7 @@ export default function HeroAnimation() {
   const codeLines = [
     '/* super tiny syntax highlighter */',
     "import { highlight } from 'sugar-high'",
-    "const code = highlight('const x = 1')",
+    "const code = highlight('const text = 1')",
   ]
 
   useEffect(() => {
