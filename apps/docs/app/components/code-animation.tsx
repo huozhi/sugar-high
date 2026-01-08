@@ -128,11 +128,6 @@ function CodeAnimation({
       className={`code-block code-block-colored ${
         isLive ? 'code-block-live' : ''
       }`}
-      style={{
-        borderRadius: '4px',
-        height: `calc(${codeLines.length * 1.6 * 0.9}rem + 16px)`, // Adjusted multiplier for sizing
-        minHeight: `calc(${codeLines.length * 1.6 * 0.9}rem + 16px)`,
-      }}
     >
       {codeLines.map((line, index) => renderCodeLine(line, index))}
     </div>
