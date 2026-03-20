@@ -56,3 +56,58 @@ describe('tokenize - customized comment rule', () => {
     `)
   })
 })
+
+describe('tokenize - typescript generic arrow function', () => {
+  it('should not treat type parameter lists as jsx tags', () => {
+    const input = 'const f = <T = any>(v: T) => v'
+    const actual = getTokensAsString(tokenize(input))
+    expect(actual).toMatchInlineSnapshot(`
+      [
+        "const => keyword",
+        "f => identifier",
+        "= => sign",
+        "< => sign",
+        "T => class",
+        "= => sign",
+        "any => identifier",
+        "> => sign",
+        "( => sign",
+        "v => identifier",
+        ": => sign",
+        "T => class",
+        ") => sign",
+        "= => sign",
+        "> => sign",
+        "v => identifier",
+      ]
+    `)
+  })
+})
+
+describe('tokenize - wrapped typescript generic arrow callback', () => {
+  it('should not treat wrapped generic callbacks as jsx tags', () => {
+    const input = '(<T, _>(x: T): T => x)'
+    const actual = getTokensAsString(tokenize(input))
+    expect(actual).toMatchInlineSnapshot(`
+      [
+        "( => sign",
+        "< => sign",
+        "T => class",
+        ", => sign",
+        "_ => class",
+        "> => sign",
+        "( => sign",
+        "x => identifier",
+        ": => sign",
+        "T => class",
+        ") => sign",
+        ": => sign",
+        "T => class",
+        "= => sign",
+        "> => sign",
+        "x => identifier",
+        ") => sign",
+      ]
+    `)
+  })
+})

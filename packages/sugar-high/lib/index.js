@@ -45,6 +45,32 @@ const Keywords_Js = new Set([
   'static',
 ])
 
+const Keywords_Ts = new Set([
+  ...Keywords_Js,
+  'type',
+  'interface',
+  'enum',
+  'implements',
+  'readonly',
+  'abstract',
+  'declare',
+  'namespace',
+  'module',
+  'private',
+  'protected',
+  'public',
+  'override',
+  'keyof',
+  'infer',
+  'is',
+  'asserts',
+  'satisfies',
+  'as',
+  'unknown',
+  'never',
+  'any',
+])
+
 const Signs = new Set([
   '+',
   '-',
@@ -80,6 +106,76 @@ const DefaultOptions = {
   keywords: Keywords_Js,
   onCommentStart: isCommentStart_Js,
   onCommentEnd: isCommentEnd_Js,
+}
+
+/**
+ * Fast, heuristic TS detection. It intentionally prefers speed over full parsing.
+ * @param {string} code
+ * @returns {boolean}
+ */
+function isLikelyTypeScript(code) {
+  let tsScore = 0
+
+  // TS-only declarations and operators.
+  if (/\binterface\s+[A-Za-z_$][\w$]*/.test(code)) tsScore += 2
+  if (/\btype\s+[A-Za-z_$][\w$]*\s*=/.test(code)) tsScore += 2
+  if (/\benum\s+[A-Za-z_$][\w$]*/.test(code)) tsScore += 2
+  if (/\b(?:implements|readonly|declare|namespace|satisfies|infer|keyof|asserts)\b/.test(code)) tsScore += 2
+
+  // Common TS annotations/signatures.
+  if (/:\s*[A-Za-z_$][\w$]*(?:<[^>\n]+>)?(?:\[\])?(?=\s*[,)=;{])/m.test(code)) tsScore += 1
+  if (/\b(?:const|let|var)\s+[A-Za-z_$][\w$]*\s*:\s*/.test(code)) tsScore += 1
+  if (/\)\s*:\s*[A-Za-z_$][\w$]*(?:<[^>\n]+>)?(?:\[\])?\s*(?:=>|\{)/.test(code)) tsScore += 1
+
+  return tsScore >= 2
+}
+
+/**
+ * Detects `<T, U = ...>(` style generic parameter lists so they are not
+ * treated as JSX tags.
+ * @param {string} code
+ * @param {number} startIndex
+ * @returns {boolean}
+ */
+function isTypeParameterListStart(code, startIndex) {
+  if (code[startIndex] !== '<') return false
+
+  let depth = 0
+  let sawIdentifierStart = false
+
+  for (let i = startIndex; i < code.length; i++) {
+    const ch = code[i]
+
+    if (ch === '<') {
+      depth++
+      continue
+    }
+    if (ch === '>') {
+      depth--
+      if (depth === 0) {
+        let next = i + 1
+        while (next < code.length && /\s/.test(code[next])) next++
+        if (!(sawIdentifierStart && code[next] === '(')) return false
+
+        // Focus this heuristic on generic arrow functions:
+        // const fn = <T>(arg) => ...
+        const tail = code.slice(next, next + 320)
+        return /\)\s*(?::[\s\S]{0,120}?)?=>/.test(tail)
+      }
+      continue
+    }
+    if (depth === 0) continue
+
+    if (/[$A-Za-z_]/.test(ch)) {
+      sawIdentifierStart = true
+      continue
+    }
+    if (/[\s,\.\=\?\:\|\&\[\]]/.test(ch)) continue
+
+    return false
+  }
+
+  return false
 }
 
 /**
@@ -200,15 +296,25 @@ function isRegexStart(str) {
 
 /**
  * @param {string} code
- * @param {{ keywords: Set<string> }} options
+ * @param {{
+ *   keywords?: Set<string>
+ *   onCommentStart?: (curr: string, next: string) => number | boolean
+ *   onCommentEnd?: (prev: string, curr: string) => number | boolean
+ * } | undefined} options
  * @return {Array<[number, string]>}
  */
 function tokenize(code, options) {
+  const mergedOptions = { ...DefaultOptions, ...options }
+  const hasCustomKeywords = !!(options && options.keywords instanceof Set)
+  const isTs = isLikelyTypeScript(code)
+  const resolvedKeywords = hasCustomKeywords
+    ? mergedOptions.keywords
+    : (isTs ? Keywords_Ts : Keywords_Js)
+
   const {
-    keywords,
     onCommentStart,
     onCommentEnd,
-  } = { ...DefaultOptions, ...options }
+  } = mergedOptions
   
   let current = ''
   let type = -1
@@ -277,7 +383,7 @@ function tokenize(code, options) {
     // Determine strings first before other types
     if (inStringQuotes() || inStrTemplateLiterals()) {
       return T_STRING
-    } else if (keywords.has(token)) {
+    } else if (resolvedKeywords.has(token)) {
       return last[1] === '.' ? T_IDENTIFIER : T_KEYWORD
     } else if (isLineBreak) {
       return T_BREAK
@@ -300,8 +406,8 @@ function tokenize(code, options) {
 
   /**
    * 
-   * @param {number} type_ 
-   * @param {string} token_ 
+   * @param {number | undefined} [type_]
+   * @param {string | undefined} [token_]
    */
   const append = (type_, token_) => {
     if (token_) {
@@ -483,11 +589,21 @@ function tokenize(code, options) {
 
     // if it's not in a jsx tag declaration or a string, close child if next is jsx close tag
     if (!__jsxTag && (curr === '<' && isIdentifierChar(next) || c_n === '</')) {
-      __jsxTag = next === '/' ? 2 : 1
+      let prevNonSpace = i - 1
+      while (prevNonSpace >= 0 && /\s/.test(code[prevNonSpace])) prevNonSpace--
+      const prevChar = prevNonSpace >= 0 ? code[prevNonSpace] : ''
+
+      const isTsTypeArgStart = curr === '<' && /[$\w\]\)]/.test(prevChar)
+      const isTsGenericStart = curr === '<' && isTypeParameterListStart(code, i)
+      if (!isTsTypeArgStart && !isTsGenericStart) {
+        __jsxTag = next === '/' ? 2 : 1
+      }
 
       // current and next char can form a jsx open or close tag
       if (curr === '<' && (next === '/' || isAlpha(next))) {
         if (
+          !isTsTypeArgStart &&
+          !isTsGenericStart &&
           !inStringContent() && 
           !inJsxLiterals() &&
           !inRegexQuotes()
@@ -727,7 +843,7 @@ function generate(tokens) {
   return lines
 }
 
-/** @param { className: string, style?: Record<string, string> } */
+/** @param {{ className: string, style?: Record<string, string> }} props */
 const propsToString = (props) => {
   let str = `class="${props.className}"`
 
@@ -758,9 +874,8 @@ function toHtml(lines) {
 /**
  *
  * @param {string} code
- * @param {
- * {
- *   keywords: Set<string>
+ * @param {{
+ *   keywords?: Set<string>
  *   onCommentStart?: (curr: string, next: string) => number | boolean
  *   onCommentEnd?: (curr: string, prev: string) => number | boolean
  * } | undefined} options
