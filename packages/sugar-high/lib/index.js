@@ -160,7 +160,7 @@ function isTypeParameterListStart(code, startIndex) {
         // Focus this heuristic on generic arrow functions:
         // const fn = <T>(arg) => ...
         const tail = code.slice(next, next + 320)
-        return /\)\s*=>/.test(tail)
+        return /\)\s*(?::[\s\S]{0,120}?)?=>/.test(tail)
       }
       continue
     }

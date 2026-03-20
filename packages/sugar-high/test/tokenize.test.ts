@@ -92,3 +92,49 @@ export const useSWRHandler = <Data = any, Error = any>(
     expect(asString).toContain('> => sign')
   })
 })
+
+describe('tokenize - wrapped typescript generic arrow callback', () => {
+  it('should not treat wrapped generic callbacks as jsx tags', () => {
+    const input = `\
+(<T, _>(
+    thenable: Promise<T> & {
+      status?: 'pending' | 'fulfilled' | 'rejected'
+      value?: T
+      reason?: unknown
+    }
+  ): T => {
+    switch (thenable.status) {
+      case 'pending':
+        throw thenable
+      case 'fulfilled':
+        return thenable.value as T
+      case 'rejected':
+        throw thenable.reason
+      default:
+        thenable.status = 'pending'
+        thenable.then(
+          v => {
+            thenable.status = 'fulfilled'
+            thenable.value = v
+          },
+          e => {
+            thenable.status = 'rejected'
+            thenable.reason = e
+          }
+        )
+        throw thenable
+    }
+  })`
+    const tokens = tokenize(input)
+    const extracted = extractTokenArray(tokens)
+    const tokenTypes = extracted.map(([, type]) => type)
+    const asString = getTokensAsString(tokens)
+
+    expect(tokenTypes).not.toContain('jsxliterals')
+    expect(tokenTypes).not.toContain('entity')
+    expect(asString).toContain('< => sign')
+    expect(asString).toContain('T => class')
+    expect(asString).toContain('= => sign')
+    expect(asString).toContain('> => sign')
+  })
+})
