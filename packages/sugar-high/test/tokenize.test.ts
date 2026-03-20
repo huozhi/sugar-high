@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize } from '..'
-import { extractTokenArray, getTokensAsString } from './testing-utils'
+import { getTokensAsString } from './testing-utils'
 
 describe('tokenize - customized keywords', () => {
   it('should tokenize the input string with the given keywords', () => {
@@ -59,82 +59,55 @@ describe('tokenize - customized comment rule', () => {
 
 describe('tokenize - typescript generic arrow function', () => {
   it('should not treat type parameter lists as jsx tags', () => {
-    const input = `\
-export const useSWRHandler = <Data = any, Error = any>(
-  _key: Key,
-  fetcher: Fetcher<Data> | null,
-  config: FullConfiguration & SWRConfiguration<Data, Error>
-) => {
-  const {
-    cache,
-    compare,
-    suspense,
-    fallbackData,
-    revalidateOnMount,
-    revalidateIfStale,
-    refreshInterval,
-    refreshWhenHidden,
-    refreshWhenOffline,
-    keepPreviousData,
-    strictServerPrefetchWarning
-  } = config
-}
-`
-    const tokens = tokenize(input)
-    const extracted = extractTokenArray(tokens)
-    const tokenTypes = extracted.map(([, type]) => type)
-    const asString = getTokensAsString(tokens)
-
-    expect(tokenTypes).not.toContain('jsxliterals')
-    expect(tokenTypes).not.toContain('entity')
-    expect(asString).toContain('< => sign')
-    expect(asString).toContain('Data => class')
-    expect(asString).toContain('> => sign')
+    const input = 'const f = <T = any>(v: T) => v'
+    const actual = getTokensAsString(tokenize(input))
+    expect(actual).toMatchInlineSnapshot(`
+      [
+        "const => keyword",
+        "f => identifier",
+        "= => sign",
+        "< => sign",
+        "T => class",
+        "= => sign",
+        "any => identifier",
+        "> => sign",
+        "( => sign",
+        "v => identifier",
+        ": => sign",
+        "T => class",
+        ") => sign",
+        "= => sign",
+        "> => sign",
+        "v => identifier",
+      ]
+    `)
   })
 })
 
 describe('tokenize - wrapped typescript generic arrow callback', () => {
   it('should not treat wrapped generic callbacks as jsx tags', () => {
-    const input = `\
-(<T, _>(
-    thenable: Promise<T> & {
-      status?: 'pending' | 'fulfilled' | 'rejected'
-      value?: T
-      reason?: unknown
-    }
-  ): T => {
-    switch (thenable.status) {
-      case 'pending':
-        throw thenable
-      case 'fulfilled':
-        return thenable.value as T
-      case 'rejected':
-        throw thenable.reason
-      default:
-        thenable.status = 'pending'
-        thenable.then(
-          v => {
-            thenable.status = 'fulfilled'
-            thenable.value = v
-          },
-          e => {
-            thenable.status = 'rejected'
-            thenable.reason = e
-          }
-        )
-        throw thenable
-    }
-  })`
-    const tokens = tokenize(input)
-    const extracted = extractTokenArray(tokens)
-    const tokenTypes = extracted.map(([, type]) => type)
-    const asString = getTokensAsString(tokens)
-
-    expect(tokenTypes).not.toContain('jsxliterals')
-    expect(tokenTypes).not.toContain('entity')
-    expect(asString).toContain('< => sign')
-    expect(asString).toContain('T => class')
-    expect(asString).toContain('= => sign')
-    expect(asString).toContain('> => sign')
+    const input = '(<T, _>(x: T): T => x)'
+    const actual = getTokensAsString(tokenize(input))
+    expect(actual).toMatchInlineSnapshot(`
+      [
+        "( => sign",
+        "< => sign",
+        "T => class",
+        ", => sign",
+        "_ => class",
+        "> => sign",
+        "( => sign",
+        "x => identifier",
+        ": => sign",
+        "T => class",
+        ") => sign",
+        ": => sign",
+        "T => class",
+        "= => sign",
+        "> => sign",
+        "x => identifier",
+        ") => sign",
+      ]
+    `)
   })
 })
