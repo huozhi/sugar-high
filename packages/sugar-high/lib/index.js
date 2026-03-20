@@ -131,6 +131,54 @@ function isLikelyTypeScript(code) {
 }
 
 /**
+ * Detects `<T, U = ...>(` style generic parameter lists so they are not
+ * treated as JSX tags.
+ * @param {string} code
+ * @param {number} startIndex
+ * @returns {boolean}
+ */
+function isTypeParameterListStart(code, startIndex) {
+  if (code[startIndex] !== '<') return false
+
+  let depth = 0
+  let sawIdentifierStart = false
+
+  for (let i = startIndex; i < code.length; i++) {
+    const ch = code[i]
+
+    if (ch === '<') {
+      depth++
+      continue
+    }
+    if (ch === '>') {
+      depth--
+      if (depth === 0) {
+        let next = i + 1
+        while (next < code.length && /\s/.test(code[next])) next++
+        if (!(sawIdentifierStart && code[next] === '(')) return false
+
+        // Focus this heuristic on generic arrow functions:
+        // const fn = <T>(arg) => ...
+        const tail = code.slice(next, next + 320)
+        return /\)\s*=>/.test(tail)
+      }
+      continue
+    }
+    if (depth === 0) continue
+
+    if (/[$A-Za-z_]/.test(ch)) {
+      sawIdentifierStart = true
+      continue
+    }
+    if (/[\s,\.\=\?\:\|\&\[\]]/.test(ch)) continue
+
+    return false
+  }
+
+  return false
+}
+
+/**
  *
  * 0  - identifier
  * 1  - keyword
@@ -541,11 +589,21 @@ function tokenize(code, options) {
 
     // if it's not in a jsx tag declaration or a string, close child if next is jsx close tag
     if (!__jsxTag && (curr === '<' && isIdentifierChar(next) || c_n === '</')) {
-      __jsxTag = next === '/' ? 2 : 1
+      let prevNonSpace = i - 1
+      while (prevNonSpace >= 0 && /\s/.test(code[prevNonSpace])) prevNonSpace--
+      const prevChar = prevNonSpace >= 0 ? code[prevNonSpace] : ''
+
+      const isTsTypeArgStart = curr === '<' && /[$\w\]\)]/.test(prevChar)
+      const isTsGenericStart = curr === '<' && isTypeParameterListStart(code, i)
+      if (!isTsTypeArgStart && !isTsGenericStart) {
+        __jsxTag = next === '/' ? 2 : 1
+      }
 
       // current and next char can form a jsx open or close tag
       if (curr === '<' && (next === '/' || isAlpha(next))) {
         if (
+          !isTsTypeArgStart &&
+          !isTsGenericStart &&
           !inStringContent() && 
           !inJsxLiterals() &&
           !inRegexQuotes()

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize } from '..'
-import { getTokensAsString } from './testing-utils'
+import { extractTokenArray, getTokensAsString } from './testing-utils'
 
 describe('tokenize - customized keywords', () => {
   it('should tokenize the input string with the given keywords', () => {
@@ -54,5 +54,41 @@ describe('tokenize - customized comment rule', () => {
         "# this is a comment => comment",
       ]
     `)
+  })
+})
+
+describe('tokenize - typescript generic arrow function', () => {
+  it('should not treat type parameter lists as jsx tags', () => {
+    const input = `\
+export const useSWRHandler = <Data = any, Error = any>(
+  _key: Key,
+  fetcher: Fetcher<Data> | null,
+  config: FullConfiguration & SWRConfiguration<Data, Error>
+) => {
+  const {
+    cache,
+    compare,
+    suspense,
+    fallbackData,
+    revalidateOnMount,
+    revalidateIfStale,
+    refreshInterval,
+    refreshWhenHidden,
+    refreshWhenOffline,
+    keepPreviousData,
+    strictServerPrefetchWarning
+  } = config
+}
+`
+    const tokens = tokenize(input)
+    const extracted = extractTokenArray(tokens)
+    const tokenTypes = extracted.map(([, type]) => type)
+    const asString = getTokensAsString(tokens)
+
+    expect(tokenTypes).not.toContain('jsxliterals')
+    expect(tokenTypes).not.toContain('entity')
+    expect(asString).toContain('< => sign')
+    expect(asString).toContain('Data => class')
+    expect(asString).toContain('> => sign')
   })
 })
