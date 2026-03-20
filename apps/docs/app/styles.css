@@ -510,6 +510,7 @@ div[data-codice-editor-header="true"] {
 }
 .sh__line {
   display: block;
+  min-height: 1em;
 }
 .live-editor [data-codice-editor] code {
   margin-left: 0 !important;
