@@ -217,25 +217,73 @@ code {
   counter-reset: sh-line-number;
 }
 
-.live-editor {
-  cursor: default;
+/* Full-bleed row: editor stays in centered band; color rail sits in side columns */
+.live-editor-layout {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, max-content) auto 1fr;
+  gap: 10px;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
   margin: 2rem auto 6rem;
-  max-width: 720px;
+}
+
+.live-editor-editor-col {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+  max-width: var(--live-editor-pane-max);
+  justify-self: center;
+}
+
+/* Dev Matched / Matching toggle: top of column, outside codice card, same width band as editor */
+.live-editor-section .live-editor-editor-col .textarea-color-toggle-container {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.live-editor {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: var(--live-editor-pane-max);
+  min-width: 0;
+  margin: 0;
+  cursor: default;
   border-radius: 6px;
   resize: both;
   overflow: auto;
   position: relative;
-  box-shadow: -5px 12px 40px #8888887a;
-  transition: box-shadow 0.3s ease;
+  background: transparent;
+  box-shadow: none;
 }
 
-.live-editor:focus, .live-editor:focus-visible, .live-editor:focus-within {
+.live-editor:focus-within > .codice.editor {
   outline: none;
-  box-shadow: -5px 12px 60px #5d59597a;
+  /* Vertical-only lift — no shadow cast to the right */
+  box-shadow: 0 14px 44px rgba(93, 89, 89, 0.28);
 }
 
 .live-editor-section {
   position: relative;
+  --live-editor-pane-max: 560px;
+}
+
+.live-editor-section .container-720 {
+  max-width: var(--live-editor-pane-max);
+}
+
+@media (min-width: 641px) {
+  .live-editor__top-bar {
+    display: none;
+  }
 }
 
 /* Smooth color transitions for syntax highlighting */
@@ -275,18 +323,48 @@ code {
   background-color: #f5f5f5;
 }
 
+.live-editor > .codice.editor {
+  min-width: 0;
+  border-radius: 6px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.07);
+  transition: box-shadow 0.3s ease;
+}
+
 .live-editor__color {
+  grid-column: 3;
   margin: 0;
   /* Give extra bottom padding to visually align with the top title */
-  padding: 8px 24px 16px;
+  padding: 8px 10px 12px;
+  list-style: none;
+  width: 132px;
+  max-width: 132px;
+  box-sizing: border-box;
+  background: #f6f6f6;
+  border: none;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.live-editor__color__theme {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.live-editor__color .theme-mode-button__full {
+  display: inline;
 }
 
 .live-editor__color .color-theme-title {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
   color: #68727f;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .textarea-color-toggle {
@@ -354,8 +432,13 @@ code {
   border-radius: 999px;
 }
 .live-editor__color__item__name {
-  margin-right: 12px;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-right: 0;
   color: #a4a4a4;
+  font-size: 11px;
+  line-height: 1.25;
+  word-break: break-word;
 }
 .live-editor__color__item__color {
   display: none;
@@ -378,12 +461,151 @@ code {
     transform: none !important;
     visibility: hidden;
   }
-  .live-editor {
+  .live-editor-layout {
+    display: flex;
+    flex-direction: column;
     margin: 1rem auto 3rem;
+    padding: 0 16px;
+    gap: 0;
   }
+
+  .live-editor-editor-col {
+    order: 1;
+    width: 100%;
+    max-width: none;
+  }
+
+  .live-editor {
+    grid-column: unset;
+    width: 100%;
+    max-width: none;
+  }
+
   .live-editor__color {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    order: 0;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    width: 100%;
+    max-width: none;
+    margin: 0 0 10px;
+    padding: 8px 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    background: rgba(246, 246, 246, 0.94);
+    backdrop-filter: blur(10px);
+    border: none;
+    box-shadow: none;
+    justify-content: flex-start;
+  }
+
+  .live-editor__color::-webkit-scrollbar {
     display: none;
   }
+
+  /* Theme circle pinned left; token swatches group toward the right */
+  .live-editor__color__theme {
+    flex: 0 0 auto;
+    width: auto;
+    margin: 0;
+    margin-right: auto;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    padding-right: 8px;
+    background: linear-gradient(
+      90deg,
+      rgba(246, 246, 246, 0.98) 0%,
+      rgba(246, 246, 246, 0.98) 85%,
+      rgba(246, 246, 246, 0) 100%
+    );
+  }
+
+  .live-editor__color .color-theme-title {
+    margin: 0;
+    gap: 0;
+  }
+
+  .live-editor__color .color-theme-title .copy-button {
+    display: none;
+  }
+
+  /* Same 16px circle as token swatches; neutral, no label, no press/hover visuals */
+  .live-editor__color .theme-mode-button__full {
+    display: none;
+  }
+
+  .live-editor__color .color-theme-title .theme-mode-button {
+    display: block;
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    margin: 0;
+    padding: 0;
+    border-radius: 999px;
+    font-size: 0;
+    line-height: 0;
+    overflow: hidden;
+    color: transparent;
+    background: #d4d4d4;
+    border: 1px solid #c8c8c8;
+    box-sizing: border-box;
+    cursor: default;
+    transition: none;
+    -webkit-tap-highlight-color: transparent;
+    appearance: none;
+  }
+
+  .live-editor__color .color-theme-title .theme-mode-button--minimal,
+  .live-editor__color .color-theme-title .theme-mode-button--stylish {
+    background: #d4d4d4;
+    border-color: #c8c8c8;
+  }
+
+  .live-editor__color .color-theme-title .theme-mode-button:hover,
+  .live-editor__color .color-theme-title .theme-mode-button:active,
+  .live-editor__color .color-theme-title .theme-mode-button:focus,
+  .live-editor__color .color-theme-title .theme-mode-button:focus-visible {
+    outline: none;
+    color: transparent;
+    background: #d4d4d4;
+    border-color: #c8c8c8;
+    filter: none;
+  }
+
+  .live-editor-section .top-controls .theme-mode-button--mobile {
+    display: none;
+  }
+
+  .live-editor__color__item__name {
+    display: none;
+  }
+
+  .live-editor__color__item {
+    flex: 0 0 auto;
+    margin: 0;
+    width: auto;
+  }
+
+  .live-editor__color__item label {
+    margin: 0;
+  }
+
+  .live-editor__color__item__indicator {
+    margin-right: 0;
+  }
+
+  .live-editor__color input[type='color'] {
+    margin: 0;
+  }
+
   .theme-mode-button--mobile {
     display: block;
   }

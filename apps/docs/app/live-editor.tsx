@@ -205,7 +205,7 @@ export default function LiveEditor({
   }, [colorPlateColors])
 
   return (
-    <div className={`container-720 live-editor-section`}>
+    <div className="live-editor-section">
       <style>{`
         ${`
         .live-editor-section {
@@ -224,56 +224,66 @@ export default function LiveEditor({
         }
         `}`}</style>
 
-      <div className="top-controls">
-        {process.env.NODE_ENV === 'development' && (
-          <div className="textarea-color-toggle-container">
-            <button
-              onClick={toggleTextareaColor}
-              className={`textarea-color-toggle ${isInspecting ? 'textarea-color-toggle--active' : ''}`}
-            >
-              {buttonText}
-            </button>
-          </div>
-        )}
-        <button
-          onClick={toggleTheme}
-          className={`theme-mode-button theme-mode-button--mobile ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
-          aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
-        >
-          {currentTheme.name}
-        </button>
+      <div className="container-720 live-editor__top-bar">
+        <div className="top-controls">
+          <button
+            onClick={toggleTheme}
+            className={`theme-mode-button theme-mode-button--mobile ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
+            aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
+          >
+            {currentTheme.name}
+          </button>
+        </div>
       </div>
-      <div className="flex live-editor">
-        <Editor
-          ref={editorRef}
-          className="codice editor flex-1"
-          controls={false}
-          value={liveCode}
-          fontSize={14}
-          lineNumbersWidth='2rem'
-          onChange={(newCode) => {
-            setLiveCode(newCode)
-            debouncedTokenize(newCode)
-            if (!isTyping) setDefaultLiveCode(newCode)
-          }}
-        />
+      <div className="live-editor-layout">
+        <div className="live-editor-editor-col">
+          {process.env.NODE_ENV === 'development' && (
+            <div className="textarea-color-toggle-container">
+              <button
+                type="button"
+                onClick={toggleTextareaColor}
+                className={`textarea-color-toggle ${isInspecting ? 'textarea-color-toggle--active' : ''}`}
+              >
+                {buttonText}
+              </button>
+            </div>
+          )}
+          <div className="live-editor">
+            <Editor
+              ref={editorRef}
+              className="codice editor flex-1"
+              controls={false}
+              value={liveCode}
+              fontSize={14}
+              lineNumbersWidth='2rem'
+              onChange={(newCode) => {
+                setLiveCode(newCode)
+                debouncedTokenize(newCode)
+                if (!isTyping) setDefaultLiveCode(newCode)
+              }}
+            />
+          </div>
+        </div>
 
         <ul className="live-editor__color">
-          <div className="color-theme-title">
-            <button
-              onClick={toggleTheme}
-              className={`theme-mode-button ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
-              aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
-            >
-              {currentTheme.name}
-            </button>
-            <CopyButton codeSnippet={customizableColorsString} />
-          </div>
+          <li className="live-editor__color__theme">
+            <div className="color-theme-title">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className={`theme-mode-button ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
+                aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
+              >
+                <span className="theme-mode-button__full">{currentTheme.name}</span>
+              </button>
+              <CopyButton codeSnippet={customizableColorsString} />
+            </div>
+          </li>
           {customizableColors.map(([tokenType, tokenTypeName]) => {
             const inputId = `live-editor-color__input--${tokenTypeName}`
             return (
               <li key={tokenType} className="live-editor__color__item">
-                <label htmlFor={inputId} className="flex align-center">
+                <label htmlFor={inputId} className="flex align-center" title={tokenTypeName}>
                   <span
                     className={`live-editor__color__item__indicator live-editor__color__item__indicator--${tokenTypeName}`}
                     style={{ color: colorPlateColors[tokenTypeName] }}
@@ -299,7 +309,8 @@ export default function LiveEditor({
         </ul>
       </div>
       {/* show tokens */}
-      <div className="editor-tokens">
+      <div className="container-720">
+        <div className="editor-tokens">
         {liveCodeTokens.map(([tokenType, token], index) => {
           const tokenTypeName = SugarHigh.TokenTypes[tokenType]
           if (
@@ -314,6 +325,7 @@ export default function LiveEditor({
             </span>
           )
         })}
+        </div>
       </div>
     </div>
   )
