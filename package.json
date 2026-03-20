@@ -15,7 +15,7 @@
   "license": "MIT",
   "author": "huozhi",
   "devDependencies": {
-    "next": "^16.0.7"
+    "next": "^16.2.0"
   },
   "pnpm": {
     "overrides": {
