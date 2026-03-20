@@ -29,24 +29,23 @@ export default function InstallBanner() {
     <div className="install-banner">
       <style>
         {`
-        :scope {
-          --sh-keyword: #ffada8;
-          --sh-string: #88bbb6;
-          --sh-comment:#7c7c7c;
-        }
-
-        :scope [data-codice-header] {
+        .install-banner [data-codice-header] {
           display: none;
         }
         `}
       </style>
-      <h1 className="install-banner__command">
-        Highlight your code with{' '}
-        <a href='https://github.com/huozhi/sugar-high' target='_blank' rel='noreferrer'>
-          sugar-high
-        </a>
-      </h1>
       <div className="container-960">
+        <div className="install-banner__head">
+          <h1 className="install-banner__command">Highlight your code</h1>
+          <a
+            className="install-banner__repo"
+            href="https://github.com/huozhi/sugar-high"
+            target="_blank"
+            rel="noreferrer"
+          >
+            repo
+          </a>
+        </div>
         <div className="install-banner__code">
           <Code title='install.sh'>
             {usageCode}
@@ -54,14 +53,14 @@ export default function InstallBanner() {
           <CopyButton codeSnippet={usageCode} />
         </div>
         <br />
-        <div className="install-banner__code install-banner__code--dimmed">
+        <div className="install-banner__code">
           <Code title='color.css'>
             {cssCode}
           </Code>
           <CopyButton codeSnippet={cssCode} />
         </div>
 
-        <div className="install-banner__block install-banner__code--dimmed">
+        <div className="install-banner__block">
           <h2>Usage with remark.js</h2>
           <p>
             <a href='https://remark.js.org/' target='_blank' rel='noreferrer'>Remark.js</a>{' '}

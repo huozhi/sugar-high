@@ -232,22 +232,27 @@ code {
 
 .live-editor-editor-col {
   grid-column: 2;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 8px;
   min-width: 0;
   width: 100%;
   max-width: var(--live-editor-pane-max);
   justify-self: center;
 }
 
-/* Dev Matched / Matching toggle: top of column, outside codice card, same width band as editor */
+/* Out of flow so editor + color rail share one top edge; toggle floats above the codice card */
 .live-editor-section .live-editor-editor-col .textarea-color-toggle-container {
-  flex-shrink: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translateY(calc(-100% - 6px));
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  z-index: 5;
+  pointer-events: auto;
 }
 
 .live-editor {
