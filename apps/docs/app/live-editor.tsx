@@ -83,19 +83,25 @@ export default function App() {
 `
 
 function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onReady) {
-  if (!enableTypingAnimation) {
-    return {
-      text: targetText,
-      isTyping: false,
-      setText: () => {},
-    }
-  }
-  const [text, setText] = useState('')
-  const [isTyping, setIsTyping] = useState(true)
+  const [text, setText] = useState(enableTypingAnimation ? '' : targetText)
+  const [isTyping, setIsTyping] = useState(enableTypingAnimation)
   const animationDuration = delay / targetText.length
   let timeoutId = useRef(null)
 
   useEffect(() => {
+    if (!enableTypingAnimation) {
+      setText(targetText)
+      setIsTyping(false)
+      return
+    }
+
+    setText('')
+    setIsTyping(true)
+  }, [enableTypingAnimation, targetText])
+
+  useEffect(() => {
+    if (!enableTypingAnimation) return
+
     if (isTyping && targetText.length) {
       if (text.length < targetText.length) {
         const nextText = targetText.substring(0, text.length + 1)
@@ -117,7 +123,7 @@ function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onRead
         timeoutId.current = null
       }
     }
-  }, [targetText, text, timeoutId.current])
+  }, [enableTypingAnimation, targetText, text, animationDuration, onReady])
 
   return { text, isTyping, setText }
 }
