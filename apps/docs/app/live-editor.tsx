@@ -6,13 +6,10 @@ import {
   useRef,
   useMemo,
   useCallback,
-  Suspense,
 } from 'react'
-import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
 import { CopyButton } from './components/copy-button'
-import { fetchGithubSource } from './github-source'
 
 // Original colorful theme
 const defaultColorPlateColors = {
@@ -80,30 +77,6 @@ export default function App() {
 }
 
 `
-
-/** Notable OSS files for one-click preview (TS/TSX, CSS). */
-const GITHUB_QUICK_EXAMPLES = [
-  {
-    label: 'swr',
-    file: 'use-swr.ts',
-    url: 'https://github.com/vercel/swr/blob/main/src/index/use-swr.ts',
-  },
-  {
-    label: 'zustand',
-    file: 'vanilla.ts',
-    url: 'https://github.com/pmndrs/zustand/blob/main/src/vanilla.ts',
-  },
-  {
-    label: 'normalize',
-    file: 'normalize.css',
-    url: 'https://github.com/necolas/normalize.css/blob/master/normalize.css',
-  },
-  {
-    label: 'next.js',
-    file: 'page.tsx',
-    url: 'https://github.com/vercel/next.js/blob/canary/examples/hello-world/app/page.tsx',
-  },
-] as const
 
 function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onReady) {
   const [text, setText] = useState(enableTypingAnimation ? '' : targetText)
@@ -175,53 +148,30 @@ function useDefaultLiveCode(defaultCodeText, restoreFromStorage = true) {
   }
 }
 
-/** Syncs `?github=` with the browser and loads from the URL when it changes (shareable links). */
-function GithubPreviewUrlSync({
-  registerSync,
-  lastLoadedRef,
-  loadRef,
-  setGithubUrlInput,
-}: {
-  registerSync: (fn: ((url: string) => void) | null) => void
-  lastLoadedRef: React.MutableRefObject<string | null>
-  loadRef: React.MutableRefObject<(url: string) => Promise<void>>
-  setGithubUrlInput: React.Dispatch<React.SetStateAction<string>>
-}) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const githubParam = searchParams.get('github')?.trim() || ''
-
-  useEffect(() => {
-    const sync = (url: string) => {
-      const q = new URLSearchParams()
-      q.set('github', url)
-      router.replace(`${pathname}?${q.toString()}`, { scroll: false })
-    }
-    registerSync(sync)
-    return () => registerSync(null)
-  }, [pathname, router, registerSync])
-
-  useEffect(() => {
-    if (!githubParam) {
-      lastLoadedRef.current = null
-      return
-    }
-    if (lastLoadedRef.current === githubParam) return
-    setGithubUrlInput(githubParam)
-    void loadRef.current(githubParam)
-  }, [githubParam, lastLoadedRef, loadRef, setGithubUrlInput])
-
-  return null
+export type LiveEditorProps = {
+  enableTypingAnimation?: boolean
+  defaultCode?: string
+  persistEditorDraft?: boolean
+  /** Merged onto the outer `live-editor-section` (e.g. `live-editor-section--github-preview`). */
+  className?: string
+  /** Controlled source; use together with `onChange`. */
+  value?: string
+  onChange?: (code: string) => void
+  /** When false, use default syntax palette and hide theme / color rail (compact embeds). */
+  showThemeControls?: boolean
 }
 
 export default function LiveEditor({
   enableTypingAnimation = false,
   defaultCode = DEFAULT_LIVE_CODE,
-  showGithubLoader = false,
-  initialGithubUrl = '',
   persistEditorDraft = true,
-}) {
+  className = '',
+  value,
+  onChange,
+  showThemeControls = true,
+}: LiveEditorProps) {
+  const isControlled = value !== undefined && onChange !== undefined
+
   const editorRef = useRef(null)
   const [currentThemeIndex, setCurrentThemeIndex] = useState(0)
   const [colorPlateColors, setColorPlateColors] = useState(() => themes[0].colors)
@@ -235,82 +185,66 @@ export default function LiveEditor({
   }
 
   useEffect(() => {
-    if (showGithubLoader) return
+    if (!showThemeControls) return
     setColorPlateColors(themes[currentThemeIndex].colors)
-  }, [currentThemeIndex, showGithubLoader])
+  }, [currentThemeIndex, showThemeControls])
 
   const toggleTextareaColor = () => {
-    setTextareaColor(prev => prev === 'transparent' ? '#66666682' : 'transparent')
+    setTextareaColor((prev) =>
+      prev === 'transparent' ? '#66666682' : 'transparent'
+    )
   }
 
   const isInspecting = textareaColor !== 'transparent'
   const buttonText = isInspecting ? 'Matching' : 'Matched'
 
-  const restoreFromStorage = !showGithubLoader
   const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode(
     defaultCode,
-    restoreFromStorage
+    persistEditorDraft && !isControlled
   )
+
+  const animationTarget = isControlled ? value : defaultLiveCode
   const {
-    text: liveCode,
-    setText: setLiveCode,
+    text: animatedCode,
+    setText: setAnimatedCode,
     isTyping,
-  } = useTextTypingAnimation(defaultLiveCode, 1000, enableTypingAnimation, () => {
-    if (editorRef.current) {
-      // focus needs to be delayed
-      setTimeout(() => {
-        editorRef.current.focus()
-      })
+  } = useTextTypingAnimation(
+    animationTarget,
+    1000,
+    enableTypingAnimation && !isControlled,
+    () => {
+      if (editorRef.current) {
+        setTimeout(() => {
+          editorRef.current.focus()
+        })
+      }
     }
-  })
-
-  const [githubUrlInput, setGithubUrlInput] = useState(
-    () => initialGithubUrl?.trim() || ''
-  )
-  const [githubLoadError, setGithubLoadError] = useState<string | null>(null)
-  const [githubLoading, setGithubLoading] = useState(false)
-
-  const lastGithubLoadedUrlRef = useRef<string | null>(null)
-  const githubUrlSyncFnRef = useRef<((url: string) => void) | null>(null)
-  const registerGithubUrlSync = useCallback(
-    (fn: ((url: string) => void) | null) => {
-      githubUrlSyncFnRef.current = fn
-    },
-    []
   )
 
-  const applyLoadedSource = useCallback((text) => {
-    setLiveCode(text)
-    if (persistEditorDraft) setDefaultLiveCode(text)
-  }, [persistEditorDraft, setDefaultLiveCode, setLiveCode])
+  const displayCode = isControlled ? value : animatedCode
 
-  const loadFromGithub = useCallback(
-    async (url) => {
-      const trimmed = url.trim()
-      if (!trimmed) {
-        setGithubLoadError('Paste a GitHub file URL.')
-        return
-      }
-      setGithubLoadError(null)
-      setGithubLoading(true)
-      try {
-        const { text } = await fetchGithubSource(trimmed)
-        applyLoadedSource(text)
-        lastGithubLoadedUrlRef.current = trimmed
-        githubUrlSyncFnRef.current?.(trimmed)
-      } catch (e) {
-        setGithubLoadError(e instanceof Error ? e.message : 'Failed to load.')
-      } finally {
-        setGithubLoading(false)
+  const handleEditorChange = useCallback(
+    (newCode) => {
+      if (isControlled) {
+        onChange(newCode)
+      } else {
+        setAnimatedCode(newCode)
+        if (!isTyping && persistEditorDraft) setDefaultLiveCode(newCode)
       }
     },
-    [applyLoadedSource]
+    [
+      isControlled,
+      onChange,
+      setAnimatedCode,
+      isTyping,
+      persistEditorDraft,
+      setDefaultLiveCode,
+    ]
   )
 
-  const loadFromGithubRef = useRef(loadFromGithub)
-  loadFromGithubRef.current = loadFromGithub
-
-  const activePlateColors = showGithubLoader ? defaultColorPlateColors : colorPlateColors
+  const activePlateColors = showThemeControls
+    ? colorPlateColors
+    : defaultColorPlateColors
 
   const customizableColorsString = useMemo(() => {
     return customizableColors
@@ -320,16 +254,13 @@ export default function LiveEditor({
       .join('\n')
   }, [activePlateColors])
 
-  const textareaTint = showGithubLoader ? 'transparent' : textareaColor
+  const textareaTint = showThemeControls ? textareaColor : 'transparent'
+
+  const sectionClass =
+    `live-editor-section${className ? ` ${className}` : ''}`.trim()
 
   return (
-    <div
-      className={
-        showGithubLoader
-          ? 'live-editor-section live-editor-section--github-preview'
-          : 'live-editor-section'
-      }
-    >
+    <div className={sectionClass}>
       <style>{`
         ${`
         .live-editor-section {
@@ -348,7 +279,7 @@ export default function LiveEditor({
         }
         `}`}</style>
 
-      {!showGithubLoader && (
+      {showThemeControls && (
         <div className="container-720 live-editor__top-bar">
           <div className="top-controls">
             <button
@@ -361,84 +292,9 @@ export default function LiveEditor({
           </div>
         </div>
       )}
-      {showGithubLoader && (
-        <Suspense fallback={null}>
-          <GithubPreviewUrlSync
-            registerSync={registerGithubUrlSync}
-            lastLoadedRef={lastGithubLoadedUrlRef}
-            loadRef={loadFromGithubRef}
-            setGithubUrlInput={setGithubUrlInput}
-          />
-        </Suspense>
-      )}
-      {showGithubLoader && (
-        <div className="container-720 github-source-loader github-source-loader--minimal">
-          <div className="github-source-loader__row">
-            <div className="github-source-loader__input-wrap">
-              <input
-                id="github-file-url"
-                type="url"
-                className="github-source-loader__input github-source-loader__input--underline"
-                placeholder="https://github.com/…/blob/…/file"
-                value={githubUrlInput}
-                disabled={githubLoading}
-                onChange={(e) => setGithubUrlInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') loadFromGithub(githubUrlInput)
-                }}
-              />
-            </div>
-            <button
-              type="button"
-              className="github-source-loader__button github-source-loader__button--minimal"
-              disabled={githubLoading}
-              onClick={() => loadFromGithub(githubUrlInput)}
-            >
-              {githubLoading ? '…' : 'Load'}
-            </button>
-          </div>
-          {githubLoadError && (
-            <p className="github-source-loader__error" role="alert">
-              {githubLoadError}
-            </p>
-          )}
-          <div
-            className="github-source-loader__hint github-source-loader__hint--compact github-source-loader__examples"
-            role="group"
-            aria-labelledby="github-quick-examples-heading"
-          >
-            <p
-              id="github-quick-examples-heading"
-              className="github-source-loader__examples-label"
-            >
-              Examples
-            </p>
-            <ul className="github-source-loader__examples-list">
-              {GITHUB_QUICK_EXAMPLES.map((ex) => (
-                <li key={ex.url} className="github-source-loader__examples-item">
-                  <button
-                    type="button"
-                    className="github-source-loader__example-load"
-                    disabled={githubLoading}
-                    aria-label={`Load example: ${ex.url}`}
-                    onClick={() => {
-                      setGithubUrlInput(ex.url)
-                      void loadFromGithub(ex.url)
-                    }}
-                  >
-                    {ex.label}
-                    {' - '}
-                    <span className="github-source-loader__example-file">{ex.file}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
       <div className="live-editor-layout">
         <div className="live-editor-editor-col">
-          {!showGithubLoader && process.env.NODE_ENV === 'development' && (
+          {showThemeControls && process.env.NODE_ENV === 'development' && (
             <div className="textarea-color-toggle-container">
               <button
                 type="button"
@@ -454,18 +310,15 @@ export default function LiveEditor({
               ref={editorRef}
               className="codice editor flex-1"
               controls={false}
-              value={liveCode}
+              value={displayCode}
               fontSize={14}
               lineNumbersWidth='2rem'
-              onChange={(newCode) => {
-                setLiveCode(newCode)
-                if (!isTyping && persistEditorDraft) setDefaultLiveCode(newCode)
-              }}
+              onChange={handleEditorChange}
             />
           </div>
         </div>
 
-        {!showGithubLoader && (
+        {showThemeControls && (
           <ul className="live-editor__color">
             <li className="live-editor__color__theme">
               <div className="color-theme-title">

@@ -1,4 +1,4 @@
-import LiveEditor from '../live-editor'
+import { GithubPlayground } from './github-playground'
 
 const HELLO_WORLD_REACT = `export default function App() {
   return <h1>Hello, world</h1>
@@ -16,12 +16,9 @@ export default async function Page({ searchParams }: EditorPageProps) {
     typeof raw === 'string' ? raw : Array.isArray(raw) ? raw[0] : undefined
 
   return (
-    <LiveEditor
+    <GithubPlayground
       defaultCode={HELLO_WORLD_REACT}
-      enableTypingAnimation={false}
-      showGithubLoader
       initialGithubUrl={githubFromQuery}
-      persistEditorDraft={false}
     />
   )
 }
