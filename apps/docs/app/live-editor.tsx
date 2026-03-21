@@ -175,7 +175,7 @@ export default function LiveEditor({
   enableTypingAnimation = false,
   defaultCode = DEFAULT_LIVE_CODE,
   showGithubLoader = false,
-  initialGithubUrl,
+  initialGithubUrl = '',
   persistEditorDraft = true,
 }) {
   const editorRef = useRef(null)
