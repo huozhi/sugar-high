@@ -1,9 +1,17 @@
 'use client'
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from 'react'
 import { tokenize, SugarHigh } from 'sugar-high'
+import * as langPresets from 'sugar-high/presets'
 import { Editor } from 'codice'
 import { CopyButton } from './components/copy-button'
+import { fetchGithubSource } from './github-source'
 
 // Original colorful theme
 const defaultColorPlateColors = {
@@ -129,16 +137,30 @@ function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onRead
 }
 
 const DEFAULT_LIVE_CODE_KEY = '$saved-live-code'
-function useDefaultLiveCode(defaultCodeText) {
-  const [defaultCode, setCode] = useState(defaultCodeText || '')
+
+function highlightOptionsForFilePath(filePath: string) {
+  const p = filePath.toLowerCase()
+  if (p.endsWith('.css')) return { ...langPresets.css }
+  if (p.endsWith('.py')) return { ...langPresets.python }
+  if (p.endsWith('.rs')) return { ...langPresets.rust }
+  return undefined
+}
+
+function useDefaultLiveCode(defaultCodeText, restoreFromStorage = true) {
+  const [defaultCode, setCode] = useState(() =>
+    restoreFromStorage ? defaultCodeText || '' : (defaultCodeText ?? '')
+  )
 
   useEffect(() => {
+    if (!restoreFromStorage) return
     if (defaultCode) return
 
     setCode(window.localStorage.getItem(DEFAULT_LIVE_CODE_KEY) || DEFAULT_LIVE_CODE)
-  }, [defaultCode])
+  }, [defaultCode, restoreFromStorage])
 
-  const setDefaultLiveCode = (code) => window.localStorage.setItem(DEFAULT_LIVE_CODE_KEY, code)
+  const setDefaultLiveCode = useCallback((code) => {
+    window.localStorage.setItem(DEFAULT_LIVE_CODE_KEY, code)
+  }, [])
 
   return {
     defaultLiveCode: defaultCode,
@@ -146,9 +168,15 @@ function useDefaultLiveCode(defaultCodeText) {
   }
 }
 
+const EXAMPLE_GITHUB_FILE =
+  'https://github.com/vercel/swr/blob/main/src/index/use-swr.ts'
+
 export default function LiveEditor({
   enableTypingAnimation = false,
   defaultCode = DEFAULT_LIVE_CODE,
+  showGithubLoader = false,
+  initialGithubUrl,
+  persistEditorDraft = true,
 }) {
   const editorRef = useRef(null)
   const [currentThemeIndex, setCurrentThemeIndex] = useState(0)
@@ -173,7 +201,11 @@ export default function LiveEditor({
   const isInspecting = textareaColor !== 'transparent'
   const buttonText = isInspecting ? 'Matching' : 'Matched'
 
-  const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode(defaultCode)
+  const restoreFromStorage = !showGithubLoader
+  const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode(
+    defaultCode,
+    restoreFromStorage
+  )
   const {
     text: liveCode,
     setText: setLiveCode,
@@ -188,13 +220,57 @@ export default function LiveEditor({
   })
 
   const [liveCodeTokens, setLiveCodeTokens] = useState([])
+  const highlightOptionsRef = useRef(undefined)
+  const [githubUrlInput, setGithubUrlInput] = useState(
+    () => initialGithubUrl?.trim() || ''
+  )
+  const [githubLoadError, setGithubLoadError] = useState<string | null>(null)
+  const [githubLoading, setGithubLoading] = useState(false)
+
   const debouncedTokenizeRef = useRef(
     debounce((c) => {
-      const tokens = tokenize(c)
+      const tokens = tokenize(c, highlightOptionsRef.current)
       setLiveCodeTokens(tokens)
     })
   )
   const debouncedTokenize = debouncedTokenizeRef.current
+
+  const applyLoadedSource = useCallback((text, filePath) => {
+    const opts = highlightOptionsForFilePath(filePath)
+    highlightOptionsRef.current = opts
+    setLiveCode(text)
+    setLiveCodeTokens(tokenize(text, opts))
+    if (persistEditorDraft) setDefaultLiveCode(text)
+  }, [persistEditorDraft, setDefaultLiveCode, setLiveCode])
+
+  const loadFromGithub = useCallback(
+    async (url) => {
+      const trimmed = url.trim()
+      if (!trimmed) {
+        setGithubLoadError('Paste a GitHub file URL.')
+        return
+      }
+      setGithubLoadError(null)
+      setGithubLoading(true)
+      try {
+        const { text, path } = await fetchGithubSource(trimmed)
+        applyLoadedSource(text, path)
+      } catch (e) {
+        setGithubLoadError(e instanceof Error ? e.message : 'Failed to load.')
+      } finally {
+        setGithubLoading(false)
+      }
+    },
+    [applyLoadedSource]
+  )
+
+  const loadFromGithubRef = useRef(loadFromGithub)
+  loadFromGithubRef.current = loadFromGithub
+
+  useEffect(() => {
+    if (!showGithubLoader || !initialGithubUrl?.trim()) return
+    loadFromGithubRef.current(initialGithubUrl)
+  }, [showGithubLoader, initialGithubUrl])
 
   const customizableColorsString = useMemo(() => {
     return customizableColors
@@ -235,6 +311,50 @@ export default function LiveEditor({
           </button>
         </div>
       </div>
+      {showGithubLoader && (
+        <div className="container-720 github-source-loader">
+          <label className="github-source-loader__label" htmlFor="github-file-url">
+            Open a GitHub file
+          </label>
+          <div className="github-source-loader__row">
+            <input
+              id="github-file-url"
+              type="url"
+              className="github-source-loader__input"
+              placeholder={EXAMPLE_GITHUB_FILE}
+              value={githubUrlInput}
+              disabled={githubLoading}
+              onChange={(e) => setGithubUrlInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') loadFromGithub(githubUrlInput)
+              }}
+            />
+            <button
+              type="button"
+              className="github-source-loader__button"
+              disabled={githubLoading}
+              onClick={() => loadFromGithub(githubUrlInput)}
+            >
+              {githubLoading ? 'Loading…' : 'Load'}
+            </button>
+          </div>
+          {githubLoadError && (
+            <p className="github-source-loader__error" role="alert">
+              {githubLoadError}
+            </p>
+          )}
+          <p className="github-source-loader__hint">
+            Paste a <code>github.com/…/blob/…</code> link (example:{' '}
+            <a href={EXAMPLE_GITHUB_FILE}>{EXAMPLE_GITHUB_FILE}</a>
+            ) or a{' '}
+            <code>raw.githubusercontent.com</code> URL. You can also open{' '}
+            <a href={`/editor?github=${encodeURIComponent(EXAMPLE_GITHUB_FILE)}`}>
+              /editor?github=…
+            </a>{' '}
+            with a URL-encoded link.
+          </p>
+        </div>
+      )}
       <div className="live-editor-layout">
         <div className="live-editor-editor-col">
           {process.env.NODE_ENV === 'development' && (
@@ -259,7 +379,7 @@ export default function LiveEditor({
               onChange={(newCode) => {
                 setLiveCode(newCode)
                 debouncedTokenize(newCode)
-                if (!isTyping) setDefaultLiveCode(newCode)
+                if (!isTyping && persistEditorDraft) setDefaultLiveCode(newCode)
               }}
             />
           </div>
