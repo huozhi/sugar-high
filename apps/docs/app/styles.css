@@ -298,6 +298,96 @@ code {
   transition: color 0.4s ease, background-color 0.4s ease;
 }
 
+.github-source-loader {
+  max-width: var(--live-editor-pane-max);
+  margin: 0 auto 1.25rem;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.github-source-loader__label {
+  display: block;
+  font-size: 13px;
+  color: #68727f;
+  margin-bottom: 6px;
+}
+
+.github-source-loader__row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.github-source-loader__input {
+  flex: 1 1 200px;
+  min-width: 0;
+  font-size: 13px;
+  font-family: ui-monospace, monospace;
+  padding: 8px 10px;
+  border: 1px solid #d8dee4;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+}
+
+.github-source-loader__input:focus {
+  outline: none;
+  border-color: #8996a3;
+  box-shadow: 0 0 0 2px rgba(137, 150, 163, 0.2);
+}
+
+.github-source-loader__input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.github-source-loader__button {
+  flex: 0 0 auto;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #d8dee4;
+  background: #f6f8fa;
+  color: #333;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.github-source-loader__button:hover:not(:disabled) {
+  background: #eaeef2;
+}
+
+.github-source-loader__button:disabled {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+.github-source-loader__error {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #b42318;
+}
+
+.github-source-loader__hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #8a939e;
+}
+
+.github-source-loader__hint code {
+  font-size: 11px;
+  background: #f0f3f6;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.github-source-loader__hint a {
+  color: #4e8fdf;
+  word-break: break-all;
+}
+
 .top-controls {
   display: flex;
   flex-direction: column;
