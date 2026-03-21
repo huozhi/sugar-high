@@ -6,9 +6,10 @@ import {
   useRef,
   useMemo,
   useCallback,
+  Suspense,
 } from 'react'
-import { tokenize, SugarHigh } from 'sugar-high'
-import * as langPresets from 'sugar-high/presets'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
+import { SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
 import { CopyButton } from './components/copy-button'
 import { fetchGithubSource } from './github-source'
@@ -65,16 +66,6 @@ const customizableColors = Object.entries(SugarHigh.TokenTypes)
   .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
   .sort((a, b) => Number(a) - Number(b))
 
-function debounce(func, timeout = 200) {
-  let timer
-  return (...args) => {
-    clearTimeout(timer)
-    timer = setTimeout(() => {
-      func.apply(this, args)
-    }, timeout)
-  }
-}
-
 const DEFAULT_LIVE_CODE = `\
 export default function App() {
   return (
@@ -89,6 +80,30 @@ export default function App() {
 }
 
 `
+
+/** Notable OSS files for one-click preview (TS/TSX, CSS). */
+const GITHUB_QUICK_EXAMPLES = [
+  {
+    label: 'swr',
+    file: 'use-swr.ts',
+    url: 'https://github.com/vercel/swr/blob/main/src/index/use-swr.ts',
+  },
+  {
+    label: 'zustand',
+    file: 'vanilla.ts',
+    url: 'https://github.com/pmndrs/zustand/blob/main/src/vanilla.ts',
+  },
+  {
+    label: 'normalize',
+    file: 'normalize.css',
+    url: 'https://github.com/necolas/normalize.css/blob/master/normalize.css',
+  },
+  {
+    label: 'next.js',
+    file: 'page.tsx',
+    url: 'https://github.com/vercel/next.js/blob/canary/examples/hello-world/app/page.tsx',
+  },
+] as const
 
 function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onReady) {
   const [text, setText] = useState(enableTypingAnimation ? '' : targetText)
@@ -138,14 +153,6 @@ function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onRead
 
 const DEFAULT_LIVE_CODE_KEY = '$saved-live-code'
 
-function highlightOptionsForFilePath(filePath: string) {
-  const p = filePath.toLowerCase()
-  if (p.endsWith('.css')) return { ...langPresets.css }
-  if (p.endsWith('.py')) return { ...langPresets.python }
-  if (p.endsWith('.rs')) return { ...langPresets.rust }
-  return undefined
-}
-
 function useDefaultLiveCode(defaultCodeText, restoreFromStorage = true) {
   const [defaultCode, setCode] = useState(() =>
     restoreFromStorage ? defaultCodeText || '' : (defaultCodeText ?? '')
@@ -168,8 +175,45 @@ function useDefaultLiveCode(defaultCodeText, restoreFromStorage = true) {
   }
 }
 
-const EXAMPLE_GITHUB_FILE =
-  'https://github.com/vercel/swr/blob/main/src/index/use-swr.ts'
+/** Syncs `?github=` with the browser and loads from the URL when it changes (shareable links). */
+function GithubPreviewUrlSync({
+  registerSync,
+  lastLoadedRef,
+  loadRef,
+  setGithubUrlInput,
+}: {
+  registerSync: (fn: ((url: string) => void) | null) => void
+  lastLoadedRef: React.MutableRefObject<string | null>
+  loadRef: React.MutableRefObject<(url: string) => Promise<void>>
+  setGithubUrlInput: React.Dispatch<React.SetStateAction<string>>
+}) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const githubParam = searchParams.get('github')?.trim() || ''
+
+  useEffect(() => {
+    const sync = (url: string) => {
+      const q = new URLSearchParams()
+      q.set('github', url)
+      router.replace(`${pathname}?${q.toString()}`, { scroll: false })
+    }
+    registerSync(sync)
+    return () => registerSync(null)
+  }, [pathname, router, registerSync])
+
+  useEffect(() => {
+    if (!githubParam) {
+      lastLoadedRef.current = null
+      return
+    }
+    if (lastLoadedRef.current === githubParam) return
+    setGithubUrlInput(githubParam)
+    void loadRef.current(githubParam)
+  }, [githubParam, lastLoadedRef, loadRef, setGithubUrlInput])
+
+  return null
+}
 
 export default function LiveEditor({
   enableTypingAnimation = false,
@@ -191,8 +235,9 @@ export default function LiveEditor({
   }
 
   useEffect(() => {
+    if (showGithubLoader) return
     setColorPlateColors(themes[currentThemeIndex].colors)
-  }, [currentThemeIndex])
+  }, [currentThemeIndex, showGithubLoader])
 
   const toggleTextareaColor = () => {
     setTextareaColor(prev => prev === 'transparent' ? '#66666682' : 'transparent')
@@ -219,27 +264,23 @@ export default function LiveEditor({
     }
   })
 
-  const [liveCodeTokens, setLiveCodeTokens] = useState([])
-  const highlightOptionsRef = useRef(undefined)
   const [githubUrlInput, setGithubUrlInput] = useState(
     () => initialGithubUrl?.trim() || ''
   )
   const [githubLoadError, setGithubLoadError] = useState<string | null>(null)
   const [githubLoading, setGithubLoading] = useState(false)
 
-  const debouncedTokenizeRef = useRef(
-    debounce((c) => {
-      const tokens = tokenize(c, highlightOptionsRef.current)
-      setLiveCodeTokens(tokens)
-    })
+  const lastGithubLoadedUrlRef = useRef<string | null>(null)
+  const githubUrlSyncFnRef = useRef<((url: string) => void) | null>(null)
+  const registerGithubUrlSync = useCallback(
+    (fn: ((url: string) => void) | null) => {
+      githubUrlSyncFnRef.current = fn
+    },
+    []
   )
-  const debouncedTokenize = debouncedTokenizeRef.current
 
-  const applyLoadedSource = useCallback((text, filePath) => {
-    const opts = highlightOptionsForFilePath(filePath)
-    highlightOptionsRef.current = opts
+  const applyLoadedSource = useCallback((text) => {
     setLiveCode(text)
-    setLiveCodeTokens(tokenize(text, opts))
     if (persistEditorDraft) setDefaultLiveCode(text)
   }, [persistEditorDraft, setDefaultLiveCode, setLiveCode])
 
@@ -253,8 +294,10 @@ export default function LiveEditor({
       setGithubLoadError(null)
       setGithubLoading(true)
       try {
-        const { text, path } = await fetchGithubSource(trimmed)
-        applyLoadedSource(text, path)
+        const { text } = await fetchGithubSource(trimmed)
+        applyLoadedSource(text)
+        lastGithubLoadedUrlRef.current = trimmed
+        githubUrlSyncFnRef.current?.(trimmed)
       } catch (e) {
         setGithubLoadError(e instanceof Error ? e.message : 'Failed to load.')
       } finally {
@@ -267,75 +310,91 @@ export default function LiveEditor({
   const loadFromGithubRef = useRef(loadFromGithub)
   loadFromGithubRef.current = loadFromGithub
 
-  useEffect(() => {
-    if (!showGithubLoader || !initialGithubUrl?.trim()) return
-    loadFromGithubRef.current(initialGithubUrl)
-  }, [showGithubLoader, initialGithubUrl])
+  const activePlateColors = showGithubLoader ? defaultColorPlateColors : colorPlateColors
 
   const customizableColorsString = useMemo(() => {
     return customizableColors
       .map(([_tokenType, tokenTypeName]) => {
-        return `--sh-${tokenTypeName}: ${colorPlateColors[tokenTypeName]};`
+        return `--sh-${tokenTypeName}: ${activePlateColors[tokenTypeName]};`
       })
       .join('\n')
-  }, [colorPlateColors])
+  }, [activePlateColors])
+
+  const textareaTint = showGithubLoader ? 'transparent' : textareaColor
 
   return (
-    <div className="live-editor-section">
+    <div
+      className={
+        showGithubLoader
+          ? 'live-editor-section live-editor-section--github-preview'
+          : 'live-editor-section'
+      }
+    >
       <style>{`
         ${`
         .live-editor-section {
-          --sh-class: ${colorPlateColors.class};
-          --sh-identifier: ${colorPlateColors.identifier};
-          --sh-sign: ${colorPlateColors.sign};
-          --sh-property: ${colorPlateColors.property};
-          --sh-entity: ${colorPlateColors.entity};
-          --sh-string: ${colorPlateColors.string};
-          --sh-keyword: ${colorPlateColors.keyword};
-          --sh-comment: ${colorPlateColors.comment};
-          --sh-jsxliterals: ${colorPlateColors.jsxliterals};
+          --sh-class: ${activePlateColors.class};
+          --sh-identifier: ${activePlateColors.identifier};
+          --sh-sign: ${activePlateColors.sign};
+          --sh-property: ${activePlateColors.property};
+          --sh-entity: ${activePlateColors.entity};
+          --sh-string: ${activePlateColors.string};
+          --sh-keyword: ${activePlateColors.keyword};
+          --sh-comment: ${activePlateColors.comment};
+          --sh-jsxliterals: ${activePlateColors.jsxliterals};
         }
         .live-editor-section .live-editor textarea {
-          color: ${textareaColor} !important;
+          color: ${textareaTint} !important;
         }
         `}`}</style>
 
-      <div className="container-720 live-editor__top-bar">
-        <div className="top-controls">
-          <button
-            onClick={toggleTheme}
-            className={`theme-mode-button theme-mode-button--mobile ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
-            aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
-          >
-            {currentTheme.name}
-          </button>
+      {!showGithubLoader && (
+        <div className="container-720 live-editor__top-bar">
+          <div className="top-controls">
+            <button
+              onClick={toggleTheme}
+              className={`theme-mode-button theme-mode-button--mobile ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
+              aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
+            >
+              {currentTheme.name}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
       {showGithubLoader && (
-        <div className="container-720 github-source-loader">
-          <label className="github-source-loader__label" htmlFor="github-file-url">
-            Open a GitHub file
-          </label>
+        <Suspense fallback={null}>
+          <GithubPreviewUrlSync
+            registerSync={registerGithubUrlSync}
+            lastLoadedRef={lastGithubLoadedUrlRef}
+            loadRef={loadFromGithubRef}
+            setGithubUrlInput={setGithubUrlInput}
+          />
+        </Suspense>
+      )}
+      {showGithubLoader && (
+        <div className="container-720 github-source-loader github-source-loader--minimal">
           <div className="github-source-loader__row">
-            <input
-              id="github-file-url"
-              type="url"
-              className="github-source-loader__input"
-              placeholder={EXAMPLE_GITHUB_FILE}
-              value={githubUrlInput}
-              disabled={githubLoading}
-              onChange={(e) => setGithubUrlInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') loadFromGithub(githubUrlInput)
-              }}
-            />
+            <div className="github-source-loader__input-wrap">
+              <input
+                id="github-file-url"
+                type="url"
+                className="github-source-loader__input github-source-loader__input--underline"
+                placeholder="https://github.com/…/blob/…/file"
+                value={githubUrlInput}
+                disabled={githubLoading}
+                onChange={(e) => setGithubUrlInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') loadFromGithub(githubUrlInput)
+                }}
+              />
+            </div>
             <button
               type="button"
-              className="github-source-loader__button"
+              className="github-source-loader__button github-source-loader__button--minimal"
               disabled={githubLoading}
               onClick={() => loadFromGithub(githubUrlInput)}
             >
-              {githubLoading ? 'Loading…' : 'Load'}
+              {githubLoading ? '…' : 'Load'}
             </button>
           </div>
           {githubLoadError && (
@@ -343,21 +402,43 @@ export default function LiveEditor({
               {githubLoadError}
             </p>
           )}
-          <p className="github-source-loader__hint">
-            Paste a <code>github.com/…/blob/…</code> link (example:{' '}
-            <a href={EXAMPLE_GITHUB_FILE}>{EXAMPLE_GITHUB_FILE}</a>
-            ) or a{' '}
-            <code>raw.githubusercontent.com</code> URL. You can also open{' '}
-            <a href={`/editor?github=${encodeURIComponent(EXAMPLE_GITHUB_FILE)}`}>
-              /editor?github=…
-            </a>{' '}
-            with a URL-encoded link.
-          </p>
+          <div
+            className="github-source-loader__hint github-source-loader__hint--compact github-source-loader__examples"
+            role="group"
+            aria-labelledby="github-quick-examples-heading"
+          >
+            <p
+              id="github-quick-examples-heading"
+              className="github-source-loader__examples-label"
+            >
+              Examples
+            </p>
+            <ul className="github-source-loader__examples-list">
+              {GITHUB_QUICK_EXAMPLES.map((ex) => (
+                <li key={ex.url} className="github-source-loader__examples-item">
+                  <button
+                    type="button"
+                    className="github-source-loader__example-load"
+                    disabled={githubLoading}
+                    aria-label={`Load example: ${ex.url}`}
+                    onClick={() => {
+                      setGithubUrlInput(ex.url)
+                      void loadFromGithub(ex.url)
+                    }}
+                  >
+                    {ex.label}
+                    {' - '}
+                    <span className="github-source-loader__example-file">{ex.file}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
       <div className="live-editor-layout">
         <div className="live-editor-editor-col">
-          {process.env.NODE_ENV === 'development' && (
+          {!showGithubLoader && process.env.NODE_ENV === 'development' && (
             <div className="textarea-color-toggle-container">
               <button
                 type="button"
@@ -378,74 +459,56 @@ export default function LiveEditor({
               lineNumbersWidth='2rem'
               onChange={(newCode) => {
                 setLiveCode(newCode)
-                debouncedTokenize(newCode)
                 if (!isTyping && persistEditorDraft) setDefaultLiveCode(newCode)
               }}
             />
           </div>
         </div>
 
-        <ul className="live-editor__color">
-          <li className="live-editor__color__theme">
-            <div className="color-theme-title">
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className={`theme-mode-button ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
-                aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
-              >
-                <span className="theme-mode-button__full">{currentTheme.name}</span>
-              </button>
-              <CopyButton codeSnippet={customizableColorsString} />
-            </div>
-          </li>
-          {customizableColors.map(([tokenType, tokenTypeName]) => {
-            const inputId = `live-editor-color__input--${tokenTypeName}`
-            return (
-              <li key={tokenType} className="live-editor__color__item">
-                <label htmlFor={inputId} className="flex align-center" title={tokenTypeName}>
-                  <span
-                    className={`live-editor__color__item__indicator live-editor__color__item__indicator--${tokenTypeName}`}
-                    style={{ color: colorPlateColors[tokenTypeName] }}
-                  />
-                  <span className='live-editor__color__item__name'>{tokenTypeName}</span>
-                  <span className='live-editor__color__item__color'>{colorPlateColors[tokenTypeName]}</span>
-                </label>
+        {!showGithubLoader && (
+          <ul className="live-editor__color">
+            <li className="live-editor__color__theme">
+              <div className="color-theme-title">
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className={`theme-mode-button ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
+                  aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
+                >
+                  <span className="theme-mode-button__full">{currentTheme.name}</span>
+                </button>
+                <CopyButton codeSnippet={customizableColorsString} />
+              </div>
+            </li>
+            {customizableColors.map(([tokenType, tokenTypeName]) => {
+              const inputId = `live-editor-color__input--${tokenTypeName}`
+              return (
+                <li key={tokenType} className="live-editor__color__item">
+                  <label htmlFor={inputId} className="flex align-center" title={tokenTypeName}>
+                    <span
+                      className={`live-editor__color__item__indicator live-editor__color__item__indicator--${tokenTypeName}`}
+                      style={{ color: colorPlateColors[tokenTypeName] }}
+                    />
+                    <span className='live-editor__color__item__name'>{tokenTypeName}</span>
+                    <span className='live-editor__color__item__color'>{colorPlateColors[tokenTypeName]}</span>
+                  </label>
 
-                <input
-                  type="color"
-                  defaultValue={colorPlateColors[tokenTypeName]}
-                  id={inputId}
-                  onChange={(e) => {
-                    setColorPlateColors({
-                      ...colorPlateColors,
-                      [tokenTypeName]: e.target.value,
-                    })
-                  }}
-                />
-              </li>
-            )
-          })}
-        </ul>
-      </div>
-      {/* show tokens */}
-      <div className="container-720">
-        <div className="editor-tokens">
-        {liveCodeTokens.map(([tokenType, token], index) => {
-          const tokenTypeName = SugarHigh.TokenTypes[tokenType]
-          if (
-            tokenTypeName === 'break' ||
-            tokenTypeName === 'space' ||
-            token === '\n' ||
-            token.trim() === ''
-          ) return null
-          return (
-            <span className={`editor-token editor-token--${tokenTypeName}`} key={index}>
-              {token}{` `}
-            </span>
-          )
-        })}
-        </div>
+                  <input
+                    type="color"
+                    defaultValue={colorPlateColors[tokenTypeName]}
+                    id={inputId}
+                    onChange={(e) => {
+                      setColorPlateColors({
+                        ...colorPlateColors,
+                        [tokenTypeName]: e.target.value,
+                      })
+                    }}
+                  />
+                </li>
+              )
+            })}
+          </ul>
+        )}
       </div>
     </div>
   )

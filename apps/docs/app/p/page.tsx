@@ -1,5 +1,10 @@
 import LiveEditor from '../live-editor'
 
+const HELLO_WORLD_REACT = `export default function App() {
+  return <h1>Hello, world</h1>
+}
+`
+
 type EditorPageProps = {
   searchParams?: Promise<{ github?: string | string[] }>
 }
@@ -12,7 +17,7 @@ export default async function Page({ searchParams }: EditorPageProps) {
 
   return (
     <LiveEditor
-      defaultCode=""
+      defaultCode={HELLO_WORLD_REACT}
       enableTypingAnimation={false}
       showGithubLoader
       initialGithubUrl={githubFromQuery}
