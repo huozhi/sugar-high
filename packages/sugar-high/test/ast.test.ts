@@ -219,6 +219,33 @@ describe('jsx', () => {
     `)
   })
 
+  it('parse jsx after return (Next.js page-style)', () => {
+    const code = `export default function Page() {
+  return <h1>Hello, Next.js!</h1>;
+}`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "export => keyword",
+        "default => keyword",
+        "function => keyword",
+        "Page => class",
+        "( => sign",
+        ") => sign",
+        "{ => sign",
+        "return => keyword",
+        "< => sign",
+        "h1 => entity",
+        "> => sign",
+        "Hello, Next.js! => jsxliterals",
+        "</ => sign",
+        "h1 => entity",
+        "> => sign",
+        "; => sign",
+        "} => sign",
+      ]
+    `)
+  })
+
   it('parse basic jsx with text without expression children', () => {
     const tokens = tokenize(`<Foo>This is content</Foo>`)
     expect(getTokensAsString(tokens)).toMatchInlineSnapshot(`

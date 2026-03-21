@@ -325,20 +325,22 @@ function tokenize(code, options) {
   /** @type {Array<[number, string]>} */
   const tokens = []
 
-  /** @type boolean if entered jsx tag, inside <open tag> or </close tag> */
-  let __jsxEnter = false
   /**
-   * @type {0 | 1 | 2}
-   * @example
-   * 0 for not in jsx;
-   * 1 for open jsx tag;
-   * 2 for closing jsx tag;
-   **/
+   * TS generics (`Map<string>`) and JSX (`<div>`) share the same `<Name …>` lexical shape. We use
+   * one tag-lexer mode (__jsxTag + __jsxStack) for both when we enter it; isTsTypeArgStart and
+   * isTypeParameterListStart only decide when *not* to enter (e.g. `foo<T>`, `<T>(x)=>`).
+   * __jsxEnter gates that mode so a latched __jsxTag (from `<` in `"a<b"`) does not run the tag
+   * lexer until we are in real JSX/TSX surface (not inside strings).
+   * @type {boolean}
+   */
+  let __jsxEnter = false
+  /** @type {0 | 1 | 2} 0 = none; 1 = inside `<open`; 2 = inside `</close` */
   let __jsxTag = 0
   let __jsxExpr = false
 
-  // only match paired (open + close) tags, not self-closing tags
+  /** Nested `<open>…</open>` depth (content between tags, including nested elements). */
   let __jsxStack = 0
+
   const __jsxChild = () => __jsxEnter && !__jsxExpr && !__jsxTag
   // < __content__ >
   const inJsxTag = () => __jsxTag && !__jsxChild()
@@ -593,18 +595,41 @@ function tokenize(code, options) {
       while (prevNonSpace >= 0 && /\s/.test(code[prevNonSpace])) prevNonSpace--
       const prevChar = prevNonSpace >= 0 ? code[prevNonSpace] : ''
 
-      const isTsTypeArgStart = curr === '<' && /[$\w\]\)]/.test(prevChar)
+      const [lastType, lastTok] = last
+      // Without a space before `<`, the LHS is often still in `current` (not flushed), so `last` is stale.
+      let typeArgFromPending = false
+      let jsxFromPending = false
+      if (current && !isSpaces(current)) {
+        const w = current
+        // Unflushed LHS before `<`: numbers/null/Upper (isCls), and booleans, behave like `foo<` (type
+        // args / `<`). Any other keyword (`return`, `void`, …) is JSX-friendly — no keyword allowlist.
+        if (isCls(w) || w === 'true' || w === 'false') {
+          typeArgFromPending = true
+        } else if (resolvedKeywords.has(w) && isIdentifier(w)) {
+          jsxFromPending = true
+        } else if (isIdentifier(w)) {
+          typeArgFromPending = true
+        }
+      }
+
+      const isTsTypeArgStart =
+        curr === '<' &&
+        /[$\w\]\)]/.test(prevChar) &&
+        (typeArgFromPending ||
+          (!jsxFromPending &&
+            (lastType === T_IDENTIFIER ||
+              lastType === T_CLS_NUMBER ||
+              (lastType === T_SIGN && (lastTok === ')' || lastTok === ']')))))
       const isTsGenericStart = curr === '<' && isTypeParameterListStart(code, i)
       if (!isTsTypeArgStart && !isTsGenericStart) {
         __jsxTag = next === '/' ? 2 : 1
       }
 
-      // current and next char can form a jsx open or close tag
       if (curr === '<' && (next === '/' || isAlpha(next))) {
         if (
           !isTsTypeArgStart &&
           !isTsGenericStart &&
-          !inStringContent() && 
+          !inStringContent() &&
           !inJsxLiterals() &&
           !inRegexQuotes()
         ) {
