@@ -242,6 +242,28 @@ code {
   justify-self: center;
 }
 
+/* `/p` — issue link above preview (composed in app/p/page.tsx) */
+.p-page-issue-link-wrap {
+  max-width: min(720px, calc(100vw - 32px));
+  margin: 0 auto 0.5rem;
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.p-page-issue-link {
+  font-size: 0.8125rem;
+  color: var(--text-secondary, #6b7280);
+  text-decoration: none;
+}
+
+.p-page-issue-link:hover {
+  text-decoration: underline;
+  color: var(--text-primary, #111827);
+}
+
 /* Out of flow so editor + color rail share one top edge; toggle floats above the codice card */
 .live-editor-section .live-editor-editor-col .textarea-color-toggle-container {
   position: absolute;
