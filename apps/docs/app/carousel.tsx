@@ -260,6 +260,7 @@ export default function Carousel() {
   const examples = EXAMPLE_PAIRS
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [tappedIndex, setTappedIndex] = useState<number | null>(null)
+  const [hoverFromPointer, setHoverFromPointer] = useState(false)
   const stackRef = useRef<HTMLDivElement>(null)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const plateColors =
@@ -275,7 +276,16 @@ export default function Carousel() {
 
   const n = examples.length
 
-  const activeIndex = hoveredIndex ?? tappedIndex
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover)')
+    const sync = () => setHoverFromPointer(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  const activeIndex =
+    hoverFromPointer ? (hoveredIndex ?? tappedIndex) : tappedIndex
   const isolating = activeIndex !== null
 
   function copyImageForFrame(exampleIndex: number) {
@@ -344,24 +354,37 @@ export default function Carousel() {
                 isActive ? ' showcase-card--stack-active' : ''
               }`}
               style={stackStyle}
-              onMouseEnter={() => setHoveredIndex(exampleIndex)}
-              onMouseLeave={(e) => {
-                const rt = e.relatedTarget
-                if (rt instanceof Node && e.currentTarget.contains(rt)) return
-                const nextCard =
-                  rt instanceof Element
-                    ? rt.closest('.showcase-card--stack')
-                    : null
-                if (nextCard && nextCard !== e.currentTarget) return
-                setHoveredIndex(null)
-              }}
+              onMouseEnter={
+                hoverFromPointer
+                  ? () => setHoveredIndex(exampleIndex)
+                  : undefined
+              }
+              onMouseLeave={
+                hoverFromPointer
+                  ? (e) => {
+                      const rt = e.relatedTarget
+                      if (rt instanceof Node && e.currentTarget.contains(rt))
+                        return
+                      const nextCard =
+                        rt instanceof Element
+                          ? rt.closest('.showcase-card--stack')
+                          : null
+                      if (nextCard && nextCard !== e.currentTarget) return
+                      setHoveredIndex(null)
+                    }
+                  : undefined
+              }
             >
               <div className="showcase-card-lift">
                 <div
                   className="showcase-card-hit"
                   role="button"
                   tabIndex={0}
-                  aria-label={`${name} example — hover or tap to expand`}
+                  aria-label={
+                    hoverFromPointer
+                      ? `${name} example — hover or click to expand`
+                      : `${name} example — tap to expand or collapse`
+                  }
                   aria-expanded={isActive}
                   onClick={() =>
                     setTappedIndex((prev) =>

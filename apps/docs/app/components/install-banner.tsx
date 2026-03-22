@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useMemo, type CSSProperties } from 'react'
+import { useContext, useMemo, useState, type CSSProperties } from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from 'codice'
 import './install-banner.css'
@@ -33,6 +33,7 @@ highlight('.card { color: red; }', presetForTitle('theme.css'))
 highlight('def hi():\\n    print("ok")', presetForTitle('main.py'))`
 
 export default function InstallBanner() {
+  const [bannerTheme, setBannerTheme] = useState<'light' | 'dark'>('light')
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
   const plateColors =
@@ -53,13 +54,18 @@ export default function InstallBanner() {
     [plateColors]
   )
 
+  const codePlate = bannerTheme === 'light' ? plateColors : darkPlate
   const codeShVars = useMemo(
-    () => plateToShVarMap(darkPlate),
-    [darkPlate]
+    () => plateToShVarMap(codePlate),
+    [codePlate]
   )
 
   return (
-    <div className="install-banner" style={chromeVars as CSSProperties}>
+    <div
+      className="install-banner"
+      data-install-theme={bannerTheme}
+      style={chromeVars as CSSProperties}
+    >
       <style>
         {`
         .install-banner [data-codice-header] {
@@ -69,7 +75,27 @@ export default function InstallBanner() {
       </style>
       <div className="container-960">
         <div className="install-banner__head">
-          <h1 className="install-banner__command">Highlight your code</h1>
+          <h2 className="install-banner__command install-banner__theme-heading">
+            <span className="install-banner__theme-sr">
+              Click the dashed file name to switch light or dark preview for the code
+              samples below.
+            </span>
+            Samples use{' '}
+            <button
+              type="button"
+              className="install-banner__theme-toggle"
+              onClick={() =>
+                setBannerTheme((t) => (t === 'light' ? 'dark' : 'light'))
+              }
+              aria-label={
+                bannerTheme === 'light'
+                  ? 'Preview uses light.css. Click to switch to dark.css.'
+                  : 'Preview uses dark.css. Click to switch to light.css.'
+              }
+            >
+              {bannerTheme === 'light' ? 'light.css' : 'dark.css'}
+            </button>
+          </h2>
         </div>
         <div
           className="install-banner__code"

@@ -116,24 +116,6 @@ input[type='checkbox']:checked {
   color: #808c97;
 }
 
-/* Home — GitHub link in viewport top-right */
-.home-repo-link,
-.home-repo-link:visited {
-  position: fixed;
-  top: 0.5rem;
-  right: 1rem;
-  z-index: 100;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #888;
-  text-decoration: underline;
-  text-decoration-thickness: from-font;
-  text-underline-position: from-font;
-}
-
-.home-repo-link:hover {
-  color: #333;
-}
 .code-frame {
   position: relative;
 }
@@ -939,11 +921,93 @@ code {
 }
 
 @media screen and (max-width: 640px) {
+  .container-960 {
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+    padding-bottom: 28px;
+  }
+
+  .container-960.header {
+    margin-top: 0;
+  }
+
+  .container-showcase {
+    padding-bottom: 20px;
+  }
+
+  /*
+   * Stretch the flex column; min-width:0 avoids intrinsic min-width from code.
+   * Do not use left:50% + translate(-50%) here: with overflow-x on an ancestor it
+   * clips half the card. Pin with left/right:0 instead.
+   */
+  .showcase-section.carousel.container-showcase {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
   .showcase-stack {
-    --showcase-step-x: 18px;
+    --showcase-step-x: 0;
     --showcase-step-y: 26px;
-    --showcase-preview-max-h: 248px;
+    --showcase-preview-max-h: min(320px, 52vh);
     padding: 0.5rem clamp(12px, 5vw, 20px) 2.5rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: visible;
+  }
+
+  .showcase-card--stack {
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+    transform: none;
+  }
+
+  .showcase-stack .showcase-card-lift {
+    min-height: 0;
+  }
+
+  .showcase-stack .showcase-card-hit {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .showcase-stack .code-frame {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .showcase-stack .codice.code-snippet {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .showcase-stack .codice[data-codice-code],
+  .showcase-stack [data-codice-code] pre {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .showcase-stack [data-codice-code] pre {
+    overflow-x: auto;
+  }
+
+  .showcase-stack .code-snippet [data-codice-code-content] {
+    padding: 12px 12px 16px;
   }
 
   .live-editor-layout {
@@ -1193,4 +1257,36 @@ div[data-codice-editor-header="true"] {
 }
 .nav-link:hover {
   color: #212529;
+}
+
+.site-footer {
+  margin-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  padding-bottom: 2rem;
+}
+
+.site-footer__sep {
+  color: #c4c4c4;
+  user-select: none;
+}
+
+.site-footer__link {
+  font-size: 0.875rem;
+  color: #888;
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-position: from-font;
+}
+
+.site-footer__link:hover {
+  color: #333;
 }
