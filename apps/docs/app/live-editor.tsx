@@ -342,7 +342,7 @@ export default function LiveEditor({
               className="codice editor flex-1"
               controls={false}
               value={displayCode}
-              fontSize={14}
+              fontSize={15}
               lineNumbersWidth='2rem'
               extension={fileExtension}
               onChange={handleEditorChange}

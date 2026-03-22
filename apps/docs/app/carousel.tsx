@@ -288,6 +288,33 @@ export default function Carousel() {
     hoverFromPointer ? (hoveredIndex ?? tappedIndex) : tappedIndex
   const isolating = activeIndex !== null
 
+  const prevActiveIndexRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    const prev = prevActiveIndexRef.current
+    if (prev !== null && activeIndex === null) {
+      const stack = stackRef.current
+      if (stack) {
+        const hit = stack.querySelector(
+          `.showcase-card--${prev} .showcase-card-hit`
+        ) as HTMLElement | null
+        if (hit) {
+          hit.scrollTop = 0
+          hit.scrollLeft = 0
+          hit.querySelectorAll('pre, textarea, [data-codice-code-content]').forEach(
+            (el) => {
+              if (el instanceof HTMLElement) {
+                el.scrollTop = 0
+                el.scrollLeft = 0
+              }
+            }
+          )
+        }
+      }
+    }
+    prevActiveIndexRef.current = activeIndex
+  }, [activeIndex])
+
   function copyImageForFrame(exampleIndex: number) {
     const domNode = document.querySelector(`#code-frame-${exampleIndex}`)
     if (!domNode) return Promise.resolve(false)

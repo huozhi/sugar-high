@@ -984,6 +984,11 @@ code {
     overflow-y: auto;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .showcase-stack .showcase-card-hit::-webkit-scrollbar {
+    display: none;
   }
 
   .showcase-stack .code-frame {
@@ -1004,6 +1009,11 @@ code {
 
   .showcase-stack [data-codice-code] pre {
     overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .showcase-stack [data-codice-code] pre::-webkit-scrollbar {
+    display: none;
   }
 
   .showcase-stack .code-snippet [data-codice-code-content] {
@@ -1180,7 +1190,7 @@ code {
 .codice[data-codice-code] textarea {
   font-family: Consolas, Monaco, monospace;
   border: none;
-  font-size: 14px;
+  font-size: var(--docs-code-font-size, 15px);
   line-height: 1.5em;
   caret-color: #333;
   outline: none;

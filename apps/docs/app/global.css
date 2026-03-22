@@ -41,6 +41,11 @@ h6 {
 }
 
 /** Styles */
+:root {
+  /* Single size for Codice / highlighted snippets (matches body text scale) */
+  --docs-code-font-size: 15px;
+}
+
 body {
   font-variant: common-ligatures contextual;
   letter-spacing: -0.01em;

@@ -89,7 +89,8 @@ h2.install-banner__command.install-banner__theme-heading::-webkit-scrollbar {
   /* --sh-* inherited from .install-banner (live theme) */
   position: relative;
   background-color: #383838;
-  font-size: 1rem;
+  font-size: var(--docs-code-font-size, 15px);
+  line-height: 1.5;
   padding: 0 16px;
   width: 100%;
   max-width: 600px;
@@ -167,8 +168,3 @@ h2.install-banner__command.install-banner__theme-heading::-webkit-scrollbar {
   }
 }
 
-@media screen and (max-width: 600px) {
-  .install-banner__code {
-    font-size: 0.75rem;
-  }
-}

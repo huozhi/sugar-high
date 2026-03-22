@@ -16,7 +16,6 @@ import { SyntaxThemeContext } from '../syntax-theme-context'
 
 const usageCode = `\
 import { highlight } from 'sugar-high'
-
 const html = highlight(code)`
 
 const presetByTitleExample = `\
