@@ -169,9 +169,7 @@ input[type='checkbox']:checked {
   filter: brightness(0.92) saturate(0.75);
   transition:
     opacity 0.28s ease,
-    filter 0.28s ease,
-    transform 0.28s ease,
-    box-shadow 0.28s ease;
+    filter 0.28s ease;
 }
 
 .showcase-card--stack {
@@ -190,31 +188,44 @@ input[type='checkbox']:checked {
   );
   z-index: var(--showcase-z);
   opacity: var(--showcase-opacity);
-  border-radius: 6px;
-  overflow: hidden;
+  height: var(--showcase-preview-max-h);
   max-height: var(--showcase-preview-max-h);
-  box-shadow: -3px 8px 28px rgba(0, 0, 0, 0.22);
+  overflow: visible;
+  border-radius: 6px;
   transition:
-    transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.34s ease,
     opacity 0.28s ease,
     filter 0.28s ease;
-  background: var(--showcase-card-bg, transparent);
+  background: transparent;
 }
 
 .showcase-card--stack-active {
   z-index: 95 !important;
   opacity: 1 !important;
   filter: none !important;
-  max-height: var(--showcase-preview-max-h);
+}
+
+/* Outer shell keeps a stable hover target; only the inner face moves up */
+.showcase-card-lift {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  border-radius: 6px;
   overflow: hidden;
+  box-shadow: -3px 8px 28px rgba(0, 0, 0, 0.22);
+  background: var(--showcase-card-bg, transparent);
+  transform: translateY(0);
+  transition:
+    transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.34s ease;
+}
+
+.showcase-card--stack-active .showcase-card-lift {
   box-shadow:
     -10px 32px 56px rgba(0, 0, 0, 0.22),
     -4px 14px 36px rgba(0, 0, 0, 0.14);
-  transform: translate(
-    calc(-50% + var(--showcase-back-shift) * var(--showcase-step-x)),
-    -58px
-  );
+  transform: translateY(-58px);
 }
 
 .showcase-card-hit {
@@ -230,20 +241,20 @@ input[type='checkbox']:checked {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .showcase-card--stack,
-  .showcase-card--stack-active {
+  .showcase-card--stack {
     transition:
       opacity 0.2s ease,
-      filter 0.2s ease,
+      filter 0.2s ease;
+  }
+
+  .showcase-card-lift {
+    transition:
       box-shadow 0.2s ease,
       transform 0.2s ease;
   }
 
-  .showcase-card--stack-active {
-    transform: translate(
-      calc(-50% + var(--showcase-back-shift) * var(--showcase-step-x)),
-      -30px
-    );
+  .showcase-card--stack-active .showcase-card-lift {
+    transform: translateY(-30px);
   }
 }
 .code-copy-pic-button {

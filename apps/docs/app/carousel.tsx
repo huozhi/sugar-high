@@ -26,17 +26,30 @@ const EXAMPLE_PAIRS = [
     `\
 use std::fmt::Display;
 
+/// Build a short Cartesian label for two displayable values.
 pub fn label<T: Display>(x: T, y: T) -> String {
     // format pair
     format!("({}, {})", x, y)
 }
 
+pub fn labels<I, T>(pairs: I) -> Vec<String>
+where
+    I: IntoIterator<Item = (T, T)>,
+    T: Display,
+{
+    pairs.into_iter().map(|(a, b)| label(a, b)).collect()
+}
+
 fn main() {
-    println!("{}", label(1, 2));
+    let pts = vec![(1u32, 2u32), (3, 4)];
+    for line in labels(pts) {
+        println!("point {line}");
+    }
+    println!("{}", label("x", "y"));
 }
 `,
     {
-      highlightedLines: [4],
+      highlightedLines: [6],
     },
   ],
 
@@ -48,8 +61,23 @@ def greet(names):
     for n in names:
         print("hello, " + n)
 
+
+def shout(msg: str, times: int = 2) -> None:
+    """Uppercase a message a few times."""
+    for _ in range(max(1, times)):
+        print(msg.upper())
+
+
+def chunk(items, size):
+    # simple batches for display
+    for i in range(0, len(items), size):
+        yield items[i : i + size]
+
+
 if __name__ == "__main__":
     greet(["ada", "linus"])
+    shout("sugar-high")
+    print(list(chunk([1, 2, 3, 4, 5], 2)))
 `,
     {
       highlightedLines: [4],
@@ -61,22 +89,55 @@ if __name__ == "__main__":
     `\
 :root {
   --accent: #2d5e9d;
+  --surface: #f6f8fa;
+  --text: #24292f;
+  --radius: 8px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: var(--text);
+  background: var(--surface);
 }
 
 @media (prefers-color-scheme: dark) {
+  :root {
+    --surface: hsl(220 14% 12%);
+    --text: #e6edf3;
+  }
+
   .card {
-    background: hsl(220 14% 12%);
+    background: color-mix(in srgb, var(--surface) 92%, #000);
+    border: 1px solid rgb(255 255 255 / 8%);
   }
 }
 
-/* keyframes */
+/* motion */
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stack-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 `,
     {
-      highlightedLines: [6],
+      highlightedLines: [28],
     },
   ],
 
@@ -94,6 +155,17 @@ const afterBlock = /foo/g.exec('foo')?.[0]
 // Regex vs division (tokenizer stress test)
 const mixed = 12 / /\\d+/.test('3') ? 1 : 0
 const expr = 100 - /50/.test('5') + 25
+
+const flags = ['g', 'i', 'm'].filter(Boolean).join('')
+const re = new RegExp('\\\\d+', flags)
+
+export function pickDelim(str) {
+  const i = str.indexOf('/')
+  return i < 0 ? str : str.slice(0, i) + str.slice(i + 1)
+}
+
+// trailing note: / is both operator and literal starter
+console.log(mixed, expr, re.test('99'))
 `,
     {
       highlightedLines: [10],
@@ -112,20 +184,39 @@ interface Cluster {
 
 export const origin = { x: 0, y: 0 } as const satisfies Point
 
+export function distance(a: Point, b: Point): number {
+  return Math.hypot(a.x - b.x, a.y - b.y)
+}
+
 export function nearest<T extends Point>(
   items: readonly T[],
   ref: Point
 ): T | undefined {
   return items.reduce<T | undefined>((best, item) => {
     if (!best) return item
-    const db = (best.x - ref.x) ** 2 + (best.y - ref.y) ** 2
-    const di = (item.x - ref.x) ** 2 + (item.y - ref.y) ** 2
+    const db = distance(best, ref)
+    const di = distance(item, ref)
     return di < db ? item : best
   }, undefined)
 }
+
+export function bbox(points: readonly Point[]) {
+  if (!points.length) return null
+  let minX = Infinity
+  let minY = Infinity
+  let maxX = -Infinity
+  let maxY = -Infinity
+  for (const p of points) {
+    minX = Math.min(minX, p.x)
+    minY = Math.min(minY, p.y)
+    maxX = Math.max(maxX, p.x)
+    maxY = Math.max(maxY, p.y)
+  }
+  return { minX, minY, maxX, maxY }
+}
 `,
     {
-      highlightedLines: [8],
+      highlightedLines: [14],
     },
   ],
 ] as const
@@ -265,37 +356,39 @@ export default function Carousel() {
                 setHoveredIndex(null)
               }}
             >
-              <div
-                className="showcase-card-hit"
-                role="button"
-                tabIndex={0}
-                aria-label={`${name} example — hover or tap to expand`}
-                aria-expanded={isActive}
-                onClick={() =>
-                  setTappedIndex((prev) =>
-                    prev === exampleIndex ? null : exampleIndex
-                  )
-                }
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault()
+              <div className="showcase-card-lift">
+                <div
+                  className="showcase-card-hit"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${name} example — hover or tap to expand`}
+                  aria-expanded={isActive}
+                  onClick={() =>
                     setTappedIndex((prev) =>
                       prev === exampleIndex ? null : exampleIndex
                     )
                   }
-                }}
-              >
-                <CodeFrame
-                  code={code}
-                  title={name}
-                  index={exampleIndex}
-                  highlightedLines={config.highlightedLines}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      setTappedIndex((prev) =>
+                        prev === exampleIndex ? null : exampleIndex
+                      )
+                    }
+                  }}
+                >
+                  <CodeFrame
+                    code={code}
+                    title={name}
+                    index={exampleIndex}
+                    highlightedLines={config.highlightedLines}
+                  />
+                </div>
+                <CopyImageButton
+                  onCopy={() => copyImageForFrame(exampleIndex)}
+                  stopPropagation
                 />
               </div>
-              <CopyImageButton
-                onCopy={() => copyImageForFrame(exampleIndex)}
-                stopPropagation
-              />
             </div>
           )
         })}
