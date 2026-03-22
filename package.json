@@ -9,7 +9,9 @@
     "dev": "pnpm -r run dev",
     "clean": "pnpm -r run clean",
     "site": "pnpm --filter docs dev",
-    "docs:build": "pnpm build && pnpm --filter docs build"
+    "docs:build": "pnpm build && pnpm --filter docs build",
+    "release-video:studio": "pnpm --filter release-video dev",
+    "release-video:render": "pnpm --filter release-video render"
   },
   "packageManager": "pnpm@9.12.2",
   "license": "MIT",

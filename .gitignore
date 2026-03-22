@@ -4,3 +4,5 @@ dist
 next-env.d.ts
 .DS_Store
 *.tsbuildinfo
+apps/release-video/build
+apps/release-video/out

@@ -1,0 +1,23 @@
+{
+  "name": "release-video",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render src/index.ts Main out/release-video.mp4",
+    "still": "remotion still src/index.ts Main out/poster.png --frame=300"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "remotion": "^4.0.340",
+    "sugar-high": "workspace:*"
+  },
+  "devDependencies": {
+    "@remotion/bundler": "^4.0.340",
+    "@remotion/cli": "^4.0.340",
+    "@types/react": "^19.0.7",
+    "typescript": "5.7.3"
+  }
+}
