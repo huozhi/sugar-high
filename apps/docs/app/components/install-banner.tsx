@@ -19,6 +19,19 @@ import { highlight } from 'sugar-high'
 
 const html = highlight(code)`
 
+const presetByTitleExample = `\
+import { highlight } from 'sugar-high'
+import * as presets from 'sugar-high/presets'
+
+// Use the file extension from a path or Codice \`title\` (e.g. "theme.css", "main.py")
+const presetForTitle = (title) =>
+  ({ css: presets.css, py: presets.python, rs: presets.rust })[
+    title.split('.').pop()
+  ]
+
+highlight('.card { color: red; }', presetForTitle('theme.css'))
+highlight('def hi():\\n    print("ok")', presetForTitle('main.py'))`
+
 export default function InstallBanner() {
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
@@ -80,9 +93,32 @@ export default function InstallBanner() {
 
         <div className="install-banner__block">
           <p>
-            Beyond JSX and JavaScript, sugar-high can highlight other languages when you pass an
-            optional preset (or set the file extension in Codice)—for example CSS, SCSS, Sass,
-            Less, Python, and Rust—so comments and keywords match each language.
+            For <strong>CSS</strong> (and SCSS, Sass, Less), a preset treats <code>/* */</code>{' '}
+            comments and <code>@</code>-rules as CSS, not as JS regex or division. For{' '}
+            <strong>Python</strong>, the preset uses <code>#</code> line comments and Python
+            keywords instead of JS rules.
+          </p>
+          <p>
+            Pass that preset as the second argument to <code>highlight</code>. With{' '}
+            <a href="https://www.npmjs.com/package/codice" target="_blank" rel="noreferrer">
+              Codice
+            </a>
+            , set <code>title</code> to a file name so the extension selects the preset; in plain
+            JS you can map <code>title</code> (or any path) the same way:
+          </p>
+        </div>
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
+          <Code title="presets.js">
+            {presetByTitleExample}
+          </Code>
+          <CopyButton codeSnippet={presetByTitleExample} />
+        </div>
+        <div className="install-banner__block">
+          <p>
+            SCSS, Sass, and Less use the same CSS preset. Rust uses <code>presets.rust</code>.
           </p>
         </div>
         <div className="install-banner__block">
