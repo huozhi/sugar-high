@@ -25,9 +25,14 @@ export default function InstallBanner() {
   const plateColors =
     syntaxThemeCtx?.colorPlateColors ?? LIVE_EDITOR_THEME_PRESETS[0].colors
 
+  const darkPlate = useMemo(
+    () => darkPlateForPresetIndex(themeIndex),
+    [themeIndex]
+  )
+
   const cssCode = useMemo(
-    () => buildInstallBannerColorCss(plateColors),
-    [plateColors]
+    () => buildInstallBannerColorCss(plateColors, darkPlate),
+    [plateColors, darkPlate]
   )
 
   const chromeVars = useMemo(
@@ -36,8 +41,8 @@ export default function InstallBanner() {
   )
 
   const codeShVars = useMemo(
-    () => plateToShVarMap(darkPlateForPresetIndex(themeIndex)),
-    [themeIndex]
+    () => plateToShVarMap(darkPlate),
+    [darkPlate]
   )
 
   return (

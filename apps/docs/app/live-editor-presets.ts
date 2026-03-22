@@ -117,11 +117,24 @@ export function buildFlatVarsCopySnippet(colors: LiveEditorColorPlate): string {
   return formatPlateAsCssVars(colors, TOKEN_KEYS, '')
 }
 
-/** Snippet shown in the install banner `color.css` example (light-mode palette). */
-export function buildInstallBannerColorCss(colors: LiveEditorColorPlate): string {
-  return `/* styles.css */
+/**
+ * Snippet for the install banner `color.css` example: light defaults on `:root`,
+ * dark when `data-theme="dark"` is set (e.g. on `<html>`), matching Codice-style theming.
+ */
+export function buildInstallBannerColorCss(
+  light: LiveEditorColorPlate,
+  dark: LiveEditorColorPlate
+): string {
+  return `/* styles.css — sugar-high token colors */
+
+/* Light (default) */
 :root {
-${formatPlateAsCssVars(colors)}
+${formatPlateAsCssVars(light)}
+}
+
+/* Dark — e.g. <html data-theme="dark"> */
+:root[data-theme='dark'] {
+${formatPlateAsCssVars(dark)}
 }`
 }
 
