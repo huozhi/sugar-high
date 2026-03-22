@@ -2,6 +2,7 @@ import Carousel from './carousel'
 import LiveEditor from './live-editor'
 import InstallBanner from './components/install-banner'
 import HeroAnimation from './components/code-animation'
+import { SyntaxThemeProvider } from './syntax-theme-context'
 
 export default function Page() {
   return (
@@ -14,8 +15,10 @@ export default function Page() {
         <HeroAnimation />
       </div>
 
-      <LiveEditor />
-      <InstallBanner />
+      <SyntaxThemeProvider>
+        <LiveEditor />
+        <InstallBanner />
+      </SyntaxThemeProvider>
       <Carousel />
     </>
   )

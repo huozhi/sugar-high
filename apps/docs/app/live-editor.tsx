@@ -6,6 +6,7 @@ import {
   useRef,
   useMemo,
   useCallback,
+  useContext,
 } from 'react'
 import { SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
@@ -21,6 +22,7 @@ import {
   buildFlatVarsCopySnippet,
   type LiveEditorColorPlate,
 } from './live-editor-presets'
+import { SyntaxThemeContext } from './syntax-theme-context'
 
 const themes = LIVE_EDITOR_THEME_PRESETS
 
@@ -151,8 +153,27 @@ export default function LiveEditor({
   const isControlled = value !== undefined && onChange !== undefined
 
   const editorRef = useRef(null)
-  const [currentThemeIndex, setCurrentThemeIndex] = useState(0)
-  const [colorPlateColors, setColorPlateColors] = useState(() => themes[0].colors)
+  const syntaxThemeCtx = useContext(SyntaxThemeContext)
+  const syncThemeWithBanner = Boolean(colorPlate && syntaxThemeCtx)
+
+  const [localThemeIndex, setLocalThemeIndex] = useState(0)
+  const [localColorPlateColors, setLocalColorPlateColors] = useState(
+    () => themes[0].colors
+  )
+
+  const currentThemeIndex = syncThemeWithBanner
+    ? syntaxThemeCtx!.themeIndex
+    : localThemeIndex
+  const setCurrentThemeIndex = syncThemeWithBanner
+    ? syntaxThemeCtx!.setThemeIndex
+    : setLocalThemeIndex
+  const colorPlateColors = syncThemeWithBanner
+    ? syntaxThemeCtx!.colorPlateColors
+    : localColorPlateColors
+  const setColorPlateColors = syncThemeWithBanner
+    ? syntaxThemeCtx!.setColorPlateColors
+    : setLocalColorPlateColors
+
   const [textareaColor, setTextareaColor] = useState('transparent')
 
   const currentTheme = themes[currentThemeIndex]
@@ -164,9 +185,9 @@ export default function LiveEditor({
   }
 
   useEffect(() => {
-    if (!colorPlate) return
-    setColorPlateColors(themes[currentThemeIndex].colors)
-  }, [currentThemeIndex, colorPlate])
+    if (!colorPlate || syncThemeWithBanner) return
+    setLocalColorPlateColors(themes[localThemeIndex].colors)
+  }, [localThemeIndex, colorPlate, syncThemeWithBanner])
 
   const toggleTextareaColor = () => {
     setTextareaColor((prev) =>

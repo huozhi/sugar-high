@@ -69,6 +69,14 @@ export function buildFlatVarsCopySnippet(colors: LiveEditorColorPlate): string {
   return formatPlateAsCssVars(colors, TOKEN_KEYS, '')
 }
 
+/** Snippet shown in the install banner `color.css` example (light-mode palette). */
+export function buildInstallBannerColorCss(colors: LiveEditorColorPlate): string {
+  return `/* styles.css */
+:root {
+${formatPlateAsCssVars(colors)}
+}`
+}
+
 /**
  * Codice theme.css shape: light + dark blocks with data-highlight-theme and data-theme.
  * Light block uses current `light` plate (so picker tweaks copy through); dark uses preset.

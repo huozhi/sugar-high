@@ -1,23 +1,15 @@
 'use client'
 
+import { useContext, useMemo } from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from 'codice'
 import './install-banner.css'
 import Link from 'next/link'
-
-const cssCode = `\
-/* styles.css */
-:root {
-  --sh-class: #2d5e9d;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-property: #0550ae;
-  --sh-entity: #249a97;
-  --sh-jsxliterals: #6266d1;
-  --sh-string: #00a99a;
-  --sh-keyword: #f47067;
-  --sh-comment: #a19595;
-}`
+import {
+  LIVE_EDITOR_THEME_PRESETS,
+  buildInstallBannerColorCss,
+} from '../live-editor-presets'
+import { SyntaxThemeContext } from '../syntax-theme-context'
 
 const usageCode = `\
 import { highlight } from 'sugar-high'
@@ -25,6 +17,13 @@ import { highlight } from 'sugar-high'
 const html = highlight(code)`
 
 export default function InstallBanner() {
+  const syntaxThemeCtx = useContext(SyntaxThemeContext)
+  const cssCode = useMemo(() => {
+    const colors =
+      syntaxThemeCtx?.colorPlateColors ?? LIVE_EDITOR_THEME_PRESETS[0].colors
+    return buildInstallBannerColorCss(colors)
+  }, [syntaxThemeCtx?.colorPlateColors])
+
   return (
     <div className="install-banner">
       <style>
