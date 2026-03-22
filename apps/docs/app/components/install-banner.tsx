@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, type CSSProperties } from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from 'codice'
 import './install-banner.css'
@@ -8,6 +8,9 @@ import Link from 'next/link'
 import {
   LIVE_EDITOR_THEME_PRESETS,
   buildInstallBannerColorCss,
+  darkPlateForPresetIndex,
+  plateToDocsUiVarMap,
+  plateToShVarMap,
 } from '../live-editor-presets'
 import { SyntaxThemeContext } from '../syntax-theme-context'
 
@@ -18,14 +21,27 @@ const html = highlight(code)`
 
 export default function InstallBanner() {
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
-  const cssCode = useMemo(() => {
-    const colors =
-      syntaxThemeCtx?.colorPlateColors ?? LIVE_EDITOR_THEME_PRESETS[0].colors
-    return buildInstallBannerColorCss(colors)
-  }, [syntaxThemeCtx?.colorPlateColors])
+  const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
+  const plateColors =
+    syntaxThemeCtx?.colorPlateColors ?? LIVE_EDITOR_THEME_PRESETS[0].colors
+
+  const cssCode = useMemo(
+    () => buildInstallBannerColorCss(plateColors),
+    [plateColors]
+  )
+
+  const chromeVars = useMemo(
+    () => plateToDocsUiVarMap(plateColors),
+    [plateColors]
+  )
+
+  const codeShVars = useMemo(
+    () => plateToShVarMap(darkPlateForPresetIndex(themeIndex)),
+    [themeIndex]
+  )
 
   return (
-    <div className="install-banner">
+    <div className="install-banner" style={chromeVars as CSSProperties}>
       <style>
         {`
         .install-banner [data-codice-header] {
@@ -45,14 +61,20 @@ export default function InstallBanner() {
             repo
           </a>
         </div>
-        <div className="install-banner__code">
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
           <Code title='install.sh'>
             {usageCode}
           </Code>
           <CopyButton codeSnippet={usageCode} />
         </div>
         <br />
-        <div className="install-banner__code">
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
           <Code title='color.css'>
             {cssCode}
           </Code>

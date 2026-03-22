@@ -1,9 +1,22 @@
 'use client'
 
-import { startTransition, useActionState, useEffect, useState } from 'react'
+import {
+  startTransition,
+  useActionState,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type CSSProperties,
+} from 'react'
 import domToImage from 'dom-to-image'
 import { Code } from 'codice'
 import { copyImageDataUrl } from './lib/copy-image'
+import {
+  LIVE_EDITOR_THEME_PRESETS,
+  plateToThemedDocsVars,
+} from './live-editor-presets'
+import { SyntaxThemeContext } from './syntax-theme-context'
 
 const EXAMPLE_PAIRS = [
   [
@@ -135,7 +148,7 @@ function CodeFrame(
       <style>
         {highlightedLines.map(line =>
           `.code-label--${index} .code-frame .sh__line:nth-child(${line}) {
-            background: #fcf5dc;
+            background: var(--carousel-line-highlight, #fcf5dc);
           }`)
           .join('\n') + '\n'
         }
@@ -156,9 +169,20 @@ function CodeFrame(
 export default function Carousel() {
   const examples = EXAMPLE_PAIRS
   const [selected, setSelected] = useState(Math.ceil(examples.length / 2))
+  const syntaxThemeCtx = useContext(SyntaxThemeContext)
+  const plateColors =
+    syntaxThemeCtx?.colorPlateColors ?? LIVE_EDITOR_THEME_PRESETS[0].colors
+
+  const carouselStyle = useMemo(() => {
+    const base = plateToThemedDocsVars(plateColors)
+    return {
+      ...base,
+      '--carousel-line-highlight': `color-mix(in srgb, ${plateColors.keyword} 14%, #fffef6)`,
+    } as CSSProperties
+  }, [plateColors])
 
   return (
-    <div className="carousel container-960">
+    <div className="carousel container-960" style={carouselStyle}>
       <style>
         {`
         ${examples.reduce((r, c, i) => {

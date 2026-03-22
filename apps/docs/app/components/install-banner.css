@@ -18,7 +18,7 @@
   width: 600px;
   max-width: calc(100vw - 48px);
   margin: 0 0 16px;
-  color: #354150;
+  color: var(--docs-ui-primary, #354150);
 }
 
 h1.install-banner__command {
@@ -28,7 +28,7 @@ h1.install-banner__command {
   font-weight: 600;
   line-height: 1.2;
   text-align: left;
-  color: #354150;
+  color: var(--docs-ui-primary, #354150);
 }
 
 .install-banner__repo,
@@ -36,32 +36,21 @@ h1.install-banner__command {
   flex-shrink: 0;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #888;
+  color: var(--docs-ui-link, #888);
   text-decoration: underline;
   text-decoration-thickness: from-font;
   text-underline-position: from-font;
 }
 
 .install-banner__repo:hover {
-  color: #333;
+  color: var(--docs-ui-link-hover, #333);
 }
 
 .install-banner__code {
   /* codice header title: color: var(--codice-title-color) */
   --codice-title-color: #b0b0b0;
   --codice-caret-color: #ccc;
-  /* sugar-high: color: var(--sh-<token>) */
-  --sh-class: #7eb5ff;
-  --sh-identifier: #d4d4d4;
-  --sh-sign: #8b949e;
-  --sh-property: #79c0ff;
-  --sh-entity: #56d4dd;
-  --sh-jsxliterals: #d2a8ff;
-  --sh-string: #88bbb6;
-  --sh-keyword: #ffada8;
-  --sh-comment: #8b8b8b;
-  --sh-break: #d4d4d4;
-  --sh-space: #8b949e;
+  /* --sh-* inherited from .install-banner (live theme) */
   position: relative;
   background-color: #383838;
   font-size: 1rem;
@@ -79,14 +68,22 @@ h1.install-banner__command {
   width: 600px;
   max-width: calc(100vw - 48px);
   border-radius: 2px;
-  color: #5c6570;
+  color: var(--docs-ui-secondary, #5c6570);
 }
 
 .install-banner__block h2 {
-  color: #354150;
+  color: var(--docs-ui-primary, #354150);
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0 0 0.5rem;
+}
+
+.install-banner__block a {
+  color: var(--docs-ui-link, #888);
+}
+
+.install-banner__block a:hover {
+  color: var(--docs-ui-link-hover, #333);
 }
 
 /* copy code button */

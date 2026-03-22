@@ -55,6 +55,54 @@ const TOKEN_KEYS: (keyof Omit<
   'property',
 ]
 
+const SH_CSS_VAR_KEYS: (keyof LiveEditorColorPlate)[] = [
+  ...TOKEN_KEYS,
+  'break',
+  'space',
+]
+
+/** Inline / inherited `--sh-*` for Codice + sugar-high. */
+export function plateToShVarMap(
+  colors: LiveEditorColorPlate
+): Record<string, string> {
+  const o: Record<string, string> = {}
+  for (const k of SH_CSS_VAR_KEYS) {
+    o[`--sh-${k}`] = colors[k]
+  }
+  return o
+}
+
+/**
+ * Docs chrome (headings, links, carousel chrome) derived from the light syntax plate.
+ */
+export function plateToDocsUiVarMap(
+  colors: LiveEditorColorPlate
+): Record<string, string> {
+  return {
+    '--docs-ui-primary': colors.identifier,
+    '--docs-ui-secondary': colors.sign,
+    '--docs-ui-muted': colors.comment,
+    '--docs-ui-link': colors.comment,
+    '--docs-ui-link-hover': colors.keyword,
+    '--docs-ui-accent': colors.keyword,
+    '--docs-ui-positive': colors.string,
+    '--docs-ui-negative': colors.keyword,
+  }
+}
+
+export function plateToThemedDocsVars(
+  colors: LiveEditorColorPlate
+): Record<string, string> {
+  return { ...plateToShVarMap(colors), ...plateToDocsUiVarMap(colors) }
+}
+
+/** Dark-mode syntax plate for the current preset (install banner code on dark bg). */
+export function darkPlateForPresetIndex(themeIndex: number): LiveEditorColorPlate {
+  const preset =
+    LIVE_EDITOR_THEME_PRESETS[themeIndex] ?? LIVE_EDITOR_THEME_PRESETS[0]
+  return preset.colorsDark!
+}
+
 export function formatPlateAsCssVars(
   colors: LiveEditorColorPlate,
   keys: typeof TOKEN_KEYS = TOKEN_KEYS,
@@ -109,6 +157,17 @@ export const LIVE_EDITOR_THEME_PRESETS: LiveEditorThemePreset[] = [
       keyword: '#f47067',
       comment: '#a19595',
     }),
+    colorsDark: plate({
+      class: '#7eb5ff',
+      identifier: '#d4d4d4',
+      sign: '#8b949e',
+      entity: '#56d4dd',
+      property: '#79c0ff',
+      jsxliterals: '#d2a8ff',
+      string: '#88bbb6',
+      keyword: '#ffada8',
+      comment: '#8b8b8b',
+    }),
   },
   {
     id: 'minimal-gray',
@@ -123,6 +182,17 @@ export const LIVE_EDITOR_THEME_PRESETS: LiveEditorThemePreset[] = [
       string: '#6b6b6b',
       keyword: '#2d2d2d',
       comment: '#9a9a9a',
+    }),
+    colorsDark: plate({
+      class: '#c8c8c8',
+      identifier: '#b0b0b0',
+      sign: '#888888',
+      entity: '#b0b0b0',
+      property: '#b0b0b0',
+      jsxliterals: '#d0d0d0',
+      string: '#a8a8a8',
+      keyword: '#e8e8e8',
+      comment: '#707070',
     }),
   },
   {
