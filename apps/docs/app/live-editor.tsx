@@ -10,6 +10,11 @@ import {
 import { SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
 import { CopyButton } from './components/copy-button'
+import {
+  SYNTAX_PRESET_SELECT_OPTIONS,
+  fileExtensionFromSyntaxSelect,
+  syntaxPresetSelectValue,
+} from './syntax-highlight-presets'
 
 // Original colorful theme
 const defaultColorPlateColors = {
@@ -158,7 +163,16 @@ export type LiveEditorProps = {
   value?: string
   onChange?: (code: string) => void
   /** When false, use default syntax palette and hide theme / color rail (compact embeds). */
-  showThemeControls?: boolean
+  colorPlate?: boolean
+  /**
+   * Passed to Codice as `extension` so sugar-high presets apply (e.g. `py` → Python `#` comments).
+   */
+  fileExtension?: string
+  /**
+   * When set, shows a language control (top-right of the editor) so users can override highlighting
+   * after pasting code. Use with controlled `fileExtension`.
+   */
+  onFileExtensionChange?: (extension: string | undefined) => void
 }
 
 export default function LiveEditor({
@@ -168,7 +182,9 @@ export default function LiveEditor({
   className = '',
   value,
   onChange,
-  showThemeControls = true,
+  colorPlate = true,
+  fileExtension,
+  onFileExtensionChange,
 }: LiveEditorProps) {
   const isControlled = value !== undefined && onChange !== undefined
 
@@ -185,9 +201,9 @@ export default function LiveEditor({
   }
 
   useEffect(() => {
-    if (!showThemeControls) return
+    if (!colorPlate) return
     setColorPlateColors(themes[currentThemeIndex].colors)
-  }, [currentThemeIndex, showThemeControls])
+  }, [currentThemeIndex, colorPlate])
 
   const toggleTextareaColor = () => {
     setTextareaColor((prev) =>
@@ -242,7 +258,7 @@ export default function LiveEditor({
     ]
   )
 
-  const activePlateColors = showThemeControls
+  const activePlateColors = colorPlate
     ? colorPlateColors
     : defaultColorPlateColors
 
@@ -254,7 +270,7 @@ export default function LiveEditor({
       .join('\n')
   }, [activePlateColors])
 
-  const textareaTint = showThemeControls ? textareaColor : 'transparent'
+  const textareaTint = colorPlate ? textareaColor : 'transparent'
 
   const sectionClass =
     `live-editor-section${className ? ` ${className}` : ''}`.trim()
@@ -279,7 +295,7 @@ export default function LiveEditor({
         }
         `}`}</style>
 
-      {showThemeControls && (
+      {colorPlate && (
         <div className="container-720 live-editor__top-bar">
           <div className="top-controls">
             <button
@@ -294,7 +310,7 @@ export default function LiveEditor({
       )}
       <div className="live-editor-layout">
         <div className="live-editor-editor-col">
-          {showThemeControls && process.env.NODE_ENV === 'development' && (
+          {colorPlate && process.env.NODE_ENV === 'development' && (
             <div className="textarea-color-toggle-container">
               <button
                 type="button"
@@ -305,7 +321,34 @@ export default function LiveEditor({
               </button>
             </div>
           )}
-          <div className="live-editor">
+          <div
+            className={
+              'live-editor' +
+              (onFileExtensionChange ? ' live-editor--with-syntax-toolbar' : '')
+            }
+          >
+            {onFileExtensionChange && (
+              <div className="live-editor__syntax-toolbar">
+                <select
+                  id="live-editor-syntax-preset"
+                  className="live-editor__syntax-toolbar-select"
+                  aria-label="Syntax language"
+                  title="Syntax language"
+                  value={syntaxPresetSelectValue(fileExtension)}
+                  onChange={(e) => {
+                    onFileExtensionChange(
+                      fileExtensionFromSyntaxSelect(e.target.value)
+                    )
+                  }}
+                >
+                  {SYNTAX_PRESET_SELECT_OPTIONS.map(({ value, label }) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <Editor
               ref={editorRef}
               className="codice editor flex-1"
@@ -313,12 +356,13 @@ export default function LiveEditor({
               value={displayCode}
               fontSize={14}
               lineNumbersWidth='2rem'
+              extension={fileExtension}
               onChange={handleEditorChange}
             />
           </div>
         </div>
 
-        {showThemeControls && (
+        {colorPlate && (
           <ul className="live-editor__color">
             <li className="live-editor__color__theme">
               <div className="color-theme-title">

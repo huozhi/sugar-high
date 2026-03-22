@@ -26,6 +26,17 @@ export function githubUrlToRawUrl(input: string): string | null {
   return null
 }
 
+/**
+ * File extension for Codice `extension` / sugar-high presets (`py`, `css`, `rs`, …).
+ * Uses the last path segment’s final `.suffix` (e.g. `foo.module.css` → `css`).
+ */
+export function fileExtensionForHighlight(repoRelativePath: string): string | undefined {
+  const base = repoRelativePath.split('/').pop() ?? ''
+  const dot = base.lastIndexOf('.')
+  if (dot <= 0 || dot === base.length - 1) return undefined
+  return base.slice(dot + 1).toLowerCase()
+}
+
 /** Repo-relative path for extension → preset (e.g. `src/index/use-swr.ts`). */
 export function filePathFromRawGithubUrl(rawUrl: string): string | null {
   try {

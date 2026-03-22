@@ -10,8 +10,9 @@ import {
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import LiveEditor from '../live-editor'
 import { fetchGithubSource } from '../github-source'
+import { presetHighlightExtensionFromPath } from '../syntax-highlight-presets'
 
-/** Notable OSS files for one-click preview (TS/TSX, CSS). */
+/** Notable OSS files for one-click preview (TS/TSX, CSS, Python, Rust). */
 const GITHUB_QUICK_EXAMPLES = [
   {
     label: 'swr',
@@ -29,9 +30,19 @@ const GITHUB_QUICK_EXAMPLES = [
     url: 'https://github.com/necolas/normalize.css/blob/master/normalize.css',
   },
   {
-    label: 'next.js',
-    file: 'page.tsx',
-    url: 'https://github.com/vercel/next.js/blob/canary/examples/hello-world/app/page.tsx',
+    label: 'bytes',
+    file: 'lib.rs',
+    url: 'https://github.com/tokio-rs/bytes/blob/master/src/lib.rs',
+  },
+  {
+    label: 'requests',
+    file: '__init__.py',
+    url: 'https://github.com/psf/requests/blob/main/src/requests/__init__.py',
+  },
+  {
+    label: 'anyhow',
+    file: 'lib.rs',
+    url: 'https://github.com/dtolnay/anyhow/blob/master/src/lib.rs',
   },
 ] as const
 
@@ -92,6 +103,9 @@ export function GithubPlayground({
   )
   const [githubLoadError, setGithubLoadError] = useState<string | null>(null)
   const [githubLoading, setGithubLoading] = useState(false)
+  const [fileExtension, setFileExtension] = useState<string | undefined>(
+    undefined
+  )
 
   const lastGithubLoadedUrlRef = useRef<string | null>(null)
   const githubUrlSyncFnRef = useRef<((url: string) => void) | null>(null)
@@ -111,8 +125,9 @@ export function GithubPlayground({
     setGithubLoadError(null)
     setGithubLoading(true)
     try {
-      const { text } = await fetchGithubSource(trimmed)
+      const { text, path } = await fetchGithubSource(trimmed)
       setCode(text)
+      setFileExtension(presetHighlightExtensionFromPath(path))
       lastGithubLoadedUrlRef.current = trimmed
       githubUrlSyncFnRef.current?.(trimmed)
     } catch (e) {
@@ -218,8 +233,10 @@ export function GithubPlayground({
         onChange={setCode}
         defaultCode={defaultCode}
         persistEditorDraft={false}
-        showThemeControls={false}
+        colorPlate={false}
         enableTypingAnimation={false}
+        fileExtension={fileExtension}
+        onFileExtensionChange={setFileExtension}
       />
     </>
   )

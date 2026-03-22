@@ -300,7 +300,10 @@ function isRegexStart(str) {
  *   keywords?: Set<string>
  *   onCommentStart?: (curr: string, next: string) => number | boolean
  *   onCommentEnd?: (prev: string, curr: string) => number | boolean
+ *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
  * } | undefined} options
+ * Optional `onQuote(curr, i, code)` at `code[i] === "'"`: return length to consume from `i` (>= 1),
+ * or null/undefined/below 1 for default JS single-quoted strings. No substring allocation.
  * @return {Array<[number, string]>}
  */
 function tokenize(code, options) {
@@ -315,7 +318,7 @@ function tokenize(code, options) {
     onCommentStart,
     onCommentEnd,
   } = mergedOptions
-  
+
   let current = ''
   let type = -1
   /** @type {[number, string]} */
@@ -374,7 +377,7 @@ function tokenize(code, options) {
       const [, lastToken] = last
       if (isIdentifier(token)) {
         // classify jsx open tag
-        if ((lastToken === '<' || lastToken === '</')) 
+        if ((lastToken === '<' || lastToken === '</'))
           return T_ENTITY
       }
     }
@@ -407,7 +410,7 @@ function tokenize(code, options) {
   }
 
   /**
-   * 
+   *
    * @param {number | undefined} [type_]
    * @param {string | undefined} [token_]
    */
@@ -416,7 +419,7 @@ function tokenize(code, options) {
       current = token_
     }
     if (current) {
-      type = type_ || classify(current)
+      type = typeof type_ === 'number' ? type_ : classify(current)
       /** @type [number, string]  */
       const pair = [type, current]
       if (type !== T_SPACE && type !== T_BREAK) {
@@ -433,6 +436,30 @@ function tokenize(code, options) {
     const next = code[i + 1]
     const p_c = prev + curr // previous and current
     const c_n = curr + next // current and next
+
+    // onQuote(curr, i, code): length from i; end = i + len (capped).
+    if (
+      typeof mergedOptions.onQuote === 'function' &&
+      curr === "'" &&
+      !inStringQuotes() &&
+      !inJsxLiterals() &&
+      !inStrTemplateLiterals()
+    ) {
+      const rawLen = mergedOptions.onQuote(curr, i, code)
+      if (
+        typeof rawLen === 'number' &&
+        rawLen >= 1 &&
+        !Number.isNaN(rawLen)
+      ) {
+        const len = Math.min(rawLen, code.length - i)
+        const end = i + len
+        append()
+        current = code.slice(i, end)
+        append(T_IDENTIFIER)
+        i = end - 1
+        continue
+      }
+    }
 
     // Determine string quotation outside of jsx literals and template literals.
     // Inside jsx literals or template literals, string quotation is still part of it.
@@ -577,7 +604,7 @@ function tokenize(code, options) {
             if (isSpaces(current)) {
               append()
             }
-            
+
             // Now check if the accumulated token is a property
             const prop = current + curr
             if (isIdentifier(prop)) {
@@ -673,7 +700,7 @@ function tokenize(code, options) {
       const isEol = () => isEof() || code[i] === '\n'
 
       let foundClose = false
-      
+
       // traverse to find closing regex slash
       for (; !isEol(); i++) {
         if (code[i] === '/' && code[i - 1] !== '\\') {
@@ -781,7 +808,7 @@ function generate(tokens) {
    * @param {any} children
    * @return {{type: string, tagName: string, children: any[], properties: Record<string, string>}}
    */
-  const createLine = (children) => 
+  const createLine = (children) =>
       ({
         type: 'element',
         tagName: 'span',
@@ -820,12 +847,12 @@ function generate(tokens) {
   /** @type {Array<[number, string]>} */
   const lineTokens = []
   let lastWasBreak = false
-  
+
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i]
     const [type, value] = token
     const isLastToken = i === tokens.length - 1
-    
+
     if (type !== T_BREAK) {
       // Divide multi-line token into multi-line code
       if (value.includes('\n')) {
@@ -850,12 +877,12 @@ function generate(tokens) {
         flushLine(lineTokens)
         lineTokens.length = 0
       }
-      
+
       // If this is the last token and it's a break, create an empty line
       if (isLastToken) {
         flushLine([])
       }
-      
+
       lastWasBreak = true
     }
   }
@@ -903,7 +930,9 @@ function toHtml(lines) {
  *   keywords?: Set<string>
  *   onCommentStart?: (curr: string, next: string) => number | boolean
  *   onCommentEnd?: (curr: string, prev: string) => number | boolean
+ *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
  * } | undefined} options
+ * `onQuote` same as `tokenize`.
  * @returns {string}
  */
 function highlight(code, options) {
