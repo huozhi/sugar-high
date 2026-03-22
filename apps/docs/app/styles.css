@@ -292,6 +292,46 @@ code {
   box-shadow: none;
 }
 
+/* Top-right syntax preset (GitHub playground): four options, compact */
+.live-editor__syntax-toolbar {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 6;
+  pointer-events: auto;
+}
+
+.live-editor__syntax-toolbar-select {
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  font-family: inherit;
+  color: var(--text-primary, #111827);
+  background: color-mix(in srgb, var(--background, #fff) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-secondary, #6b7280) 28%, transparent);
+  border-radius: 4px;
+  padding: 2px 22px 2px 6px;
+  max-width: 7.5rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 5px center;
+  backdrop-filter: blur(4px);
+}
+
+.live-editor__syntax-toolbar-select:hover {
+  border-color: color-mix(in srgb, var(--text-secondary, #6b7280) 48%, transparent);
+}
+
+.live-editor__syntax-toolbar-select:focus {
+  outline: 1px solid color-mix(in srgb, var(--text-primary, #111827) 30%, transparent);
+  outline-offset: 0;
+}
+
+.live-editor.live-editor--with-syntax-toolbar {
+  padding-top: 1.75rem;
+}
+
 .live-editor:focus-within > .codice.editor {
   outline: none;
   /* Vertical-only lift — no shadow cast to the right */

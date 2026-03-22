@@ -2,6 +2,11 @@ type HighlightOptions = {
   keywords?: Set<string>
   onCommentStart?: (curr: string, next: string) => number | boolean
   onCommentEnd?: (curr: string, prev: string) => number | boolean
+  /**
+   * At `code[i] === "'"`: return how many code units to consume from `i` as one token,
+   * or null/undefined or a number below 1 for default JS single-quoted string rules.
+   */
+  onQuote?: (curr: string, i: number, code: string) => number | null | undefined
 }
 
 export function highlight(code: string, options?: HighlightOptions): string
