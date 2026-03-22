@@ -1,18 +1,18 @@
 # Sugar High
 
-[![Build][build-badge]][build]
+[![npm][npm-badge]][npm]
 
-### Introduction
+Super lightweight syntax highlighter for JavaScript and JSX—about **1 kB** minified and gzipped. Works in the browser or any JS runtime that can set HTML strings.
 
-Super lightweight JSX syntax highlighter, around 1KB after minified and gzipped
+![Sugar High preview](https://repository-images.githubusercontent.com/453236442/aa0db684-bad3-4cd3-a420-f4e53b8c6757)
 
-![img](https://repository-images.githubusercontent.com/453236442/aa0db684-bad3-4cd3-a420-f4e53b8c6757)
-
-### Usage
+## Install
 
 ```sh
-npm install --save sugar-high
+npm install sugar-high
 ```
+
+## Usage
 
 ```js
 import { highlight } from 'sugar-high'
@@ -22,26 +22,26 @@ const codeHTML = highlight(code)
 document.querySelector('pre > code').innerHTML = codeHTML
 ```
 
-### Highlight with CSS
+### Language presets
 
-Then make your own theme with customized colors by token type and put in global CSS. The corresponding class names start with `--sh-` prefix.
+The core highlighter targets JavaScript and JSX. For CSS, Rust, Python, and similar, import a preset from [`sugar-high/presets`](https://github.com/huozhi/sugar-high/tree/main/packages/sugar-high/lib/presets) and pass it into `highlight`:
+
+```js
+import { highlight } from 'sugar-high'
+import { rust } from 'sugar-high/presets'
+
+const html = highlight(source, { ...rust })
+```
+
+For more language presets and syntax color themes, see **[sugar-high.vercel.app](https://sugar-high.vercel.app/)**.
+
+## Styling
+
+Each line is wrapped in `sh__line`. Set **CSS custom properties** `--sh-*` on an ancestor (for example `:root`) to pick colors—inspect the output or the example below for the variable names you need.
+
+Example theme:
 
 ```css
-/**
- * Types that sugar-high have:
- *
- * identifier
- * keyword
- * string
- * Class, number and null
- * property
- * entity
- * jsx literals
- * sign
- * comment
- * break
- * space
- */
 :root {
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
@@ -55,11 +55,9 @@ Then make your own theme with customized colors by token type and put in global 
 }
 ```
 
-### Features
+### Line numbers
 
-#### Line number
-
-Sugar high provide `.sh_line` class name for each line. To display line number, define the `.sh_line::before` element with CSS will enable line numbers automatically.
+Use a `::before` counter on `.sh__line` for gutter numbers:
 
 ```css
 pre code {
@@ -75,9 +73,9 @@ pre code {
 }
 ```
 
-### Line Highlight
+### Highlighting a line
 
-Use `.sh__line:nth-child(<line number>)` to highlight specific line.
+Target a line with `.sh__line:nth-child(<n>)` (1-based):
 
 ```css
 .sh__line:nth-child(5) {
@@ -85,36 +83,16 @@ Use `.sh__line:nth-child(<line number>)` to highlight specific line.
 }
 ```
 
-#### CSS Class Names
+## Remark
 
-You can use `.sh__token--<token type>` to customize the output node of each token.
+Use the [remark plugin](https://sugar-high.vercel.app/remark) to highlight fenced code blocks when processing Markdown with [remark](https://remark.js.org/). Details: [`packages/remark-sugar-high`](https://github.com/huozhi/sugar-high/tree/main/packages/remark-sugar-high).
 
-```css
-.sh__token--keyword {
-  background: #f47067;
-}
-```
-
-### Use With Remark.js
-
-[Remark.js](https://remark.js.org/) is a powerful markdown processor, you can use the [sugar-high remark plugin](https://sugar-high.vercel.app/remark) with remark.js to highlight code blocks in markdown.
-
-Check out the [readme](https://github.com/huozhi/sugar-high/tree/main/packages/remark-sugar-high) for more details.
-
-### LICENSE
+## License
 
 MIT
 
 <!-- Definitions -->
 
-[build-badge]: https://github.com/huozhi/sugar-high/workflows/Test/badge.svg
+[npm-badge]: https://img.shields.io/npm/v/sugar-high.svg
 
-[build]: https://github.com/huozhi/sugar-high/actions
-
-[coverage-badge]: https://badge.fury.io/js/sugar-high.svg
-
-[coverage]: https://codecov.io/github/huozhi/sugar-high
-
-[downloads-badge]: https://img.shields.io/npm/dm/sugar-high.svg
-
-[downloads]: https://www.npmjs.com/package/sugar-high
+[npm]: https://www.npmjs.com/package/sugar-high
