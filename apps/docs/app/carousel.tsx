@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type CSSProperties,
 } from 'react'
@@ -18,117 +19,115 @@ import {
 } from './live-editor-presets'
 import { SyntaxThemeContext } from './syntax-theme-context'
 
+/* Stack order: index 0 = back of pile, last = front (JS/TS on top; Rust/Python behind) */
 const EXAMPLE_PAIRS = [
   [
-    'install.js',
+    `lib.rs`,
     `\
-// npm i -S sugar-high
+use std::fmt::Display;
 
-import { highlight } from 'sugar-high'
+pub fn label<T: Display>(x: T, y: T) -> String {
+    // format pair
+    format!("({}, {})", x, y)
+}
 
-const html = highlight(code)
-
-document.querySelector('pre > code').innerHTML = html
+fn main() {
+    println!("{}", label(1, 2));
+}
 `,
     {
-      highlightedLines: [5]
+      highlightedLines: [4],
     },
   ],
 
   [
-    `app.jsx`,
-  `\
-const element = (
-  <>
-    <Food
-      season={{
-        sault: <p a={[{}]} />
-      }}>
-    </Food>
-    {/* jsx comment */}
-    <h1 className="title" data-title="true">
-      Read{' '}
-      <Link href="/posts/first-post">
-        <a>this page! - {Date.now()}</a>
-      </Link>
-    </h1>
-  </>
-)
-`,
-    {
-      highlightedLines: [7]
-    }
-  ],
-  [
-    `hello.js`,
-  `\
-const nums = [
-  1000_000_000, 1.2e3, 0x1f, .14, 1n
-].filter(Boolean)
-
-function* foo(index) {
-  do {
-    yield index++;
-    return void 0
-  } while (index < 2)
-}
-`,
-    {
-      highlightedLines: [2]
-    }
-  ],
-
-  [
-    `klass.js`,
+    `main.py`,
     `\
-/**
- * @param {string} names
- * @return {Promise<string[]>}
- */
-async function notify(names) {
-  const tags = []
-  for (let i = 0; i < names.length; i++) {
-    tags.push('@' + names[i])
-  }
-  await ping(tags)
+def greet(names):
+    # one name per line
+    for n in names:
+        print("hello, " + n)
+
+if __name__ == "__main__":
+    greet(["ada", "linus"])
+`,
+    {
+      highlightedLines: [4],
+    },
+  ],
+
+  [
+    `theme.css`,
+    `\
+:root {
+  --accent: #2d5e9d;
 }
 
-class SuperArray extends Array {
-  static core = Object.create(null)
-
-  constructor(...args) { super(...args); }
-
-  bump(value) {
-    return this.map(
-      x => x == undefined ? x + 1 : 0
-    ).concat(value)
+@media (prefers-color-scheme: dark) {
+  .card {
+    background: hsl(220 14% 12%);
   }
 }
+
+/* keyframes */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 `,
     {
-      highlightedLines: [7]
-    }
+      highlightedLines: [6],
+    },
   ],
 
   [
-    `regex.js`,
+    `literals.js`,
     `\
-export const test = (str) => /^\\/[0-5]\\/$/g.test(str)
+export const matchBoundary = (s) => /^[/][\\w-]+[/]$/u.test(s)
 
-// This is a super lightweight javascript syntax highlighter npm package
+// Slashes in comments are not regex delimiters
+// path: /usr/local/bin
 
-// This is a inline comment / <- a slash
-/// <reference path="..." /> // reference comment
-/* This is another comment */ alert('good') // <- alerts
+/** @see https://example.com/docs/foo/bar */
+const afterBlock = /foo/g.exec('foo')?.[0]
 
-// Invalid calculation: regex and numbers
-const _in = 123 - /555/ + 444;
-const _iu = /* evaluate */ (19) / 234 + 56 / 7;
+// Regex vs division (tokenizer stress test)
+const mixed = 12 / /\\d+/.test('3') ? 1 : 0
+const expr = 100 - /50/.test('5') + 25
 `,
     {
-      highlightedLines: [9]
-    }
-  ]
+      highlightedLines: [10],
+    },
+  ],
+
+  [
+    `geometry.ts`,
+    `\
+type Point = { readonly x: number; y: number }
+
+interface Cluster {
+  center: Point
+  members: ReadonlyArray<Point>
+}
+
+export const origin = { x: 0, y: 0 } as const satisfies Point
+
+export function nearest<T extends Point>(
+  items: readonly T[],
+  ref: Point
+): T | undefined {
+  return items.reduce<T | undefined>((best, item) => {
+    if (!best) return item
+    const db = (best.x - ref.x) ** 2 + (best.y - ref.y) ** 2
+    const di = (item.x - ref.x) ** 2 + (item.y - ref.y) ** 2
+    return di < db ? item : best
+  }, undefined)
+}
+`,
+    {
+      highlightedLines: [8],
+    },
+  ],
 ] as const
 
 function CodeFrame(
@@ -136,19 +135,19 @@ function CodeFrame(
     code,
     title = 'Untitled',
     index,
-    highlightedLines = []
+    highlightedLines = [],
   }: {
-    code: string,
-    title: string,
-    index: number,
+    code: string
+    title: string
+    index: number
     highlightedLines: readonly number[] | number[]
   }) {
   return (
-    <div className='code-frame' id={`code-frame-${index}`}>
+    <div className="code-frame" id={`code-frame-${index}`}>
       <style>
         {highlightedLines.map(line =>
-          `.code-label--${index} .code-frame .sh__line:nth-child(${line}) {
-            background: var(--carousel-line-highlight, #fcf5dc);
+          `.showcase-card--${index} .code-frame .sh__line:nth-child(${line}) {
+            background: var(--showcase-line-highlight, #fcf5dc);
           }`)
           .join('\n') + '\n'
         }
@@ -168,120 +167,138 @@ function CodeFrame(
 
 export default function Carousel() {
   const examples = EXAMPLE_PAIRS
-  const [selected, setSelected] = useState(Math.ceil(examples.length / 2))
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [tappedIndex, setTappedIndex] = useState<number | null>(null)
+  const stackRef = useRef<HTMLDivElement>(null)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const plateColors =
     syntaxThemeCtx?.colorPlateColors ?? LIVE_EDITOR_THEME_PRESETS[0].colors
 
-  const carouselStyle = useMemo(() => {
+  const showcaseStyle = useMemo(() => {
     const base = plateToThemedDocsVars(plateColors)
     return {
       ...base,
-      '--carousel-line-highlight': `color-mix(in srgb, ${plateColors.keyword} 14%, #fffef6)`,
+      '--showcase-line-highlight': `color-mix(in srgb, ${plateColors.keyword} 14%, #fffef6)`,
     } as CSSProperties
   }, [plateColors])
 
+  const n = examples.length
+
+  const activeIndex = hoveredIndex ?? tappedIndex
+  const isolating = activeIndex !== null
+
+  function copyImageForFrame(exampleIndex: number) {
+    const domNode = document.querySelector(`#code-frame-${exampleIndex}`)
+    if (!domNode) return Promise.resolve(false)
+    return domToImage.toPng(domNode).then((dataUrl) => {
+      return copyImageDataUrl(dataUrl).then(
+        () => true,
+        () => false
+      )
+    })
+  }
+
+  useEffect(() => {
+    if (tappedIndex === null) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setTappedIndex(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [tappedIndex])
+
+  useEffect(() => {
+    if (tappedIndex === null) return
+    const onDocDown = (e: MouseEvent) => {
+      const el = stackRef.current
+      const t = e.target
+      if (el && t instanceof Node && !el.contains(t)) {
+        setTappedIndex(null)
+      }
+    }
+    document.addEventListener('mousedown', onDocDown)
+    return () => document.removeEventListener('mousedown', onDocDown)
+  }, [tappedIndex])
+
   return (
-    <div className="carousel container-960" style={carouselStyle}>
-      <style>
-        {`
-        ${examples.reduce((r, c, i) => {
-          const left = (selected - 1 + examples.length) % examples.length
-          const right = (selected + 1) % examples.length
-          const isAdjacent = i === left || i === right
-          const isSelected = i === selected
-          const isShown = isAdjacent || isSelected
+    <div className="showcase-section carousel container-showcase" style={showcaseStyle}>
+      <div
+        ref={stackRef}
+        className={`showcase-stack${isolating ? ' showcase-stack--isolating' : ''}`}
+        style={
+          {
+            '--showcase-count': String(n),
+          } as CSSProperties
+        }
+      >
+        {examples.map(([name, code, config], exampleIndex) => {
+          const position = exampleIndex
+          const depthFromFront = n - 1 - position
+          const depthOpacity =
+            n <= 1 ? 1 : 0.38 + (position / (n - 1)) * 0.52
 
-          let translate = '0%, 0%'
-          let scale = '1'
-          let opacity = '1'
-          if (i == left) {
-            translate = '-40%, 60px'
-            scale = '0.8'
-            opacity = '.2'
-          } else if (i === right) {
-            translate = '40%, 60px'
-            scale = '0.8'
-            opacity = '.2'
-          }
-          r += `.code-label#code-${i} {
-            transform: translate(${translate}) scale(${scale});
-            opacity: ${isShown ? opacity : 0};
-            z-index: ${isSelected ? 1 : 0};
-            height: ${isSelected ? 'auto' : '300px'};
-            overflow-y: ${isSelected ? 'auto' : 'hidden'};
-            ${isSelected ? '' : `cursor: pointer; user-select: none;`}
-          }`
+          const stackStyle = {
+            '--showcase-back-shift': String(depthFromFront),
+            '--showcase-top-step': String(position),
+            '--showcase-opacity': String(depthOpacity),
+            '--showcase-z': String(10 + position),
+          } as CSSProperties
 
-          if (isAdjacent || i === selected) {
-            r += `.code-label#code-${i}:hover {
-              transform: translate(${translate}) scale(${Number(scale) * 1.1});
-            }`
-          }
-
-          return r
-        }, '')}
-
-        `}
-      </style>
-      <>
-        {examples.map((_, i) => (
-          <input
-            key={i}
-            type="radio"
-            name="slider"
-            className={`item`}
-            id={`item-${i}`}
-            checked={selected === i}
-            onChange={() => setSelected(i)}
-          />
-        ))}
-      </>
-      <div className='show-case-title align-start'>
-        <h1>Showcase</h1>
-        <p>Code highlight examples built with sugar-high</p>
-      </div>
-      <div className='card-indicator-dots'>
-        {examples.map((_, i) => (
-          <label
-            key={i}
-            htmlFor={`item-${i}`}
-            className={`card-indicator ${i === selected ? `card-indicator--selected` : ''}`}
-          />
-        ))}
-      </div>
-      <div className="cards">
-        {examples.map(([name, code, config], i) => {
-          function handleCopyImage() {
-            const domNode = document.querySelector(`#code-frame-${i}`)
-            return domToImage.toPng(domNode).then(dataUrl => {
-              return copyImageDataUrl(dataUrl).then(
-                () => {
-                  return true
-                }, () => {
-                  return false
-                }
-              )
-            })
-          }
+          const isActive = activeIndex === exampleIndex
 
           return (
-            <label
-              key={i}
-              htmlFor={`item-${i}`}
-              className={`code-label code-label--${i} ${i === selected ? `code-label--selected` : 'code-label--non-selected'}`}
-              id={`code-${i}`}
+            <div
+              key={exampleIndex}
+              className={`showcase-card showcase-card--stack showcase-card--${exampleIndex}${
+                isActive ? ' showcase-card--stack-active' : ''
+              }`}
+              style={stackStyle}
+              onMouseEnter={() => setHoveredIndex(exampleIndex)}
+              onMouseLeave={(e) => {
+                const rt = e.relatedTarget
+                if (rt instanceof Node && e.currentTarget.contains(rt)) return
+                const nextCard =
+                  rt instanceof Element
+                    ? rt.closest('.showcase-card--stack')
+                    : null
+                if (nextCard && nextCard !== e.currentTarget) return
+                setHoveredIndex(null)
+              }}
             >
-              <CodeFrame
-                code={code}
-                title={name}
-                index={i}
-                highlightedLines={config.highlightedLines}
+              <div
+                className="showcase-card-hit"
+                role="button"
+                tabIndex={0}
+                aria-label={`${name} example — hover or tap to expand`}
+                aria-expanded={isActive}
+                onClick={() =>
+                  setTappedIndex((prev) =>
+                    prev === exampleIndex ? null : exampleIndex
+                  )
+                }
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setTappedIndex((prev) =>
+                      prev === exampleIndex ? null : exampleIndex
+                    )
+                  }
+                }}
+              >
+                <CodeFrame
+                  code={code}
+                  title={name}
+                  index={exampleIndex}
+                  highlightedLines={config.highlightedLines}
+                />
+              </div>
+              <CopyImageButton
+                onCopy={() => copyImageForFrame(exampleIndex)}
+                stopPropagation
               />
-              <CopyImageButton onCopy={handleCopyImage} />
-            </label>
-          )}
-        )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -301,7 +318,13 @@ function cx(...args: any[]) {
 }
 
 
-function CopyImageButton({ onCopy } : { onCopy: () => Promise<boolean> }) {
+function CopyImageButton({
+  onCopy,
+  stopPropagation = false,
+}: {
+  onCopy: () => Promise<boolean>
+  stopPropagation?: boolean
+}) {
   function handleActionState(state, action) {
     if (action === 'copy') {
       return onCopy().then(
@@ -332,8 +355,11 @@ function CopyImageButton({ onCopy } : { onCopy: () => Promise<boolean> }) {
 
   return (
     <button
-      className='code-copy-pic-button'
-      onClick={() => {
+      className="code-copy-pic-button"
+      onClick={(e) => {
+        if (stopPropagation) {
+          e.stopPropagation()
+        }
         copy()
       }}
       title={

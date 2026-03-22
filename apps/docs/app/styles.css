@@ -47,6 +47,16 @@ a:hover {
   padding: 0 16px 24px;
   margin: auto;
 }
+
+/* Showcase band — a bit narrower than the old 1200px layout */
+.container-showcase {
+  max-width: min(900px, 94vw);
+  padding: 0 16px 40px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  width: 100%;
+}
 input[type='radio'] {
   display: none;
 }
@@ -105,48 +115,136 @@ input[type='checkbox']:checked {
   font-size: 1.3rem;
   color: #808c97;
 }
-.cards .editor {
-  position: relative;
-  overflow-y: scroll;
-  scrollbar-width: none;
-}
-.code-label {
-  position: absolute;
-  height: 100%;
-  left: 0;
-  right: 0;
-  margin: auto;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  border-radius: 2px;
-  overflow-x: hidden;
-  box-shadow: -5px 12px 60px rgba(0, 0, 0, 0.5);
+
+/* Home — GitHub link in viewport top-right */
+.home-repo-link,
+.home-repo-link:visited {
+  position: fixed;
+  top: 0.5rem;
+  right: 1rem;
+  z-index: 100;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #888;
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-position: from-font;
 }
 
-.card-indicator-dots {
-  margin: auto;
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  padding: 8px;
-  background-color: #ffffff1f;
-  border-radius: 4px;
-}
-.card-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #bababa;
-  transition: background-color 0.3s ease;
-  cursor: pointer;
-}
-.card-indicator--selected {
-  background-color: var(--docs-ui-primary, #354150);
-}
-.code-label {
-  border-radius: 6px;
+.home-repo-link:hover {
+  color: #333;
 }
 .code-frame {
   position: relative;
+}
+
+/* Showcase — diagonal stack; active layer lifts straight up (file picked off the pile) */
+.showcase-section {
+  position: relative;
+  overflow: visible;
+}
+
+.showcase-stack {
+  --showcase-step-x: 32px;
+  --showcase-step-y: 42px;
+  --showcase-preview-max-h: 300px;
+  --showcase-count: 5;
+  --showcase-back-shift: 0;
+  --showcase-top-step: 0;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 2rem auto 0;
+  padding: 2.75rem 12px 3rem;
+  box-sizing: border-box;
+  overflow: visible;
+  min-height: calc(
+    var(--showcase-preview-max-h) + max(0, var(--showcase-count) - 1) *
+      var(--showcase-step-y) + 48px
+  );
+}
+
+.showcase-stack--isolating .showcase-card--stack:not(.showcase-card--stack-active) {
+  opacity: 0.28 !important;
+  filter: brightness(0.92) saturate(0.75);
+  transition:
+    opacity 0.28s ease,
+    filter 0.28s ease,
+    transform 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.showcase-card--stack {
+  --showcase-opacity: 0.75;
+  --showcase-z: 1;
+  position: absolute;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  top: calc(var(--showcase-top-step) * var(--showcase-step-y));
+  transform: translate(
+    calc(-50% + var(--showcase-back-shift) * var(--showcase-step-x)),
+    0
+  );
+  z-index: var(--showcase-z);
+  opacity: var(--showcase-opacity);
+  border-radius: 6px;
+  overflow: hidden;
+  max-height: var(--showcase-preview-max-h);
+  box-shadow: -3px 8px 28px rgba(0, 0, 0, 0.22);
+  transition:
+    transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.34s ease,
+    opacity 0.28s ease,
+    filter 0.28s ease;
+  background: var(--showcase-card-bg, transparent);
+}
+
+.showcase-card--stack-active {
+  z-index: 95 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  max-height: var(--showcase-preview-max-h);
+  overflow: hidden;
+  box-shadow:
+    -10px 32px 56px rgba(0, 0, 0, 0.22),
+    -4px 14px 36px rgba(0, 0, 0, 0.14);
+  transform: translate(
+    calc(-50% + var(--showcase-back-shift) * var(--showcase-step-x)),
+    -58px
+  );
+}
+
+.showcase-card-hit {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  cursor: pointer;
+  outline: none;
+}
+
+.showcase-card-hit:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--docs-ui-primary, #354150);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase-card--stack,
+  .showcase-card--stack-active {
+    transition:
+      opacity 0.2s ease,
+      filter 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .showcase-card--stack-active {
+    transform: translate(
+      calc(-50% + var(--showcase-back-shift) * var(--showcase-step-x)),
+      -30px
+    );
+  }
 }
 .code-copy-pic-button {
   position: absolute;
@@ -184,24 +282,13 @@ input[type='checkbox']:checked {
 }
 .carousel {
   margin: 8rem auto;
-  transform-style: preserve-3d;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
 }
 
-.cards {
-  /* --sh-* inherited from .carousel (SyntaxThemeProvider) */
-  --editor-background-color: transparent;
-
-  position: relative;
-  width: 600px;
-  height: 480px;
-  margin: 2rem auto;
-}
-.cards textarea {
-  /* disable text area */
+.showcase-stack textarea {
   pointer-events: none;
 }
 
@@ -234,15 +321,31 @@ code {
   justify-self: center;
 }
 
-/* `/p` — issue link above preview (composed in app/p/page.tsx) */
+/* `/p` — site title + issue link above preview */
 .p-page-issue-link-wrap {
   max-width: min(720px, calc(100vw - 32px));
   margin: 0 auto 0.5rem;
   padding: 0 16px;
   box-sizing: border-box;
   display: flex;
-  justify-content: flex-end;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
   width: 100%;
+}
+
+.p-page-site-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #354150;
+  text-decoration: none;
+}
+
+.p-page-site-title:hover {
+  color: #111827;
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-position: from-font;
 }
 
 .p-page-issue-link {
@@ -825,15 +928,13 @@ code {
 }
 
 @media screen and (max-width: 640px) {
-  .cards {
-    width: 100%;
+  .showcase-stack {
+    --showcase-step-x: 18px;
+    --showcase-step-y: 26px;
+    --showcase-preview-max-h: 248px;
+    padding: 0.5rem clamp(12px, 5vw, 20px) 2.5rem;
   }
-  .code-label--non-selected {
-    width: 0 !important;
-    height: 0 !important;
-    transform: none !important;
-    visibility: hidden;
-  }
+
   .live-editor-layout {
     display: flex;
     flex-direction: column;
@@ -1027,13 +1128,6 @@ code {
 }
 .codice [data-codice-title] {
   color: rgba(0, 0, 0, 0.34);
-}
-
-.show-case-title h1 {
-  color: var(--docs-ui-primary, #354150);
-}
-.show-case-title p {
-  color: var(--docs-ui-secondary, #5b626d);
 }
 
 /* Remark page specific styles */

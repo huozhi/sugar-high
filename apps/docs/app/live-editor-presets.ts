@@ -73,7 +73,7 @@ export function plateToShVarMap(
 }
 
 /**
- * Docs chrome (headings, links, carousel chrome) derived from the light syntax plate.
+ * Docs chrome (headings, links, showcase section) derived from the light syntax plate.
  */
 export function plateToDocsUiVarMap(
   colors: LiveEditorColorPlate

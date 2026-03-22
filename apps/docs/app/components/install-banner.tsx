@@ -57,14 +57,6 @@ export default function InstallBanner() {
       <div className="container-960">
         <div className="install-banner__head">
           <h1 className="install-banner__command">Highlight your code</h1>
-          <a
-            className="install-banner__repo"
-            href="https://github.com/huozhi/sugar-high"
-            target="_blank"
-            rel="noreferrer"
-          >
-            repo
-          </a>
         </div>
         <div
           className="install-banner__code"
@@ -86,6 +78,13 @@ export default function InstallBanner() {
           <CopyButton codeSnippet={cssCode} />
         </div>
 
+        <div className="install-banner__block">
+          <p>
+            Beyond JSX and JavaScript, sugar-high can highlight other languages when you pass an
+            optional preset (or set the file extension in Codice)—for example CSS, SCSS, Sass,
+            Less, Python, and Rust—so comments and keywords match each language.
+          </p>
+        </div>
         <div className="install-banner__block">
           <h2>Usage with remark.js</h2>
           <p>

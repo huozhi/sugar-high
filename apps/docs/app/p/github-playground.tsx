@@ -8,6 +8,7 @@ import {
   Suspense,
 } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import LiveEditor from '../live-editor'
 import { fetchGithubSource } from '../github-source'
 import { presetHighlightExtensionFromPath } from '../syntax-highlight-presets'
@@ -144,6 +145,9 @@ export function GithubPlayground({
     <>
       <div className="live-editor-section live-editor-section--github-preview">
         <div className="p-page-issue-link-wrap">
+          <Link href="/" className="p-page-site-title">
+            sugar high
+          </Link>
           <a
             className="p-page-issue-link"
             href={ISSUES_URL}

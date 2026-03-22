@@ -10,10 +10,6 @@
 }
 
 .install-banner__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
   box-sizing: border-box;
   width: 600px;
   max-width: calc(100vw - 48px);
@@ -29,21 +25,6 @@ h1.install-banner__command {
   line-height: 1.2;
   text-align: left;
   color: var(--docs-ui-primary, #354150);
-}
-
-.install-banner__repo,
-.install-banner__repo:visited {
-  flex-shrink: 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--docs-ui-link, #888);
-  text-decoration: underline;
-  text-decoration-thickness: from-font;
-  text-underline-position: from-font;
-}
-
-.install-banner__repo:hover {
-  color: var(--docs-ui-link-hover, #333);
 }
 
 .install-banner__code {
