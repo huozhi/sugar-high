@@ -4,7 +4,7 @@
 
 Super lightweight syntax highlighter for JavaScript and JSX—about **1 kB** minified and gzipped. Works in the browser or any JS runtime that can set HTML strings.
 
-![Sugar High preview](https://repository-images.githubusercontent.com/453236442/aa0db684-bad3-4cd3-a420-f4e53b8c6757)
+![Sugar High preview](https://repository-images.githubusercontent.com/453236442/e9c853e9-4af6-45c4-aa4a-c27afbf16a0d)
 
 ## Install
 
