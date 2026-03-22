@@ -140,7 +140,7 @@ input[type='checkbox']:checked {
   cursor: pointer;
 }
 .card-indicator--selected {
-  background-color: #354150;
+  background-color: var(--docs-ui-primary, #354150);
 }
 .code-label {
   border-radius: 6px;
@@ -160,16 +160,16 @@ input[type='checkbox']:checked {
 }
 /* svg change colors based on state */
 .code-copy-pic-icon:hover {
-  color: #333;
+  color: var(--docs-ui-primary, #333);
 }
 .code-copy-pic-icon.code-copy-pic-icon--pending {
-  color: #666;
+  color: var(--docs-ui-secondary, #666);
 }
 .code-copy-pic-icon.code-copy-pic-icon--success {
-  color: #00a99a;
+  color: var(--docs-ui-positive, #00a99a);
 }
 .code-copy-pic-icon.code-copy-pic-icon--error {
-  color: #f47067;
+  color: var(--docs-ui-negative, #f47067);
 }
 .code-copy-pic-button:hover {
   background-color: #ffffff1f;
@@ -179,7 +179,7 @@ input[type='checkbox']:checked {
   background-color: #ffffff2f;
 }
 .code-copy-pic-button svg {
-  color: #666;
+  color: var(--docs-ui-secondary, #666);
   vertical-align: middle;
 }
 .carousel {
@@ -192,15 +192,7 @@ input[type='checkbox']:checked {
 }
 
 .cards {
-  --sh-class: #2d5e9d;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-property: #0550ae;
-  --sh-entity: #249a97;
-  --sh-jsxliterals: #6266d1;
-  --sh-string: #00a99a;
-  --sh-keyword: #f47067;
-  --sh-comment: #a19595;
+  /* --sh-* inherited from .carousel (SyntaxThemeProvider) */
   --editor-background-color: transparent;
 
   position: relative;
@@ -1038,10 +1030,10 @@ code {
 }
 
 .show-case-title h1 {
-  color: #354150;
+  color: var(--docs-ui-primary, #354150);
 }
 .show-case-title p {
-  color: #5b626d;
+  color: var(--docs-ui-secondary, #5b626d);
 }
 
 /* Remark page specific styles */

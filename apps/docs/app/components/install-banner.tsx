@@ -1,23 +1,18 @@
 'use client'
 
+import { useContext, useMemo, type CSSProperties } from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from 'codice'
 import './install-banner.css'
 import Link from 'next/link'
-
-const cssCode = `\
-/* styles.css */
-:root {
-  --sh-class: #2d5e9d;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-property: #0550ae;
-  --sh-entity: #249a97;
-  --sh-jsxliterals: #6266d1;
-  --sh-string: #00a99a;
-  --sh-keyword: #f47067;
-  --sh-comment: #a19595;
-}`
+import {
+  LIVE_EDITOR_THEME_PRESETS,
+  buildInstallBannerColorCss,
+  darkPlateForPresetIndex,
+  plateToDocsUiVarMap,
+  plateToShVarMap,
+} from '../live-editor-presets'
+import { SyntaxThemeContext } from '../syntax-theme-context'
 
 const usageCode = `\
 import { highlight } from 'sugar-high'
@@ -25,8 +20,33 @@ import { highlight } from 'sugar-high'
 const html = highlight(code)`
 
 export default function InstallBanner() {
+  const syntaxThemeCtx = useContext(SyntaxThemeContext)
+  const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
+  const plateColors =
+    syntaxThemeCtx?.colorPlateColors ?? LIVE_EDITOR_THEME_PRESETS[0].colors
+
+  const darkPlate = useMemo(
+    () => darkPlateForPresetIndex(themeIndex),
+    [themeIndex]
+  )
+
+  const cssCode = useMemo(
+    () => buildInstallBannerColorCss(plateColors, darkPlate),
+    [plateColors, darkPlate]
+  )
+
+  const chromeVars = useMemo(
+    () => plateToDocsUiVarMap(plateColors),
+    [plateColors]
+  )
+
+  const codeShVars = useMemo(
+    () => plateToShVarMap(darkPlate),
+    [darkPlate]
+  )
+
   return (
-    <div className="install-banner">
+    <div className="install-banner" style={chromeVars as CSSProperties}>
       <style>
         {`
         .install-banner [data-codice-header] {
@@ -46,14 +66,20 @@ export default function InstallBanner() {
             repo
           </a>
         </div>
-        <div className="install-banner__code">
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
           <Code title='install.sh'>
             {usageCode}
           </Code>
           <CopyButton codeSnippet={usageCode} />
         </div>
         <br />
-        <div className="install-banner__code">
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
           <Code title='color.css'>
             {cssCode}
           </Code>

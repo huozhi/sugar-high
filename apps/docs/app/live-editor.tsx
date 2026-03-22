@@ -6,6 +6,7 @@ import {
   useRef,
   useMemo,
   useCallback,
+  useContext,
 } from 'react'
 import { SugarHigh } from 'sugar-high'
 import { Editor } from 'codice'
@@ -15,54 +16,17 @@ import {
   fileExtensionFromSyntaxSelect,
   syntaxPresetSelectValue,
 } from './syntax-highlight-presets'
+import {
+  LIVE_EDITOR_THEME_PRESETS,
+  buildCodiceThemeCopySnippet,
+  buildFlatVarsCopySnippet,
+  type LiveEditorColorPlate,
+} from './live-editor-presets'
+import { SyntaxThemeContext } from './syntax-theme-context'
 
-// Original colorful theme
-const defaultColorPlateColors = {
-  class: '#8d85ff',
-  identifier: '#354150',
-  sign: '#8996a3',
-  entity: '#6eafad',
-  property: '#4e8fdf',
-  jsxliterals: '#bf7db6',
-  string: '#00a99a',
-  keyword: '#f47067',
-  comment: '#a19595',
-  break: '#ffffff',
-  space: '#ffffff',
-}
+const themes = LIVE_EDITOR_THEME_PRESETS
 
-// Minimal gray theme with 3 colors
-const minimalGrayTheme = {
-  name: 'Minimal Gray',
-  colors: {
-    primary: '#2d2d2d',    // Dark gray for keywords, class
-    secondary: '#6b6b6b',  // Medium gray for identifiers, properties
-    tertiary: '#9a9a9a',  // Light gray for comments, signs
-  }
-}
-
-// Map token types to minimal gray theme colors
-function getMinimalThemeColors() {
-  const { primary, secondary, tertiary } = minimalGrayTheme.colors
-  return {
-    class: primary,
-    identifier: secondary,
-    sign: tertiary,
-    entity: secondary,
-    property: secondary,
-    jsxliterals: primary,
-    string: secondary,
-    keyword: primary,
-    comment: tertiary,
-    break: '#ffffff',
-    space: '#ffffff',
-  }
-}
-
-const themes = [
-  { name: 'Stylish', colors: defaultColorPlateColors },
-  { name: 'Minimal', colors: getMinimalThemeColors() },
-]
+const defaultColorPlateColors: LiveEditorColorPlate = themes[0].colors
 
 const customizableColors = Object.entries(SugarHigh.TokenTypes)
   .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
@@ -189,21 +153,41 @@ export default function LiveEditor({
   const isControlled = value !== undefined && onChange !== undefined
 
   const editorRef = useRef(null)
-  const [currentThemeIndex, setCurrentThemeIndex] = useState(0)
-  const [colorPlateColors, setColorPlateColors] = useState(() => themes[0].colors)
+  const syntaxThemeCtx = useContext(SyntaxThemeContext)
+  const syncThemeWithBanner = Boolean(colorPlate && syntaxThemeCtx)
+
+  const [localThemeIndex, setLocalThemeIndex] = useState(0)
+  const [localColorPlateColors, setLocalColorPlateColors] = useState(
+    () => themes[0].colors
+  )
+
+  const currentThemeIndex = syncThemeWithBanner
+    ? syntaxThemeCtx!.themeIndex
+    : localThemeIndex
+  const setCurrentThemeIndex = syncThemeWithBanner
+    ? syntaxThemeCtx!.setThemeIndex
+    : setLocalThemeIndex
+  const colorPlateColors = syncThemeWithBanner
+    ? syntaxThemeCtx!.colorPlateColors
+    : localColorPlateColors
+  const setColorPlateColors = syncThemeWithBanner
+    ? syntaxThemeCtx!.setColorPlateColors
+    : setLocalColorPlateColors
+
   const [textareaColor, setTextareaColor] = useState('transparent')
 
   const currentTheme = themes[currentThemeIndex]
-  const isMinimalMode = currentThemeIndex === 1
+  const isMinimalMode = currentTheme.id === 'minimal-gray'
+  const nextTheme = themes[(currentThemeIndex + 1) % themes.length]
 
   const toggleTheme = () => {
-    setCurrentThemeIndex((prev) => (prev === 0 ? 1 : 0))
+    setCurrentThemeIndex((prev) => (prev + 1) % themes.length)
   }
 
   useEffect(() => {
-    if (!colorPlate) return
-    setColorPlateColors(themes[currentThemeIndex].colors)
-  }, [currentThemeIndex, colorPlate])
+    if (!colorPlate || syncThemeWithBanner) return
+    setLocalColorPlateColors(themes[localThemeIndex].colors)
+  }, [localThemeIndex, colorPlate, syncThemeWithBanner])
 
   const toggleTextareaColor = () => {
     setTextareaColor((prev) =>
@@ -263,12 +247,16 @@ export default function LiveEditor({
     : defaultColorPlateColors
 
   const customizableColorsString = useMemo(() => {
-    return customizableColors
-      .map(([_tokenType, tokenTypeName]) => {
-        return `--sh-${tokenTypeName}: ${activePlateColors[tokenTypeName]};`
-      })
-      .join('\n')
-  }, [activePlateColors])
+    const t = themes[currentThemeIndex]
+    if (t.codiceHighlightTheme && t.colorsDark) {
+      return buildCodiceThemeCopySnippet(
+        t.codiceHighlightTheme,
+        activePlateColors,
+        t.colorsDark
+      )
+    }
+    return buildFlatVarsCopySnippet(activePlateColors)
+  }, [activePlateColors, currentThemeIndex])
 
   const textareaTint = colorPlate ? textareaColor : 'transparent'
 
@@ -301,7 +289,7 @@ export default function LiveEditor({
             <button
               onClick={toggleTheme}
               className={`theme-mode-button theme-mode-button--mobile ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
-              aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
+              aria-label={`Next syntax theme (${nextTheme.name})`}
             >
               {currentTheme.name}
             </button>
@@ -370,7 +358,7 @@ export default function LiveEditor({
                   type="button"
                   onClick={toggleTheme}
                   className={`theme-mode-button ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
-                  aria-label={isMinimalMode ? 'Switch to Stylish theme' : 'Switch to Minimal theme'}
+                  aria-label={`Next syntax theme (${nextTheme.name})`}
                 >
                   <span className="theme-mode-button__full">{currentTheme.name}</span>
                 </button>
@@ -391,6 +379,7 @@ export default function LiveEditor({
                   </label>
 
                   <input
+                    key={`${currentTheme.id}-${tokenTypeName}`}
                     type="color"
                     defaultValue={colorPlateColors[tokenTypeName]}
                     id={inputId}
