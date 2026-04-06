@@ -57,8 +57,8 @@ importers:
         specifier: 19.0.7
         version: 19.0.7
       typescript:
-        specifier: 5.7.3
-        version: 5.7.3
+        specifier: 6.0.2
+        version: 6.0.2
 
   apps/release-video:
     dependencies:
@@ -85,8 +85,8 @@ importers:
         specifier: ^19.0.7
         version: 19.0.7
       typescript:
-        specifier: 5.7.3
-        version: 5.7.3
+        specifier: 6.0.2
+        version: 6.0.2
 
   packages/remark-sugar-high:
     dependencies:
@@ -105,10 +105,10 @@ importers:
         version: 22.12.0
       bunchee:
         specifier: ^6.3.1
-        version: 6.6.2(typescript@5.7.3)
+        version: 6.6.2(typescript@6.0.2)
       typescript:
-        specifier: ^5.7.2
-        version: 5.7.3
+        specifier: ^6.0.2
+        version: 6.0.2
 
   packages/sugar-high:
     devDependencies:
@@ -116,8 +116,8 @@ importers:
         specifier: 22.12.0
         version: 22.12.0
       typescript:
-        specifier: 5.7.3
-        version: 5.7.3
+        specifier: 6.0.2
+        version: 6.0.2
       vitest:
         specifier: ^3.0.2
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.12.0)(terser@5.46.1)
@@ -2277,8 +2277,8 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
-  typescript@5.7.3:
-    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
+  typescript@6.0.2:
+    resolution: {integrity: sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -3528,7 +3528,7 @@ snapshots:
 
   buffer-from@1.1.2: {}
 
-  bunchee@6.6.2(typescript@5.7.3):
+  bunchee@6.6.2(typescript@6.0.2):
     dependencies:
       '@rollup/plugin-commonjs': 28.0.9(rollup@4.53.1)
       '@rollup/plugin-json': 6.1.0(rollup@4.53.1)
@@ -3544,14 +3544,14 @@ snapshots:
       picomatch: 4.0.3
       pretty-bytes: 5.6.0
       rollup: 4.53.1
-      rollup-plugin-dts: 6.2.3(rollup@4.53.1)(typescript@5.7.3)
+      rollup-plugin-dts: 6.2.3(rollup@4.53.1)(typescript@6.0.2)
       rollup-plugin-swc3: 0.11.2(@swc/core@1.15.1(@swc/helpers@0.5.17))(rollup@4.53.1)
       rollup-preserve-directives: 1.1.3(rollup@4.53.1)
       tinyglobby: 0.2.15
       tslib: 2.8.1
       yargs: 17.7.2
     optionalDependencies:
-      typescript: 5.7.3
+      typescript: 6.0.2
 
   cac@6.7.14: {}
 
@@ -4469,11 +4469,11 @@ snapshots:
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
-  rollup-plugin-dts@6.2.3(rollup@4.53.1)(typescript@5.7.3):
+  rollup-plugin-dts@6.2.3(rollup@4.53.1)(typescript@6.0.2):
     dependencies:
       magic-string: 0.30.21
       rollup: 4.53.1
-      typescript: 5.7.3
+      typescript: 6.0.2
     optionalDependencies:
       '@babel/code-frame': 7.27.1
 
@@ -4689,7 +4689,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  typescript@5.7.3: {}
+  typescript@6.0.2: {}
 
   undici-types@6.20.0: {}
 

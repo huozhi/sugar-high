@@ -10,8 +10,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "sugar-high": "workspace:*",
-    "remark-sugar-high": "workspace:*",
     "codice": "^1.5.5",
     "dom-to-image": "^2.6.0",
     "next": "^16.2.0",
@@ -19,12 +17,13 @@
     "react-dom": "^19.2.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "remark-sugar-high": "workspace:*",
+    "sugar-high": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "22.12.0",
     "@types/react": "19.0.7",
-    "typescript": "5.7.3"
-  },
-  "packageManager": "pnpm@9.12.2"
+    "typescript": "6.0.2"
+  }
 }
