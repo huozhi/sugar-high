@@ -69,6 +69,13 @@ const Keywords_Ts = new Set([
   'unknown',
   'never',
   'any',
+  // Built-in type names (annotations / type positions)
+  'number',
+  'string',
+  'boolean',
+  'bigint',
+  'symbol',
+  'object',
 ])
 
 const Signs = new Set([
