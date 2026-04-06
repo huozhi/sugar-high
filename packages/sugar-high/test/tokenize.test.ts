@@ -2,6 +2,19 @@ import { describe, expect, it } from 'vitest'
 import { tokenize } from '..'
 import { getTokensAsString } from './testing-utils'
 
+describe('tokenize - typeKeywords', () => {
+  it('classifies typeKeywords as class before keywords', () => {
+    const input = 'int x'
+    const actual = getTokensAsString(
+      tokenize(input, {
+        keywords: new Set(['int']),
+        typeKeywords: new Set(['int']),
+      })
+    )
+    expect(actual).toEqual(['int => class', 'x => identifier'])
+  })
+})
+
 describe('tokenize - customized keywords', () => {
   it('should tokenize the input string with the given keywords', () => {
     const input = 'def f(): return 1'

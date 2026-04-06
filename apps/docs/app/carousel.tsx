@@ -19,7 +19,7 @@ import {
 } from './live-editor-presets'
 import { SyntaxThemeContext } from './syntax-theme-context'
 
-/* Stack order: index 0 = back of pile, last = front (JS/TS on top; Rust/Python behind) */
+/* Stack order: index 0 = back of pile, last = front. */
 const EXAMPLE_PAIRS = [
   [
     `lib.rs`,
@@ -53,36 +53,6 @@ fn main() {
     },
   ],
 
-  [
-    `main.py`,
-    `\
-def greet(names):
-    # one name per line
-    for n in names:
-        print("hello, " + n)
-
-
-def shout(msg: str, times: int = 2) -> None:
-    """Uppercase a message a few times."""
-    for _ in range(max(1, times)):
-        print(msg.upper())
-
-
-def chunk(items, size):
-    # simple batches for display
-    for i in range(0, len(items), size):
-        yield items[i : i + size]
-
-
-if __name__ == "__main__":
-    greet(["ada", "linus"])
-    shout("sugar-high")
-    print(list(chunk([1, 2, 3, 4, 5], 2)))
-`,
-    {
-      highlightedLines: [4],
-    },
-  ],
 
   [
     `theme.css`,
@@ -140,7 +110,26 @@ body {
       highlightedLines: [28],
     },
   ],
+  [
+    `main.go`,
+    `\
+package main
 
+import "fmt"
+
+func add(a int, b int) int {
+  return a + b
+}
+
+func main() {
+  total := add(20, 22)
+  fmt.Println("total:", total)
+}
+`,
+    {
+      highlightedLines: [5],
+    },
+  ],
   [
     `literals.js`,
     `\

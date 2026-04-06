@@ -1,5 +1,9 @@
 type HighlightOptions = {
   keywords?: Set<string>
+  /**
+   * Highlighted as the `class` token type (e.g. built-in types). Checked before `keywords`.
+   */
+  typeKeywords?: Set<string>
   onCommentStart?: (curr: string, next: string) => number | boolean
   onCommentEnd?: (curr: string, prev: string) => number | boolean
   /**

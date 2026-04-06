@@ -298,6 +298,7 @@ function isRegexStart(str) {
  * @param {string} code
  * @param {{
  *   keywords?: Set<string>
+ *   typeKeywords?: Set<string>
  *   onCommentStart?: (curr: string, next: string) => number | boolean
  *   onCommentEnd?: (prev: string, curr: string) => number | boolean
  *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
@@ -318,6 +319,9 @@ function tokenize(code, options) {
     onCommentStart,
     onCommentEnd,
   } = mergedOptions
+
+  const resolvedTypeKeywords =
+    mergedOptions.typeKeywords instanceof Set ? mergedOptions.typeKeywords : null
 
   let current = ''
   let type = -1
@@ -388,6 +392,8 @@ function tokenize(code, options) {
     // Determine strings first before other types
     if (inStringQuotes() || inStrTemplateLiterals()) {
       return T_STRING
+    } else if (resolvedTypeKeywords && resolvedTypeKeywords.has(token)) {
+      return last[1] === '.' ? T_IDENTIFIER : T_CLS_NUMBER
     } else if (resolvedKeywords.has(token)) {
       return last[1] === '.' ? T_IDENTIFIER : T_KEYWORD
     } else if (isLineBreak) {
@@ -928,6 +934,7 @@ function toHtml(lines) {
  * @param {string} code
  * @param {{
  *   keywords?: Set<string>
+ *   typeKeywords?: Set<string>
  *   onCommentStart?: (curr: string, next: string) => number | boolean
  *   onCommentEnd?: (curr: string, prev: string) => number | boolean
  *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
