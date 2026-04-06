@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev-remotion": "remotion studio",
-    "build": "remotion render src/index.ts Main out/release-video.mp4",
+    "dev-video": "remotion studio",
+    "build-video": "remotion render src/index.ts Main out/release-video.mp4",
     "still": "remotion still src/index.ts Main out/poster.png --frame=300"
   },
   "dependencies": {
