@@ -19,7 +19,7 @@ import {
 } from './live-editor-presets'
 import { SyntaxThemeContext } from './syntax-theme-context'
 
-/* Stack order: index 0 = back of pile, last = front (JS/TS on top; Rust/Python behind) */
+/* Stack order: index 0 = back of pile, last = front. */
 const EXAMPLE_PAIRS = [
   [
     `lib.rs`,
@@ -138,6 +138,69 @@ body {
 `,
     {
       highlightedLines: [28],
+    },
+  ],
+  [
+    `main.c`,
+    `\
+#include <stdio.h>
+
+static int sum(int* values, int len) {
+  int total = 0;
+  for (int i = 0; i < len; i++) {
+    total += values[i];
+  }
+  return total;
+}
+
+int main(void) {
+  int nums[] = {1, 2, 3, 4};
+  printf("sum=%d\\n", sum(nums, 4));
+  return 0;
+}
+`,
+    {
+      highlightedLines: [5],
+    },
+  ],
+  [
+    `main.go`,
+    `\
+package main
+
+import "fmt"
+
+func add(a int, b int) int {
+  return a + b
+}
+
+func main() {
+  total := add(20, 22)
+  fmt.Println("total:", total)
+}
+`,
+    {
+      highlightedLines: [5],
+    },
+  ],
+  [
+    `App.java`,
+    `\
+public class App {
+  static int fib(int n) {
+    if (n <= 1) return n;
+    return fib(n - 1) + fib(n - 2);
+  }
+
+  public static void main(String[] args) {
+    for (int i = 0; i < 5; i++) {
+      System.out.println(fib(i));
+    }
+  }
+}
+`,
+    {
+      highlightedLines: [4],
     },
   ],
 

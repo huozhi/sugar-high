@@ -1,5 +1,6 @@
 import { tokenize, generate, type HighlightOptions } from 'sugar-high'
 import * as languagePresets from 'sugar-high/presets'
+import { resolvePresetLanguage } from 'sugar-high/presets'
 import { map as unistMap } from 'unist-util-map'
 import rangeParser from 'parse-numeric-range'
 
@@ -74,6 +75,7 @@ const highlight = () => (tree) => {
     if (tagName !== 'code' && type !== 'code') return node
 
     const { lang } = parseLang(node.lang)
+    const resolvedLang = resolvePresetLanguage(lang)
 
     const highlightRanges = parseHighlightMeta(node.meta)
     const highlightLineNumbers = new Set<number>()
@@ -89,8 +91,8 @@ const highlight = () => (tree) => {
 
     let options: HighlightOptions | undefined = undefined
 
-    if (lang in languagePresets) {
-      options = languagePresets[lang]
+    if (resolvedLang in languagePresets) {
+      options = languagePresets[resolvedLang]
     }
 
     const codeText =

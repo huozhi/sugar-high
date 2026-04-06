@@ -7,6 +7,10 @@ import { fileExtensionForHighlight } from './github-source'
 export const SYNTAX_PRESET_CODICE_EXTENSIONS = new Set([
   'py',
   'rs',
+  'c',
+  'h',
+  'go',
+  'java',
   'css',
   'scss',
   'sass',
@@ -21,6 +25,9 @@ export const SYNTAX_PRESET_SELECT_OPTIONS: readonly {
   label: string
 }[] = [
   { value: SYNTAX_SELECT_JSX, label: 'jsx/tsx' },
+  { value: 'c', label: 'c' },
+  { value: 'go', label: 'go' },
+  { value: 'java', label: 'java' },
   { value: 'css', label: 'css' },
   { value: 'py', label: 'python' },
   { value: 'rs', label: 'rust' },
@@ -41,6 +48,9 @@ export function syntaxPresetSelectValue(
 ): string {
   if (extension === 'py') return 'py'
   if (extension === 'rs') return 'rs'
+  if (extension === 'c' || extension === 'h') return 'c'
+  if (extension === 'go') return 'go'
+  if (extension === 'java') return 'java'
   if (
     extension &&
     (extension === 'css' ||
@@ -62,6 +72,12 @@ export function fileExtensionFromSyntaxSelect(
       return 'py'
     case 'rs':
       return 'rs'
+    case 'c':
+      return 'c'
+    case 'go':
+      return 'go'
+    case 'java':
+      return 'java'
     case 'css':
       return 'css'
     default:
