@@ -4,7 +4,7 @@ import { useContext, useMemo, useState, type CSSProperties } from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from 'codice'
 import { highlight } from 'sugar-high'
-import { c, java, python } from 'sugar-high/presets'
+import { c, go, java, python } from 'sugar-high/presets'
 import './install-banner.css'
 import Link from 'next/link'
 import {
@@ -44,28 +44,31 @@ highlight('class App { public static void main(String[] a) {} }', presetForTitle
 highlight('def hi():\\n    print("ok")', presetForTitle('main.py'))`
 
 const cPresetSample = `\
-/* add two integers */
-int sum(int a, int b) {
-  return a + b; // sum
-}
-int main() {
-  return sum(20, 22);
-}`
+#include <stdint.h> /* fixed-width ints */
+#define MIX(x,y) (((x) & 0xffu) ^ ((y) >> 8) | (0xab00u)) // bit ops
+typedef struct { uint16_t a; uint32_t b; } hdr_t; // packed header fields
+static inline uint32_t rot(uint32_t x, int n) { return (x << n) | (x >> (32 - n)); } // rotate
+`
 
 const javaPresetSample = `\
-class App {
-  // entry point
-  static int add(int a, int b) { return a + b; }
-  public static void main(String[] args) {
-    System.out.println(add(20, 22)); // print result
-  }
-}`
+// FQCN-heavy lines: generics, streams, method refs (no extra imports)
+java.util.List<java.util.Map<String, Integer>> rows = java.util.List.of(java.util.Map.of("a", 1), java.util.Map.of("b", 2));
+java.util.stream.Stream.of("x", "y").map(String::toUpperCase).filter(s -> !s.isEmpty()).forEach(System.out::println);
+`
 
 const pythonPresetSample = `\
-def add(a, b):
-  return a + b  # sum
-if __name__ == "__main__":
-  print(add(20, 22))  # demo
+from __future__ import annotations  # postponed annotations
+from itertools import chain, groupby  # stdlib
+RE = r"(?x) ^\\s* (?P<name> [A-Za-z_]\\w* ) \\s* = \\s* (?P<val> .+ ) $ "  # verbose regex
+def windows(xs: list[int], n: int) -> list[list[int]]: return [xs[i : i + n] for i in range(0, len(xs), n)]  # slices
+`
+
+const goPresetSample = `\
+package main
+import "encoding/json"; import "fmt"; import "strings" // one line, three imports
+type Row struct { ID string \`json:"id"\`; Tags []string \`json:"tags,omitempty"\` } // struct tags
+func (r Row) Label() string { return fmt.Sprintf("%s [%s]", r.ID, strings.Join(r.Tags, ",")) } // Sprintf + Join
+var _ json.Marshaler = (*Row)(nil) // interface satisfaction
 `
 
 export default function InstallBanner() {
@@ -195,6 +198,14 @@ export default function InstallBanner() {
           >
             <Code title="main.c" asMarkup preformatted>
               {highlight(cPresetSample, c)}
+            </Code>
+          </div>
+          <div
+            className="install-banner__code install-banner__code--sample"
+            style={codeShVars as CSSProperties}
+          >
+            <Code title="main.go" asMarkup preformatted>
+              {highlight(goPresetSample, go)}
             </Code>
           </div>
           <div
