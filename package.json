@@ -15,7 +15,7 @@
     "bump": "npm version --prefix packages/sugar-high --no-git-tag-version",
     "bump:remark": "npm version --prefix packages/remark-sugar-high --no-git-tag-version"
   },
-  "packageManager": "pnpm@9.12.2",
+  "packageManager": "pnpm@10.33.0",
   "license": "MIT",
   "author": "huozhi",
   "devDependencies": {
