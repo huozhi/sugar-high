@@ -17,7 +17,7 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 10.22.0
+          version: 9.15.9
 
       - uses: actions/setup-node@v4
         with:
