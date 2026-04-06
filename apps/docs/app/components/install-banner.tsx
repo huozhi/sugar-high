@@ -41,6 +41,21 @@ highlight('package main\\nfunc main() {}', presetForTitle('main.go'))
 highlight('class App { public static void main(String[] a) {} }', presetForTitle('App.java'))
 highlight('def hi():\\n    print("ok")', presetForTitle('main.py'))`
 
+const cPresetSample = `\
+int main(void) {
+  return 0;
+}`
+
+const javaPresetSample = `\
+class App {
+  public static void main(String[] args) {}
+}`
+
+const pythonPresetSample = `\
+def hi():
+  print("ok")
+`
+
 export default function InstallBanner() {
   const [bannerTheme, setBannerTheme] = useState<'light' | 'dark'>('light')
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
@@ -158,6 +173,24 @@ export default function InstallBanner() {
             and C-like languages use <code>presets.c</code>, <code>presets.go</code>, or{' '}
             <code>presets.java</code>.
           </p>
+        </div>
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
+          <Code title="main.c">{cPresetSample}</Code>
+        </div>
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
+          <Code title="App.java">{javaPresetSample}</Code>
+        </div>
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
+          <Code title="main.py">{pythonPresetSample}</Code>
         </div>
         <div className="install-banner__block">
           <h2>Usage with remark.js</h2>

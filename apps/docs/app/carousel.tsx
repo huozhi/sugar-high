@@ -53,36 +53,6 @@ fn main() {
     },
   ],
 
-  [
-    `main.py`,
-    `\
-def greet(names):
-    # one name per line
-    for n in names:
-        print("hello, " + n)
-
-
-def shout(msg: str, times: int = 2) -> None:
-    """Uppercase a message a few times."""
-    for _ in range(max(1, times)):
-        print(msg.upper())
-
-
-def chunk(items, size):
-    # simple batches for display
-    for i in range(0, len(items), size):
-        yield items[i : i + size]
-
-
-if __name__ == "__main__":
-    greet(["ada", "linus"])
-    shout("sugar-high")
-    print(list(chunk([1, 2, 3, 4, 5], 2)))
-`,
-    {
-      highlightedLines: [4],
-    },
-  ],
 
   [
     `theme.css`,
@@ -141,29 +111,6 @@ body {
     },
   ],
   [
-    `main.c`,
-    `\
-#include <stdio.h>
-
-static int sum(int* values, int len) {
-  int total = 0;
-  for (int i = 0; i < len; i++) {
-    total += values[i];
-  }
-  return total;
-}
-
-int main(void) {
-  int nums[] = {1, 2, 3, 4};
-  printf("sum=%d\\n", sum(nums, 4));
-  return 0;
-}
-`,
-    {
-      highlightedLines: [5],
-    },
-  ],
-  [
     `main.go`,
     `\
 package main
@@ -183,27 +130,6 @@ func main() {
       highlightedLines: [5],
     },
   ],
-  [
-    `App.java`,
-    `\
-public class App {
-  static int fib(int n) {
-    if (n <= 1) return n;
-    return fib(n - 1) + fib(n - 2);
-  }
-
-  public static void main(String[] args) {
-    for (int i = 0; i < 5; i++) {
-      System.out.println(fib(i));
-    }
-  }
-}
-`,
-    {
-      highlightedLines: [4],
-    },
-  ],
-
   [
     `literals.js`,
     `\
