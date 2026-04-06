@@ -11,7 +11,9 @@
     "site": "pnpm --filter docs dev",
     "docs:build": "pnpm build && pnpm --filter docs build",
     "release-video:studio": "pnpm --filter release-video dev",
-    "release-video:render": "pnpm --filter release-video render"
+    "release-video:render": "pnpm --filter release-video render",
+    "bump": "npm version --prefix packages/sugar-high --no-git-tag-version",
+    "bump:remark": "npm version --prefix packages/remark-sugar-high --no-git-tag-version"
   },
   "packageManager": "pnpm@9.12.2",
   "license": "MIT",
