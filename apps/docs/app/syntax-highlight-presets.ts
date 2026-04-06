@@ -8,7 +8,6 @@ export const SYNTAX_PRESET_CODICE_EXTENSIONS = new Set([
   'py',
   'rs',
   'c',
-  'h',
   'go',
   'java',
   'css',
@@ -48,7 +47,7 @@ export function syntaxPresetSelectValue(
 ): string {
   if (extension === 'py') return 'py'
   if (extension === 'rs') return 'rs'
-  if (extension === 'c' || extension === 'h') return 'c'
+  if (extension === 'c') return 'c'
   if (extension === 'go') return 'go'
   if (extension === 'java') return 'java'
   if (

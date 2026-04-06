@@ -11,4 +11,3 @@ export const python: LanguageConfig
 export const c: LanguageConfig
 export const go: LanguageConfig
 export const java: LanguageConfig
-export function resolvePresetLanguage(language?: string): string

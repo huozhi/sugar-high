@@ -26,7 +26,6 @@ import * as presets from 'sugar-high/presets'
 const presetForTitle = (title) =>
   ({
     c: presets.c,
-    h: presets.c,
     go: presets.go,
     java: presets.java,
     css: presets.css,
