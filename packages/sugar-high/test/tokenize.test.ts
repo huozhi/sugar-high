@@ -70,6 +70,28 @@ describe('tokenize - customized comment rule', () => {
   })
 })
 
+describe('tokenize - typescript built-in type names', () => {
+  it('classifies primitive type keywords in type positions', () => {
+    const input =
+      'type Point = { readonly x: number; y: number }\n' +
+      'const b: boolean = true\n' +
+      'const s: string = ""\n' +
+      'const bi: bigint = 0n\n' +
+      'const sym: symbol = Symbol()\n' +
+      'const o: object = {}'
+    const actual = getTokensAsString(tokenize(input))
+    expect(actual.filter((t) => /^(number|string|boolean|bigint|symbol|object) =>/.test(t))).toEqual([
+      'number => keyword',
+      'number => keyword',
+      'boolean => keyword',
+      'string => keyword',
+      'bigint => keyword',
+      'symbol => keyword',
+      'object => keyword',
+    ])
+  })
+})
+
 describe('tokenize - typescript generic arrow function', () => {
   it('should not treat type parameter lists as jsx tags', () => {
     const input = 'const f = <T = any>(v: T) => v'
