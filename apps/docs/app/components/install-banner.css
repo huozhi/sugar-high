@@ -32,13 +32,7 @@ h2.install-banner__command.install-banner__theme-heading {
   font-size: clamp(0.875rem, 2.4vw, 1rem);
   font-weight: 500;
   line-height: 1.35;
-  white-space: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-h2.install-banner__command.install-banner__theme-heading::-webkit-scrollbar {
-  display: none;
+  white-space: normal;
 }
 
 .install-banner__theme-sr {
@@ -98,6 +92,20 @@ h2.install-banner__command.install-banner__theme-heading::-webkit-scrollbar {
   overflow: hidden;
   /* Smooth bg when View Transitions are unavailable */
   transition: background-color 0.3s ease;
+}
+
+.install-banner__sample-grid {
+  width: 100%;
+  max-width: 600px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 4px 0 8px;
+}
+
+.install-banner__code.install-banner__code--sample {
+  max-width: 100%;
+  min-height: 176px;
 }
 
 .install-banner[data-install-theme='light'] .install-banner__code {
@@ -165,6 +173,10 @@ h2.install-banner__command.install-banner__theme-heading::-webkit-scrollbar {
 
   .install-banner__head {
     margin-bottom: 12px;
+  }
+
+  .install-banner__sample-grid {
+    gap: 10px;
   }
 }
 

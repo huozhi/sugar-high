@@ -3,6 +3,8 @@
 import { useContext, useMemo, useState, type CSSProperties } from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from 'codice'
+import { highlight } from 'sugar-high'
+import { c, java, python } from 'sugar-high/presets'
 import './install-banner.css'
 import Link from 'next/link'
 import {
@@ -36,24 +38,34 @@ const presetForTitle = (title) =>
   ]
 
 highlight('.card { color: red; }', presetForTitle('theme.css'))
-highlight('int main(void) { return 0; }', presetForTitle('main.c'))
+highlight('int main() { return 0; }', presetForTitle('main.c'))
 highlight('package main\\nfunc main() {}', presetForTitle('main.go'))
 highlight('class App { public static void main(String[] a) {} }', presetForTitle('App.java'))
 highlight('def hi():\\n    print("ok")', presetForTitle('main.py'))`
 
 const cPresetSample = `\
-int main(void) {
-  return 0;
+/* add two integers */
+int sum(int a, int b) {
+  return a + b; // sum
+}
+int main() {
+  return sum(20, 22);
 }`
 
 const javaPresetSample = `\
 class App {
-  public static void main(String[] args) {}
+  // entry point
+  static int add(int a, int b) { return a + b; }
+  public static void main(String[] args) {
+    System.out.println(add(20, 22)); // print result
+  }
 }`
 
 const pythonPresetSample = `\
-def hi():
-  print("ok")
+def add(a, b):
+  return a + b  # sum
+if __name__ == "__main__":
+  print(add(20, 22))  # demo
 `
 
 export default function InstallBanner() {
@@ -104,7 +116,7 @@ export default function InstallBanner() {
               Click the dashed file name to switch light or dark preview for the code
               samples below.
             </span>
-            Samples use{' '}
+            Theme:{' '}
             <button
               type="button"
               className="install-banner__theme-toggle"
@@ -154,8 +166,10 @@ export default function InstallBanner() {
             <a href="https://www.npmjs.com/package/codice" target="_blank" rel="noreferrer">
               Codice
             </a>
-            , set <code>title</code> to a file name so the extension selects the preset; in plain
-            JS you can map <code>title</code> (or any path) the same way:
+            , built-in extension mapping covers CSS, Python, and Rust; for other languages call{' '}
+            <code>highlight</code> with the preset and pass the HTML to{' '}
+            <code>Code</code> using <code>asMarkup</code> (as below). In plain JS, map the path or
+            extension yourself the same way.
           </p>
         </div>
         <div
@@ -174,23 +188,31 @@ export default function InstallBanner() {
             <code>presets.java</code>.
           </p>
         </div>
-        <div
-          className="install-banner__code"
-          style={codeShVars as CSSProperties}
-        >
-          <Code title="main.c">{cPresetSample}</Code>
-        </div>
-        <div
-          className="install-banner__code"
-          style={codeShVars as CSSProperties}
-        >
-          <Code title="App.java">{javaPresetSample}</Code>
-        </div>
-        <div
-          className="install-banner__code"
-          style={codeShVars as CSSProperties}
-        >
-          <Code title="main.py">{pythonPresetSample}</Code>
+        <div className="install-banner__sample-grid">
+          <div
+            className="install-banner__code install-banner__code--sample"
+            style={codeShVars as CSSProperties}
+          >
+            <Code title="main.c" asMarkup preformatted>
+              {highlight(cPresetSample, c)}
+            </Code>
+          </div>
+          <div
+            className="install-banner__code install-banner__code--sample"
+            style={codeShVars as CSSProperties}
+          >
+            <Code title="App.java" asMarkup preformatted>
+              {highlight(javaPresetSample, java)}
+            </Code>
+          </div>
+          <div
+            className="install-banner__code install-banner__code--sample"
+            style={codeShVars as CSSProperties}
+          >
+            <Code title="main.py" asMarkup preformatted>
+              {highlight(pythonPresetSample, python)}
+            </Code>
+          </div>
         </div>
         <div className="install-banner__block">
           <h2>Usage with remark.js</h2>

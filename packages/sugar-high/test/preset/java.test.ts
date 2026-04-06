@@ -11,6 +11,8 @@ describe('tokenize - java preset', () => {
     expect(actual).toContain('public => keyword')
     expect(actual).toContain('class => keyword')
     expect(actual).toContain('static => keyword')
+    expect(actual).toContain('void => class')
+    expect(actual).toContain('String => class')
     expect(actual).toContain('return => keyword')
   })
 })

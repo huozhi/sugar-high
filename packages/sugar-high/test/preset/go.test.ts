@@ -10,6 +10,7 @@ describe('tokenize - go preset', () => {
     expect(actual).toContain('package => keyword')
     expect(actual).toContain('func => keyword')
     expect(actual).toContain('return => keyword')
+    expect(actual).toContain('int => class')
     expect(actual).toContain('// done => comment')
   })
 })
