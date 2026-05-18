@@ -33,7 +33,7 @@ import { rust } from 'sugar-high/presets'
 const html = highlight(source, { ...rust })
 ```
 
-Diff blocks are supported with the `diff` preset. It adds line classes such as `sh__line--diff-add`, `sh__line--diff-remove`, `sh__line--diff-hunk`, and `sh__line--diff-meta` for styling added, removed, hunk, and metadata lines.
+Available presets: `c`, `css`, `diff`, `go`, `java`, `python`, and `rust`.
 
 For more language presets and syntax color themes, see **[sugar-high.vercel.app](https://sugar-high.vercel.app/)**.
 
