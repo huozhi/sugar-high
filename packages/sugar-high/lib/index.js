@@ -309,6 +309,7 @@ function isRegexStart(str) {
  *   onCommentStart?: (curr: string, next: string) => number | boolean
  *   onCommentEnd?: (prev: string, curr: string) => number | boolean
  *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
+ *   lineClassName?: (line: string, index: number) => string | null | undefined
  * } | undefined} options
  * Optional `onQuote(curr, i, code)` at `code[i] === "'"`: return length to consume from `i` (>= 1),
  * or null/undefined/below 1 for default JS single-quoted strings. No substring allocation.
@@ -813,29 +814,42 @@ function tokenize(code, options) {
 
 /**
  * @param {Array<[number, string]>} tokens
+ * @param {{
+ *   lineClassName?: (line: string, index: number) => string | null | undefined
+ * } | undefined} options
  * @return {Array<{type: string, tagName: string, children: any[], properties: Record<string, string>}>}
  */
-function generate(tokens) {
+function generate(tokens, options) {
   const lines = []
+  const lineClassName = options && typeof options.lineClassName === 'function'
+    ? options.lineClassName
+    : null
+  let lineIndex = 0
   /**
    * @param {any} children
+   * @param {string} text
    * @return {{type: string, tagName: string, children: any[], properties: Record<string, string>}}
    */
-  const createLine = (children) =>
-      ({
+  const createLine = (children, text) => {
+    const extraClassName = lineClassName ? lineClassName(text, lineIndex) : ''
+    lineIndex++
+
+    return ({
         type: 'element',
         tagName: 'span',
         children,
         properties: {
-          className: 'sh__line',
+          className: extraClassName ? `sh__line ${extraClassName}` : 'sh__line',
         },
       })
+  }
 
   /**
    * @param {Array<[number, string]>} tokens
    * @returns {void}
    */
   function flushLine(tokens) {
+    const lineText = tokens.map(([, value]) => value).join('')
     /** @type {Array<any>} */
     const lineTokens = (
       tokens
@@ -855,7 +869,7 @@ function generate(tokens) {
           }
         })
     )
-    lines.push(createLine(lineTokens))
+    lines.push(createLine(lineTokens, lineText))
   }
   /** @type {Array<[number, string]>} */
   const lineTokens = []
@@ -945,13 +959,14 @@ function toHtml(lines) {
  *   onCommentStart?: (curr: string, next: string) => number | boolean
  *   onCommentEnd?: (curr: string, prev: string) => number | boolean
  *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
+ *   lineClassName?: (line: string, index: number) => string | null | undefined
  * } | undefined} options
  * `onQuote` same as `tokenize`.
  * @returns {string}
  */
 function highlight(code, options) {
   const tokens = tokenize(code, options)
-  const lines = generate(tokens)
+  const lines = generate(tokens, options)
   const output = toHtml(lines)
   return output
 }

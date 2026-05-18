@@ -11,11 +11,12 @@ type HighlightOptions = {
    * or null/undefined or a number below 1 for default JS single-quoted string rules.
    */
   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
+  lineClassName?: (line: string, index: number) => string | null | undefined
 }
 
 export function highlight(code: string, options?: HighlightOptions): string
 export function tokenize(code: string, options?: HighlightOptions): Array<[number, string]>
-export function generate(tokens: Array<[number, string]>): Array<any>
+export function generate(tokens: Array<[number, string]>, options?: Pick<HighlightOptions, 'lineClassName'>): Array<any>
 export const SugarHigh: {
   TokenTypes: {
     [key: number]: string
