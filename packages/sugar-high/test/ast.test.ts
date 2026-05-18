@@ -1023,6 +1023,20 @@ describe('newline handling', () => {
     expect(lineContents[3]).toBe('}')
   })
 
+  it('should add custom class names to generated lines', () => {
+    const code = 'const a = 1\nconst b = 2'
+    const options = {
+      lineClassName: (_line, index) => index === 1 ? 'sh__line--marked' : undefined,
+    }
+
+    const lines = generate(tokenize(code), options)
+    const html = highlight(code, options)
+
+    expect(lines[0].properties.className).toBe('sh__line')
+    expect(lines[1].properties.className).toBe('sh__line sh__line--marked')
+    expect(html).toContain('class="sh__line sh__line--marked"')
+  })
+
   it('should preserve empty lines in HTML output', () => {
     const codeWithEmptyLines = `function test() {
   console.log('first');

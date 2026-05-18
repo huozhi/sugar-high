@@ -108,6 +108,19 @@ h2.install-banner__command.install-banner__theme-heading {
   min-height: 176px;
 }
 
+.install-banner__code .sh__line--diff-add {
+  background-color: color-mix(in srgb, #2da44e 18%, transparent);
+}
+
+.install-banner__code .sh__line--diff-remove {
+  background-color: color-mix(in srgb, #cf222e 18%, transparent);
+}
+
+.install-banner__code .sh__line--diff-hunk,
+.install-banner__code .sh__line--diff-meta {
+  color: var(--sh-comment);
+}
+
 .install-banner[data-install-theme='light'] .install-banner__code {
   background-color: #f6f6f6;
   --codice-title-color: #707070;

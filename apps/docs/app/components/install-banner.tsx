@@ -4,7 +4,7 @@ import { useContext, useMemo, useState, type CSSProperties } from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from 'codice'
 import { highlight } from 'sugar-high'
-import { c, go, java, python } from 'sugar-high/presets'
+import { c, diff, go, java, python } from 'sugar-high/presets'
 import './install-banner.css'
 import Link from 'next/link'
 import {
@@ -31,6 +31,8 @@ const presetForTitle = (title) =>
     go: presets.go,
     java: presets.java,
     css: presets.css,
+    diff: presets.diff,
+    patch: presets.diff,
     py: presets.python,
     rs: presets.rust,
   })[
@@ -69,6 +71,14 @@ import "encoding/json"; import "fmt"; import "strings" // one line, three import
 type Row struct { ID string \`json:"id"\`; Tags []string \`json:"tags,omitempty"\` } // struct tags
 func (r Row) Label() string { return fmt.Sprintf("%s [%s]", r.ID, strings.Join(r.Tags, ",")) } // Sprintf + Join
 var _ json.Marshaler = (*Row)(nil) // interface satisfaction
+`
+
+const diffPresetSample = `\
+  export const theme = {
+-   accent: '#f47067',
++   accent: '#2876db',
+    surface: '#ffffff',
+  }
 `
 
 export default function InstallBanner() {
@@ -161,8 +171,9 @@ export default function InstallBanner() {
             For <strong>CSS</strong> (and SCSS, Sass, Less), a preset treats <code>/* */</code>{' '}
             comments and <code>@</code>-rules as CSS, not as JS regex or division. For{' '}
             <strong>Python</strong>, the preset uses <code>#</code> line comments and Python
-            keywords instead of JS rules. <strong>C</strong>, <strong>Go</strong>, and{' '}
-            <strong>Java</strong> use C-like preset profiles with language-specific keyword sets.
+            keywords instead of JS rules. <strong>Diff</strong> marks added, removed, hunk, and
+            metadata lines. <strong>C</strong>, <strong>Go</strong>, and <strong>Java</strong> use
+            C-like preset profiles with language-specific keyword sets.
           </p>
           <p>
             Pass that preset as the second argument to <code>highlight</code>. With{' '}
@@ -187,8 +198,8 @@ export default function InstallBanner() {
         <div className="install-banner__block">
           <p>
             SCSS, Sass, and Less use the same CSS preset. Rust uses <code>presets.rust</code>,
-            and C-like languages use <code>presets.c</code>, <code>presets.go</code>, or{' '}
-            <code>presets.java</code>.
+            diff and patch files use <code>presets.diff</code>, and C-like languages use{' '}
+            <code>presets.c</code>, <code>presets.go</code>, or <code>presets.java</code>.
           </p>
         </div>
         <div className="install-banner__sample-grid">
@@ -222,6 +233,14 @@ export default function InstallBanner() {
           >
             <Code title="main.py" asMarkup preformatted>
               {highlight(pythonPresetSample, python)}
+            </Code>
+          </div>
+          <div
+            className="install-banner__code install-banner__code--sample"
+            style={codeShVars as CSSProperties}
+          >
+            <Code title="theme.diff" asMarkup preformatted>
+              {highlight(diffPresetSample, diff)}
             </Code>
           </div>
         </div>

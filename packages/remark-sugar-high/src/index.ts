@@ -100,7 +100,7 @@ const highlight = () => (tree) => {
         .map(({ value }) => value)
         .pop()
 
-    const childrenLines = generate(tokenize(codeText, options))
+    const childrenLines = generate(tokenize(codeText, options), options)
 
     let lineIndex = 1
     for (let i = 0; i < childrenLines.length; i++) {

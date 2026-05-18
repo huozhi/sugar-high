@@ -33,6 +33,8 @@ import { rust } from 'sugar-high/presets'
 const html = highlight(source, { ...rust })
 ```
 
+Available presets: `c`, `css`, `diff`, `go`, `java`, `python`, and `rust`.
+
 For more language presets and syntax color themes, see **[sugar-high.vercel.app](https://sugar-high.vercel.app/)**.
 
 ## Styling
