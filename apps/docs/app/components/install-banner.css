@@ -121,7 +121,9 @@
   border-radius: 4px;
   overflow: hidden;
   /* Smooth bg when View Transitions are unavailable */
-  transition: background-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .install-banner__sample-grid {
@@ -153,7 +155,10 @@
     rotate(var(--install-banner-card-rotate, 0deg));
   transform-origin: 50% 100%;
   transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
     box-shadow 0.22s ease,
+    color 0.3s ease,
     transform 0.22s ease;
 }
 
@@ -216,6 +221,7 @@
 
 .install-banner__code .sh__line--highlighted {
   background-color: rgb(73 152 255 / 18%);
+  transition: background-color 0.3s ease;
 }
 
 .install-banner[data-install-theme='light'] .install-banner__code {
@@ -295,6 +301,9 @@
   padding: 4px 8px;
   border-radius: 2px;
   font-size: 0.75rem;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 @media screen and (max-width: 640px) {
