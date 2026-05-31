@@ -1,6 +1,6 @@
 {
   "name": "remark-sugar-high",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "remark plugin of sugar high syntax highlighter",
   "type": "module",
   "main": "./dist/index.js",
