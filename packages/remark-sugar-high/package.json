@@ -19,7 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "parse-numeric-range": "^1.3.0",
-    "sugar-high": "workspace:*",
+    "sugar-high": "^1.2.1",
     "unist-util-map": "^4.0.0"
   },
   "devDependencies": {
