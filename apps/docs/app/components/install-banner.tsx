@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type KeyboardEvent,
   type PointerEvent,
 } from 'react'
 import { CopyButton } from './copy-button'
@@ -18,23 +19,13 @@ import {
   LIVE_EDITOR_THEME_PRESETS,
   buildInstallBannerColorCss,
   darkPlateForPresetIndex,
+  formatPlateAsCssVars,
   plateToDocsUiVarMap,
   plateToShVarMap,
 } from '../live-editor-presets'
 import { SyntaxThemeContext } from '../syntax-theme-context'
 
-const usageCode = `\
-import { highlight } from 'sugar-high'
-const html = highlight(code)`
-
 const lineHighlightCss = `\
-.sh__line {
-  display: block;
-  padding: 0 12px;
-  margin: 0 -12px;
-  min-height: 1rem;
-}
-
 .sh__line:nth-child(5),
 .sh__line--highlighted {
   background: #fff8c5;
@@ -123,16 +114,30 @@ export default function InstallBanner() {
     [plateColors, darkPlate]
   )
 
+  const lightThemeCss = useMemo(
+    () => `/* light.css */
+:root {
+${formatPlateAsCssVars(plateColors)}
+}`,
+    [plateColors]
+  )
+
+  const darkThemeCss = useMemo(
+    () => `/* dark.css */
+:root[data-theme='dark'] {
+${formatPlateAsCssVars(darkPlate)}
+}`,
+    [darkPlate]
+  )
+
   const chromeVars = useMemo(
     () => plateToDocsUiVarMap(plateColors),
     [plateColors]
   )
 
-  const codePlate = bannerTheme === 'light' ? plateColors : darkPlate
-  const codeShVars = useMemo(
-    () => plateToShVarMap(codePlate),
-    [codePlate]
-  )
+  const lightCodeShVars = useMemo(() => plateToShVarMap(plateColors), [plateColors])
+  const darkCodeShVars = useMemo(() => plateToShVarMap(darkPlate), [darkPlate])
+  const codeShVars = bannerTheme === 'light' ? lightCodeShVars : darkCodeShVars
 
   const languagePresetSamples = useMemo(
     () => [
@@ -141,6 +146,24 @@ export default function InstallBanner() {
       { title: 'App.java', markup: highlight(javaPresetSample, java) },
       { title: 'main.py', markup: highlight(pythonPresetSample, python) },
     ],
+    []
+  )
+
+  const presetByTitleMarkup = useMemo(
+    () =>
+      highlight(presetByTitleExample, {
+        lineClassName: (_line, index) =>
+          index === 1 ? 'sh__line--highlighted' : undefined,
+      }),
+    []
+  )
+
+  const lineHighlightMarkup = useMemo(
+    () =>
+      highlight(lineHighlightCss, {
+        lineClassName: (_line, index) =>
+          index === 0 || index === 1 ? 'sh__line--highlighted' : undefined,
+      }),
     []
   )
 
@@ -165,6 +188,25 @@ export default function InstallBanner() {
     setActiveLanguageSampleIndex(index)
   }
 
+  const activateThemeFromPointer = (
+    theme: 'light' | 'dark',
+    event: PointerEvent<HTMLDivElement>
+  ) => {
+    if (event.pointerType !== 'touch') {
+      setBannerTheme(theme)
+    }
+  }
+
+  const activateThemeFromKeyboard = (
+    theme: 'light' | 'dark',
+    event: KeyboardEvent<HTMLDivElement>
+  ) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      setBannerTheme(theme)
+    }
+  }
+
   return (
     <div
       className="install-banner"
@@ -179,47 +221,57 @@ export default function InstallBanner() {
         `}
       </style>
       <div className="container-960">
-        <div className="install-banner__head">
-          <h2 className="install-banner__command install-banner__theme-heading">
-            <span className="install-banner__theme-sr">
-              Click the dashed file name to switch light or dark preview for the code
-              samples below.
-            </span>
-            Theme:{' '}
-            <button
-              type="button"
-              className="install-banner__theme-toggle"
-              onClick={() =>
-                setBannerTheme((t) => (t === 'light' ? 'dark' : 'light'))
-              }
-              aria-label={
-                bannerTheme === 'light'
-                  ? 'Preview uses light.css. Click to switch to dark.css.'
-                  : 'Preview uses dark.css. Click to switch to light.css.'
-              }
-            >
-              {bannerTheme === 'light' ? 'light.css' : 'dark.css'}
-            </button>
-          </h2>
-        </div>
         <div
-          className="install-banner__code"
-          style={codeShVars as CSSProperties}
+          className="install-banner__theme-split"
+          role="group"
+          aria-label="Theme preview"
         >
-          <Code title='install.sh'>
-            {usageCode}
-          </Code>
-          <CopyButton codeSnippet={usageCode} />
-        </div>
-        <br />
-        <div
-          className="install-banner__code"
-          style={codeShVars as CSSProperties}
-        >
-          <Code title='color.css'>
-            {cssCode}
-          </Code>
-          <CopyButton codeSnippet={cssCode} />
+          <div
+            className={`install-banner__theme-pane install-banner__theme-pane--light${
+              bannerTheme === 'light'
+                ? ' install-banner__theme-pane--active'
+                : ''
+            }`}
+            style={lightCodeShVars as CSSProperties}
+            role="button"
+            tabIndex={0}
+            aria-pressed={bannerTheme === 'light'}
+            aria-label="Use light theme preview"
+            onPointerEnter={(event) => activateThemeFromPointer('light', event)}
+            onClick={() => setBannerTheme('light')}
+            onFocus={() => setBannerTheme('light')}
+            onKeyDown={(event) => activateThemeFromKeyboard('light', event)}
+          >
+            <div className="install-banner__theme-pane-label">light.css</div>
+            <Code title="light.css">
+              {lightThemeCss}
+            </Code>
+          </div>
+          <div
+            className={`install-banner__theme-pane install-banner__theme-pane--dark${
+              bannerTheme === 'dark' ? ' install-banner__theme-pane--active' : ''
+            }`}
+            style={darkCodeShVars as CSSProperties}
+            role="button"
+            tabIndex={0}
+            aria-pressed={bannerTheme === 'dark'}
+            aria-label="Use dark theme preview"
+            onPointerEnter={(event) => activateThemeFromPointer('dark', event)}
+            onClick={() => setBannerTheme('dark')}
+            onFocus={() => setBannerTheme('dark')}
+            onKeyDown={(event) => activateThemeFromKeyboard('dark', event)}
+          >
+            <div className="install-banner__theme-pane-label">dark.css</div>
+            <Code title="dark.css">
+              {darkThemeCss}
+            </Code>
+          </div>
+          <div className="install-banner__theme-copy">
+            <CopyButton
+              codeSnippet={cssCode}
+              aria-label="Copy light and dark theme CSS"
+            />
+          </div>
         </div>
 
         <div className="install-banner__block">
@@ -234,8 +286,8 @@ export default function InstallBanner() {
           className="install-banner__code"
           style={codeShVars as CSSProperties}
         >
-          <Code title='line-highlight.css'>
-            {lineHighlightCss}
+          <Code title='line-highlight.css' asMarkup preformatted>
+            {lineHighlightMarkup}
           </Code>
           <CopyButton codeSnippet={lineHighlightCss} />
         </div>
@@ -268,8 +320,8 @@ export default function InstallBanner() {
           className="install-banner__code"
           style={codeShVars as CSSProperties}
         >
-          <Code title="presets.js">
-            {presetByTitleExample}
+          <Code title="presets.js" asMarkup preformatted>
+            {presetByTitleMarkup}
           </Code>
           <CopyButton codeSnippet={presetByTitleExample} />
         </div>

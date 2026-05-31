@@ -274,7 +274,7 @@ input[type='checkbox']:checked {
   vertical-align: middle;
 }
 .carousel {
-  margin: 8rem auto;
+  margin: 3rem auto;
   display: flex;
   justify-content: center;
   flex-direction: column;
