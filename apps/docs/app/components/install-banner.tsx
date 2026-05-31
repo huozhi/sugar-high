@@ -20,6 +20,19 @@ const usageCode = `\
 import { highlight } from 'sugar-high'
 const html = highlight(code)`
 
+const lineHighlightCss = `\
+.sh__line {
+  display: block;
+  padding: 0 12px;
+  margin: 0 -12px;
+  min-height: 1rem;
+}
+
+.sh__line:nth-child(5),
+.sh__line--highlighted {
+  background: #fff8c5;
+}`
+
 const presetByTitleExample = `\
 import { highlight } from 'sugar-high'
 import * as presets from 'sugar-high/presets'
@@ -83,6 +96,8 @@ const diffPresetSample = `\
 
 export default function InstallBanner() {
   const [bannerTheme, setBannerTheme] = useState<'light' | 'dark'>('light')
+  const [activeLanguageSampleIndex, setActiveLanguageSampleIndex] =
+    useState<number | null>(null)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
   const plateColors =
@@ -107,6 +122,16 @@ export default function InstallBanner() {
   const codeShVars = useMemo(
     () => plateToShVarMap(codePlate),
     [codePlate]
+  )
+
+  const languagePresetSamples = useMemo(
+    () => [
+      { title: 'main.c', markup: highlight(cPresetSample, c) },
+      { title: 'main.go', markup: highlight(goPresetSample, go) },
+      { title: 'App.java', markup: highlight(javaPresetSample, java) },
+      { title: 'main.py', markup: highlight(pythonPresetSample, python) },
+    ],
+    []
   )
 
   return (
@@ -167,6 +192,28 @@ export default function InstallBanner() {
         </div>
 
         <div className="install-banner__block">
+          <h2>Line highlighting</h2>
+          <p>
+            Line spans use <code>.sh__line</code>, so static snippets can target a 1-based
+            line with <code>:nth-child()</code>. If you add line classes yourself, style the
+            same highlight color on that class.
+          </p>
+        </div>
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
+          <Code title='line-highlight.css'>
+            {lineHighlightCss}
+          </Code>
+          <CopyButton codeSnippet={lineHighlightCss} />
+        </div>
+
+        <div className="install-banner__block">
+          <h2>Language presets</h2>
+          <p>
+            Import a preset when the source is CSS, Python, Rust, diff, C, Go, or Java.
+          </p>
           <p>
             For <strong>CSS</strong> (and SCSS, Sass, Less), a preset treats <code>/* */</code>{' '}
             comments and <code>@</code>-rules as CSS, not as JS regex or division. For{' '}
@@ -203,46 +250,48 @@ export default function InstallBanner() {
           </p>
         </div>
         <div className="install-banner__sample-grid">
-          <div
-            className="install-banner__code install-banner__code--sample"
-            style={codeShVars as CSSProperties}
-          >
-            <Code title="main.c" asMarkup preformatted>
-              {highlight(cPresetSample, c)}
-            </Code>
-          </div>
-          <div
-            className="install-banner__code install-banner__code--sample"
-            style={codeShVars as CSSProperties}
-          >
-            <Code title="main.go" asMarkup preformatted>
-              {highlight(goPresetSample, go)}
-            </Code>
-          </div>
-          <div
-            className="install-banner__code install-banner__code--sample"
-            style={codeShVars as CSSProperties}
-          >
-            <Code title="App.java" asMarkup preformatted>
-              {highlight(javaPresetSample, java)}
-            </Code>
-          </div>
-          <div
-            className="install-banner__code install-banner__code--sample"
-            style={codeShVars as CSSProperties}
-          >
-            <Code title="main.py" asMarkup preformatted>
-              {highlight(pythonPresetSample, python)}
-            </Code>
-          </div>
-          <div
-            className="install-banner__code install-banner__code--sample"
-            style={codeShVars as CSSProperties}
-          >
-            <Code title="theme.diff" asMarkup preformatted>
-              {highlight(diffPresetSample, diff)}
-            </Code>
-          </div>
+          {languagePresetSamples.map((sample, index) => (
+            <div
+              key={sample.title}
+              className={`install-banner__code install-banner__code--sample${
+                activeLanguageSampleIndex === index
+                  ? ' install-banner__code--sample-active'
+                  : ''
+              }`}
+              style={codeShVars as CSSProperties}
+              role="button"
+              tabIndex={0}
+              aria-pressed={activeLanguageSampleIndex === index}
+              aria-label={`Bring ${sample.title} example to the front`}
+              onPointerDownCapture={() => setActiveLanguageSampleIndex(index)}
+              onClick={() => setActiveLanguageSampleIndex(index)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  setActiveLanguageSampleIndex(index)
+                }
+              }}
+            >
+              <Code title={sample.title} asMarkup preformatted>
+                {sample.markup}
+              </Code>
+            </div>
+          ))}
+        </div>
+        <div className="install-banner__block">
+          <h2>Diff examples</h2>
+          <p>
+            Diff and patch files use <code>presets.diff</code> to mark added, removed, hunk, and
+            metadata lines.
+          </p>
+        </div>
+        <div
+          className="install-banner__code"
+          style={codeShVars as CSSProperties}
+        >
+          <Code title="theme.diff" asMarkup preformatted>
+            {highlight(diffPresetSample, diff)}
+          </Code>
         </div>
         <div className="install-banner__block">
           <h2>Usage with remark.js</h2>

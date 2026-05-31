@@ -111,37 +111,6 @@ body {
     },
   ],
   [
-    `literals.js`,
-    `\
-export const matchBoundary = (s) => /^[/][\\w-]+[/]$/u.test(s)
-
-// Slashes in comments are not regex delimiters
-// path: /usr/local/bin
-
-/** @see https://example.com/docs/foo/bar */
-const afterBlock = /foo/g.exec('foo')?.[0]
-
-// Regex vs division (tokenizer stress test)
-const mixed = 12 / /\\d+/.test('3') ? 1 : 0
-const expr = 100 - /50/.test('5') + 25
-
-const flags = ['g', 'i', 'm'].filter(Boolean).join('')
-const re = new RegExp('\\\\d+', flags)
-
-export function pickDelim(str) {
-  const i = str.indexOf('/')
-  return i < 0 ? str : str.slice(0, i) + str.slice(i + 1)
-}
-
-// trailing note: / is both operator and literal starter
-console.log(mixed, expr, re.test('99'))
-`,
-    {
-      highlightedLines: [10],
-    },
-  ],
-
-  [
     `geometry.ts`,
     `\
 type Point = { readonly x: number; y: number }
@@ -185,7 +154,37 @@ export function bbox(points: readonly Point[]) {
 }
 `,
     {
-      highlightedLines: [14],
+      highlightedLines: [8],
+    },
+  ],
+  [
+    `literals.js`,
+    `\
+export const matchBoundary = (s) => /^[/][\\w-]+[/]$/u.test(s)
+
+// Slashes in comments are not regex delimiters
+// path: /usr/local/bin
+
+/** @see https://example.com/docs/foo/bar */
+const afterBlock = /foo/g.exec('foo')?.[0]
+
+// Regex vs division (tokenizer stress test)
+const mixed = 12 / /\\d+/.test('3') ? 1 : 0
+const expr = 100 - /50/.test('5') + 25
+
+const flags = ['g', 'i', 'm'].filter(Boolean).join('')
+const re = new RegExp('\\\\d+', flags)
+
+export function pickDelim(str) {
+  const i = str.indexOf('/')
+  return i < 0 ? str : str.slice(0, i) + str.slice(i + 1)
+}
+
+// trailing note: / is both operator and literal starter
+console.log(mixed, expr, re.test('99'))
+`,
+    {
+      highlightedLines: [10],
     },
   ],
 ] as const

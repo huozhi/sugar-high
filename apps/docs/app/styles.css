@@ -127,8 +127,8 @@ input[type='checkbox']:checked {
 }
 
 .showcase-stack {
-  --showcase-step-x: 32px;
-  --showcase-step-y: 42px;
+  --showcase-step-x: 22px;
+  --showcase-step-y: 30px;
   --showcase-preview-max-h: 300px;
   --showcase-count: 5;
   --showcase-back-shift: 0;
@@ -137,7 +137,7 @@ input[type='checkbox']:checked {
   width: 100%;
   max-width: 100%;
   margin: 2rem auto 0;
-  padding: 2.75rem 12px 3rem;
+  padding: 2rem 12px 2.5rem;
   box-sizing: border-box;
   overflow: visible;
   min-height: calc(
@@ -199,15 +199,15 @@ input[type='checkbox']:checked {
   background: var(--showcase-card-bg, transparent);
   transform: translateY(0);
   transition:
-    transform 0.34s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.34s ease;
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s ease;
 }
 
 .showcase-card--stack-active .showcase-card-lift {
   box-shadow:
-    -10px 32px 56px rgba(0, 0, 0, 0.22),
-    -4px 14px 36px rgba(0, 0, 0, 0.14);
-  transform: translateY(-58px);
+    -7px 22px 42px rgba(0, 0, 0, 0.2),
+    -3px 10px 26px rgba(0, 0, 0, 0.12);
+  transform: translateY(-36px);
 }
 
 .showcase-card-hit {
@@ -236,7 +236,7 @@ input[type='checkbox']:checked {
   }
 
   .showcase-card--stack-active .showcase-card-lift {
-    transform: translateY(-30px);
+    transform: translateY(-20px);
   }
 }
 .code-copy-pic-button {
@@ -953,7 +953,7 @@ code {
 
   .showcase-stack {
     --showcase-step-x: 0;
-    --showcase-step-y: 26px;
+    --showcase-step-y: 20px;
     --showcase-preview-max-h: min(320px, 52vh);
     padding: 0.5rem clamp(12px, 5vw, 20px) 2.5rem;
     width: 100%;
