@@ -715,9 +715,16 @@ function tokenize(code, options) {
 
       let foundClose = false
 
+      // `/` is literal inside regex character classes, e.g. `[/]`.
+      let inCharClass = false
+
       // traverse to find closing regex slash
       for (; !isEol(); i++) {
-        if (code[i] === '/' && code[i - 1] !== '\\') {
+        const ch = code[i]
+        const escaped = code[i - 1] === '\\'
+        if (!escaped && ch === '[') inCharClass = true
+        if (!escaped && ch === ']') inCharClass = false
+        if (ch === '/' && !inCharClass && !escaped) {
           foundClose = true
           // end of regex, append regex flags
           while (start !== i && /^[a-z]$/.test(code[i + 1]) && !isEol()) {
