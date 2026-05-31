@@ -2,6 +2,7 @@
 
 import {
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -96,9 +97,12 @@ export default function InstallBanner() {
   const [bannerTheme, setBannerTheme] = useState<'light' | 'dark'>('light')
   const [activeLanguageSampleIndex, setActiveLanguageSampleIndex] =
     useState<number | null>(null)
+  const [hasSpreadLanguageSamples, setHasSpreadLanguageSamples] =
+    useState(false)
   const lastLanguageSampleHoverPoint = useRef<{ x: number; y: number } | null>(
     null
   )
+  const languageSampleGridRef = useRef<HTMLDivElement | null>(null)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
   const plateColors =
@@ -206,6 +210,37 @@ ${formatPlateAsCssVars(darkPlate)}
       setBannerTheme(theme)
     }
   }
+
+  useEffect(() => {
+    const grid = languageSampleGridRef.current
+    if (!grid) return
+
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    )
+
+    if (prefersReducedMotion.matches || !('IntersectionObserver' in window)) {
+      setHasSpreadLanguageSamples(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+
+        setHasSpreadLanguageSamples(true)
+        observer.disconnect()
+      },
+      {
+        rootMargin: '0px 0px -12% 0px',
+        threshold: 0.28,
+      }
+    )
+
+    observer.observe(grid)
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div
@@ -332,7 +367,14 @@ ${formatPlateAsCssVars(darkPlate)}
             <code>presets.c</code>, <code>presets.go</code>, or <code>presets.java</code>.
           </p>
         </div>
-        <div className="install-banner__sample-grid">
+        <div
+          ref={languageSampleGridRef}
+          className={`install-banner__sample-grid${
+            hasSpreadLanguageSamples
+              ? ' install-banner__sample-grid--spread'
+              : ''
+          }`}
+        >
           {languagePresetSamples.map((sample, index) => (
             <div
               key={sample.title}

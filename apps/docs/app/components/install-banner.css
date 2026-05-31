@@ -126,6 +126,11 @@
     color 0.3s ease;
 }
 
+.install-banner__code pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .install-banner__sample-grid {
   --install-banner-card-edge-spread: min(96px, 14vw);
   --install-banner-card-inner-spread: min(32px, 5vw);
@@ -138,6 +143,8 @@
 }
 
 .install-banner__code.install-banner__code--sample {
+  --install-banner-card-shift: 0px;
+  --install-banner-card-rotate: 0deg;
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -159,7 +166,12 @@
     border-color 0.3s ease,
     box-shadow 0.22s ease,
     color 0.3s ease,
-    transform 0.22s ease;
+    transform 0.56s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.install-banner__sample-grid--spread .install-banner__code--sample {
+  --install-banner-card-shift: var(--install-banner-card-final-shift, 0px);
+  --install-banner-card-rotate: var(--install-banner-card-final-rotate, 0deg);
 }
 
 .install-banner__sample-grid .install-banner__code--sample:hover,
@@ -170,26 +182,26 @@
 }
 
 .install-banner__sample-grid .install-banner__code--sample:nth-child(1) {
-  --install-banner-card-shift: calc(var(--install-banner-card-edge-spread) * -1);
-  --install-banner-card-rotate: -13deg;
+  --install-banner-card-final-shift: calc(var(--install-banner-card-edge-spread) * -1);
+  --install-banner-card-final-rotate: -13deg;
   z-index: 1;
 }
 
 .install-banner__sample-grid .install-banner__code--sample:nth-child(2) {
-  --install-banner-card-shift: calc(var(--install-banner-card-inner-spread) * -1);
-  --install-banner-card-rotate: -4deg;
+  --install-banner-card-final-shift: calc(var(--install-banner-card-inner-spread) * -1);
+  --install-banner-card-final-rotate: -4deg;
   z-index: 2;
 }
 
 .install-banner__sample-grid .install-banner__code--sample:nth-child(3) {
-  --install-banner-card-shift: var(--install-banner-card-inner-spread);
-  --install-banner-card-rotate: 5deg;
+  --install-banner-card-final-shift: var(--install-banner-card-inner-spread);
+  --install-banner-card-final-rotate: 5deg;
   z-index: 3;
 }
 
 .install-banner__sample-grid .install-banner__code--sample:nth-child(4) {
-  --install-banner-card-shift: var(--install-banner-card-edge-spread);
-  --install-banner-card-rotate: 14deg;
+  --install-banner-card-final-shift: var(--install-banner-card-edge-spread);
+  --install-banner-card-final-rotate: 14deg;
   z-index: 4;
 }
 
@@ -316,8 +328,10 @@
   }
 
   .install-banner__theme-split {
+    grid-template-columns: minmax(0, 1fr);
     min-height: 224px;
     margin: 12px 0;
+    max-width: 100%;
   }
 
   .install-banner__theme-pane {
@@ -325,18 +339,28 @@
     font-size: 12px;
   }
 
+  .install-banner__theme-pane + .install-banner__theme-pane {
+    border-top: 1px solid rgb(255 255 255 / 16%);
+    border-left: 0;
+  }
+
   .install-banner__theme-pane-label {
     height: 30px;
   }
 
   .install-banner__sample-grid {
-    height: 275px;
-    margin-top: 40px;
-    margin-bottom: 60px;
+    --install-banner-card-edge-spread: 0px;
+    --install-banner-card-inner-spread: 0px;
+    height: 340px;
+    margin-top: 52px;
+    margin-bottom: 104px;
+    max-width: 100%;
+    overflow: visible;
   }
 
   .install-banner__code.install-banner__code--sample {
-    width: min(390px, calc(100% - 32px));
+    width: min(390px, calc(100% - 24px));
+    --install-banner-card-final-rotate: 0deg;
   }
 }
 
