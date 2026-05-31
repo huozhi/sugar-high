@@ -328,20 +328,14 @@
   }
 
   .install-banner__theme-split {
-    grid-template-columns: minmax(0, 1fr);
     min-height: 224px;
     margin: 12px 0;
     max-width: 100%;
   }
 
   .install-banner__theme-pane {
-    padding: 0 10px 12px;
-    font-size: 12px;
-  }
-
-  .install-banner__theme-pane + .install-banner__theme-pane {
-    border-top: 1px solid rgb(255 255 255 / 16%);
-    border-left: 0;
+    padding: 0 8px 10px;
+    font-size: 11px;
   }
 
   .install-banner__theme-pane-label {
