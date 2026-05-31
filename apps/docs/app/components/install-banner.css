@@ -139,7 +139,8 @@
   height: 320px;
   position: relative;
   margin: 52px 0 78px;
-  overflow: visible;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .install-banner__code.install-banner__code--sample {
@@ -349,7 +350,8 @@
     margin-top: 52px;
     margin-bottom: 104px;
     max-width: 100%;
-    overflow: visible;
+    overflow-x: clip;
+    overflow-y: visible;
   }
 
   .install-banner__code.install-banner__code--sample {
