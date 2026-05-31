@@ -95,9 +95,11 @@ h2.install-banner__command.install-banner__theme-heading {
 }
 
 .install-banner__sample-grid {
+  --install-banner-card-edge-spread: min(96px, 14vw);
+  --install-banner-card-inner-spread: min(32px, 5vw);
   width: 100%;
-  max-width: 600px;
-  height: 310px;
+  max-width: 720px;
+  height: 320px;
   position: relative;
   margin: 52px 0 78px;
   overflow: visible;
@@ -116,7 +118,8 @@ h2.install-banner__command.install-banner__theme-heading {
     0 -1px 0 rgb(255 255 255 / 8%),
     0 12px 28px rgb(0 0 0 / 16%);
   backdrop-filter: blur(2px);
-  transform: translateX(-50%) translateY(var(--install-banner-card-lift, 0))
+  transform: translateX(-50%) translateX(var(--install-banner-card-shift, 0))
+    translateY(var(--install-banner-card-lift, 0))
     rotate(var(--install-banner-card-rotate, 0deg));
   transform-origin: 50% 100%;
   transition:
@@ -126,28 +129,31 @@ h2.install-banner__command.install-banner__theme-heading {
 
 .install-banner__sample-grid .install-banner__code--sample:hover,
 .install-banner__sample-grid .install-banner__code--sample:focus-within {
-  --install-banner-card-lift: -18px;
   box-shadow:
     0 -1px 0 rgb(255 255 255 / 10%),
     0 22px 42px rgb(0 0 0 / 22%);
 }
 
 .install-banner__sample-grid .install-banner__code--sample:nth-child(1) {
+  --install-banner-card-shift: calc(var(--install-banner-card-edge-spread) * -1);
   --install-banner-card-rotate: -13deg;
   z-index: 1;
 }
 
 .install-banner__sample-grid .install-banner__code--sample:nth-child(2) {
+  --install-banner-card-shift: calc(var(--install-banner-card-inner-spread) * -1);
   --install-banner-card-rotate: -4deg;
   z-index: 2;
 }
 
 .install-banner__sample-grid .install-banner__code--sample:nth-child(3) {
+  --install-banner-card-shift: var(--install-banner-card-inner-spread);
   --install-banner-card-rotate: 5deg;
   z-index: 3;
 }
 
 .install-banner__sample-grid .install-banner__code--sample:nth-child(4) {
+  --install-banner-card-shift: var(--install-banner-card-edge-spread);
   --install-banner-card-rotate: 14deg;
   z-index: 4;
 }
@@ -162,7 +168,7 @@ h2.install-banner__command.install-banner__theme-heading {
 
 .install-banner__sample-grid .install-banner__code--sample.install-banner__code--sample-active:hover,
 .install-banner__sample-grid .install-banner__code--sample.install-banner__code--sample-active:focus-within {
-  --install-banner-card-lift: -34px;
+  --install-banner-card-lift: -26px;
 }
 
 .install-banner__code .sh__line--diff-add {

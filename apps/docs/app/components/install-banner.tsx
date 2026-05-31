@@ -1,6 +1,13 @@
 'use client'
 
-import { useContext, useMemo, useState, type CSSProperties } from 'react'
+import {
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent,
+} from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from 'codice'
 import { highlight } from 'sugar-high'
@@ -98,6 +105,9 @@ export default function InstallBanner() {
   const [bannerTheme, setBannerTheme] = useState<'light' | 'dark'>('light')
   const [activeLanguageSampleIndex, setActiveLanguageSampleIndex] =
     useState<number | null>(null)
+  const lastLanguageSampleHoverPoint = useRef<{ x: number; y: number } | null>(
+    null
+  )
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
   const plateColors =
@@ -133,6 +143,27 @@ export default function InstallBanner() {
     ],
     []
   )
+
+  const activateLanguageSampleFromPointer = (
+    index: number,
+    event: PointerEvent<HTMLDivElement>
+  ) => {
+    if (event.pointerType === 'touch') return
+
+    const point = { x: event.clientX, y: event.clientY }
+    const previousPoint = lastLanguageSampleHoverPoint.current
+
+    if (
+      previousPoint &&
+      previousPoint.x === point.x &&
+      previousPoint.y === point.y
+    ) {
+      return
+    }
+
+    lastLanguageSampleHoverPoint.current = point
+    setActiveLanguageSampleIndex(index)
+  }
 
   return (
     <div
@@ -263,7 +294,11 @@ export default function InstallBanner() {
               tabIndex={0}
               aria-pressed={activeLanguageSampleIndex === index}
               aria-label={`Bring ${sample.title} example to the front`}
+              onPointerMove={(event) =>
+                activateLanguageSampleFromPointer(index, event)
+              }
               onPointerDownCapture={() => setActiveLanguageSampleIndex(index)}
+              onFocus={() => setActiveLanguageSampleIndex(index)}
               onClick={() => setActiveLanguageSampleIndex(index)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
