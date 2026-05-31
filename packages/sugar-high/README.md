@@ -1,6 +1,7 @@
 # Sugar High
 
-[![npm][npm-badge]][npm]
+[![version][npm-version-badge]][npm]
+[![downloads][npm-downloads-badge]][npm]
 
 Super lightweight syntax highlighter for JavaScript and JSX—about **1 kB** minified and gzipped. Works in the browser or any JS runtime that can set HTML strings.
 
@@ -108,6 +109,7 @@ MIT
 
 <!-- Definitions -->
 
-[npm-badge]: https://img.shields.io/npm/v/sugar-high.svg
+[npm-version-badge]: https://img.shields.io/npm/v/sugar-high?style=flat&colorA=000000&colorB=000000
+[npm-downloads-badge]: https://img.shields.io/npm/dt/sugar-high.svg?style=flat&colorA=000000&colorB=000000
 
 [npm]: https://www.npmjs.com/package/sugar-high
