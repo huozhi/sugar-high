@@ -7,6 +7,7 @@
   margin: 0;
   padding: 24px 0 0;
   background: transparent;
+  touch-action: pan-y;
 }
 
 .install-banner__theme-split {
@@ -139,7 +140,7 @@
   height: 320px;
   position: relative;
   margin: 52px 0 78px;
-  overflow-x: clip;
+  overflow: visible;
   overflow-y: visible;
 }
 
@@ -350,7 +351,7 @@
     margin-top: 52px;
     margin-bottom: 104px;
     max-width: 100%;
-    overflow-x: clip;
+    overflow: visible;
     overflow-y: visible;
   }
 

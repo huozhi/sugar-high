@@ -21,10 +21,12 @@
 html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
     'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  overflow-x: hidden;
 }
 body {
   margin: 0;
   overflow-x: hidden;
+  width: 100%;
 }
 a {
   color: #888;
@@ -127,12 +129,9 @@ input[type='checkbox']:checked {
 }
 
 .showcase-stack {
-  --showcase-step-x: 22px;
-  --showcase-step-y: 30px;
   --showcase-preview-max-h: 300px;
+  --showcase-card-width: min(380px, 74vw);
   --showcase-count: 5;
-  --showcase-back-shift: 0;
-  --showcase-top-step: 0;
   position: relative;
   width: 100%;
   max-width: 100%;
@@ -140,10 +139,7 @@ input[type='checkbox']:checked {
   padding: 2rem 12px 2.5rem;
   box-sizing: border-box;
   overflow: visible;
-  min-height: calc(
-    var(--showcase-preview-max-h) + max(0, var(--showcase-count) - 1) *
-      var(--showcase-step-y) + 48px
-  );
+  min-height: calc(var(--showcase-preview-max-h) + 150px);
 }
 
 .showcase-stack--isolating .showcase-card--stack:not(.showcase-card--stack-active) {
@@ -155,29 +151,39 @@ input[type='checkbox']:checked {
 }
 
 .showcase-card--stack {
-  --showcase-opacity: 0.75;
   --showcase-z: 1;
+  --showcase-x: 0px;
+  --showcase-y: 0px;
+  --showcase-rotate: 0deg;
   position: absolute;
   left: 50%;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 600px;
-  top: calc(var(--showcase-top-step) * var(--showcase-step-y));
+  width: var(--showcase-card-width);
+  max-width: var(--showcase-card-width);
+  top: 36px;
   transform: translate(
-    calc(-50% + var(--showcase-back-shift) * var(--showcase-step-x)),
-    0
-  );
+      calc(-50% + var(--showcase-x)),
+      var(--showcase-y)
+    )
+    rotate(var(--showcase-rotate));
   z-index: var(--showcase-z);
-  opacity: var(--showcase-opacity);
+  opacity: 1;
   height: var(--showcase-preview-max-h);
   max-height: var(--showcase-preview-max-h);
   overflow: visible;
   border-radius: 6px;
   transition:
     opacity 0.28s ease,
-    filter 0.28s ease;
+    filter 0.28s ease,
+    transform 0.56s cubic-bezier(0.16, 1, 0.3, 1);
   background: transparent;
+}
+
+.showcase-stack--spread .showcase-card--stack {
+  --showcase-x: var(--showcase-final-x, 0px);
+  --showcase-y: var(--showcase-final-y, 0px);
+  --showcase-rotate: var(--showcase-final-rotate, 0deg);
 }
 
 .showcase-card--stack-active {
@@ -222,11 +228,30 @@ input[type='checkbox']:checked {
   box-shadow: inset 0 0 0 2px var(--docs-ui-primary, #354150);
 }
 
+.showcase-section .code-frame,
+.showcase-section .codice.code-snippet {
+  background: var(--showcase-card-bg, #f6f6f6);
+}
+
+.showcase-section .sh__line--diff-add {
+  background-color: color-mix(in srgb, #2da44e 18%, transparent);
+}
+
+.showcase-section .sh__line--diff-remove {
+  background-color: color-mix(in srgb, #cf222e 18%, transparent);
+}
+
+.showcase-section .sh__line--diff-hunk,
+.showcase-section .sh__line--diff-meta {
+  color: var(--sh-comment);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .showcase-card--stack {
     transition:
       opacity 0.2s ease,
-      filter 0.2s ease;
+      filter 0.2s ease,
+      transform 0.01ms;
   }
 
   .showcase-card-lift {
@@ -274,7 +299,7 @@ input[type='checkbox']:checked {
   vertical-align: middle;
 }
 .carousel {
-  margin: 3rem auto;
+  margin: 1rem auto;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -299,7 +324,7 @@ code {
   max-width: 100%;
   padding: 0 16px;
   box-sizing: border-box;
-  margin: 2rem auto 6rem;
+  margin: 2rem auto;
 }
 
 .live-editor-editor-col {
@@ -952,9 +977,9 @@ code {
   }
 
   .showcase-stack {
-    --showcase-step-x: 0;
-    --showcase-step-y: 20px;
     --showcase-preview-max-h: min(320px, 52vh);
+    --showcase-card-width: min(360px, calc(100vw - 48px));
+    min-height: calc(var(--showcase-preview-max-h) + 120px);
     padding: 0.5rem clamp(12px, 5vw, 20px) 2.5rem;
     width: 100%;
     max-width: 100%;
@@ -968,10 +993,14 @@ code {
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    width: auto;
+    width: var(--showcase-card-width);
     max-width: 100%;
     min-width: 0;
     transform: none;
+  }
+
+  .showcase-stack--spread .showcase-card--stack {
+    transform: translateY(var(--showcase-y)) rotate(var(--showcase-rotate));
   }
 
   .showcase-stack .showcase-card-lift {
@@ -1195,6 +1224,16 @@ code {
   caret-color: #333;
   outline: none;
   scrollbar-width: none;
+}
+
+.codice[data-codice-code] *,
+.code-snippet * {
+  scrollbar-width: none;
+}
+
+.codice[data-codice-code] *::-webkit-scrollbar,
+.code-snippet *::-webkit-scrollbar {
+  display: none;
 }
 
 .code-snippet [data-codice-code-content] {

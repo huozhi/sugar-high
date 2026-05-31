@@ -36,25 +36,17 @@ const presetByTitleExample = `\
 import { highlight } from 'sugar-high'
 import * as presets from 'sugar-high/presets'
 
-// Use the file extension from a path or Codice \`title\` (e.g. "theme.css", "main.py")
 const presetForTitle = (title) =>
   ({
-    c: presets.c,
-    go: presets.go,
-    java: presets.java,
     css: presets.css,
-    diff: presets.diff,
-    patch: presets.diff,
     py: presets.python,
     rs: presets.rust,
+    diff: presets.diff,
   })[
     title.split('.').pop()
   ]
 
 highlight('.card { color: red; }', presetForTitle('theme.css'))
-highlight('int main() { return 0; }', presetForTitle('main.c'))
-highlight('package main\\nfunc main() {}', presetForTitle('main.go'))
-highlight('class App { public static void main(String[] a) {} }', presetForTitle('App.java'))
 highlight('def hi():\\n    print("ok")', presetForTitle('main.py'))`
 
 const cPresetSample = `\
@@ -312,9 +304,8 @@ ${formatPlateAsCssVars(darkPlate)}
         <div className="install-banner__block">
           <h2>Line highlighting</h2>
           <p>
-            Line spans use <code>.sh__line</code>, so static snippets can target a 1-based
-            line with <code>:nth-child()</code>. If you add line classes yourself, style the
-            same highlight color on that class.
+            Each line is a <code>.sh__line</code>, so target lines with CSS selectors or a custom
+            line class.
           </p>
         </div>
         <div
@@ -330,25 +321,8 @@ ${formatPlateAsCssVars(darkPlate)}
         <div className="install-banner__block">
           <h2>Language presets</h2>
           <p>
-            Import a preset when the source is CSS, Python, Rust, diff, C, Go, or Java.
-          </p>
-          <p>
-            For <strong>CSS</strong> (and SCSS, Sass, Less), a preset treats <code>/* */</code>{' '}
-            comments and <code>@</code>-rules as CSS, not as JS regex or division. For{' '}
-            <strong>Python</strong>, the preset uses <code>#</code> line comments and Python
-            keywords instead of JS rules. <strong>Diff</strong> marks added, removed, hunk, and
-            metadata lines. <strong>C</strong>, <strong>Go</strong>, and <strong>Java</strong> use
-            C-like preset profiles with language-specific keyword sets.
-          </p>
-          <p>
-            Pass that preset as the second argument to <code>highlight</code>. With{' '}
-            <a href="https://www.npmjs.com/package/codice" target="_blank" rel="noreferrer">
-              Codice
-            </a>
-            , built-in extension mapping covers CSS, Python, and Rust; for other languages call{' '}
-            <code>highlight</code> with the preset and pass the HTML to{' '}
-            <code>Code</code> using <code>asMarkup</code> (as below). In plain JS, map the path or
-            extension yourself the same way.
+            Import a preset when the source is not JavaScript or JSX, then pass it as the second
+            argument to <code>highlight</code>.
           </p>
         </div>
         <div
@@ -359,13 +333,6 @@ ${formatPlateAsCssVars(darkPlate)}
             {presetByTitleMarkup}
           </Code>
           <CopyButton codeSnippet={presetByTitleExample} />
-        </div>
-        <div className="install-banner__block">
-          <p>
-            SCSS, Sass, and Less use the same CSS preset. Rust uses <code>presets.rust</code>,
-            diff and patch files use <code>presets.diff</code>, and C-like languages use{' '}
-            <code>presets.c</code>, <code>presets.go</code>, or <code>presets.java</code>.
-          </p>
         </div>
         <div
           ref={languageSampleGridRef}

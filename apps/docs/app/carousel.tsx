@@ -12,6 +12,8 @@ import {
 } from 'react'
 import domToImage from 'dom-to-image'
 import { Code } from 'codice'
+import { highlight } from 'sugar-high'
+import { diff } from 'sugar-high/presets'
 import { copyImageDataUrl } from './lib/copy-image'
 import {
   LIVE_EDITOR_THEME_PRESETS,
@@ -187,7 +189,55 @@ console.log(mixed, expr, re.test('99'))
       highlightedLines: [10],
     },
   ],
+  [
+    `query.py`,
+    `\
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class Filter:
+    field: str
+    value: str
+
+def build_where(filters: list[Filter]) -> str:
+    if not filters:
+        return "1 = 1"
+    parts = [f"{f.field} = :{f.field}" for f in filters]
+    return " AND ".join(parts)
+
+print(build_where([Filter("status", "open"), Filter("owner", "me")]))
+`,
+    {
+      highlightedLines: [8],
+    },
+  ],
+  [
+    `release.diff`,
+    `\
+diff --git a/config/release.json b/config/release.json
+@@ -1,5 +1,5 @@
+ {
+-  "channel": "beta",
++  "channel": "stable",
+   "region": "eu-central"
+ }
+`,
+    {
+      highlightedLines: [5],
+    },
+  ],
 ] as const
+
+const SHOWCASE_SPREAD = [
+  { x: -342, y: 18, rotate: -7 },
+  { x: -198, y: -16, rotate: 12 },
+  { x: -72, y: 27, rotate: -4 },
+  { x: 104, y: -12, rotate: 9 },
+  { x: 224, y: 25, rotate: -15 },
+  { x: 318, y: -4, rotate: 5 },
+] as const
+
+const SHOWCASE_Z_ORDER = [14, 12, 18, 16, 10, 15] as const
 
 function CodeFrame(
   {
@@ -201,6 +251,9 @@ function CodeFrame(
     index: number
     highlightedLines: readonly number[] | number[]
   }) {
+  const isDiff = title.endsWith('.diff')
+  const codeContent = isDiff ? highlight(code, diff) : code
+
   return (
     <div className="code-frame" id={`code-frame-${index}`}>
       <style>
@@ -216,8 +269,10 @@ function CodeFrame(
         title={title}
         className='codice code-snippet'
         data-disabled="true"
+        asMarkup={isDiff}
+        preformatted={isDiff}
       >
-        {code}
+        {codeContent}
       </Code>
     </div>
   )
@@ -229,6 +284,7 @@ export default function Carousel() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [tappedIndex, setTappedIndex] = useState<number | null>(null)
   const [hoverFromPointer, setHoverFromPointer] = useState(false)
+  const [hasSpreadStack, setHasSpreadStack] = useState(false)
   const stackRef = useRef<HTMLDivElement>(null)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const plateColors =
@@ -238,6 +294,7 @@ export default function Carousel() {
     const base = plateToThemedDocsVars(plateColors)
     return {
       ...base,
+      '--showcase-card-bg': '#f6f6f6',
       '--showcase-line-highlight': `color-mix(in srgb, ${plateColors.keyword} 14%, #fffef6)`,
     } as CSSProperties
   }, [plateColors])
@@ -250,6 +307,37 @@ export default function Carousel() {
     sync()
     mq.addEventListener('change', sync)
     return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  useEffect(() => {
+    const stack = stackRef.current
+    if (!stack) return
+
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    )
+
+    if (prefersReducedMotion.matches || !('IntersectionObserver' in window)) {
+      setHasSpreadStack(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+
+        setHasSpreadStack(true)
+        observer.disconnect()
+      },
+      {
+        rootMargin: '0px 0px -12% 0px',
+        threshold: 0.28,
+      }
+    )
+
+    observer.observe(stack)
+
+    return () => observer.disconnect()
   }, [])
 
   const activeIndex =
@@ -320,7 +408,9 @@ export default function Carousel() {
     <div className="showcase-section carousel container-showcase" style={showcaseStyle}>
       <div
         ref={stackRef}
-        className={`showcase-stack${isolating ? ' showcase-stack--isolating' : ''}`}
+        className={`showcase-stack${
+          hasSpreadStack ? ' showcase-stack--spread' : ''
+        }${isolating ? ' showcase-stack--isolating' : ''}`}
         style={
           {
             '--showcase-count': String(n),
@@ -328,16 +418,14 @@ export default function Carousel() {
         }
       >
         {examples.map(([name, code, config], exampleIndex) => {
-          const position = exampleIndex
-          const depthFromFront = n - 1 - position
-          const depthOpacity =
-            n <= 1 ? 1 : 0.38 + (position / (n - 1)) * 0.52
+          const spread = SHOWCASE_SPREAD[exampleIndex % SHOWCASE_SPREAD.length]
+          const zIndex = SHOWCASE_Z_ORDER[exampleIndex % SHOWCASE_Z_ORDER.length]
 
           const stackStyle = {
-            '--showcase-back-shift': String(depthFromFront),
-            '--showcase-top-step': String(position),
-            '--showcase-opacity': String(depthOpacity),
-            '--showcase-z': String(10 + position),
+            '--showcase-final-x': `${spread.x}px`,
+            '--showcase-final-y': `${spread.y}px`,
+            '--showcase-final-rotate': `${spread.rotate}deg`,
+            '--showcase-z': String(zIndex),
           } as CSSProperties
 
           const isActive = activeIndex === exampleIndex
