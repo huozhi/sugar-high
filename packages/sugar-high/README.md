@@ -80,10 +80,23 @@ pre code {
 Target a line with `.sh__line:nth-child(<n>)` (1-based):
 
 ```css
+.sh__line {
+  display: block;
+  padding: 0 12px;
+  margin: 0 -12px;
+  min-height: 1rem;
+}
+
 .sh__line:nth-child(5) {
-  background: #f5f5f5;
+  background: #fff8c5;
+}
+
+.sh__line--highlighted {
+  background: #fff8c5;
 }
 ```
+
+Use `.sh__line--highlighted` when you add highlight classes yourself (for example with `lineClassName`).
 
 ## Remark
 
