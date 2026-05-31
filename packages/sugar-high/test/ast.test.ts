@@ -694,6 +694,13 @@ describe('regex', () => {
     `)
   })
 
+  it('contains slash character classes', () => {
+    const code = `const matchBoundary = (s) => /^[/][\\w-]+[/]$/u.test(s)`
+    expect(getTokensAsString(tokenize(code))).toContain(
+      "/^[/][\\w-]+[/]$/u => string"
+    )
+  })
+
   it('regex plus operators', () => {
     const code = `/^\\/[0-5]\\/$/ + /^\\/\w+\\/$/gi`
     const tokens = tokenize(code)
