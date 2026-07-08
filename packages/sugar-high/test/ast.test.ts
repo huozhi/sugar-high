@@ -990,6 +990,194 @@ describe('strings', () => {
   })
 })
 
+describe('object keys', () => {
+  it('quoted json keys are properties, values stay strings', () => {
+    const code = `{"name": "Alice", "age": 30}`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "{ => sign",
+        "" => property",
+        "name => property",
+        "" => property",
+        ": => sign",
+        "" => string",
+        "Alice => string",
+        "" => string",
+        ", => sign",
+        "" => property",
+        "age => property",
+        "" => property",
+        ": => sign",
+        "30 => class",
+        "} => sign",
+      ]
+    `)
+  })
+
+  it('multiline json with nested objects', () => {
+    const code = `{
+  "a": 1,
+  "b": { "c": true }
+}`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "{ => sign",
+        "" => property",
+        "a => property",
+        "" => property",
+        ": => sign",
+        "1 => class",
+        ", => sign",
+        "" => property",
+        "b => property",
+        "" => property",
+        ": => sign",
+        "{ => sign",
+        "" => property",
+        "c => property",
+        "" => property",
+        ": => sign",
+        "true => keyword",
+        "} => sign",
+        "} => sign",
+      ]
+    `)
+  })
+
+  it('single quoted keys in js object literals', () => {
+    const code = `const o = { foo: 1, 'bar': 2 }`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "const => keyword",
+        "o => identifier",
+        "= => sign",
+        "{ => sign",
+        "foo => identifier",
+        ": => sign",
+        "1 => class",
+        ", => sign",
+        "' => property",
+        "bar => property",
+        "' => property",
+        ": => sign",
+        "2 => class",
+        "} => sign",
+      ]
+    `)
+  })
+
+  it('string value containing a colon stays a string', () => {
+    const code = `{"a": "b:c"}`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "{ => sign",
+        "" => property",
+        "a => property",
+        "" => property",
+        ": => sign",
+        "" => string",
+        "b:c => string",
+        "" => string",
+        "} => sign",
+      ]
+    `)
+  })
+
+  it('escaped quote inside a key', () => {
+    const code = `{"a\\"b": 1}`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "{ => sign",
+        "" => property",
+        "a\\ => property",
+        "" => property",
+        "b => property",
+        "" => property",
+        ": => sign",
+        "1 => class",
+        "} => sign",
+      ]
+    `)
+  })
+
+  it('ts optional member keys', () => {
+    const code = `interface Opts { "a"?: string }`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "interface => keyword",
+        "Opts => class",
+        "{ => sign",
+        "" => property",
+        "a => property",
+        "" => property",
+        "? => sign",
+        ": => sign",
+        "string => keyword",
+        "} => sign",
+      ]
+    `)
+  })
+
+  it('case labels are not keys', () => {
+    const code = `switch (x) { case "a": break }`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "switch => keyword",
+        "( => sign",
+        "x => identifier",
+        ") => sign",
+        "{ => sign",
+        "case => keyword",
+        "" => string",
+        "a => string",
+        "" => string",
+        ": => sign",
+        "break => keyword",
+        "} => sign",
+      ]
+    `)
+  })
+
+  it('ternary branches are not keys', () => {
+    const code = `f(x, flag ? "a" : "b")`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "f => identifier",
+        "( => sign",
+        "x => identifier",
+        ", => sign",
+        "flag => identifier",
+        "? => sign",
+        "" => string",
+        "a => string",
+        "" => string",
+        ": => sign",
+        "" => string",
+        "b => string",
+        "" => string",
+        ") => sign",
+      ]
+    `)
+  })
+
+  it('array elements are not keys', () => {
+    const code = `["a", "b"]`
+    expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
+      [
+        "[ => sign",
+        "" => string",
+        "a => string",
+        "" => string",
+        ", => sign",
+        "" => string",
+        "b => string",
+        "" => string",
+        "] => sign",
+      ]
+    `)
+  })
+})
+
 describe('class', () => {
   it('determine class name', () => {
     const code = `class Bar extends Array {}`

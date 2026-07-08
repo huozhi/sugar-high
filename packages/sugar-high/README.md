@@ -42,6 +42,8 @@ For more language presets and syntax color themes, see **[sugar-high.vercel.app]
 
 Each line is wrapped in `sh__line`. Set **CSS custom properties** `--sh-*` on an ancestor (for example `:root`) to pick colors—inspect the output or the example below for the variable names you need.
 
+Quoted object keys (`{ "key": "value" }` in JSON or JS/TS) are highlighted as `property`—the same token as member access (`obj.foo`) and JSX attribute names—so keys and string values get distinct colors (`--sh-property` vs `--sh-string`).
+
 Example theme:
 
 ```css

@@ -302,6 +302,24 @@ function isRegexStart(str) {
 }
 
 /**
+ * After a closing string quote at `index`, checks whether the next
+ * non-whitespace character is `:` (optionally preceded by a `?` for
+ * TS optional members like `{ "key"?: string }`).
+ * @param {string} code
+ * @param {number} index
+ * @returns {boolean}
+ */
+function isObjectKeyColonAhead(code, index) {
+  let i = index + 1
+  while (i < code.length && /\s/.test(code[i])) i++
+  if (code[i] === '?') {
+    i++
+    while (i < code.length && /\s/.test(code[i])) i++
+  }
+  return code[i] === ':'
+}
+
+/**
  * @param {string} code
  * @param {{
  *   keywords?: Set<string>
@@ -364,6 +382,10 @@ function tokenize(code, options) {
 
   /** @type {string | null} */
   let __strQuote = null
+  /** Index in `tokens` of the pending string's opening quote. */
+  let __strTokenStart = 0
+  /** Value of the last non-space token right before the pending string opened. */
+  let __strOpenPrevToken = ''
   let __regexQuoteStart = false
   let __strTemplateExprStack = 0
   let __strTemplateQuoteStack = 0
@@ -479,15 +501,31 @@ function tokenize(code, options) {
     // Inside jsx literals or template literals, string quotation is still part of it.
     if (isSingleQuotes(curr) && !inJsxLiterals() && !inStrTemplateLiterals()) {
       append()
+      let isStrClose = false
       if (prev !== `\\`) {
         if (__strQuote && curr === __strQuote) {
           __strQuote = null
+          isStrClose = true
         } else if (!__strQuote) {
           __strQuote = curr
+          __strTokenStart = tokens.length
+          __strOpenPrevToken = last[1]
         }
       }
 
       append(T_STRING, curr)
+      // Quoted object keys (`{"a": 1}`, `{ 'a': 1 }`): a string that opened
+      // right after `{` or `,` and is followed by `:` is a key, not a value.
+      // The prev-token guard keeps `case "x":` and `cond ? "a" : "b"` as strings.
+      if (
+        isStrClose &&
+        (__strOpenPrevToken === '{' || __strOpenPrevToken === ',') &&
+        isObjectKeyColonAhead(code, i)
+      ) {
+        for (let t = __strTokenStart; t < tokens.length; t++) {
+          tokens[t][0] = T_PROPERTY
+        }
+      }
       continue
     }
 
