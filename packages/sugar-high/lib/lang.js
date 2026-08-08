@@ -27,19 +27,19 @@ import * as typescript from './presets/lang/typescript.js'
 import * as yaml from './presets/lang/yaml.js'
 
 /**
- * @typedef {import('./index.js').HighlightOptions} HighlightOptions
+ * @typedef {import('./core.js').ParseOptions} ParseOptions
  * @typedef {{
  *   id: string
  *   extension: string
  *   aliases: readonly string[]
- *   config?: HighlightOptions
+ *   config?: ParseOptions
  * }} Language
  */
 
 /**
  * Disable JavaScript-only scanner modes for a non-JavaScript language.
- * @param {HighlightOptions} config
- * @returns {HighlightOptions}
+ * @param {ParseOptions} config
+ * @returns {ParseOptions}
  */
 function nonJavaScript(config) {
   return {

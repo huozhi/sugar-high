@@ -8,7 +8,7 @@ The default export path includes the built-in language registry. JavaScript is u
 omitted.
 
 ```js
-import { highlight, tokenize, generate } from 'sugar-high'
+import { highlight } from 'sugar-high'
 
 highlight('const ready = true')
 highlight('print("hi")', { lang: 'python' })
@@ -19,15 +19,18 @@ names.
 
 ### `sugar-high/core`
 
-The core export contains the tokenizer and generator without the built-in language registry. Pass
-tokenizer configuration rather than a language name.
+The core export separates syntax parsing from HTML rendering and does not include the built-in
+language registry. Pass tokenizer configuration to `parse()` and display options to `render()`.
 
 ```js
-import { highlight } from 'sugar-high/core'
+import { parse, render } from 'sugar-high/core'
 
-highlight('select * from users', {
+const parsed = parse('select * from users', {
   keywords: new Set(['select', 'from', 'where']),
-  comment: /--.*$/gm,
+})
+
+const html = render(parsed, {
+  cx: { keyword: 'font-bold' },
 })
 ```
 
@@ -95,14 +98,11 @@ includes TSX, JSON includes JSONC comments, Shell includes sh/Bash/Zsh, and HCL 
 ```ts
 type HighlightOptions = {
   lang?: LanguageName
-  lineClassName?: (line: string, index: number) => string | null | undefined
   cx?: Partial<Record<TokenType, string>>
   mark?: (token: MarkToken) => void
+  markLine?: (line: MarkLine) => void
 }
 ```
-
-The default package also accepts the lower-level tokenizer configuration documented by the
-`sugar-high/core` types.
 
 ### `cx`
 
@@ -135,13 +135,16 @@ highlight(source, {
 
 ## Highlighted lines
 
-The string highlighter exposes line styling through `lineClassName`. The callback receives the
-source line and its zero-based index:
+Use `markLine` to mutate a generated line before rendering. It follows the same void-returning
+model as `mark`; `line.index` is zero-based.
 
 ```js
 highlight(source, {
-  lineClassName(_line, index) {
-    return index === 1 ? 'sh__line--highlighted' : undefined
+  markLine(line) {
+    if (line.index === 1) {
+      line.className += ' sh__line--highlighted'
+      line.properties['data-highlight'] = true
+    }
   },
 })
 ```
@@ -171,13 +174,29 @@ The Remark plugin reads the same one-based ranges from fenced-code metadata such
 
 ### `highlight(code, options?)`
 
-Tokenizes code and returns highlighted HTML.
+Selects a built-in language, parses the source with core, and returns highlighted HTML. This is the
+only function most applications need.
 
-### `tokenize(code, options?)`
+### `parse(code, config?)`
 
-Returns Sugar High's compact token tuples.
+Core API. Returns structured source data containing lines and semantic tokens. Parsing accepts
+tokenizer configuration and does not produce HTML.
 
-### `generate(tokens, options?)`
+```ts
+type ParsedCode = {
+  value: string
+  lines: Array<{
+    index: number
+    value: string
+    tokens: Array<{ type: TokenType; value: string }>
+    className: string
+    style: Record<string, string | number>
+    properties: Record<string, string | number | boolean>
+  }>
+}
+```
 
-Converts token tuples into line and token nodes. Generation accepts `lineClassName`, `cx`, and
-`mark` options.
+### `render(parsed, options?)`
+
+Core API. Converts parsed code to HTML and accepts only display customization: `cx`, `mark`, and
+`markLine`.

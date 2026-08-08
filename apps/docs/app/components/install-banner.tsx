@@ -83,8 +83,9 @@ ${formatPlateAsCssVars(darkPlate)}
   const presetByTitleMarkup = useMemo(
     () =>
       highlight(presetByTitleExample, {
-        lineClassName: (_line, index) =>
-          index === 1 ? 'sh__line--highlighted' : undefined,
+        markLine: (line) => {
+          if (line.index === 1) line.className += ' sh__line--highlighted'
+        },
       }),
     []
   )
@@ -92,8 +93,11 @@ ${formatPlateAsCssVars(darkPlate)}
   const lineHighlightMarkup = useMemo(
     () =>
       highlight(lineHighlightCss, {
-        lineClassName: (_line, index) =>
-          index === 0 || index === 1 ? 'sh__line--highlighted' : undefined,
+        markLine: (line) => {
+          if (line.index === 0 || line.index === 1) {
+            line.className += ' sh__line--highlighted'
+          }
+        },
       }),
     []
   )

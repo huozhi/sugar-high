@@ -2,41 +2,52 @@
 
 import {
   generate as generateCore,
-  highlight as highlightCore,
+  parse as parseCore,
+  render,
   SugarHigh,
   tokenize as tokenizeCore,
 } from './core.js'
 import { languages } from './lang.js'
+import { parseTokens } from './shared.js'
 
-/** @param {HighlightOptions | undefined} options */
-function optionsFor(options) {
-  const language = options?.lang
-    ? languages.find(({ id }) => id === options.lang)
-    : languages.find(({ id }) => id === 'javascript')
+/** @param {string | undefined} name */
+function configFor(name) {
+  return languages.find(({ id }) => id === (name || 'javascript'))?.config
+}
 
-  return {
-    ...language?.config,
-    ...options,
-  }
+/** @param {string} code @param {{ lang?: string } | undefined} options */
+function parse(code, options) {
+  const { lang, ...config } = options || {}
+  return parseCore(code, { ...configFor(lang), ...config })
 }
 
 /** @param {string} code @param {HighlightOptions | undefined} options */
 function highlight(code, options) {
-  return highlightCore(code, optionsFor(options))
+  const { lang, cx, mark, markLine, ...config } = options || {}
+  const parsed = parseCore(code, { ...configFor(lang), ...config })
+  return render(parsed, { cx, mark, markLine })
 }
 
-/** @param {string} code @param {HighlightOptions | undefined} options */
+/** @param {string} code @param {{ lang?: string } | undefined} options */
 function tokenize(code, options) {
-  return tokenizeCore(code, optionsFor(options))
+  const { lang, ...config } = options || {}
+  return tokenizeCore(code, { ...configFor(lang), ...config })
 }
-
-/** @param {Array<[number, string]>} tokens @param {HighlightOptions | undefined} options */
-function generate(tokens, options) {
-  return generateCore(tokens, optionsFor(options))
-}
-
-export { generate, highlight, SugarHigh, tokenize }
 
 /**
- * @typedef {import('./core.js').HighlightOptions & { lang?: string }} HighlightOptions
+ * @param {import('./core.js').ParsedCode | Array<[number, string]>} parsed
+ * @param {import('./core.js').DisplayOptions | undefined} options
+ */
+function generate(parsed, options) {
+  if (Array.isArray(parsed)) {
+    const value = parsed.map(([, tokenValue]) => tokenValue).join('')
+    return generateCore(parseTokens(value, parsed), options)
+  }
+  return generateCore(parsed, options)
+}
+
+export { generate, highlight, parse, render, SugarHigh, tokenize }
+
+/**
+ * @typedef {import('./core.js').DisplayOptions & { lang?: string }} HighlightOptions
  */

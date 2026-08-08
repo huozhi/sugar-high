@@ -11,54 +11,65 @@ export type TokenType =
   | 'break'
   | 'space'
 
-export type MarkToken = {
+export type ParsedToken = {
   type: TokenType
   value: string
+}
+
+export type MarkToken = ParsedToken & {
   className: string
   style: Record<string, string | number>
   properties: Record<string, string | number | boolean>
 }
 
-export type HighlightOptions = {
+export type ParsedLine = {
+  index: number
+  value: string
+  tokens: ParsedToken[]
+  className: string
+  style: Record<string, string | number>
+  properties: Record<string, string | number | boolean>
+}
+
+export type MarkLine = ParsedLine
+
+export type ParsedCode = {
+  value: string
+  lines: ParsedLine[]
+}
+
+export type DisplayOptions = {
+  cx?: Partial<Record<TokenType, string>>
+  mark?: (token: MarkToken) => void
+  markLine?: (line: MarkLine) => void
+}
+
+export type ParseOptions = {
   keywords?: Set<string>
-  /**
-   * Highlighted as the `class` token type (e.g. built-in types). Checked before `keywords`.
-   */
   typeKeywords?: Set<string>
   onCommentStart?: (curr: string, next: string, index: number, code: string) => number | boolean
   onCommentEnd?: (prev: string, curr: string, index: number, code: string) => number | boolean
-  /**
-   * At `code[i] === "'"`: return how many code units to consume from `i` as one token,
-   * or null/undefined or a number below 1 for default JS single-quoted string rules.
-   */
-  onQuote?: (curr: string, i: number, code: string) => number | null | undefined
-  /** Highlight quoted object keys followed by `:` as `property` tokens. */
+  onQuote?: (curr: string, index: number, code: string) => number | null | undefined
   quotedKeys?: boolean
-  /** Enable JavaScript-style JSX tag parsing. */
   jsx?: boolean
-  /** Enable JavaScript-style regular expression literals. */
   regex?: boolean
-  /** Enable JavaScript template strings. */
   templateStrings?: boolean
-  /** Match keywords and type keywords without regard to case. */
   caseInsensitive?: boolean
-  /** Override heuristic TypeScript detection. */
   typescript?: boolean
-  /** Replace the general lexer for a complex language family. */
-  tokenize?: (code: string, options: HighlightOptions) => Array<[number, string]>
-  lineClassName?: (line: string, index: number) => string | null | undefined
-  /** Additional classes keyed by token type. */
-  cx?: Partial<Record<TokenType, string>>
-  /** Mutate a token before it is rendered. */
-  mark?: (token: MarkToken) => void
+  tokenize?: (code: string, options: ParseOptions) => Array<[number, string]>
+  /** Apply syntax-specific line metadata while parsing. */
+  markLine?: (line: MarkLine) => void
 }
 
-export function highlight(code: string, options?: HighlightOptions): string
-export function tokenize(code: string, options?: HighlightOptions): Array<[number, string]>
-export function generate(tokens: Array<[number, string]>, options?: Pick<HighlightOptions, 'lineClassName' | 'cx' | 'mark'>): Array<any>
+export function parse(code: string, options?: ParseOptions): ParsedCode
+export function render(parsed: ParsedCode, options?: DisplayOptions): string
+
+/** Low-level token API used by language presets and integrations. */
+export function tokenize(code: string, options?: ParseOptions): Array<[number, string]>
+/** Build renderable nodes from parsed code. */
+export function generate(parsed: ParsedCode, options?: DisplayOptions): Array<any>
+
 export const SugarHigh: {
-  TokenTypes: {
-    [key: number]: string
-  }
+  TokenTypes: { [key: number]: string }
   TokenMap: Map<string, number>
 }

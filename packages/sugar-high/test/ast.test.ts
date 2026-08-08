@@ -1043,7 +1043,9 @@ describe('newline handling', () => {
   it('should add custom class names to generated lines', () => {
     const code = 'const a = 1\nconst b = 2'
     const options = {
-      lineClassName: (_line, index) => index === 1 ? 'sh__line--marked' : undefined,
+      markLine(line) {
+        if (line.index === 1) line.className += ' sh__line--marked'
+      },
     }
 
     const lines = generate(tokenize(code), options)

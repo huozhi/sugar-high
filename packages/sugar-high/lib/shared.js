@@ -11,19 +11,9 @@ const SugarHigh = /** @type {const} */ ({
   TokenMap: new Map(TokenTypes.map((type, index) => [type, index])),
 })
 
-/**
- * @param {Array<[number, string]>} tokens
- * @param {{
- *   lineClassName?: (line: string, index: number) => string | null | undefined
- *   cx?: Partial<Record<import('./core.js').TokenType, string>>
- *   mark?: (token: import('./core.js').MarkToken) => void
- * } | undefined} options
- */
-function generate(tokens, options) {
+/** @param {string} value @param {Array<[number, string]>} tokens */
+function parseTokens(value, tokens) {
   const lines = []
-  const lineClassName = typeof options?.lineClassName === 'function' ? options.lineClassName : null
-  const cx = options?.cx
-  const mark = options?.mark
   let lineIndex = 0
   /** @type {Array<[number, string]>} */
   const lineTokens = []
@@ -31,37 +21,16 @@ function generate(tokens, options) {
 
   /** @param {Array<[number, string]>} tokens */
   function flushLine(tokens) {
-    const text = tokens.map(([, value]) => value).join('')
-    const extraClassName = lineClassName ? lineClassName(text, lineIndex) : ''
-    lineIndex++
     lines.push({
-      type: 'element',
-      tagName: 'span',
-      children: tokens.map(([type, value]) => {
-        const tokenType = TokenTypes[type]
-        const extraClassName = cx?.[tokenType]
-        const token = {
-          type: tokenType,
-          value,
-          className: `sh__token--${tokenType}${extraClassName ? ` ${extraClassName}` : ''}`,
-          style: { color: `var(--sh-${tokenType})` },
-          properties: {},
-        }
-        mark?.(token)
-        return {
-          type: 'element',
-          tagName: 'span',
-          children: [{ type: 'text', value: token.value }],
-          properties: {
-            ...token.properties,
-            className: token.className,
-            style: token.style,
-          },
-        }
-      }),
-      properties: {
-        className: extraClassName ? `sh__line ${extraClassName}` : 'sh__line',
-      },
+      index: lineIndex++,
+      value: tokens.map(([, tokenValue]) => tokenValue).join(''),
+      tokens: tokens.map(([type, tokenValue]) => ({
+        type: TokenTypes[type],
+        value: tokenValue,
+      })),
+      className: 'sh__line',
+      style: {},
+      properties: {},
     })
   }
 
@@ -94,30 +63,87 @@ function generate(tokens, options) {
   }
 
   if (lineTokens.length) flushLine(lineTokens)
-  return lines
+  return { value, lines }
+}
+
+/**
+ * @param {import('./core.js').ParsedCode} parsed
+ * @param {import('./core.js').DisplayOptions | undefined} options
+ */
+function generate(parsed, options) {
+  const cx = options?.cx
+  const mark = options?.mark
+  const markLine = options?.markLine
+
+  return parsed.lines.map((parsedLine) => {
+    const line = {
+      index: parsedLine.index,
+      value: parsedLine.value,
+      tokens: parsedLine.tokens,
+      className: parsedLine.className,
+      style: { ...parsedLine.style },
+      properties: { ...parsedLine.properties },
+    }
+    markLine?.(line)
+
+    return {
+      type: 'element',
+      tagName: 'span',
+      children: parsedLine.tokens.map(({ type, value }) => {
+        const extraClassName = cx?.[type]
+        const token = {
+          type,
+          value,
+          className: `sh__token--${type}${extraClassName ? ` ${extraClassName}` : ''}`,
+          style: { color: `var(--sh-${type})` },
+          properties: {},
+        }
+        mark?.(token)
+        return {
+          type: 'element',
+          tagName: 'span',
+          children: [{ type: 'text', value: token.value }],
+          properties: {
+            ...token.properties,
+            className: token.className,
+            style: token.style,
+          },
+        }
+      }),
+      properties: {
+        ...line.properties,
+        className: line.className,
+        style: line.style,
+      },
+    }
+  })
 }
 
 const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }
 /** @param {string} value */
 const encode = (value) => value.replace(/[&<>"']/g, character => entities[character])
 
+/** @param {Record<string, any>} values */
+function attributes(values) {
+  const style = Object.entries(values.style || {})
+    .map(([key, value]) => `${key.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}:${value}`).join(';')
+  const properties = Object.entries(values)
+    .filter(([key, value]) => /^[\w:-]+$/.test(key) && key !== 'className' && key !== 'style' && value !== false && value != null)
+    .map(([key, value]) => value === true ? key : `${key}="${encode(String(value))}"`).join(' ')
+  return `class="${encode(values.className || '')}"${style ? ` style="${encode(style)}"` : ''}${properties ? ` ${properties}` : ''}`
+}
+
 /** @param {Array<any>} lines */
 function toHtml(lines) {
   return lines.map(line => {
     const children = line.children.map(token => {
-      const style = Object.entries(token.properties.style)
-        .map(([key, value]) => `${key.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}:${value}`).join(';')
-      const properties = Object.entries(token.properties)
-        .filter(([key, value]) => /^[\w:-]+$/.test(key) && key !== 'className' && key !== 'style' && value !== false && value != null)
-        .map(([key, value]) => value === true ? key : `${key}="${encode(String(value))}"`).join(' ')
-      const attributes = `class="${encode(token.properties.className)}" style="${encode(style)}"${properties ? ` ${properties}` : ''}`
-      return `<${token.tagName} ${attributes}>${encode(token.children[0].value)}</${token.tagName}>`
+      return `<${token.tagName} ${attributes(token.properties)}>${encode(token.children[0].value)}</${token.tagName}>`
     }).join('')
-    return `<${line.tagName} class="${line.properties.className}">${children}</${line.tagName}>`
+    return `<${line.tagName} ${attributes(line.properties)}>${children}</${line.tagName}>`
   }).join('\n')
 }
 
 export {
-  encode, generate, SugarHigh, toHtml, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
+  encode, generate, parseTokens, SugarHigh, toHtml, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
   T_JSX_LITERALS, T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 }
