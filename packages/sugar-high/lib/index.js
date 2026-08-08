@@ -8,7 +8,7 @@ import {
   tokenize as tokenizeCore,
 } from './core.js'
 import { languages } from './lang.js'
-import { parseTokens } from './shared.js'
+import { toParsedCode } from './shared.js'
 
 /** @param {string | undefined} name */
 function configFor(name) {
@@ -41,7 +41,7 @@ function tokenize(code, options) {
 function generate(parsed, options) {
   if (Array.isArray(parsed)) {
     const value = parsed.map(([, tokenValue]) => tokenValue).join('')
-    return generateCore(parseTokens(value, parsed), options)
+    return generateCore(toParsedCode(value, parsed), options)
   }
   return generateCore(parsed, options)
 }

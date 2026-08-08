@@ -12,7 +12,7 @@ const SugarHigh = /** @type {const} */ ({
 })
 
 /** @param {string} value @param {Array<[number, string]>} tokens */
-function parseTokens(value, tokens) {
+function toParsedCode(value, tokens) {
   const lines = []
   let lineIndex = 0
   /** @type {Array<[number, string]>} */
@@ -144,6 +144,6 @@ function toHtml(lines) {
 }
 
 export {
-  encode, generate, parseTokens, SugarHigh, toHtml, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
+  encode, generate, toParsedCode, SugarHigh, toHtml, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
   T_JSX_LITERALS, T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 }
