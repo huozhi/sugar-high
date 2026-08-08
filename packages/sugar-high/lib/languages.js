@@ -5,15 +5,23 @@ import * as cpp from './presets/lang/cpp.js'
 import * as csharp from './presets/lang/csharp.js'
 import * as css from './presets/lang/css.js'
 import * as diff from './presets/lang/diff.js'
+import * as dockerfile from './presets/lang/dockerfile.js'
 import * as go from './presets/lang/go.js'
 import * as html from './presets/lang/html.js'
+import * as graphql from './presets/lang/graphql.js'
+import * as hcl from './presets/lang/hcl.js'
 import * as java from './presets/lang/java.js'
 import * as json from './presets/lang/json.js'
+import * as kotlin from './presets/lang/kotlin.js'
 import * as markdown from './presets/lang/markdown.js'
+import * as php from './presets/lang/php.js'
+import * as powershell from './presets/lang/powershell.js'
 import * as python from './presets/lang/python.js'
 import * as rust from './presets/lang/rust.js'
 import * as shell from './presets/lang/shell.js'
 import * as sql from './presets/lang/sql.js'
+import * as swift from './presets/lang/swift.js'
+import * as toml from './presets/lang/toml.js'
 import * as yaml from './presets/lang/yaml.js'
 
 /**
@@ -59,6 +67,14 @@ const languages = Object.freeze([
   { id: 'html', extension: 'html', aliases: Object.freeze(['htm', 'xml']), config: html },
   { id: 'yaml', extension: 'yaml', aliases: Object.freeze(['yml']), config: nonJavaScript(yaml) },
   { id: 'markdown', extension: 'md', aliases: Object.freeze(['md', 'mdx']), config: nonJavaScript(markdown) },
+  { id: 'kotlin', extension: 'kt', aliases: Object.freeze(['kts']), config: nonJavaScript(kotlin) },
+  { id: 'swift', extension: 'swift', aliases: Object.freeze([]), config: nonJavaScript(swift) },
+  { id: 'php', extension: 'php', aliases: Object.freeze([]), config: nonJavaScript(php) },
+  { id: 'toml', extension: 'toml', aliases: Object.freeze([]), config: nonJavaScript(toml) },
+  { id: 'powershell', extension: 'ps1', aliases: Object.freeze(['pwsh']), config: nonJavaScript(powershell) },
+  { id: 'dockerfile', extension: 'dockerfile', aliases: Object.freeze(['docker']), config: nonJavaScript(dockerfile) },
+  { id: 'graphql', extension: 'graphql', aliases: Object.freeze(['gql']), config: nonJavaScript(graphql) },
+  { id: 'hcl', extension: 'hcl', aliases: Object.freeze(['terraform', 'tf']), config: nonJavaScript(hcl) },
 ])
 
 /** @param {string} value */

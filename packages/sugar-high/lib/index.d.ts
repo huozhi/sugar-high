@@ -44,6 +44,14 @@ export type LanguageName =
   | 'html'
   | 'yaml'
   | 'markdown'
+  | 'kotlin'
+  | 'swift'
+  | 'php'
+  | 'toml'
+  | 'powershell'
+  | 'dockerfile'
+  | 'graphql'
+  | 'hcl'
 
 export function highlight(code: string, options?: HighlightOptions): string
 export function tokenize(code: string, options?: HighlightOptions): Array<[number, string]>

@@ -28,6 +28,12 @@ describe('language registry', () => {
     ['xml', 'html'],
     ['yml', 'yaml'],
     ['mdx', 'markdown'],
+    ['kts', 'kotlin'],
+    ['pwsh', 'powershell'],
+    ['docker', 'dockerfile'],
+    ['gql', 'graphql'],
+    ['terraform', 'hcl'],
+    ['tf', 'hcl'],
   ])('resolves %s to %s', (input, expected) => {
     expect(resolveLanguage(input)).toBe(expected)
   })
