@@ -4,7 +4,7 @@ import { useEffect, useState, forwardRef } from 'react'
 import { CodeHeader, getExtension, Code } from '../code/code'
 import { ScopedStyle } from '../style'
 import { css } from './css'
-import type { LanguageName } from 'sugar-high'
+import type { HighlightOptions, LanguageName } from 'sugar-high'
 
 export const Editor = forwardRef(function Editor(
   {
@@ -15,6 +15,8 @@ export const Editor = forwardRef(function Editor(
     lineNumbersWidth,
     extension,
     lang,
+    cx,
+    mark,
     padding,
     onChange = () => {},
     fontSize,
@@ -31,6 +33,8 @@ export const Editor = forwardRef(function Editor(
     padding?: string
     extension?: string
     lang?: LanguageName
+    cx?: HighlightOptions['cx']
+    mark?: HighlightOptions['mark']
     onChangeTitle?: (title: string) => void
     onChange?: (code: string) => void
     textareaRef?: React.Ref<HTMLTextAreaElement>
@@ -79,6 +83,8 @@ export const Editor = forwardRef(function Editor(
           title={null}
           extension={extension || getExtension(title)}
           lang={lang}
+          cx={cx}
+          mark={mark}
           controls={false}
           lineNumbers={lineNumbers}
           lineNumbersWidth={lineNumbersWidth}

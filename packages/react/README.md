@@ -26,7 +26,7 @@ import { Editor } from '@sugar-high/react'
 ```tsx
 import { Code } from '@sugar-high/react/code'
 
-<Code lang="python" title="main.py" lineNumbers>
+<Code lang="python" title="main.py" lineNumbers cx={{ keyword: 'font-bold' }}>
   {'def hello():\n    return "world"'}
 </Code>
 ```

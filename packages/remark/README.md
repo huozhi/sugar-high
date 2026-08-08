@@ -33,7 +33,7 @@ Using [remark](https://github.com/remarkjs/remark):
 const { highlight } = require('@sugar-high/remark');
 
 await remark()
-  .use(highlight)
+  .use(highlight, { cx: { keyword: 'font-bold' } })
   .use(require('remark-html'))
   .process(file, (err, file) => console.log(String(file)));
 ```

@@ -13,11 +13,17 @@ const SugarHigh = /** @type {const} */ ({
 
 /**
  * @param {Array<[number, string]>} tokens
- * @param {{ lineClassName?: (line: string, index: number) => string | null | undefined } | undefined} options
+ * @param {{
+ *   lineClassName?: (line: string, index: number) => string | null | undefined
+ *   cx?: Partial<Record<import('./core.js').TokenType, string>>
+ *   mark?: (token: import('./core.js').MarkToken) => void
+ * } | undefined} options
  */
 function generate(tokens, options) {
   const lines = []
   const lineClassName = typeof options?.lineClassName === 'function' ? options.lineClassName : null
+  const cx = options?.cx
+  const mark = options?.mark
   let lineIndex = 0
   /** @type {Array<[number, string]>} */
   const lineTokens = []
@@ -33,13 +39,23 @@ function generate(tokens, options) {
       tagName: 'span',
       children: tokens.map(([type, value]) => {
         const tokenType = TokenTypes[type]
+        const extraClassName = cx?.[tokenType]
+        const token = {
+          type: tokenType,
+          value,
+          className: `sh__token--${tokenType}${extraClassName ? ` ${extraClassName}` : ''}`,
+          style: { color: `var(--sh-${tokenType})` },
+          properties: {},
+        }
+        mark?.(token)
         return {
           type: 'element',
           tagName: 'span',
-          children: [{ type: 'text', value }],
+          children: [{ type: 'text', value: token.value }],
           properties: {
-            className: `sh__token--${tokenType}`,
-            style: { color: `var(--sh-${tokenType})` },
+            ...token.properties,
+            className: token.className,
+            style: token.style,
           },
         }
       }),
@@ -90,8 +106,12 @@ function toHtml(lines) {
   return lines.map(line => {
     const children = line.children.map(token => {
       const style = Object.entries(token.properties.style)
-        .map(([key, value]) => `${key}:${value}`).join(';')
-      return `<${token.tagName} class="${token.properties.className}" style="${style}">${encode(token.children[0].value)}</${token.tagName}>`
+        .map(([key, value]) => `${key.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}:${value}`).join(';')
+      const properties = Object.entries(token.properties)
+        .filter(([key, value]) => /^[\w:-]+$/.test(key) && key !== 'className' && key !== 'style' && value !== false && value != null)
+        .map(([key, value]) => value === true ? key : `${key}="${encode(String(value))}"`).join(' ')
+      const attributes = `class="${encode(token.properties.className)}" style="${encode(style)}"${properties ? ` ${properties}` : ''}`
+      return `<${token.tagName} ${attributes}>${encode(token.children[0].value)}</${token.tagName}>`
     }).join('')
     return `<${line.tagName} class="${line.properties.className}">${children}</${line.tagName}>`
   }).join('\n')

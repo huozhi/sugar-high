@@ -1,6 +1,6 @@
 'use client'
 
-import { tokenize, generate, type LanguageName } from 'sugar-high'
+import { tokenize, generate, type HighlightOptions, type LanguageName } from 'sugar-high'
 import { css, HEADER_CSS } from './css'
 import { lang as canonicalLang } from 'sugar-high/lang'
 import { useMemo } from 'react'
@@ -17,11 +17,15 @@ function generateHighlightedLines(
   lineNumbers: boolean,
   title: string | undefined,
   extension: string | undefined,
-  language: LanguageName | undefined
+  language: LanguageName | undefined,
+  cx: HighlightOptions['cx'],
+  mark: HighlightOptions['mark']
 ) {
   const ext = extension || getExtension(title)
   const resolvedLang = language || canonicalLang(ext)
-  const options = resolvedLang ? { lang: resolvedLang } : undefined
+  const options: HighlightOptions | undefined = resolvedLang || cx || mark
+    ? { ...(resolvedLang ? { lang: resolvedLang } : {}), cx, mark }
+    : undefined
   const childrenLines = generate(tokenize(codeText, options), options)
 
   // each line will contain class name 'sh__line',
@@ -158,6 +162,8 @@ export function Code({
   asMarkup = false,
   extension,
   lang,
+  cx,
+  mark,
   ...props
 }: {
   children: string
@@ -173,12 +179,14 @@ export function Code({
   asMarkup?: boolean
   extension?: string
   lang?: LanguageName
+  cx?: HighlightOptions['cx']
+  mark?: HighlightOptions['mark']
 } & React.HTMLAttributes<HTMLDivElement>) {
   const lineElements = useMemo(() =>
     asMarkup
       ? code
-      : generateHighlightedLines(code, highlightLines, lineNumbers, title, extension, lang),
-    [code, highlightLines, lineNumbers, title, extension, lang, asMarkup]
+      : generateHighlightedLines(code, highlightLines, lineNumbers, title, extension, lang, cx, mark),
+    [code, highlightLines, lineNumbers, title, extension, lang, cx, mark, asMarkup]
   )
 
   return (

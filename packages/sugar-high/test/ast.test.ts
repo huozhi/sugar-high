@@ -1054,6 +1054,37 @@ describe('newline handling', () => {
     expect(html).toContain('class="sh__line sh__line--marked"')
   })
 
+  it('should append token classes with cx before marking tokens', () => {
+    const html = highlight('const value = true', {
+      cx: { keyword: 'font-bold' },
+      mark(token) {
+        if (token.type === 'keyword') {
+          expect(token.className).toContain('font-bold')
+          token.className += ' uppercase'
+        }
+      },
+    })
+
+    expect(html).toContain('class="sh__token--keyword font-bold uppercase"')
+  })
+
+  it('should let mark mutate token content, styles, and properties', () => {
+    const html = highlight('// TODO', {
+      mark(token) {
+        if (token.type === 'comment') {
+          token.value = 'marked <todo>'
+          token.style.fontWeight = 700
+          token.properties['data-todo'] = true
+          token.properties.title = 'Review "this"'
+        }
+      },
+    })
+
+    expect(html).toContain('style="color:var(--sh-comment);font-weight:700"')
+    expect(html).toContain('data-todo title="Review &quot;this&quot;"')
+    expect(html).toContain('marked &lt;todo&gt;')
+  })
+
   it('should preserve empty lines in HTML output', () => {
     const codeWithEmptyLines = `function test() {
   console.log('first');

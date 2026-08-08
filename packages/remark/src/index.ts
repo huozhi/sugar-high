@@ -3,7 +3,7 @@ import { lang as canonicalizeLang } from 'sugar-high/lang'
 import { map as unistMap } from 'unist-util-map'
 import rangeParser from 'parse-numeric-range'
 
-function cx(...args: any[]): string {
+function join(...args: any[]): string {
   return args.filter(Boolean).join(' ')
 }
 
@@ -68,7 +68,12 @@ const h = (type, attrs, children) => {
   }
 }
 
-const highlight = () => (tree) => {
+type RemarkSugarHighOptions = {
+  cx?: HighlightOptions['cx']
+  mark?: HighlightOptions['mark']
+}
+
+const highlight = ({ cx, mark }: RemarkSugarHighOptions = {}) => (tree) => {
   return unistMap(tree, (node) => {
     const { type, tagName } = node
     if (tagName !== 'code' && type !== 'code') return node
@@ -89,8 +94,8 @@ const highlight = () => (tree) => {
 
     const canonicalLang = canonicalizeLang(lang)
     const outputLang = canonicalLang || lang
-    const options: HighlightOptions | undefined = canonicalLang
-      ? { lang: canonicalLang }
+    const options: HighlightOptions | undefined = canonicalLang || cx || mark
+      ? { ...(canonicalLang ? { lang: canonicalLang } : {}), cx, mark }
       : undefined
 
     const codeText =
@@ -119,7 +124,8 @@ const highlight = () => (tree) => {
         if (token.properties && typeof token.properties.style === 'object') {
           let styleString = ''
           for (const [key, value] of Object.entries(token.properties.style)) {
-            styleString += `${key}:${value};`
+            const property = key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)
+            styleString += `${property}:${value};`
           }
           if (styleString) {
             token.properties.style = styleString
@@ -139,7 +145,7 @@ const highlight = () => (tree) => {
       )
 
       // add class to line
-      line.properties.className = cx(
+      line.properties.className = join(
         line.properties.className,
         highLightClassName
       )

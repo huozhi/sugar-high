@@ -1,3 +1,24 @@
+export type TokenType =
+  | 'identifier'
+  | 'keyword'
+  | 'string'
+  | 'class'
+  | 'property'
+  | 'entity'
+  | 'jsxliterals'
+  | 'sign'
+  | 'comment'
+  | 'break'
+  | 'space'
+
+export type MarkToken = {
+  type: TokenType
+  value: string
+  className: string
+  style: Record<string, string | number>
+  properties: Record<string, string | number | boolean>
+}
+
 export type HighlightOptions = {
   keywords?: Set<string>
   /**
@@ -26,11 +47,15 @@ export type HighlightOptions = {
   /** Replace the general lexer for a complex language family. */
   tokenize?: (code: string, options: HighlightOptions) => Array<[number, string]>
   lineClassName?: (line: string, index: number) => string | null | undefined
+  /** Additional classes keyed by token type. */
+  cx?: Partial<Record<TokenType, string>>
+  /** Mutate a token before it is rendered. */
+  mark?: (token: MarkToken) => void
 }
 
 export function highlight(code: string, options?: HighlightOptions): string
 export function tokenize(code: string, options?: HighlightOptions): Array<[number, string]>
-export function generate(tokens: Array<[number, string]>, options?: Pick<HighlightOptions, 'lineClassName'>): Array<any>
+export function generate(tokens: Array<[number, string]>, options?: Pick<HighlightOptions, 'lineClassName' | 'cx' | 'mark'>): Array<any>
 export const SugarHigh: {
   TokenTypes: {
     [key: number]: string
