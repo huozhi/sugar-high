@@ -770,8 +770,11 @@ function tokenize(code, options) {
           isJsxLiterals
         )
       ) {
-        current += curr
-        if (next === '<') {
+        let end = i + 1
+        while (code[end] === ' ') end++
+        current += code.slice(i, end)
+        i = end - 1
+        if (code[end] === '<') {
           append()
         }
       } else {
