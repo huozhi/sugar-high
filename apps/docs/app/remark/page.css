@@ -1,65 +1,86 @@
-.remark-page {
-  font-family: var(--font-geist-sans), system-ui, -apple-system,
-    BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans,
-    sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,
-    Noto Color Emoji;
-  font-feature-settings: 'liga', 'clig', 'calt';
-  
-  padding: 2rem;
-  background-color: #f7fcfc;
-
-  /* theme */
+.remark-product {
+  --product-accent: #2876db;
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
   --sh-sign: #8996a3;
   --sh-property: #0550ae;
-  --sh-entity: #9eb8d6;
+  --sh-entity: #249a97;
   --sh-jsxliterals: #6266d1;
   --sh-string: #73747c;
   --sh-keyword: #2876db;
   --sh-comment: #a19595;
-  /* codice */
-  --codice-code-padding: 0;
 }
 
-.remark-page main {
-  width: 600px;
+.remark-source,
+.remark-preview {
+  min-height: 300px;
+  padding: 22px;
 }
 
-.remark-page a {
-  color: #888;
-}
-.remark-page a:hover {
-  color: #333;
+.remark-source {
+  --sh-class: #4ec9b0;
+  --sh-identifier: #9cdcfe;
+  --sh-sign: #d4d4d4;
+  --sh-string: #ce9178;
+  --sh-keyword: #569cd6;
+  --sh-comment: #6a9955;
+  background: #343434;
+  color: #d5d5d5;
 }
 
-.remark-page pre {
-  background-color: #ffffff;
-}
-
-.code {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  width: 100%;
-}
-div[data-codice-editor-header="true"] {
-  background-color: #d6e1eb;
-  padding: 4px 6px;
-  color: #507a99;
+.remark-source pre {
   margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
 }
-/* Override */
-[data-codice-code] pre,
-[data-codice-code] code {
-  width: 100%;
+
+.remark-preview h1 {
+  margin: 0 0 14px;
+  color: #354150;
+  font-size: 1.55rem;
 }
-.code[data-codice-code="true"] pre {
-  padding: 8px 0;
+
+.remark-preview p {
+  color: #788592;
 }
-.sh__line {
+
+.remark-preview pre {
   display: block;
-  padding: 0 0.5em;
+  margin: 22px 0 0;
+  padding: 16px;
+  border-radius: 7px;
+  background: #f5f8fa;
+  white-space: pre-wrap;
 }
-.sh__line--highlighted {
-  background-color: #dff1ff;
+
+.remark-preview .sh__line,
+.remark-product .product-code .sh__line {
+  display: block;
+  padding: 0;
+}
+
+.remark-product .product-code[data-codice-code] {
+  border-radius: 0;
+}
+
+.remark-product .product-card .product-code [data-codice-header] {
+  display: none;
+}
+
+.remark-product .product-card:has(.remark-source) .product-card__bar,
+.remark-product .product-card:has(.product-code) .product-card__bar {
+  background: #2b2b2b;
+  color: #aaa;
+}
+
+.remark-product .product-card:has(.remark-source) .product-card__dot,
+.remark-product .product-card:has(.product-code) .product-card__dot {
+  background: #666;
+}
+
+@media (max-width: 680px) {
+  .remark-source,
+  .remark-preview {
+    min-height: 240px;
+  }
 }

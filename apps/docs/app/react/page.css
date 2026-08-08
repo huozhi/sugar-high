@@ -1,0 +1,148 @@
+.react-product {
+  --product-accent: #f47067;
+  --codice-caret-color: #354150;
+  --codice-title-color: #6f7b86;
+  --codice-control-color: #a8b1b8;
+  --codice-code-line-number-color: #a4adb5;
+  --codice-code-highlight-color: #fff0ee;
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-property: #0550ae;
+  --sh-entity: #249a97;
+  --sh-jsxliterals: #6266d1;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
+}
+
+.react-demo__toolbar,
+.react-demo__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #788592;
+  font-size: 12px;
+}
+
+.react-demo__toolbar {
+  min-height: 42px;
+  padding: 0 16px;
+  background: #343434;
+  color: #aaa;
+}
+
+.react-demo__toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+
+.react-demo__toolbar input {
+  width: 13px;
+  height: 13px;
+  margin: 0;
+}
+
+.react-demo__editor {
+  --codice-caret-color: #d5efea;
+  --codice-title-color: rgba(221, 221, 221, 0.45);
+  --codice-control-color: #8d8989;
+  --codice-code-line-number-color: #858585;
+  --sh-class: #4ec9b0;
+  --sh-identifier: #9cdcfe;
+  --sh-sign: #d4d4d4;
+  --sh-property: #9cdcfe;
+  --sh-entity: #dcdcaa;
+  --sh-jsxliterals: #ff8c42;
+  --sh-string: #ce9178;
+  --sh-keyword: #569cd6;
+  --sh-comment: #6a9955;
+  min-height: 330px;
+  background: #3d3c3c;
+  color: #d5d5d5;
+}
+
+.react-demo__editor [data-codice-header] {
+  padding-top: 12px;
+}
+
+.react-demo__editor textarea,
+.react-demo__editor pre,
+.react-demo__editor code {
+  min-height: 260px;
+}
+
+.react-demo__status {
+  min-height: 38px;
+  padding: 0 16px;
+  background: #343434;
+  color: #aaa;
+}
+
+.react-code-preview {
+  --codice-code-padding: 18px 18px 22px;
+  --codice-title-color: rgba(221, 221, 221, 0.45);
+  --codice-control-color: #8d8989;
+  --codice-code-line-number-color: #858585;
+  --codice-code-highlight-color: #555;
+  --sh-class: #4ec9b0;
+  --sh-identifier: #9cdcfe;
+  --sh-sign: #d4d4d4;
+  --sh-property: #9cdcfe;
+  --sh-entity: #dcdcaa;
+  --sh-jsxliterals: #ff8c42;
+  --sh-string: #ce9178;
+  --sh-keyword: #569cd6;
+  --sh-comment: #6a9955;
+  background: #343434;
+  color: #d5d5d5;
+}
+
+.react-product .react-demo__editor [data-codice-header],
+.react-product .react-code-preview [data-codice-header] {
+  background: #343434;
+}
+
+.react-product .react-demo__editor [data-codice-title],
+.react-product .react-code-preview [data-codice-title] {
+  color: rgba(221, 221, 221, 0.45);
+}
+
+.react-product .sh__line {
+  display: block;
+}
+
+.react-product [data-highlight] {
+  background: #555;
+}
+
+.react-product .product-card:has(.product-code) .product-card__bar,
+.react-product .product-card:has(.react-demo) .product-card__bar,
+.react-product .product-card:has(.react-code-preview) .product-card__bar {
+  background: #2b2b2b;
+  color: #aaa;
+}
+
+.react-product .product-card:has(.product-code) .product-card__dot,
+.react-product .product-card:has(.react-demo) .product-card__dot,
+.react-product .product-card:has(.react-code-preview) .product-card__dot {
+  background: #666;
+}
+
+@media (max-width: 680px) {
+  .react-demo__editor {
+    min-height: 280px;
+  }
+
+  .react-demo__editor textarea,
+  .react-demo__editor pre,
+  .react-demo__editor code {
+    min-height: 220px;
+  }
+
+  .react-demo__status span:last-child {
+    display: none;
+  }
+}
