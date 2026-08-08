@@ -2,6 +2,11 @@
   "name": "remark-sugar-high",
   "version": "0.6.3",
   "description": "remark plugin of sugar high syntax highlighter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huozhi/sugar-high.git",
+    "directory": "packages/remark"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "parse-numeric-range": "^1.3.0",
-    "sugar-high": "workspace:*",
+    "sugar-high": "workspace:^",
     "unist-util-map": "^4.0.0"
   },
   "devDependencies": {
