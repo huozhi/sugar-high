@@ -1,7 +1,7 @@
 // @ts-check
 
 import {
-  generate, SugarHigh, toHtml, T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER,
+  assemble, generate, SugarHigh, toHtml, T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER,
   T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 } from './shared.js'
 
@@ -131,15 +131,24 @@ function tokenize(code, options) {
   return tokens
 }
 
-/** @param {string} code @param {HighlightOptions | undefined} options */
-function highlight(code, options) {
-  return toHtml(generate(tokenize(code, options), options))
+/** @param {string} code @param {ParseOptions | undefined} options */
+function parse(code, options) {
+  const parsed = assemble(code, tokenize(code, options))
+  if (options?.markLine) {
+    for (const line of parsed.lines) options.markLine(line)
+  }
+  return parsed
 }
 
-export { generate, highlight, SugarHigh, tokenize }
+/** @param {ParsedCode} parsed @param {DisplayOptions | undefined} options */
+function render(parsed, options) {
+  return toHtml(generate(parsed, options))
+}
+
+export { generate, parse, render, SugarHigh, tokenize }
 
 /**
- * @typedef {Object} HighlightOptions
+ * @typedef {Object} ParseOptions
  * @property {Set<string>} [keywords]
  * @property {Set<string>} [typeKeywords]
  * @property {(curr: string, next: string, index: number, code: string) => number | boolean} [onCommentStart]
@@ -148,10 +157,15 @@ export { generate, highlight, SugarHigh, tokenize }
  * @property {boolean} [quotedKeys]
  * @property {boolean} [caseInsensitive]
  * @property {boolean} [templateStrings]
- * @property {(line: string, index: number) => string | null | undefined} [lineClassName]
- * @property {(code: string, options: HighlightOptions) => Array<[number, string]>} [tokenize]
+ * @property {(code: string, options: ParseOptions) => Array<[number, string]>} [tokenize]
+ * @property {(line: MarkLine) => void} [markLine]
+ */
+
+/**
+ * @typedef {Object} DisplayOptions
  * @property {Partial<Record<TokenType, string>>} [cx]
  * @property {(token: MarkToken) => void} [mark]
+ * @property {(line: MarkLine) => void} [markLine]
  */
 
 /**
@@ -163,4 +177,15 @@ export { generate, highlight, SugarHigh, tokenize }
  *   style: Record<string, string | number>
  *   properties: Record<string, string | number | boolean>
  * }} MarkToken
+ * @typedef {{ type: TokenType, value: string }} ParsedToken
+ * @typedef {{
+ *   index: number
+ *   value: string
+ *   tokens: ParsedToken[]
+ *   className: string
+ *   style: Record<string, string | number>
+ *   properties: Record<string, string | number | boolean>
+ * }} ParsedLine
+ * @typedef {ParsedLine} MarkLine
+ * @typedef {{ value: string, lines: ParsedLine[] }} ParsedCode
  */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { tokenize } from '../..'
+import { tokenize } from '../../lib/core.js'
 import { go } from '../../lib/presets/index.js'
 import { getTokensAsString } from '../testing-utils'
 

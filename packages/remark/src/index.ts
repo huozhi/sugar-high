@@ -1,11 +1,8 @@
-import { tokenize, generate, type HighlightOptions } from 'sugar-high'
-import { lang as canonicalizeLang } from 'sugar-high/lang'
+import { type HighlightOptions } from 'sugar-high'
+import { parse, generate } from 'sugar-high/core'
+import { lang as canonicalizeLang, languages } from 'sugar-high/lang'
 import { map as unistMap } from 'unist-util-map'
 import rangeParser from 'parse-numeric-range'
-
-function join(...args: any[]): string {
-  return args.filter(Boolean).join(' ')
-}
 
 type HighlightRange = number | [number, number]
 
@@ -71,9 +68,10 @@ const h = (type, attrs, children) => {
 type RemarkSugarHighOptions = {
   cx?: HighlightOptions['cx']
   mark?: HighlightOptions['mark']
+  markLine?: HighlightOptions['markLine']
 }
 
-const highlight = ({ cx, mark }: RemarkSugarHighOptions = {}) => (tree) => {
+const highlight = ({ cx, mark, markLine }: RemarkSugarHighOptions = {}) => (tree) => {
   return unistMap(tree, (node) => {
     const { type, tagName } = node
     if (tagName !== 'code' && type !== 'code') return node
@@ -94,10 +92,6 @@ const highlight = ({ cx, mark }: RemarkSugarHighOptions = {}) => (tree) => {
 
     const canonicalLang = canonicalizeLang(lang)
     const outputLang = canonicalLang || lang
-    const options: HighlightOptions | undefined = canonicalLang || cx || mark
-      ? { ...(canonicalLang ? { lang: canonicalLang } : {}), cx, mark }
-      : undefined
-
     const codeText =
       node.value ||
       node.children
@@ -105,18 +99,21 @@ const highlight = ({ cx, mark }: RemarkSugarHighOptions = {}) => (tree) => {
         .map(({ value }) => value)
         .pop()
 
-    const childrenLines = generate(tokenize(codeText, options), options)
+    const config = languages.find(({ id }) => id === (canonicalLang || 'javascript'))?.config
+    const parsed = parse(codeText, config)
+    const childrenLines = generate(parsed, {
+      cx,
+      mark,
+      markLine(line) {
+        markLine?.(line)
+        if (highlightLineNumbers.has(line.index + 1)) {
+          line.className += ' sh__line--highlighted'
+        }
+      },
+    })
 
-    let lineIndex = 1
     for (let i = 0; i < childrenLines.length; i++) {
       const line = childrenLines[i]
-      // if it's highlighted lines, add a classname `sh__line--highlighted`
-      let highLightClassName = ''
-      let isCurrentLineHighlighted = highlightLineNumbers.has(lineIndex)
-
-      if (isCurrentLineHighlighted) {
-        highLightClassName = 'sh__line--highlighted'
-      }
       
       for (let j = 0; j < line.children.length; j++) {
         const token = line.children[j]
@@ -144,13 +141,6 @@ const highlight = ({ cx, mark }: RemarkSugarHighOptions = {}) => (tree) => {
         )
       )
 
-      // add class to line
-      line.properties.className = join(
-        line.properties.className,
-        highLightClassName
-      )
-
-      lineIndex++
     }
 
     const code = h(

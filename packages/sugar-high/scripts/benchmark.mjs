@@ -3,8 +3,8 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { brotliCompressSync, constants, gzipSync } from 'node:zlib'
-import { highlight as highlightBuiltin } from '../lib/index.js'
-import { highlight as highlightCore } from '../lib/core.js'
+import { highlight } from '../lib/index.js'
+import { parse, render } from '../lib/core.js'
 import * as python from '../lib/presets/lang/python.js'
 
 const iterations = Number.parseInt(process.env.BENCH_ITERATIONS || '50000', 10)
@@ -61,9 +61,9 @@ const benchmarkDir = mkdtempSync(join(tmpdir(), 'sugar-high-benchmark-'))
 try {
   const javascriptEntry = join(benchmarkDir, 'javascript-entry.js')
   writeFileSync(javascriptEntry, [
-    `import { highlight } from ${JSON.stringify(join(process.cwd(), 'lib/core.js'))}`,
+    `import { parse, render } from ${JSON.stringify(join(process.cwd(), 'lib/core.js'))}`,
     `import * as javascript from ${JSON.stringify(join(process.cwd(), 'lib/presets/lang/javascript.js'))}`,
-    'export const run = code => highlight(code, javascript)',
+    'export const run = code => render(parse(code, javascript))',
   ].join('\n'))
 
   const sizes = [
@@ -81,8 +81,8 @@ try {
   })))
 
   const performance = [
-    benchmark('builtin: { lang: "python" }', () => highlightBuiltin(source, { lang: 'python' })),
-    benchmark('core: composed python preset', () => highlightCore(source, python)),
+    benchmark('builtin: { lang: "python" }', () => highlight(source, { lang: 'python' })),
+    benchmark('core: parse and render python', () => render(parse(source, python))),
   ]
 
   console.log(`\nHighlight performance (${iterations.toLocaleString('en-US')} iterations)\n`)

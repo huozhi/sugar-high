@@ -1,42 +1,26 @@
 // @ts-check
 
 import {
-  generate as generateCore,
-  highlight as highlightCore,
+  parse,
+  render,
   SugarHigh,
-  tokenize as tokenizeCore,
 } from './core.js'
 import { languages } from './lang.js'
 
-/** @param {HighlightOptions | undefined} options */
-function optionsFor(options) {
-  const language = options?.lang
-    ? languages.find(({ id }) => id === options.lang)
-    : languages.find(({ id }) => id === 'javascript')
-
-  return {
-    ...language?.config,
-    ...options,
-  }
+/** @param {string | undefined} name */
+function configFor(name) {
+  return languages.find(({ id }) => id === (name || 'javascript'))?.config
 }
 
 /** @param {string} code @param {HighlightOptions | undefined} options */
 function highlight(code, options) {
-  return highlightCore(code, optionsFor(options))
+  const { lang, cx, mark, markLine, ...config } = options || {}
+  const parsed = parse(code, { ...configFor(lang), ...config })
+  return render(parsed, { cx, mark, markLine })
 }
 
-/** @param {string} code @param {HighlightOptions | undefined} options */
-function tokenize(code, options) {
-  return tokenizeCore(code, optionsFor(options))
-}
-
-/** @param {Array<[number, string]>} tokens @param {HighlightOptions | undefined} options */
-function generate(tokens, options) {
-  return generateCore(tokens, optionsFor(options))
-}
-
-export { generate, highlight, SugarHigh, tokenize }
+export { highlight, SugarHigh }
 
 /**
- * @typedef {import('./core.js').HighlightOptions & { lang?: string }} HighlightOptions
+ * @typedef {import('./core.js').DisplayOptions & { lang?: string }} HighlightOptions
  */

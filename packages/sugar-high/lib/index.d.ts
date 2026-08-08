@@ -1,6 +1,11 @@
-import type { HighlightOptions as CoreHighlightOptions } from './core.js'
+import type {
+  DisplayOptions,
+  MarkLine,
+  MarkToken,
+  TokenType,
+} from './core.js'
 
-export type { MarkToken, TokenType } from './core.js'
+export type { DisplayOptions, MarkLine, MarkToken, TokenType }
 
 export type LanguageName =
   | 'javascript'
@@ -29,14 +34,13 @@ export type LanguageName =
   | 'graphql'
   | 'hcl'
 
-export type HighlightOptions = CoreHighlightOptions & {
+export type HighlightOptions = DisplayOptions & {
   /** Canonical language name. Fence and extension aliases must be normalized first. */
   lang?: LanguageName
 }
 
 export function highlight(code: string, options?: HighlightOptions): string
-export function tokenize(code: string, options?: HighlightOptions): Array<[number, string]>
-export function generate(tokens: Array<[number, string]>, options?: HighlightOptions): Array<any>
+
 export const SugarHigh: {
   TokenTypes: { [key: number]: string }
   TokenMap: Map<string, number>

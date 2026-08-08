@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { tokenize } from '../..'
+import { tokenize } from '../../lib/core.js'
 import { python } from '../../lib/presets/index.js'
 import { getTokensAsString } from '../testing-utils'
 
@@ -21,9 +21,7 @@ describe('tokenize - python preset', () => {
       '! => sign',
       '= => sign',
       '[ => sign',
-      '" => string',
-      'dev => string',
-      '" => string',
+      '"dev" => string',
       '] => sign',
       "# Verify urllib3 isn't installed from git. => comment",
     ])

@@ -10,7 +10,7 @@ type LanguageConfig = {
   templateStrings?: boolean
   caseInsensitive?: boolean
   tokenize?(code: string, options: LanguageConfig): Array<[number, string]>
-  lineClassName?(line: string, index: number): string | null | undefined
+  markLine?(line: import('../core.js').MarkLine): void
 }
 
 export const css: LanguageConfig

@@ -777,5 +777,5 @@ export { tokenize }
  * @property {boolean} [templateStrings] Whether JavaScript template strings are enabled.
  * @property {boolean} [caseInsensitive] Whether keyword matching ignores case.
  * @property {boolean} [typescript] Override heuristic TypeScript detection.
- * @property {(line: string, index: number) => string | null | undefined} [lineClassName]
+ * @property {(line: import('../../core.js').MarkLine) => void} [markLine]
  */

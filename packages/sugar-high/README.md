@@ -63,19 +63,22 @@ includes JSONC comments, Shell includes sh/Bash/Zsh, and HCL includes Terraform.
 
 ## Composable core
 
-Use `sugar-high/core` for the tokenizer and generator without the built-in language registry. Core
-takes tokenizer configuration, not a language name:
+Use `sugar-high/core` to separate configurable syntax parsing from HTML rendering. It does not
+include the built-in language registry:
 
 ```js
-import { highlight } from 'sugar-high/core'
+import { parse, render } from 'sugar-high/core'
 
-highlight('select * from users', {
+const parsed = parse('select * from users', {
   keywords: new Set(['select', 'from', 'where']),
-  comment: /--.*$/gm,
+})
+
+const html = render(parsed, {
+  cx: { keyword: 'font-bold' },
 })
 ```
 
-Use the default `sugar-high` export when you want built-in languages through `{ lang }`.
+Use the default `sugar-high` export when you want built-in languages and one-step `highlight()`.
 
 ## Customize tokens
 
@@ -110,12 +113,15 @@ highlight(source, {
 
 ## Highlight lines
 
-Use `lineClassName` to attach a class to generated lines. Its index is zero-based:
+Use `markLine` to customize generated lines. Its index is zero-based:
 
 ```js
 highlight(source, {
-  lineClassName: (_line, index) =>
-    index === 1 ? 'sh__line--highlighted' : undefined,
+  markLine(line) {
+    if (line.index === 1) {
+      line.className += ' sh__line--highlighted'
+    }
+  },
 })
 ```
 
