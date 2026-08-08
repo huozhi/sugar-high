@@ -1,4 +1,4 @@
-# remark-sugar-high
+# @sugar-high/remark
 
 Remark plugin for [Sugar High](https://sugar-high.vercel.app) syntax highlighter.
 
@@ -8,7 +8,7 @@ Remark plugin for [Sugar High](https://sugar-high.vercel.app) syntax highlighter
 ## Installation
 
 ```bash
-$ npm i -S remark-sugar-high
+$ npm i -S @sugar-high/remark
 ```
 
 ## Usage
@@ -30,7 +30,7 @@ await hello()
 Using [remark](https://github.com/remarkjs/remark):
 
 ```js
-const { highlight } = require('remark-sugar-high');
+const { highlight } = require('@sugar-high/remark');
 
 await remark()
   .use(highlight)

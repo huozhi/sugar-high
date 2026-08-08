@@ -1,5 +1,5 @@
 import { remark } from 'remark'
-import { highlight } from 'remark-sugar-high'
+import { highlight } from '@sugar-high/remark'
 import html from 'remark-html'
 import gfm from 'remark-gfm'
 
