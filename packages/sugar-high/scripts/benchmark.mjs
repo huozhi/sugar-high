@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { brotliCompressSync, constants, gzipSync } from 'node:zlib'
@@ -59,9 +59,17 @@ const formatRate = (rate) => `${Math.round(rate).toLocaleString('en-US')} ops/s`
 const benchmarkDir = mkdtempSync(join(tmpdir(), 'sugar-high-benchmark-'))
 
 try {
+  const javascriptEntry = join(benchmarkDir, 'javascript-entry.js')
+  writeFileSync(javascriptEntry, [
+    `import { highlight } from ${JSON.stringify(join(process.cwd(), 'lib/core.js'))}`,
+    `import * as javascript from ${JSON.stringify(join(process.cwd(), 'lib/presets/lang/javascript.js'))}`,
+    'export const run = code => highlight(code, javascript)',
+  ].join('\n'))
+
   const sizes = [
     ['sugar-high', measureBundle('lib/index.js', join(benchmarkDir, 'builtin.js'))],
     ['sugar-high/core', measureBundle('lib/core.js', join(benchmarkDir, 'core.js'))],
+    ['core + javascript', measureBundle(javascriptEntry, join(benchmarkDir, 'javascript.js'))],
   ]
 
   console.log(`Size (Bun browser ESM, minified)\n`)

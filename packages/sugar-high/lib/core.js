@@ -1,17 +1,9 @@
 // @ts-check
 
-import { generate, SugarHigh } from './presets/lang/javascript-runtime.js'
-
-const { TokenMap } = SugarHigh
-const T_IDENTIFIER = TokenMap.get('identifier')
-const T_KEYWORD = TokenMap.get('keyword')
-const T_STRING = TokenMap.get('string')
-const T_CLASS = TokenMap.get('class')
-const T_PROPERTY = TokenMap.get('property')
-const T_SIGN = TokenMap.get('sign')
-const T_COMMENT = TokenMap.get('comment')
-const T_BREAK = TokenMap.get('break')
-const T_SPACE = TokenMap.get('space')
+import {
+  generate, SugarHigh, toHtml, T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER,
+  T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
+} from './shared.js'
 
 const signs = new Set('+-*/%=!&|^~?:.,;()[]{}<>#@\\'.split(''))
 const noComment = () => 0
@@ -137,25 +129,6 @@ function tokenize(code, options) {
   }
 
   return tokens
-}
-
-/** @param {string} value */
-function encode(value) {
-  return value.replace(/[&<>"']/g, character => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;',
-  })[character])
-}
-
-/** @param {Array<any>} lines */
-function toHtml(lines) {
-  return lines.map(line => {
-    const children = line.children.map(token => {
-      const style = Object.entries(token.properties.style)
-        .map(([key, value]) => `${key}:${value}`).join(';')
-      return `<${token.tagName} class="${token.properties.className}" style="${style}">${encode(token.children[0].value)}</${token.tagName}>`
-    }).join('')
-    return `<${line.tagName} class="${line.properties.className}">${children}</${line.tagName}>`
-  }).join('\n')
 }
 
 /** @param {string} code @param {HighlightOptions | undefined} options */

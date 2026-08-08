@@ -1,81 +1,25 @@
 // @ts-check
 
+import {
+  T_BREAK, T_CLASS as T_CLS_NUMBER, T_COMMENT, T_ENTITY, T_IDENTIFIER,
+  T_JSX_LITERALS, T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
+} from '../../shared.js'
+
 const JSXBrackets = new Set(['<', '>', '{', '}', '[', ']'])
 const Keywords_Js = new Set([
-  'for',
-  'do',
-  'while',
-  'if',
-  'else',
-  'return',
-  'function',
-  'var',
-  'let',
-  'const',
-  'true',
-  'false',
-  'undefined',
-  'this',
-  'new',
-  'delete',
-  'typeof',
-  'in',
-  'instanceof',
-  'void',
-  'break',
-  'continue',
-  'switch',
-  'case',
-  'default',
-  'throw',
-  'try',
-  'catch',
-  'finally',
-  'debugger',
-  'with',
-  'yield',
-  'async',
-  'await',
-  'class',
-  'extends',
-  'super',
-  'import',
-  'export',
-  'from',
-  'static',
+  'for', 'do', 'while', 'if', 'else', 'return', 'function', 'var', 'let', 'const',
+  'true', 'false', 'undefined', 'this', 'new', 'delete', 'typeof', 'in', 'instanceof',
+  'void', 'break', 'continue', 'switch', 'case', 'default', 'throw', 'try', 'catch',
+  'finally', 'debugger', 'with', 'yield', 'async', 'await', 'class', 'extends', 'super',
+  'import', 'export', 'from', 'static',
 ])
 
 const Keywords_Ts = new Set([
   ...Keywords_Js,
-  'type',
-  'interface',
-  'enum',
-  'implements',
-  'readonly',
-  'abstract',
-  'declare',
-  'namespace',
-  'module',
-  'private',
-  'protected',
-  'public',
-  'override',
-  'keyof',
-  'infer',
-  'is',
-  'asserts',
-  'satisfies',
-  'as',
-  'unknown',
-  'never',
-  'any',
-  // Built-in type names (annotations / type positions)
-  'number',
-  'string',
-  'boolean',
-  'bigint',
-  'symbol',
-  'object',
+  'type', 'interface', 'enum', 'implements', 'readonly', 'abstract', 'declare',
+  'namespace', 'module', 'private', 'protected', 'public', 'override', 'keyof', 'infer',
+  'is', 'asserts', 'satisfies', 'as', 'unknown', 'never', 'any', 'number', 'string',
+  'boolean', 'bigint', 'symbol', 'object',
 ])
 
 const Signs = new Set([
@@ -215,53 +159,12 @@ function isTypeParameterListStart(code, startIndex) {
  * 10 - space
  *
  */
-const TokenTypes = /** @type {const} */ ([
-  'identifier',
-  'keyword',
-  'string',
-  'class',
-  'property',
-  'entity',
-  'jsxliterals',
-  'sign',
-  'comment',
-  'break',
-  'space',
-])
-const [
-  T_IDENTIFIER,
-  T_KEYWORD,
-  T_STRING,
-  T_CLS_NUMBER,
-  T_PROPERTY,
-  T_ENTITY,
-  T_JSX_LITERALS,
-  T_SIGN,
-  T_COMMENT,
-  T_BREAK,
-  T_SPACE,
-] = /** @types {const} */ TokenTypes.map((_, i) => i)
-
 function isSpaces(str) {
   return /^[^\S\r\n]+$/g.test(str)
 }
 
 function isSign(ch) {
   return Signs.has(ch)
-}
-
-const HtmlEntities = /** @type {Record<string, string>} */ ({
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#039;',
-})
-
-/** @param {string} str */
-function encode(str) {
-  if (!/[&<>"']/.test(str)) return str
-  return str.replace(/[&<>"']/g, chr => HtmlEntities[chr])
 }
 
 function isWord(chr) {
@@ -859,179 +762,7 @@ function tokenize(code, options) {
   return tokens
 }
 
-/**
- * @param {Array<[number, string]>} tokens
- * @param {{
- *   lineClassName?: (line: string, index: number) => string | null | undefined
- * } | undefined} options
- * @return {Array<{type: string, tagName: string, children: any[], properties: Record<string, string>}>}
- */
-function generate(tokens, options) {
-  const lines = []
-  const lineClassName = options && typeof options.lineClassName === 'function'
-    ? options.lineClassName
-    : null
-  let lineIndex = 0
-  /**
-   * @param {any} children
-   * @param {string} text
-   * @return {{type: string, tagName: string, children: any[], properties: Record<string, string>}}
-   */
-  const createLine = (children, text) => {
-    const extraClassName = lineClassName ? lineClassName(text, lineIndex) : ''
-    lineIndex++
-
-    return ({
-        type: 'element',
-        tagName: 'span',
-        children,
-        properties: {
-          className: extraClassName ? `sh__line ${extraClassName}` : 'sh__line',
-        },
-      })
-  }
-
-  /**
-   * @param {Array<[number, string]>} tokens
-   * @returns {void}
-   */
-  function flushLine(tokens) {
-    const lineText = tokens.map(([, value]) => value).join('')
-    /** @type {Array<any>} */
-    const lineTokens = (
-      tokens
-        .map(([type, value]) => {
-          const tokenType = TokenTypes[type]
-          return {
-            type: 'element',
-            tagName: 'span',
-            children: [{
-              type: 'text', // text node
-              value, // to encode
-            }],
-            properties: {
-              className: `sh__token--${tokenType}`,
-              style: { color: `var(--sh-${tokenType})` },
-            },
-          }
-        })
-    )
-    lines.push(createLine(lineTokens, lineText))
-  }
-  /** @type {Array<[number, string]>} */
-  const lineTokens = []
-  let lastWasBreak = false
-
-  for (let i = 0; i < tokens.length; i++) {
-    const token = tokens[i]
-    const [type, value] = token
-    const isLastToken = i === tokens.length - 1
-
-    if (type !== T_BREAK) {
-      // Divide multi-line token into multi-line code
-      if (value.includes('\n')) {
-        const lines = value.split('\n')
-        for (let j = 0; j < lines.length; j++) {
-          lineTokens.push([type, lines[j]])
-          if (j < lines.length - 1) {
-            flushLine(lineTokens)
-            lineTokens.length = 0
-          }
-        }
-      } else {
-        lineTokens.push(token)
-      }
-      lastWasBreak = false
-    } else {
-      if (lastWasBreak) {
-        // Consecutive break - create empty line
-        flushLine([])
-      } else {
-        // First break after content - flush current line
-        flushLine(lineTokens)
-        lineTokens.length = 0
-      }
-
-      // If this is the last token and it's a break, create an empty line
-      if (isLastToken) {
-        flushLine([])
-      }
-
-      lastWasBreak = true
-    }
-  }
-
-  // Flush remaining tokens if any
-  if (lineTokens.length) {
-    flushLine(lineTokens)
-  }
-
-  return lines
-}
-
-/** @param {{ className: string, style?: Record<string, string> }} props */
-const propsToString = (props) => {
-  let str = `class="${props.className}"`
-
-  if (props.style) {
-    const style = Object.entries(props.style)
-      .map(([key, value]) => `${key}:${value}`)
-      .join(';')
-    str += ` style="${style}"`
-  }
-  return str
-}
-
-function toHtml(lines) {
-  return lines
-    .map(line => {
-      const { tagName: lineTag } = line
-      const tokens = line.children
-        .map(child => {
-          const { tagName, children, properties } = child
-          return `<${tagName} ${propsToString(properties)}>${encode(children[0].value)}</${tagName}>`
-        })
-        .join('')
-      return `<${lineTag} class="${line.properties.className}">${tokens}</${lineTag}>`
-    })
-    .join('\n')
-}
-
-/**
- *
- * @param {string} code
- * @param {{
- *   keywords?: Set<string>
- *   typeKeywords?: Set<string>
- *   onCommentStart?: (curr: string, next: string) => number | boolean
- *   onCommentEnd?: (curr: string, prev: string) => number | boolean
- *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
- *   quotedKeys?: boolean
- *   lineClassName?: (line: string, index: number) => string | null | undefined
- * } | undefined} options
- * `onQuote` same as `tokenize`.
- * @returns {string}
- */
-function highlight(code, options) {
-  const resolvedOptions = resolveHighlightOptions(options)
-  const tokens = tokenize(code, resolvedOptions)
-  const lines = generate(tokens, resolvedOptions)
-  const output = toHtml(lines)
-  return output
-}
-
-// namespace
-const SugarHigh = /** @type {const} */ {
-  TokenTypes,
-  TokenMap: new Map(TokenTypes.map((type, i) => [type, i])),
-}
-
-export {
-  highlight,
-  tokenize,
-  generate,
-  SugarHigh,
-}
+export { tokenize }
 
 /**
  * @typedef {Object} HighlightOptions
