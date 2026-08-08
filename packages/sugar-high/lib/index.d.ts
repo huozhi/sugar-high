@@ -6,8 +6,8 @@ export type HighlightOptions = {
    * Highlighted as the `class` token type (e.g. built-in types). Checked before `keywords`.
    */
   typeKeywords?: Set<string>
-  onCommentStart?: (curr: string, next: string) => number | boolean
-  onCommentEnd?: (curr: string, prev: string) => number | boolean
+  onCommentStart?: (curr: string, next: string, index: number, code: string) => number | boolean
+  onCommentEnd?: (prev: string, curr: string, index: number, code: string) => number | boolean
   /**
    * At `code[i] === "'"`: return how many code units to consume from `i` as one token,
    * or null/undefined or a number below 1 for default JS single-quoted string rules.
@@ -41,6 +41,9 @@ export type LanguageName =
   | 'cpp'
   | 'csharp'
   | 'sql'
+  | 'html'
+  | 'yaml'
+  | 'markdown'
 
 export function highlight(code: string, options?: HighlightOptions): string
 export function tokenize(code: string, options?: HighlightOptions): Array<[number, string]>

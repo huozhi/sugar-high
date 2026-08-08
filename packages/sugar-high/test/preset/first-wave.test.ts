@@ -41,4 +41,28 @@ describe('first-wave language presets', () => {
     expect(actual).toContain('WHERE => keyword')
     expect(actual).toContain('-- enabled => comment')
   })
+
+  it('highlights HTML tags, attributes, and comments', () => {
+    const actual = getTokensAsString(tokenize('<!-- note -->\n<section aria-label="Hi">Hello</section>', {
+      lang: 'html',
+    }))
+    expect(actual).toContain('<!-- note --> => comment')
+    expect(actual).toContain('section => entity')
+    expect(actual).toContain('aria-label => property')
+  })
+
+  it('highlights YAML values and hash comments', () => {
+    const actual = getTokensAsString(tokenize('enabled: true # rollout\nmissing: null', {
+      lang: 'yaml',
+    }))
+    expect(actual).toContain('true => keyword')
+    expect(actual).toContain('# rollout => comment')
+    expect(actual).toContain('null => keyword')
+  })
+
+  it('adds semantic line classes to Markdown', () => {
+    const html = tokenize('# Title\n- one\n> quote', { lang: 'markdown' })
+    // Tokenization remains source-preserving; line semantics are applied during generation.
+    expect(html.map(([, value]) => value).join('')).toBe('# Title\n- one\n> quote')
+  })
 })

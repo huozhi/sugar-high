@@ -644,13 +644,13 @@ function tokenize(code, options) {
         }
 
         // jsx property
-        // `-` in data-prop
-        if (next === '-'  && !inStringContent() && !inJsxLiterals()) {
-          if (current) {
-            append(T_PROPERTY, current + curr + next)
-            i++
-            continue
-          }
+        // `-` in data-prop / aria-label. Consume the complete attribute as one property.
+        if (curr === '-' && current && !inStringContent() && !inJsxLiterals()) {
+          let end = i + 1
+          while (end < code.length && /[$\w-]/.test(code[end])) end++
+          append(T_PROPERTY, current + code.slice(i, end))
+          i = end - 1
+          continue
         }
         // `=` in property=<value>
         if (next === '=' && !inStringContent()) {
@@ -788,17 +788,17 @@ function tokenize(code, options) {
         append()
         i = start
       }
-    } else if (onCommentStart(curr, next)) {
+    } else if (onCommentStart(curr, next, i, code)) {
       append()
       const start = i
-      const startCommentType = onCommentStart(curr, next)
+      const startCommentType = onCommentStart(curr, next, i, code)
 
       // just match the comment, commentType === true
       // inline comment, commentType === 1
       // block comment, commentType === 2
       if (startCommentType) {
         for (; i < code.length; i++) {
-          const endCommentType = onCommentEnd(code[i - 1], code[i])
+          const endCommentType = onCommentEnd(code[i - 1], code[i], i, code)
           if (endCommentType == startCommentType) break
         }
       }
@@ -1043,8 +1043,8 @@ export {
  * @property {string} [lang] Canonical language name.
  * @property {Set<string>} [keywords]
  * @property {Set<string>} [typeKeywords]
- * @property {(curr: string, next: string) => number | boolean} [onCommentStart]
- * @property {(prev: string, curr: string) => number | boolean} [onCommentEnd]
+ * @property {(curr: string, next: string, index: number, code: string) => number | boolean} [onCommentStart]
+ * @property {(prev: string, curr: string, index: number, code: string) => number | boolean} [onCommentEnd]
  * @property {(curr: string, i: number, code: string) => number | null | undefined} [onQuote]
  * @property {boolean} [quotedKeys]
  * @property {boolean} [jsx] Whether JSX tag parsing is enabled.
