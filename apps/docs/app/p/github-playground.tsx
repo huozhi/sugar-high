@@ -13,8 +13,13 @@ import LiveEditor from '../live-editor'
 import { fetchGithubSource } from '../github-source'
 import { presetHighlightExtensionFromPath } from '../syntax-highlight-presets'
 
-/** Notable OSS files for one-click preview (TS/TSX, CSS, Python, Rust). */
+/** Notable OSS files for one-click preview. */
 const GITHUB_QUICK_EXAMPLES = [
+  {
+    label: 'sugar-high',
+    file: 'package.json',
+    url: 'https://github.com/huozhi/sugar-high/blob/main/package.json',
+  },
   {
     label: 'swr',
     file: 'use-swr.ts',

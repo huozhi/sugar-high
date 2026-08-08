@@ -22,6 +22,9 @@
     "next": "^16.2.6"
   },
   "pnpm": {
+    "patchedDependencies": {
+      "codice@1.5.5": "patches/codice@1.5.5.patch"
+    },
     "overrides": {
       "sugar-high": "workspace:*"
     },
