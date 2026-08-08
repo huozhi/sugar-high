@@ -21,21 +21,21 @@ highlighter instead of a second preset.
 | `rust` | `.rs` | `rs` | Supported |
 | `json` | `.json` | `jsonc` | Supported; comments planned |
 | `diff` | `.diff` | `patch` | Supported |
-| `html` | `.html` | `htm`, `xml` | First wave |
-| `shell` | `.sh` | `sh`, `bash`, `zsh` | First wave |
-| `cpp` | `.cpp` | `c++`, `cc`, `cxx` | First wave |
-| `csharp` | `.cs` | `c#`, `cs`, `dotnet` | First wave |
-| `sql` | `.sql` | - | First wave |
-| `yaml` | `.yaml` | `yml` | First wave |
-| `markdown` | `.md` | `md`, `mdx` | First wave |
-| `kotlin` | `.kt` | `kts` | Second wave |
-| `swift` | `.swift` | - | Second wave |
-| `php` | `.php` | - | Second wave |
-| `toml` | `.toml` | - | Second wave |
-| `powershell` | `.ps1` | `pwsh` | Second wave |
-| `dockerfile` | `.dockerfile` | `docker` | Second wave |
-| `graphql` | `.graphql` | `gql` | Second wave |
-| `hcl` | `.hcl` | `terraform`, `tf` | Second wave |
+| `html` | `.html` | `htm`, `xml` | Supported |
+| `shell` | `.sh` | `sh`, `bash`, `zsh` | Supported |
+| `cpp` | `.cpp` | `c++`, `cc`, `cxx` | Supported |
+| `csharp` | `.cs` | `c#`, `cs`, `dotnet` | Supported |
+| `sql` | `.sql` | - | Supported |
+| `yaml` | `.yaml` | `yml` | Supported |
+| `markdown` | `.md` | `md`, `mdx` | Supported |
+| `kotlin` | `.kt` | `kts` | Supported |
+| `swift` | `.swift` | - | Supported |
+| `php` | `.php` | - | Supported |
+| `toml` | `.toml` | - | Supported |
+| `powershell` | `.ps1` | `pwsh` | Supported |
+| `dockerfile` | `.dockerfile` | `docker` | Supported |
+| `graphql` | `.graphql` | `gql` | Supported |
+| `hcl` | `.hcl` | `terraform`, `tf` | Supported |
 
 An alias only affects language lookup. It does not create another export, implementation, or test
 matrix. The canonical name is used in generated classes and `data-sh-language` attributes.
@@ -64,9 +64,9 @@ highlight(source, { lang: 'rust' })
 The registry exposes canonical metadata and predictable resolution:
 
 ```js
-resolveLanguage('bash')  // shell; integration normalization
-resolveLanguage('.yml') // yaml; integration normalization
-getLanguage('jsonc')    // the json definition
+lang('bash')  // shell; integration normalization
+lang('.yml') // yaml; integration normalization
+lang('jsonc') // json
 ```
 
 `lang` accepts canonical names only. Unknown runtime values fall back to the JavaScript-compatible
