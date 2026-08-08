@@ -13,18 +13,19 @@ jobs:
   publish-sugar-high:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: pnpm/action-setup@v4
         with:
           version: 9.15.9
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           # Trusted publishing needs npm CLI >= 11.5.1; Node 24 ships with npm 11.
           node-version: 24
           registry-url: https://registry.npmjs.org
-          cache: pnpm
+          # Keep the release build independent of mutable dependency caches.
+          package-manager-cache: false
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
