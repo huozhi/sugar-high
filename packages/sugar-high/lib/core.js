@@ -150,4 +150,17 @@ export { generate, highlight, SugarHigh, tokenize }
  * @property {boolean} [templateStrings]
  * @property {(line: string, index: number) => string | null | undefined} [lineClassName]
  * @property {(code: string, options: HighlightOptions) => Array<[number, string]>} [tokenize]
+ * @property {Partial<Record<TokenType, string>>} [cx]
+ * @property {(token: MarkToken) => void} [mark]
+ */
+
+/**
+ * @typedef {'identifier' | 'keyword' | 'string' | 'class' | 'property' | 'entity' | 'jsxliterals' | 'sign' | 'comment' | 'break' | 'space'} TokenType
+ * @typedef {{
+ *   type: TokenType
+ *   value: string
+ *   className: string
+ *   style: Record<string, string | number>
+ *   properties: Record<string, string | number | boolean>
+ * }} MarkToken
  */

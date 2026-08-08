@@ -96,6 +96,36 @@ lang('.yml')  // 'yaml'
 
 For more language presets and syntax color themes, see **[sugar-high.vercel.app](https://sugar-high.vercel.app/)**.
 
+### Mark tokens
+
+Use `cx` to append classes by token type. This works with utility classes, CSS Modules, and global
+styles while preserving Sugar High's semantic token classes.
+
+```js
+const html = highlight(source, {
+  lang: 'typescript',
+  cx: {
+    keyword: 'font-bold',
+    comment: 'italic opacity-60',
+  },
+})
+```
+
+For conditional styling or custom attributes, mutate each generated token with `mark`:
+
+```js
+highlight(source, {
+  mark(token) {
+    if (token.type === 'comment' && token.value.includes('TODO')) {
+      token.className += ' text-orange-500'
+      token.properties['data-todo'] = true
+    }
+  },
+})
+```
+
+`cx` is applied before `mark`, so the callback receives the composed class name.
+
 ## Styling
 
 Each line is wrapped in `sh__line`. Set **CSS custom properties** `--sh-*` on an ancestor (for example `:root`) to pick colors—inspect the output or the example below for the variable names you need.

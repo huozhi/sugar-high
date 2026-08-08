@@ -20,4 +20,11 @@ describe('language selection', () => {
     const html = renderToString(<Editor lang="rust" value="fn main() {}" />)
     expect(html).toContain('sh__token--keyword')
   })
+
+  it('marks tokens with custom classes', () => {
+    const html = renderToString(
+      <Code lang="javascript" cx={{ keyword: 'font-bold' }}>{'const value = true'}</Code>
+    )
+    expect(html).toContain('sh__token--keyword font-bold')
+  })
 })

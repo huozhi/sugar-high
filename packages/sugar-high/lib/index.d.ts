@@ -1,5 +1,7 @@
 import type { HighlightOptions as CoreHighlightOptions } from './core.js'
 
+export type { MarkToken, TokenType } from './core.js'
+
 export type LanguageName =
   | 'javascript'
   | 'typescript'
