@@ -6,12 +6,15 @@ import * as csharp from './presets/lang/csharp.js'
 import * as css from './presets/lang/css.js'
 import * as diff from './presets/lang/diff.js'
 import * as go from './presets/lang/go.js'
+import * as html from './presets/lang/html.js'
 import * as java from './presets/lang/java.js'
 import * as json from './presets/lang/json.js'
+import * as markdown from './presets/lang/markdown.js'
 import * as python from './presets/lang/python.js'
 import * as rust from './presets/lang/rust.js'
 import * as shell from './presets/lang/shell.js'
 import * as sql from './presets/lang/sql.js'
+import * as yaml from './presets/lang/yaml.js'
 
 /**
  * @typedef {import('./index.js').HighlightOptions} HighlightOptions
@@ -53,6 +56,9 @@ const languages = Object.freeze([
   { id: 'cpp', extension: 'cpp', aliases: Object.freeze(['c++', 'cc', 'cxx']), config: nonJavaScript(cpp) },
   { id: 'csharp', extension: 'cs', aliases: Object.freeze(['c#', 'cs', 'dotnet']), config: nonJavaScript(csharp) },
   { id: 'sql', extension: 'sql', aliases: Object.freeze([]), config: nonJavaScript(sql) },
+  { id: 'html', extension: 'html', aliases: Object.freeze(['htm', 'xml']), config: html },
+  { id: 'yaml', extension: 'yaml', aliases: Object.freeze(['yml']), config: nonJavaScript(yaml) },
+  { id: 'markdown', extension: 'md', aliases: Object.freeze(['md', 'mdx']), config: nonJavaScript(markdown) },
 ])
 
 /** @param {string} value */

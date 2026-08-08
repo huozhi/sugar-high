@@ -1,8 +1,8 @@
 type LanguageConfig = {
   keywords: Set<string>
   typeKeywords?: Set<string>
-  onCommentStart?(curr: string, next: string): 0 | 1 | 2
-  onCommentEnd?(prev: string, curr: string): 0 | 1 | 2
+  onCommentStart?(curr: string, next: string, index: number, code: string): number | boolean
+  onCommentEnd?(prev: string, curr: string, index: number, code: string): number | boolean
   onQuote?(curr: string, i: number, code: string): number | null | undefined
   quotedKeys?: boolean
   jsx?: boolean
@@ -24,3 +24,6 @@ export const shell: LanguageConfig
 export const cpp: LanguageConfig
 export const csharp: LanguageConfig
 export const sql: LanguageConfig
+export const html: LanguageConfig
+export const yaml: LanguageConfig
+export const markdown: LanguageConfig

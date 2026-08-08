@@ -25,6 +25,9 @@ describe('language registry', () => {
     ['.sh', 'shell'],
     ['c++', 'cpp'],
     ['cs', 'csharp'],
+    ['xml', 'html'],
+    ['yml', 'yaml'],
+    ['mdx', 'markdown'],
   ])('resolves %s to %s', (input, expected) => {
     expect(resolveLanguage(input)).toBe(expected)
   })
