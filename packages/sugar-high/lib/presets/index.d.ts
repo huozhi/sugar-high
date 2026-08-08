@@ -4,6 +4,7 @@ type LanguageConfig = {
   onCommentStart?(curr: string, next: string): 0 | 1 | 2
   onCommentEnd?(prev: string, curr: string): 0 | 1 | 2
   onQuote?(curr: string, i: number, code: string): number | null | undefined
+  quotedKeys?: boolean
   lineClassName?(line: string, index: number): string | null | undefined
 }
 
@@ -14,3 +15,4 @@ export const c: LanguageConfig
 export const go: LanguageConfig
 export const java: LanguageConfig
 export const diff: LanguageConfig
+export const json: LanguageConfig

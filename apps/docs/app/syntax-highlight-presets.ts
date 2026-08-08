@@ -10,6 +10,7 @@ export const SYNTAX_PRESET_CODICE_EXTENSIONS = new Set([
   'c',
   'go',
   'java',
+  'json',
   'css',
   'scss',
   'sass',
@@ -27,6 +28,7 @@ export const SYNTAX_PRESET_SELECT_OPTIONS: readonly {
   { value: 'c', label: 'c' },
   { value: 'go', label: 'go' },
   { value: 'java', label: 'java' },
+  { value: 'json', label: 'json' },
   { value: 'css', label: 'css' },
   { value: 'py', label: 'python' },
   { value: 'rs', label: 'rust' },
@@ -50,6 +52,7 @@ export function syntaxPresetSelectValue(
   if (extension === 'c') return 'c'
   if (extension === 'go') return 'go'
   if (extension === 'java') return 'java'
+  if (extension === 'json') return 'json'
   if (
     extension &&
     (extension === 'css' ||
@@ -77,6 +80,8 @@ export function fileExtensionFromSyntaxSelect(
       return 'go'
     case 'java':
       return 'java'
+    case 'json':
+      return 'json'
     case 'css':
       return 'css'
     default:

@@ -9,6 +9,11 @@ overrides:
 
 packageExtensionsChecksum: bc3e8d93856392b180ec87aea65bacec
 
+patchedDependencies:
+  codice@1.5.5:
+    hash: 7lf4kxknni34nr65ci7eihq5de
+    path: patches/codice@1.5.5.patch
+
 importers:
 
   .:
@@ -21,7 +26,7 @@ importers:
     dependencies:
       codice:
         specifier: ^1.5.5
-        version: 1.5.5(react@19.2.0)
+        version: 1.5.5(patch_hash=7lf4kxknni34nr65ci7eihq5de)(react@19.2.0)
       dom-to-image:
         specifier: ^2.6.0
         version: 2.6.0
@@ -3586,7 +3591,7 @@ snapshots:
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
 
-  codice@1.5.5(react@19.2.0):
+  codice@1.5.5(patch_hash=7lf4kxknni34nr65ci7eihq5de)(react@19.2.0):
     dependencies:
       react: 19.2.0
       sugar-high: link:packages/sugar-high
