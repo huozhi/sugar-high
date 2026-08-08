@@ -4,18 +4,22 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type "publish" to release packages to npm
+        required: true
+        type: string
 
-permissions:
-  contents: write
-  pull-requests: write
-  id-token: write
+permissions: {}
 
 jobs:
-  release:
+  version:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    env:
-      # npm obtains a short-lived publishing credential from GitHub's OIDC provider.
-      NPM_CONFIG_PROVENANCE: "true"
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v6
 
@@ -34,13 +38,38 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create release PR or publish packages
+      - name: Create or update release PR
         uses: changesets/action@v1
         with:
-          publish: pnpm release
           version: pnpm version
           title: Release packages
           commit: Release packages
         env:
-          # Built into every Actions run; used only to manage the Changesets release PR.
           GITHUB_TOKEN: ${{ github.token }}
+
+  publish:
+    if: github.event_name == 'workflow_dispatch' && inputs.confirm == 'publish'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      NPM_CONFIG_PROVENANCE: "true"
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Publish packages through npm trusted publishing
+        run: pnpm release
