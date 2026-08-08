@@ -7,5 +7,5 @@ from GitHub Actions and entering `publish` in its confirmation field.
 
 Publishing uses npm trusted publishing through GitHub Actions OIDC; no npm access token is stored.
 Configure `sugar-high`, `@sugar-high/react`, and `@sugar-high/remark` on npm to trust this repository
-and `.github/workflows/release.yml`. The workflow's automatic `github.token` is used only for the
+and `.github/workflows/publish.yml`. The workflow's automatic `github.token` is used only for the
 version pull request and GitHub commits.
