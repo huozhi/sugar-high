@@ -4,7 +4,7 @@ import { code as cssCode } from './languages/css'
 import { code as htmlCode } from './languages/html'
 import { code as pythonCode } from './languages/python'
 import { code as rustCode } from './languages/rust'
-import { Code } from 'codice'
+import { Code } from '@sugar-high/react'
 import './page.css'
 import Link from 'next/link'
 
@@ -85,4 +85,4 @@ export default async function RemarkPage() {
       </main>
     </div>
   )
-} 
+}

@@ -11,7 +11,7 @@ import {
   type PointerEvent,
 } from 'react'
 import { CopyButton } from './copy-button'
-import { Code } from 'codice'
+import { Code } from '@sugar-high/react'
 import { highlight } from 'sugar-high'
 import { c, diff, go, java, python } from 'sugar-high/presets'
 import './install-banner.css'
