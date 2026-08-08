@@ -9,6 +9,7 @@ type LanguageConfig = {
   regex?: boolean
   templateStrings?: boolean
   caseInsensitive?: boolean
+  tokenize?(code: string, options: LanguageConfig): Array<[number, string]>
   lineClassName?(line: string, index: number): string | null | undefined
 }
 
@@ -35,3 +36,5 @@ export const powershell: LanguageConfig
 export const dockerfile: LanguageConfig
 export const graphql: LanguageConfig
 export const hcl: LanguageConfig
+export const javascript: LanguageConfig
+export const typescript: LanguageConfig

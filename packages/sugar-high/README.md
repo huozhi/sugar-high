@@ -36,6 +36,40 @@ highlight(rustSource, { lang: 'rust' })
 
 `lang` is typed, so TypeScript editors autocomplete every supported canonical name.
 
+### Composable core
+
+Import `sugar-high/core` when bundle size matters and compose only the language definitions you
+use. The core entry does not import the built-in language registry:
+
+```js
+import { highlight } from 'sugar-high/core'
+import { python } from 'sugar-high/presets'
+
+highlight(source, python)
+```
+
+JavaScript includes JSX, and TypeScript includes TSX; they are intentionally not separate presets:
+
+```js
+import { javascript, typescript } from 'sugar-high/presets'
+
+highlight(jsxSource, javascript)
+highlight(tsxSource, typescript)
+```
+
+The root `sugar-high` export remains the convenient option when you want every built-in language
+available through `{ lang }`.
+
+### Benchmarking
+
+Measure both bundle size and highlighting throughput locally:
+
+```sh
+pnpm --filter sugar-high benchmark
+```
+
+Set `BENCH_ITERATIONS` to change the default 50,000 performance iterations.
+
 ### Languages
 
 Pass a canonical language name through `lang`. Similar dialects share one implementation: JSON
