@@ -13,6 +13,9 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      # npm obtains a short-lived publishing credential from GitHub's OIDC provider.
+      NPM_CONFIG_PROVENANCE: "true"
     steps:
       - uses: actions/checkout@v6
 
@@ -39,4 +42,5 @@ jobs:
           title: Release packages
           commit: Release packages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Built into every Actions run; used only to manage the Changesets release PR.
+          GITHUB_TOKEN: ${{ github.token }}
