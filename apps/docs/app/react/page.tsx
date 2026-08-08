@@ -4,26 +4,6 @@ import { ReactDemo } from './react-demo'
 import '../product-page.css'
 import './page.css'
 
-const editorCode = `import { Editor } from '@sugar-high/react'
-
-<Editor
-  lang="typescript"
-  title="app.tsx"
-  value={code}
-  onChange={setCode}
-/>`
-
-const codeBlockCode = `import { Code } from '@sugar-high/react/code'
-
-<Code
-  lang="python"
-  title="main.py"
-  lineNumbers
-  highlightLines={[2]}
->
-  {source}
-</Code>`
-
 const pythonCode = `def greet(name):
     message = f"Hello, {name}!"
     return message
@@ -65,7 +45,7 @@ export default function ReactPage() {
 
         <section className="product-section">
           <div className="product-section__head">
-            <h2>Edit in place.</h2>
+            <h2>{'<Editor />'}</h2>
             <p>
               A controlled editor with highlighted text, editable filenames, line numbers, and the
               same markup contract as the static code component.
@@ -76,23 +56,8 @@ export default function ReactPage() {
 
         <section className="product-section">
           <div className="product-section__head">
-            <h2>Two primitives,<br />one visual system.</h2>
-            <p>Use the editor for interaction and the code block for presentation. Both resolve languages through Sugar High.</p>
-          </div>
-          <div className="product-grid react-api-grid">
-            <Window title="editor.tsx">
-              <Code className="product-code" lang="typescript">{editorCode}</Code>
-            </Window>
-            <Window title="code-block.tsx">
-              <Code className="product-code" lang="typescript">{codeBlockCode}</Code>
-            </Window>
-          </div>
-        </section>
-
-        <section className="product-section">
-          <div className="product-section__head">
-            <h2>Presentation included.</h2>
-            <p>Titles, controls, highlighted lines, and line numbers are opt-in props—not a separate rendering layer.</p>
+            <h2>{'<Code />'}</h2>
+            <p>A lightweight presentation block with optional filenames, highlighted lines, and line numbers.</p>
           </div>
           <Window title="main.py">
             <Code
