@@ -12,12 +12,12 @@ export type TokenType =
   | 'space'
 
 export type ParsedToken = {
-  readonly type: TokenType
-  readonly value: string
+  type: TokenType
+  value: string
 }
 
 export type MarkToken = {
-  readonly type: TokenType
+  type: TokenType
   value: string
   className: string
   style: Record<string, string | number>

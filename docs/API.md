@@ -188,7 +188,7 @@ type ParsedCode = {
   readonly lines: ReadonlyArray<{
     readonly index: number
     readonly value: string
-    readonly tokens: ReadonlyArray<{ readonly type: TokenType; readonly value: string }>
+    readonly tokens: ReadonlyArray<{ type: TokenType; value: string }>
     readonly className: string
     readonly style: Readonly<Record<string, string | number>>
     readonly properties: Readonly<Record<string, string | number | boolean>>
