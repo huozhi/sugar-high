@@ -1,7 +1,7 @@
 {
   "name": "sugar-high-monorepo",
   "private": true,
-  "description": "Monorepo for sugar-high and remark-sugar-high packages",
+  "description": "Monorepo for Sugar High packages",
   "type": "module",
   "scripts": {
     "build": "pnpm -r run build",

@@ -11,7 +11,7 @@ import Link from 'next/link'
 const usageCode = `\
 \`\`\`javascript {2,9}
 import { remark } from 'remark'
-import { highlight } from 'remark-sugar-high'
+import { highlight } from '@sugar-high/remark'
 import html from 'remark-html'
 import gfm from 'remark-gfm'
 
@@ -60,7 +60,7 @@ export default async function RemarkPage() {
           <Link href="/">
             Sugar High Syntax Highlighting 
           </Link> with Remark Plugin.{' '}
-          <a href="https://github.com/huozhi/remark-sugar-high" target="_blank">
+          <a href="https://github.com/huozhi/sugar-high/tree/main/packages/remark" target="_blank">
             Source Code ↗
           </a>
         </p>
@@ -68,7 +68,7 @@ export default async function RemarkPage() {
         <h2>Usage</h2>
         <h3>Install</h3>
         <pre>
-          <code>{`npm install remark remark-html remark-gfm remark-sugar-high`}</code>
+          <code>{`npm install remark remark-html remark-gfm @sugar-high/remark`}</code>
         </pre>
 
         <h3>API</h3>

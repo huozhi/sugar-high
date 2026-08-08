@@ -20,6 +20,9 @@ importers:
       '@sugar-high/react':
         specifier: workspace:*
         version: link:../../packages/react
+      '@sugar-high/remark':
+        specifier: workspace:*
+        version: link:../../packages/remark
       dom-to-image:
         specifier: ^2.6.0
         version: 2.6.0
@@ -41,9 +44,6 @@ importers:
       remark-html:
         specifier: ^16.0.1
         version: 16.0.1
-      remark-sugar-high:
-        specifier: workspace:*
-        version: link:../../packages/remark
       sugar-high:
         specifier: workspace:*
         version: link:../../packages/sugar-high
