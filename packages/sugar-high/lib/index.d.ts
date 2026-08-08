@@ -1,4 +1,6 @@
-type HighlightOptions = {
+export type HighlightOptions = {
+  /** Canonical language name. Fence and extension aliases must be normalized first. */
+  lang?: LanguageName
   keywords?: Set<string>
   /**
    * Highlighted as the `class` token type (e.g. built-in types). Checked before `keywords`.
@@ -13,8 +15,32 @@ type HighlightOptions = {
   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
   /** Highlight quoted object keys followed by `:` as `property` tokens. */
   quotedKeys?: boolean
+  /** Enable JavaScript-style JSX tag parsing. */
+  jsx?: boolean
+  /** Enable JavaScript-style regular expression literals. */
+  regex?: boolean
+  /** Enable JavaScript template strings. */
+  templateStrings?: boolean
+  /** Match keywords and type keywords without regard to case. */
+  caseInsensitive?: boolean
   lineClassName?: (line: string, index: number) => string | null | undefined
 }
+
+export type LanguageName =
+  | 'javascript'
+  | 'typescript'
+  | 'css'
+  | 'python'
+  | 'c'
+  | 'go'
+  | 'java'
+  | 'rust'
+  | 'json'
+  | 'diff'
+  | 'shell'
+  | 'cpp'
+  | 'csharp'
+  | 'sql'
 
 export function highlight(code: string, options?: HighlightOptions): string
 export function tokenize(code: string, options?: HighlightOptions): Array<[number, string]>
