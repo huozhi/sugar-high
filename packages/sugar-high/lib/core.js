@@ -1,0 +1,180 @@
+// @ts-check
+
+import { generate, SugarHigh } from './presets/lang/javascript-runtime.js'
+
+const { TokenMap } = SugarHigh
+const T_IDENTIFIER = TokenMap.get('identifier')
+const T_KEYWORD = TokenMap.get('keyword')
+const T_STRING = TokenMap.get('string')
+const T_CLASS = TokenMap.get('class')
+const T_PROPERTY = TokenMap.get('property')
+const T_SIGN = TokenMap.get('sign')
+const T_COMMENT = TokenMap.get('comment')
+const T_BREAK = TokenMap.get('break')
+const T_SPACE = TokenMap.get('space')
+
+const signs = new Set('+-*/%=!&|^~?:.,;()[]{}<>#@\\'.split(''))
+const noComment = () => 0
+
+/** @param {string} value */
+const isWord = (value) => value === '_' || value === '$' || /[\p{L}\p{N}]/u.test(value)
+
+/** @param {string} code @param {number} index */
+function isQuotedKey(code, index) {
+  while (index < code.length && /\s/.test(code[index])) index++
+  return code[index] === ':'
+}
+
+/**
+ * General-purpose lexer for keyword, string, comment, and punctuation based languages.
+ * Complex language presets may supply `tokenize` to replace this stage.
+ * @param {string} code
+ * @param {HighlightOptions | undefined} options
+ * @returns {Array<[number, string]>}
+ */
+function tokenize(code, options) {
+  if (typeof options?.tokenize === 'function') return options.tokenize(code, options)
+
+  const keywords = options?.keywords || new Set()
+  const typeKeywords = options?.typeKeywords || new Set()
+  const onCommentStart = options?.onCommentStart || noComment
+  const onCommentEnd = options?.onCommentEnd || noComment
+  const normalize = options?.caseInsensitive
+    ? (value) => value.toLowerCase()
+    : (value) => value
+  /** @type {Array<[number, string]>} */
+  const tokens = []
+  let lastSignificant = ''
+
+  /** @param {number} type @param {string} value */
+  function append(type, value) {
+    if (!value) return
+    tokens.push([type, value])
+    if (type !== T_SPACE && type !== T_BREAK) lastSignificant = value
+  }
+
+  for (let i = 0; i < code.length;) {
+    const curr = code[i]
+    const next = code[i + 1]
+
+    const commentType = onCommentStart(curr, next, i, code)
+    if (commentType) {
+      const start = i++
+      while (i < code.length) {
+        if (onCommentEnd(code[i - 1], code[i], i, code) == commentType) {
+          i++
+          break
+        }
+        i++
+      }
+      append(T_COMMENT, code.slice(start, i))
+      continue
+    }
+
+    if (typeof options?.onQuote === 'function' && curr === "'") {
+      const length = options.onQuote(curr, i, code)
+      if (typeof length === 'number' && length >= 1) {
+        append(T_IDENTIFIER, code.slice(i, i + length))
+        i += length
+        continue
+      }
+    }
+
+    if (curr === '"' || curr === "'" || (options?.templateStrings && curr === '`')) {
+      const quote = curr
+      const start = i++
+      while (i < code.length) {
+        if (code[i] === quote && code[i - 1] !== '\\') {
+          i++
+          break
+        }
+        i++
+      }
+      const value = code.slice(start, i)
+      append(options?.quotedKeys && isQuotedKey(code, i) ? T_PROPERTY : T_STRING, value)
+      continue
+    }
+
+    if (curr === '\n') {
+      append(T_BREAK, curr)
+      i++
+      continue
+    }
+
+    if (/[^\S\r\n]/.test(curr)) {
+      const start = i++
+      while (i < code.length && /[^\S\r\n]/.test(code[i])) i++
+      append(T_SPACE, code.slice(start, i))
+      continue
+    }
+
+    if (isWord(curr)) {
+      const start = i++
+      while (i < code.length && isWord(code[i])) i++
+      const value = code.slice(start, i)
+      const normalized = normalize(value)
+      const type = typeKeywords.has(normalized)
+        ? T_CLASS
+        : keywords.has(normalized)
+          ? T_KEYWORD
+          : lastSignificant === '.'
+            ? T_PROPERTY
+            : (/^\d/.test(value) || value === 'null' || /^\p{Lu}/u.test(value))
+              ? T_CLASS
+              : T_IDENTIFIER
+      append(type, value)
+      continue
+    }
+
+    if (signs.has(curr)) {
+      append(T_SIGN, curr)
+      i++
+      continue
+    }
+
+    append(T_STRING, curr)
+    i++
+  }
+
+  return tokens
+}
+
+/** @param {string} value */
+function encode(value) {
+  return value.replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;',
+  })[character])
+}
+
+/** @param {Array<any>} lines */
+function toHtml(lines) {
+  return lines.map(line => {
+    const children = line.children.map(token => {
+      const style = Object.entries(token.properties.style)
+        .map(([key, value]) => `${key}:${value}`).join(';')
+      return `<${token.tagName} class="${token.properties.className}" style="${style}">${encode(token.children[0].value)}</${token.tagName}>`
+    }).join('')
+    return `<${line.tagName} class="${line.properties.className}">${children}</${line.tagName}>`
+  }).join('\n')
+}
+
+/** @param {string} code @param {HighlightOptions | undefined} options */
+function highlight(code, options) {
+  return toHtml(generate(tokenize(code, options), options))
+}
+
+export { generate, highlight, SugarHigh, tokenize }
+
+/**
+ * @typedef {Object} HighlightOptions
+ * @property {Set<string>} [keywords]
+ * @property {Set<string>} [typeKeywords]
+ * @property {(curr: string, next: string, index: number, code: string) => number | boolean} [onCommentStart]
+ * @property {(prev: string, curr: string, index: number, code: string) => number | boolean} [onCommentEnd]
+ * @property {(curr: string, index: number, code: string) => number | null | undefined} [onQuote]
+ * @property {boolean} [quotedKeys]
+ * @property {boolean} [caseInsensitive]
+ * @property {boolean} [templateStrings]
+ * @property {(line: string, index: number) => string | null | undefined} [lineClassName]
+ * @property {(code: string, options: HighlightOptions) => Array<[number, string]>} [tokenize]
+ */

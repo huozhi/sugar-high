@@ -12,6 +12,7 @@ import * as graphql from './presets/lang/graphql.js'
 import * as hcl from './presets/lang/hcl.js'
 import * as java from './presets/lang/java.js'
 import * as json from './presets/lang/json.js'
+import * as javascript from './presets/lang/javascript.js'
 import * as kotlin from './presets/lang/kotlin.js'
 import * as markdown from './presets/lang/markdown.js'
 import * as php from './presets/lang/php.js'
@@ -22,6 +23,7 @@ import * as shell from './presets/lang/shell.js'
 import * as sql from './presets/lang/sql.js'
 import * as swift from './presets/lang/swift.js'
 import * as toml from './presets/lang/toml.js'
+import * as typescript from './presets/lang/typescript.js'
 import * as yaml from './presets/lang/yaml.js'
 
 /**
@@ -50,8 +52,8 @@ function nonJavaScript(config) {
 
 /** @type {readonly Language[]} */
 const languages = Object.freeze([
-  { id: 'javascript', extension: 'js', aliases: Object.freeze(['js', 'jsx', 'node']) },
-  { id: 'typescript', extension: 'ts', aliases: Object.freeze(['ts', 'tsx']) },
+  { id: 'javascript', extension: 'js', aliases: Object.freeze(['js', 'jsx', 'node']), config: javascript },
+  { id: 'typescript', extension: 'ts', aliases: Object.freeze(['ts', 'tsx']), config: typescript },
   { id: 'css', extension: 'css', aliases: Object.freeze(['scss']), config: nonJavaScript(css) },
   { id: 'python', extension: 'py', aliases: Object.freeze(['py', 'python3']), config: nonJavaScript(python) },
   { id: 'c', extension: 'c', aliases: Object.freeze([]), config: nonJavaScript(c) },
