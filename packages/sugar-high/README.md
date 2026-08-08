@@ -38,23 +38,16 @@ highlight(rustSource, { lang: 'rust' })
 
 ### Composable core
 
-Import `sugar-high/core` when bundle size matters and compose only the language definitions you
-use. The core entry does not import the built-in language registry:
+Import `sugar-high/core` when bundle size matters or when you want to provide a custom tokenizer
+configuration. The core entry does not import the built-in language registry:
 
 ```js
 import { highlight } from 'sugar-high/core'
-import { python } from 'sugar-high/presets'
 
-highlight(source, python)
-```
-
-JavaScript includes JSX, and TypeScript includes TSX; they are intentionally not separate presets:
-
-```js
-import { javascript, typescript } from 'sugar-high/presets'
-
-highlight(jsxSource, javascript)
-highlight(tsxSource, typescript)
+highlight(source, {
+  keywords: ['select', 'from', 'where'],
+  comment: /--.*$/gm,
+})
 ```
 
 The root `sugar-high` export remains the convenient option when you want every built-in language
@@ -94,14 +87,12 @@ const html = highlight('{"name": "Alice"}', { lang: 'json' })
 Fence names and file extensions can be normalized separately when building integrations:
 
 ```js
-import { lang } from 'sugar-high/languages'
+import { lang } from 'sugar-high/lang'
 
 lang('bash')  // 'shell'
 lang('jsonc') // 'json'
 lang('.yml')  // 'yaml'
 ```
-
-The existing `sugar-high/presets` exports remain available for custom composition.
 
 For more language presets and syntax color themes, see **[sugar-high.vercel.app](https://sugar-high.vercel.app/)**.
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { highlight as highlightBuiltin } from 'sugar-high'
 import { highlight as highlightCore, tokenize } from 'sugar-high/core'
-import { javascript, python, typescript } from 'sugar-high/presets'
+import { javascript, python, typescript } from '../lib/presets/index.js'
 
 describe('composable core export', () => {
   it('composes a selected preset without the built-in registry API', () => {

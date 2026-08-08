@@ -1,5 +1,5 @@
 import { tokenize, generate, type HighlightOptions } from 'sugar-high'
-import { lang as canonicalizeLang } from 'sugar-high/languages'
+import { lang as canonicalizeLang } from 'sugar-high/lang'
 import { map as unistMap } from 'unist-util-map'
 import rangeParser from 'parse-numeric-range'
 

@@ -42,19 +42,12 @@ matrix. The canonical name is used in generated classes and `data-sh-language` a
 
 ## Public API
 
-The existing preset-object API remains supported:
+Canonical language names are the configurable API. The option is named `lang`, not `language`,
+and integrations can normalize aliases before highlighting.
 
 ```js
 import { highlight } from 'sugar-high'
-import { python } from 'sugar-high/presets'
 
-highlight(source, python)
-```
-
-Canonical language names are the configurable API. This is a breaking API addition: the option is
-named `lang`, not `language`, and aliases are normalized by integrations before highlighting.
-
-```js
 highlight(source, { lang: 'python' })
 highlight(source, { lang: 'json' })
 highlight(source, { lang: 'diff' })
@@ -64,14 +57,16 @@ highlight(source, { lang: 'rust' })
 The registry exposes canonical metadata and predictable resolution:
 
 ```js
+import { lang } from 'sugar-high/lang'
+
 lang('bash')  // shell; integration normalization
 lang('.yml') // yaml; integration normalization
 lang('jsonc') // json
 ```
 
-`lang` accepts canonical names only. Unknown runtime values fall back to the JavaScript-compatible
-core behavior; registry lookup returns `undefined`, allowing integrations to choose plain text or
-an error instead.
+The root highlighting option accepts canonical names only. The resolver accepts canonical names,
+aliases, and extensions; unknown values return `undefined`, allowing integrations to choose a
+fallback or an error.
 
 ## Architecture work
 
