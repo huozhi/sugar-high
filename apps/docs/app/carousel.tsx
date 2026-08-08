@@ -13,7 +13,6 @@ import {
 import domToImage from 'dom-to-image'
 import { Code } from '@sugar-high/react'
 import { highlight } from 'sugar-high'
-import { diff } from 'sugar-high/presets'
 import { copyImageDataUrl } from './lib/copy-image'
 import {
   LIVE_EDITOR_THEME_PRESETS,
@@ -252,7 +251,7 @@ function CodeFrame(
     highlightedLines: readonly number[] | number[]
   }) {
   const isDiff = title.endsWith('.diff')
-  const codeContent = isDiff ? highlight(code, diff) : code
+  const codeContent = isDiff ? highlight(code, { lang: 'diff' }) : code
 
   return (
     <div className="code-frame" id={`code-frame-${index}`}>

@@ -2,7 +2,7 @@
 
 import { tokenize, generate, type LanguageName } from 'sugar-high'
 import { css, HEADER_CSS } from './css'
-import { lang as canonicalLang } from 'sugar-high/languages'
+import { lang as canonicalLang } from 'sugar-high/lang'
 import { useMemo } from 'react'
 import { ScopedStyle } from '../style'
 

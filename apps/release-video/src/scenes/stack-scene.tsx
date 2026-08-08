@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'react'
-import { highlight } from 'sugar-high'
-import { css, python, rust } from 'sugar-high/presets'
+import { highlight, type LanguageName } from 'sugar-high'
 import { STACK_FRAMES } from '../constants'
 import {
   codeCardShell,
@@ -17,11 +16,11 @@ import { LIB_RS, MAIN_PY, THEME_CSS } from '../stack-examples'
 const EXAMPLES: {
   title: string
   code: string
-  preset?: Parameters<typeof highlight>[1]
+  lang: LanguageName
 }[] = [
-  { title: 'lib.rs', code: LIB_RS, preset: rust },
-  { title: 'main.py', code: MAIN_PY, preset: python },
-  { title: 'theme.css', code: THEME_CSS, preset: css },
+  { title: 'lib.rs', code: LIB_RS, lang: 'rust' },
+  { title: 'main.py', code: MAIN_PY, lang: 'python' },
+  { title: 'theme.css', code: THEME_CSS, lang: 'css' },
 ]
 
 const N = EXAMPLES.length
@@ -44,7 +43,7 @@ export function StackScene({ relFrame }: Props) {
       <div style={stage}>
         {EXAMPLES.map((ex, i) => {
           const isActive = activeIndex === i
-          const raw = highlight(ex.code, ex.preset)
+          const raw = highlight(ex.code, { lang: ex.lang })
           const html = compactHighlightedHtml(raw)
 
           return (

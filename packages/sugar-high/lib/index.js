@@ -6,7 +6,7 @@ import {
   SugarHigh,
   tokenize as tokenizeCore,
 } from './core.js'
-import { languages } from './languages.js'
+import { languages } from './lang.js'
 
 /** @param {HighlightOptions | undefined} options */
 function optionsFor(options) {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { highlight, tokenize } from 'sugar-high'
-import { lang, languages } from 'sugar-high/languages'
+import { lang, languages } from 'sugar-high/lang'
 import { getTokensAsString } from './testing-utils'
 
 describe('language registry', () => {

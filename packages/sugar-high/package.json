@@ -18,13 +18,9 @@
       "types": "./lib/core.d.ts",
       "default": "./lib/core.js"
     },
-    "./presets": {
-      "types": "./lib/presets/index.d.ts",
-      "default": "./lib/presets/index.js"
-    },
-    "./languages": {
-      "types": "./lib/languages.d.ts",
-      "default": "./lib/languages.js"
+    "./lang": {
+      "types": "./lib/lang.d.ts",
+      "default": "./lib/lang.js"
     }
   },
   "description": "Super lightweight JSX syntax highlighter",

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { generate, highlight, tokenize } from '../..'
-import { diff } from 'sugar-high/presets'
+import { diff } from '../../lib/presets/index.js'
 
 describe('diff preset', () => {
   it('adds line classes for simple line diffs', () => {

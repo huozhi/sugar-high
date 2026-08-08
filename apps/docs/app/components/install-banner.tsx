@@ -13,7 +13,6 @@ import {
 import { CopyButton } from './copy-button'
 import { Code } from '@sugar-high/react'
 import { highlight } from 'sugar-high'
-import { c, diff, go, java, python } from 'sugar-high/presets'
 import './install-banner.css'
 import Link from 'next/link'
 import {
@@ -34,20 +33,12 @@ const lineHighlightCss = `\
 
 const presetByTitleExample = `\
 import { highlight } from 'sugar-high'
-import * as presets from 'sugar-high/presets'
+import { lang } from 'sugar-high/lang'
 
-const presetForTitle = (title) =>
-  ({
-    css: presets.css,
-    py: presets.python,
-    rs: presets.rust,
-    diff: presets.diff,
-  })[
-    title.split('.').pop()
-  ]
+const ext = (title) => title.split('.').pop()
 
-highlight('.card { color: red; }', presetForTitle('theme.css'))
-highlight('def hi():\\n    print("ok")', presetForTitle('main.py'))`
+highlight('.card { color: red; }', { lang: lang(ext('theme.css')) })
+highlight('def hi():\\n    print("ok")', { lang: lang(ext('main.py')) })`
 
 const cPresetSample = `\
 #include <stdint.h> /* fixed-width ints */
@@ -137,10 +128,10 @@ ${formatPlateAsCssVars(darkPlate)}
 
   const languagePresetSamples = useMemo(
     () => [
-      { title: 'main.c', markup: highlight(cPresetSample, c) },
-      { title: 'main.go', markup: highlight(goPresetSample, go) },
-      { title: 'App.java', markup: highlight(javaPresetSample, java) },
-      { title: 'main.py', markup: highlight(pythonPresetSample, python) },
+      { title: 'main.c', markup: highlight(cPresetSample, { lang: 'c' }) },
+      { title: 'main.go', markup: highlight(goPresetSample, { lang: 'go' }) },
+      { title: 'App.java', markup: highlight(javaPresetSample, { lang: 'java' }) },
+      { title: 'main.py', markup: highlight(pythonPresetSample, { lang: 'python' }) },
     ],
     []
   )
@@ -319,10 +310,10 @@ ${formatPlateAsCssVars(darkPlate)}
         </div>
 
         <div className="install-banner__block">
-          <h2>Language presets</h2>
+          <h2>Languages</h2>
           <p>
-            Import a preset when the source is not JavaScript or JSX, then pass it as the second
-            argument to <code>highlight</code>.
+            Pass a canonical language name to <code>highlight</code>, or normalize a filename
+            extension with <code>sugar-high/lang</code>.
           </p>
         </div>
         <div
@@ -377,7 +368,7 @@ ${formatPlateAsCssVars(darkPlate)}
         <div className="install-banner__block">
           <h2>Diff examples</h2>
           <p>
-            Diff and patch files use <code>presets.diff</code> to mark added, removed, hunk, and
+            Diff and patch files use <code>lang: 'diff'</code> to mark added, removed, hunk, and
             metadata lines.
           </p>
         </div>
@@ -386,7 +377,7 @@ ${formatPlateAsCssVars(darkPlate)}
           style={codeShVars as CSSProperties}
         >
           <Code title="theme.diff" asMarkup preformatted>
-            {highlight(diffPresetSample, diff)}
+            {highlight(diffPresetSample, { lang: 'diff' })}
           </Code>
         </div>
         <div className="install-banner__block">

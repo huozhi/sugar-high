@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize } from '../..'
-import { go } from 'sugar-high/presets'
+import { go } from '../../lib/presets/index.js'
 import { getTokensAsString } from '../testing-utils'
 
 describe('tokenize - go preset', () => {
