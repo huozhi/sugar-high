@@ -11,7 +11,7 @@ import {
   type CSSProperties,
 } from 'react'
 import domToImage from 'dom-to-image'
-import { Code } from 'codice'
+import { Code } from '@sugar-high/react'
 import { highlight } from 'sugar-high'
 import { diff } from 'sugar-high/presets'
 import { copyImageDataUrl } from './lib/copy-image'

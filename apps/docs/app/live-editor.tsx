@@ -9,7 +9,7 @@ import {
   useContext,
 } from 'react'
 import { SugarHigh } from 'sugar-high'
-import { Editor } from 'codice'
+import { Editor } from '@sugar-high/react'
 import { CopyButton } from './components/copy-button'
 import {
   SYNTAX_PRESET_SELECT_OPTIONS,

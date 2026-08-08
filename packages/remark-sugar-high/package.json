@@ -19,12 +19,12 @@
   "license": "MIT",
   "dependencies": {
     "parse-numeric-range": "^1.3.0",
-    "sugar-high": "^1.2.1",
+    "sugar-high": "workspace:*",
     "unist-util-map": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.12.0",
-    "bunchee": "^6.3.1",
+    "bunchee": "^7.0.1",
     "typescript": "^6.0.2"
   }
 }
