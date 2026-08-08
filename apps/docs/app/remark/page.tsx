@@ -64,11 +64,10 @@ export default function RemarkPage() {
         </nav>
 
         <header className="product-hero">
-          <div className="product-eyebrow">Markdown integration</div>
-          <h1>Remark,<br />with more color.</h1>
+          <div className="product-eyebrow">@sugar-high/remark</div>
+          <h1>Remark plugin.</h1>
           <p className="product-lede">
-            A small Remark plugin that turns fenced code blocks into Sugar High markup—without a
-            runtime highlighter in the browser.
+            Highlight fenced code blocks with Sugar High during your Markdown build.
           </p>
           <div className="product-install"><code>npm install @sugar-high/remark</code></div>
         </header>
@@ -76,10 +75,7 @@ export default function RemarkPage() {
         <section className="product-section">
           <div className="product-section__head">
             <h2>Markdown in.<br />Highlighted HTML out.</h2>
-            <p>
-              Keep authoring ordinary fenced code. Language aliases are normalized and line metadata
-              stays available to the generated markup.
-            </p>
+            <p>Transform fenced code into highlighted HTML.</p>
           </div>
           <div className="product-grid remark-demo-grid">
             <Window title="readme.md"><div className="remark-source"><pre>{previewMarkdown}</pre></div></Window>
@@ -90,7 +86,7 @@ export default function RemarkPage() {
         <section className="product-section">
           <div className="product-section__head">
             <h2>One plugin.</h2>
-            <p>Place it before your HTML compiler. The output uses the same semantic token classes as Sugar High.</p>
+            <p>Add it before your HTML compiler.</p>
           </div>
           <Window title="remark-plugin.js">
             <Code className="product-code" title="remark-plugin.js" lang="javascript">{usageCode}</Code>
@@ -100,7 +96,7 @@ export default function RemarkPage() {
         <section className="product-section">
           <div className="product-section__head">
             <h2>Across languages.</h2>
-            <p>The plugin delegates language selection to Sugar High, keeping the integration thin.</p>
+            <p>Use every language supported by Sugar High.</p>
           </div>
           <div className="product-grid">
             <Window title="script.js"><CodeExample filename="script.js" code={jsCode} /></Window>
@@ -108,10 +104,6 @@ export default function RemarkPage() {
           </div>
         </section>
 
-        <section className="product-grid" aria-label="Remark features">
-          <div className="product-note"><h3>Server friendly</h3><p>Generate HTML during your existing Markdown build with no client-side runtime.</p></div>
-          <div className="product-note"><h3>Style it once</h3><p>Reuse Sugar High token classes, CSS variables, and your existing code presentation.</p></div>
-        </section>
       </div>
     </div>
   )

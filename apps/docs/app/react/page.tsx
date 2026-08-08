@@ -4,11 +4,29 @@ import { ReactDemo } from './react-demo'
 import '../product-page.css'
 import './page.css'
 
-const pythonCode = `def greet(name):
-    message = f"Hello, {name}!"
-    return message
+const codeBlockExample = `import { Code } from '@sugar-high/react/code'
+import { highlight } from 'sugar-high'
 
-print(greet("Sugar High"))`
+function renderMarkup() {
+  const code = "return 'long live sugar-high'"
+  return highlight(code)
+}
+
+const markup = renderMarkup()
+console.log(markup)
+
+render(
+  <div>
+    <Code
+      controls
+      title="app/index.js"
+      lineNumbers
+      highlightLines={[1, [14, 19]]}
+    >
+      {'<div>Hello World</div>'}
+    </Code>
+  </div>
+)`
 
 function Window({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -34,11 +52,10 @@ export default function ReactPage() {
         </nav>
 
         <header className="product-hero">
-          <div className="product-eyebrow">React components</div>
-          <h1>Code that feels<br />at home.</h1>
+          <div className="product-eyebrow">@sugar-high/react</div>
+          <h1>Code editor & block</h1>
           <p className="product-lede">
-            The Codice editor and code block now live next to Sugar High: lightweight React
-            primitives for presenting and editing highlighted code.
+            Edit and present highlighted code with two lightweight React components.
           </p>
           <div className="product-install"><code>npm install @sugar-high/react sugar-high</code></div>
         </header>
@@ -46,35 +63,29 @@ export default function ReactPage() {
         <section className="product-section">
           <div className="product-section__head">
             <h2>{'<Editor />'}</h2>
-            <p>
-              A controlled editor with highlighted text, editable filenames, line numbers, and the
-              same markup contract as the static code component.
-            </p>
+            <p>A controlled, highlighted editor with optional line numbers.</p>
           </div>
-          <Window title="counter.tsx"><ReactDemo /></Window>
+          <Window title="editor-example.tsx"><ReactDemo /></Window>
         </section>
 
         <section className="product-section">
           <div className="product-section__head">
             <h2>{'<Code />'}</h2>
-            <p>A lightweight presentation block with optional filenames, highlighted lines, and line numbers.</p>
+            <p>Present code with optional line numbers and marked lines.</p>
           </div>
-          <Window title="main.py">
+          <Window title="code-example.tsx">
             <Code
               className="react-code-preview"
-              lang="python"
+              lang="typescript"
               lineNumbers
-              highlightLines={[2]}
+              padding="0"
+              highlightLines={[1, [14, 19]]}
             >
-              {pythonCode}
+              {codeBlockExample}
             </Code>
           </Window>
         </section>
 
-        <section className="product-grid" aria-label="React package features">
-          <div className="product-note"><h3>Small by composition</h3><p>Bring the React surface you need while Sugar High remains the highlighting engine underneath.</p></div>
-          <div className="product-note"><h3>Migration without a rewrite</h3><p>Existing Codice data attributes and CSS variables remain available for current themes and integrations.</p></div>
-        </section>
       </div>
     </div>
   )

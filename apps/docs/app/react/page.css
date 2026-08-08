@@ -58,12 +58,18 @@
   color: #788592;
 }
 
-.react-code-preview {
-  --codice-code-padding: 18px 18px 22px;
+.react-code-preview[data-codice-code] {
+  --codice-code-padding: 0px;
   --codice-code-line-number-color: #a4a4a4;
   --codice-code-highlight-color: #dff1ff;
+  padding: 0;
   background: #f6f6f6;
   color: #354150;
+}
+
+.react-code-preview .sh__line [data-codice-code-line-number] {
+  position: static;
+  vertical-align: baseline;
 }
 
 .react-product .sh__line {

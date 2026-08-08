@@ -4,14 +4,21 @@ import { useState } from 'react'
 import { Editor } from '@sugar-high/react'
 
 const initialCode = `import { useState } from 'react'
+import { Editor } from '@sugar-high/react'
 
-export function Counter() {
-  const [count, setCount] = useState(0)
+const defaultText = 'console.log("hello world")'
+
+export default function Page() {
+  const [code, setCode] = useState(defaultText)
+  const [title, setTitle] = useState('index.js')
 
   return (
-    <button onClick={() => setCount(count + 1)}>
-      Count: {count}
-    </button>
+    <Editor
+      value={code}
+      title={title}
+      onChange={(text) => setCode(text)}
+      onChangeTitle={(title) => setTitle(title)}
+    />
   )
 }`
 
