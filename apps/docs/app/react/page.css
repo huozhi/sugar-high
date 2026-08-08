@@ -38,22 +38,11 @@
 }
 
 .react-demo__editor {
-  --codice-caret-color: #d5efea;
-  --codice-title-color: rgba(221, 221, 221, 0.45);
-  --codice-control-color: #8d8989;
-  --codice-code-line-number-color: #858585;
-  --sh-class: #4ec9b0;
-  --sh-identifier: #9cdcfe;
-  --sh-sign: #d4d4d4;
-  --sh-property: #9cdcfe;
-  --sh-entity: #dcdcaa;
-  --sh-jsxliterals: #ff8c42;
-  --sh-string: #ce9178;
-  --sh-keyword: #569cd6;
-  --sh-comment: #6a9955;
+  --codice-caret-color: #354150;
+  --codice-code-line-number-color: #a4a4a4;
   min-height: 330px;
-  background: #3d3c3c;
-  color: #d5d5d5;
+  background: #f6f6f6;
+  color: #354150;
 }
 
 .react-demo__editor textarea,
@@ -65,27 +54,16 @@
 .react-demo__status {
   min-height: 38px;
   padding: 0 16px;
-  background: #343434;
-  color: #aaa;
+  background: #eef2f4;
+  color: #788592;
 }
 
 .react-code-preview {
   --codice-code-padding: 18px 18px 22px;
-  --codice-title-color: rgba(221, 221, 221, 0.45);
-  --codice-control-color: #8d8989;
-  --codice-code-line-number-color: #858585;
-  --codice-code-highlight-color: #555;
-  --sh-class: #4ec9b0;
-  --sh-identifier: #9cdcfe;
-  --sh-sign: #d4d4d4;
-  --sh-property: #9cdcfe;
-  --sh-entity: #dcdcaa;
-  --sh-jsxliterals: #ff8c42;
-  --sh-string: #ce9178;
-  --sh-keyword: #569cd6;
-  --sh-comment: #6a9955;
-  background: #343434;
-  color: #d5d5d5;
+  --codice-code-line-number-color: #a4a4a4;
+  --codice-code-highlight-color: #dff1ff;
+  background: #f6f6f6;
+  color: #354150;
 }
 
 .react-product .sh__line {
@@ -93,20 +71,7 @@
 }
 
 .react-product [data-highlight] {
-  background: #555;
-}
-
-.react-product .product-card:has(.product-code) .product-card__bar,
-.react-product .product-card:has(.react-demo) .product-card__bar,
-.react-product .product-card:has(.react-code-preview) .product-card__bar {
-  background: #2b2b2b;
-  color: #aaa;
-}
-
-.react-product .product-card:has(.product-code) .product-card__dot,
-.react-product .product-card:has(.react-demo) .product-card__dot,
-.react-product .product-card:has(.react-code-preview) .product-card__dot {
-  background: #666;
+  background: #dff1ff;
 }
 
 @media (max-width: 680px) {

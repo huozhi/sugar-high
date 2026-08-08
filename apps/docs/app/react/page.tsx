@@ -34,9 +34,6 @@ function Window({ title, children }: { title: string; children: React.ReactNode 
   return (
     <div className="product-card">
       <div className="product-card__bar">
-        <span className="product-card__dot" />
-        <span className="product-card__dot" />
-        <span className="product-card__dot" />
         <span className="product-card__title">{title}</span>
       </div>
       {children}

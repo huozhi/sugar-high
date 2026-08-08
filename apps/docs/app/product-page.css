@@ -138,30 +138,22 @@
 .product-card:has(.react-demo),
 .product-card:has(.react-code-preview),
 .product-card:has(.remark-source) {
-  background: #343434;
+  background: #f6f6f6;
 }
 
 .product-card__bar {
   display: flex;
   align-items: center;
-  gap: 6px;
-  height: 38px;
-  padding: 0 14px;
-  background: var(--product-soft);
+  height: 34px;
+  padding: 0 4px;
+  background: white;
   color: var(--product-muted);
   font-family: var(--font-geist-mono), menlo, monospace;
   font-size: 11px;
 }
 
-.product-card__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #cbd3d9;
-}
-
 .product-card__title {
-  margin-left: 6px;
+  margin: 0;
 }
 
 .product-card__body {
@@ -193,23 +185,23 @@
 
 .product-code {
   --codice-code-padding: 18px;
-  --sh-class: #4ec9b0;
-  --sh-identifier: #9cdcfe;
-  --sh-sign: #d4d4d4;
-  --sh-property: #9cdcfe;
-  --sh-entity: #dcdcaa;
-  --sh-jsxliterals: #ff8c42;
-  --sh-string: #ce9178;
-  --sh-keyword: #569cd6;
-  --sh-comment: #6a9955;
+  --sh-class: #2d5e9d;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-property: #0550ae;
+  --sh-entity: #249a97;
+  --sh-jsxliterals: #6266d1;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
   margin: 0;
-  background: #343434;
-  color: #d5d5d5;
+  background: #f6f6f6;
+  color: #354150;
 }
 
 .product-code [data-codice-header] {
-  background: #2b2b2b;
-  color: #aaa;
+  background: white;
+  color: var(--product-muted);
 }
 
 .product-code pre {

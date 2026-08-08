@@ -18,14 +18,8 @@
 }
 
 .remark-source {
-  --sh-class: #4ec9b0;
-  --sh-identifier: #9cdcfe;
-  --sh-sign: #d4d4d4;
-  --sh-string: #ce9178;
-  --sh-keyword: #569cd6;
-  --sh-comment: #6a9955;
-  background: #343434;
-  color: #d5d5d5;
+  background: #f6f6f6;
+  color: #62707e;
 }
 
 .remark-source pre {
@@ -65,17 +59,6 @@
 
 .remark-product .product-card .product-code [data-codice-header] {
   display: none;
-}
-
-.remark-product .product-card:has(.remark-source) .product-card__bar,
-.remark-product .product-card:has(.product-code) .product-card__bar {
-  background: #2b2b2b;
-  color: #aaa;
-}
-
-.remark-product .product-card:has(.remark-source) .product-card__dot,
-.remark-product .product-card:has(.product-code) .product-card__dot {
-  background: #666;
 }
 
 @media (max-width: 680px) {
