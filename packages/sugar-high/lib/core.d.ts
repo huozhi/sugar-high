@@ -12,30 +12,39 @@ export type TokenType =
   | 'space'
 
 export type ParsedToken = {
-  type: TokenType
-  value: string
+  readonly type: TokenType
+  readonly value: string
 }
 
-export type MarkToken = ParsedToken & {
+export type MarkToken = {
+  readonly type: TokenType
+  value: string
   className: string
   style: Record<string, string | number>
   properties: Record<string, string | number | boolean>
 }
 
 export type ParsedLine = {
-  index: number
-  value: string
-  tokens: ParsedToken[]
+  readonly index: number
+  readonly value: string
+  readonly tokens: readonly ParsedToken[]
+  readonly className: string
+  readonly style: Readonly<Record<string, string | number>>
+  readonly properties: Readonly<Record<string, string | number | boolean>>
+}
+
+export type MarkLine = {
+  readonly index: number
+  readonly value: string
+  readonly tokens: readonly ParsedToken[]
   className: string
   style: Record<string, string | number>
   properties: Record<string, string | number | boolean>
 }
 
-export type MarkLine = ParsedLine
-
 export type ParsedCode = {
-  value: string
-  lines: ParsedLine[]
+  readonly value: string
+  readonly lines: readonly ParsedLine[]
 }
 
 export type DisplayOptions = {
@@ -58,7 +67,7 @@ export type ParseOptions = {
   typescript?: boolean
   tokenize?: (code: string, options: ParseOptions) => Array<[number, string]>
   /** Apply syntax-specific line metadata while parsing. */
-  markLine?: (line: MarkLine) => void
+  annotateLine?: (line: MarkLine) => void
 }
 
 export function parse(code: string, options?: ParseOptions): ParsedCode

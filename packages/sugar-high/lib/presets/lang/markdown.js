@@ -3,7 +3,7 @@ import { onCommentEnd, onCommentStart } from './plain-base.js'
 
 export const keywords = new Set([])
 
-export const markLine = (line) => {
+export const annotateLine = (line) => {
   let className = ''
   if (/^#{1,6}\s/.test(line.value)) className = 'sh__line--heading'
   else if (/^\s*>/.test(line.value)) className = 'sh__line--quote'

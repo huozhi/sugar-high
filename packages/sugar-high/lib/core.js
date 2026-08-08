@@ -134,8 +134,8 @@ function tokenize(code, options) {
 /** @param {string} code @param {ParseOptions | undefined} options */
 function parse(code, options) {
   const parsed = assemble(code, tokenize(code, options))
-  if (options?.markLine) {
-    for (const line of parsed.lines) options.markLine(line)
+  if (options?.annotateLine) {
+    for (const line of parsed.lines) options.annotateLine(line)
   }
   return parsed
 }
@@ -158,7 +158,7 @@ export { generate, parse, render, SugarHigh, tokenize }
  * @property {boolean} [caseInsensitive]
  * @property {boolean} [templateStrings]
  * @property {(code: string, options: ParseOptions) => Array<[number, string]>} [tokenize]
- * @property {(line: MarkLine) => void} [markLine]
+ * @property {(line: MarkLine) => void} [annotateLine]
  */
 
 /**

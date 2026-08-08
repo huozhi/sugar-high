@@ -184,14 +184,14 @@ tokenizer configuration and does not produce HTML.
 
 ```ts
 type ParsedCode = {
-  value: string
-  lines: Array<{
-    index: number
-    value: string
-    tokens: Array<{ type: TokenType; value: string }>
-    className: string
-    style: Record<string, string | number>
-    properties: Record<string, string | number | boolean>
+  readonly value: string
+  readonly lines: ReadonlyArray<{
+    readonly index: number
+    readonly value: string
+    readonly tokens: ReadonlyArray<{ readonly type: TokenType; readonly value: string }>
+    readonly className: string
+    readonly style: Readonly<Record<string, string | number>>
+    readonly properties: Readonly<Record<string, string | number | boolean>>
   }>
 }
 ```

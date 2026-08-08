@@ -2,7 +2,7 @@
 
 export const keywords = new Set([])
 
-export const markLine = (line) => {
+export const annotateLine = (line) => {
   let className = ''
   if (line.value.startsWith('+') && !line.value.startsWith('+++')) className = 'sh__line--diff-add'
   else if (line.value.startsWith('-') && !line.value.startsWith('---')) className = 'sh__line--diff-remove'

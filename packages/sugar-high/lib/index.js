@@ -3,7 +3,6 @@
 import {
   parse,
   render,
-  SugarHigh,
 } from './core.js'
 import { languages } from './lang.js'
 
@@ -19,7 +18,7 @@ function highlight(code, options) {
   return render(parsed, { cx, mark, markLine })
 }
 
-export { highlight, SugarHigh }
+export { highlight }
 
 /**
  * @typedef {import('./core.js').DisplayOptions & { lang?: string }} HighlightOptions
