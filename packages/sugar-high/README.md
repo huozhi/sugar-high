@@ -34,7 +34,15 @@ import { rust } from 'sugar-high/presets'
 const html = highlight(source, { ...rust })
 ```
 
-Available presets: `c`, `css`, `diff`, `go`, `java`, `python`, and `rust`.
+Available presets: `c`, `css`, `diff`, `go`, `java`, `json`, `python`, and `rust`.
+
+The `json` preset highlights quoted object keys as `property` tokens, keeping them distinct from string values:
+
+```js
+import { json } from 'sugar-high/presets'
+
+const html = highlight('{"name": "Alice"}', json)
+```
 
 For more language presets and syntax color themes, see **[sugar-high.vercel.app](https://sugar-high.vercel.app/)**.
 

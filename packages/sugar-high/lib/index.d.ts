@@ -11,6 +11,8 @@ type HighlightOptions = {
    * or null/undefined or a number below 1 for default JS single-quoted string rules.
    */
   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
+  /** Highlight quoted object keys followed by `:` as `property` tokens. */
+  quotedKeys?: boolean
   lineClassName?: (line: string, index: number) => string | null | undefined
 }
 

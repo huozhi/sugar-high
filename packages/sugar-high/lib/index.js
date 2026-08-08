@@ -301,6 +301,12 @@ function isRegexStart(str) {
   return str[0] === '/' && !isCommentStart_Js(str[0], str[1])
 }
 
+function isPropertyKey(code, quoteEnd) {
+  let i = quoteEnd + 1
+  while (i < code.length && /\s/.test(code[i])) i++
+  return code[i] === ':'
+}
+
 /**
  * @param {string} code
  * @param {{
@@ -309,6 +315,7 @@ function isRegexStart(str) {
  *   onCommentStart?: (curr: string, next: string) => number | boolean
  *   onCommentEnd?: (prev: string, curr: string) => number | boolean
  *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
+ *   quotedKeys?: boolean
  *   lineClassName?: (line: string, index: number) => string | null | undefined
  * } | undefined} options
  * Optional `onQuote(curr, i, code)` at `code[i] === "'"`: return length to consume from `i` (>= 1),
@@ -364,6 +371,7 @@ function tokenize(code, options) {
 
   /** @type {string | null} */
   let __strQuote = null
+  let __strTokenStart = 0
   let __regexQuoteStart = false
   let __strTemplateExprStack = 0
   let __strTemplateQuoteStack = 0
@@ -479,15 +487,23 @@ function tokenize(code, options) {
     // Inside jsx literals or template literals, string quotation is still part of it.
     if (isSingleQuotes(curr) && !inJsxLiterals() && !inStrTemplateLiterals()) {
       append()
+      let isStringClose = false
       if (prev !== `\\`) {
         if (__strQuote && curr === __strQuote) {
           __strQuote = null
+          isStringClose = true
         } else if (!__strQuote) {
           __strQuote = curr
+          __strTokenStart = tokens.length
         }
       }
 
       append(T_STRING, curr)
+      if (mergedOptions.quotedKeys && isStringClose && isPropertyKey(code, i)) {
+        for (let tokenIndex = __strTokenStart; tokenIndex < tokens.length; tokenIndex++) {
+          tokens[tokenIndex][0] = T_PROPERTY
+        }
+      }
       continue
     }
 
@@ -966,6 +982,7 @@ function toHtml(lines) {
  *   onCommentStart?: (curr: string, next: string) => number | boolean
  *   onCommentEnd?: (curr: string, prev: string) => number | boolean
  *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
+ *   quotedKeys?: boolean
  *   lineClassName?: (line: string, index: number) => string | null | undefined
  * } | undefined} options
  * `onQuote` same as `tokenize`.
