@@ -27,3 +27,11 @@ export const sql: LanguageConfig
 export const html: LanguageConfig
 export const yaml: LanguageConfig
 export const markdown: LanguageConfig
+export const kotlin: LanguageConfig
+export const swift: LanguageConfig
+export const php: LanguageConfig
+export const toml: LanguageConfig
+export const powershell: LanguageConfig
+export const dockerfile: LanguageConfig
+export const graphql: LanguageConfig
+export const hcl: LanguageConfig
