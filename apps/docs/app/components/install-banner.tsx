@@ -35,10 +35,10 @@ const presetByTitleExample = `\
 import { highlight } from 'sugar-high'
 import { lang } from 'sugar-high/lang'
 
-const languageForTitle = (title) => lang(title.split('.').pop())
+const ext = (title) => title.split('.').pop()
 
-highlight('.card { color: red; }', { lang: languageForTitle('theme.css') })
-highlight('def hi():\\n    print("ok")', { lang: languageForTitle('main.py') })`
+highlight('.card { color: red; }', { lang: lang(ext('theme.css')) })
+highlight('def hi():\\n    print("ok")', { lang: lang(ext('main.py')) })`
 
 const cPresetSample = `\
 #include <stdint.h> /* fixed-width ints */
