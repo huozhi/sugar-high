@@ -4,6 +4,12 @@ import { json } from 'sugar-high/presets'
 import { getTokensAsString } from '../testing-utils'
 
 describe('tokenize - json preset', () => {
+  it('supports JSONC comments in the canonical JSON preset', () => {
+    const actual = getTokensAsString(tokenize('{\n  // note\n  "ok": true /* enabled */\n}', json))
+    expect(actual).toContain('// note => comment')
+    expect(actual).toContain('/* enabled */ => comment')
+  })
+
   it('distinguishes quoted object keys from string values', () => {
     const input = '{"name": "Alice", "age": 30, "active": true, "other": null}'
     const actual = getTokensAsString(tokenize(input, json))

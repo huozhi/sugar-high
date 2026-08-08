@@ -17,6 +17,10 @@
     "./presets": {
       "types": "./lib/presets/index.d.ts",
       "default": "./lib/presets/index.js"
+    },
+    "./languages": {
+      "types": "./lib/languages.d.ts",
+      "default": "./lib/languages.js"
     }
   },
   "description": "Super lightweight JSX syntax highlighter",

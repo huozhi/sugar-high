@@ -1,5 +1,7 @@
 // @ts-check
 
+import { getCanonicalLanguage } from './languages.js'
+
 const JSXBrackets = new Set(['<', '>', '{', '}', '[', ']'])
 const Keywords_Js = new Set([
   'for',
@@ -113,6 +115,24 @@ const DefaultOptions = {
   keywords: Keywords_Js,
   onCommentStart: isCommentStart_Js,
   onCommentEnd: isCommentEnd_Js,
+  jsx: true,
+  regex: true,
+  templateStrings: true,
+}
+
+/**
+ * Resolve a canonical language name or alias, then apply caller overrides.
+ * Unknown languages intentionally retain the JavaScript-compatible defaults.
+ * @param {HighlightOptions | undefined} options
+ * @returns {HighlightOptions}
+ */
+function resolveHighlightOptions(options) {
+  const language = options?.lang ? getCanonicalLanguage(options.lang) : undefined
+  return {
+    ...DefaultOptions,
+    ...language?.config,
+    ...options,
+  }
 }
 
 /**
@@ -314,23 +334,17 @@ function isPropertyKey(code, quoteEnd) {
 
 /**
  * @param {string} code
- * @param {{
- *   keywords?: Set<string>
- *   typeKeywords?: Set<string>
- *   onCommentStart?: (curr: string, next: string) => number | boolean
- *   onCommentEnd?: (prev: string, curr: string) => number | boolean
- *   onQuote?: (curr: string, i: number, code: string) => number | null | undefined
- *   quotedKeys?: boolean
- *   lineClassName?: (line: string, index: number) => string | null | undefined
- * } | undefined} options
+ * @param {HighlightOptions | undefined} options
  * Optional `onQuote(curr, i, code)` at `code[i] === "'"`: return length to consume from `i` (>= 1),
  * or null/undefined/below 1 for default JS single-quoted strings. No substring allocation.
  * @return {Array<[number, string]>}
  */
 function tokenize(code, options) {
-  const mergedOptions = { ...DefaultOptions, ...options }
-  const hasCustomKeywords = !!(options && options.keywords instanceof Set)
-  const isTs = isLikelyTypeScript(code)
+  const language = options?.lang ? getCanonicalLanguage(options.lang) : undefined
+  const mergedOptions = resolveHighlightOptions(options)
+  const hasCustomKeywords = mergedOptions.keywords !== DefaultOptions.keywords
+  const isTs = language?.id === 'typescript' ||
+    (language?.id !== 'javascript' && isLikelyTypeScript(code))
   const resolvedKeywords = hasCustomKeywords
     ? mergedOptions.keywords
     : (isTs ? Keywords_Ts : Keywords_Js)
@@ -342,6 +356,13 @@ function tokenize(code, options) {
 
   const resolvedTypeKeywords =
     mergedOptions.typeKeywords instanceof Set ? mergedOptions.typeKeywords : null
+  const supportsJsx = mergedOptions.jsx !== false
+  const supportsRegex = mergedOptions.regex !== false
+  const supportsTemplateStrings = mergedOptions.templateStrings !== false
+  const normalizeKeyword = mergedOptions.caseInsensitive
+    ? (token) => token.toLowerCase()
+    : (token) => token
+  const isTemplateQuote = (chr) => supportsTemplateStrings && isStrTemplateChr(chr)
 
   let current = ''
   let type = -1
@@ -413,9 +434,9 @@ function tokenize(code, options) {
     // Determine strings first before other types
     if (inStringQuotes() || inStrTemplateLiterals()) {
       return T_STRING
-    } else if (resolvedTypeKeywords && resolvedTypeKeywords.has(token)) {
+    } else if (resolvedTypeKeywords && resolvedTypeKeywords.has(normalizeKeyword(token))) {
       return last[1] === '.' ? T_IDENTIFIER : T_CLS_NUMBER
-    } else if (resolvedKeywords.has(token)) {
+    } else if (resolvedKeywords.has(normalizeKeyword(token))) {
       return last[1] === '.' ? T_IDENTIFIER : T_KEYWORD
     } else if (isLineBreak) {
       return T_BREAK
@@ -513,7 +534,7 @@ function tokenize(code, options) {
     }
 
     if (!inStrTemplateLiterals()) {
-      if (prev !== '\\n' && isStrTemplateChr(curr)) {
+      if (prev !== '\\n' && isTemplateQuote(curr)) {
         append()
         append(T_STRING, curr)
         __strTemplateQuoteStack++
@@ -522,7 +543,7 @@ function tokenize(code, options) {
     }
 
     if (inStrTemplateLiterals()) {
-      if (prev !== '\\n' && isStrTemplateChr(curr)) {
+      if (prev !== '\\n' && isTemplateQuote(curr)) {
         if (__strTemplateQuoteStack > 0) {
           append()
           __strTemplateQuoteStack--
@@ -652,7 +673,7 @@ function tokenize(code, options) {
     }
 
     // if it's not in a jsx tag declaration or a string, close child if next is jsx close tag
-    if (!__jsxTag && (curr === '<' && isIdentifierChar(next) || c_n === '</')) {
+    if (supportsJsx && !__jsxTag && (curr === '<' && isIdentifierChar(next) || c_n === '</')) {
       let prevNonSpace = i - 1
       while (prevNonSpace >= 0 && /\s/.test(code[prevNonSpace])) prevNonSpace--
       const prevChar = prevNonSpace >= 0 ? code[prevNonSpace] : ''
@@ -700,9 +721,9 @@ function tokenize(code, options) {
       }
     }
 
-    const isQuotationChar = isStringQuotation(curr)
+    const isQuotationChar = isSingleQuotes(curr) || isTemplateQuote(curr)
     const isStringTemplateLiterals = inStrTemplateLiterals()
-    const isRegexChar = !__jsxEnter && isRegexStart(c_n)
+    const isRegexChar = supportsRegex && !__jsxEnter && isRegexStart(c_n)
     const isJsxLiterals = inJsxLiterals()
 
     // string quotation
@@ -997,8 +1018,9 @@ function toHtml(lines) {
  * @returns {string}
  */
 function highlight(code, options) {
-  const tokens = tokenize(code, options)
-  const lines = generate(tokens, options)
+  const resolvedOptions = resolveHighlightOptions(options)
+  const tokens = tokenize(code, resolvedOptions)
+  const lines = generate(tokens, resolvedOptions)
   const output = toHtml(lines)
   return output
 }
@@ -1015,3 +1037,19 @@ export {
   generate,
   SugarHigh,
 }
+
+/**
+ * @typedef {Object} HighlightOptions
+ * @property {string} [lang] Canonical language name.
+ * @property {Set<string>} [keywords]
+ * @property {Set<string>} [typeKeywords]
+ * @property {(curr: string, next: string) => number | boolean} [onCommentStart]
+ * @property {(prev: string, curr: string) => number | boolean} [onCommentEnd]
+ * @property {(curr: string, i: number, code: string) => number | null | undefined} [onQuote]
+ * @property {boolean} [quotedKeys]
+ * @property {boolean} [jsx] Whether JSX tag parsing is enabled.
+ * @property {boolean} [regex] Whether JavaScript-style regular expressions are enabled.
+ * @property {boolean} [templateStrings] Whether JavaScript template strings are enabled.
+ * @property {boolean} [caseInsensitive] Whether keyword matching ignores case.
+ * @property {(line: string, index: number) => string | null | undefined} [lineClassName]
+ */
