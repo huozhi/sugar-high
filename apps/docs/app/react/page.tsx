@@ -101,8 +101,6 @@ export default function ReactPage() {
             <Code
               className="react-code-preview"
               lang="python"
-              title="main.py"
-              controls
               lineNumbers
               highlightLines={[2]}
             >

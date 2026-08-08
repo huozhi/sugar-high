@@ -16,7 +16,6 @@
   --sh-comment: #a19595;
 }
 
-.react-demo__toolbar,
 .react-demo__status {
   display: flex;
   align-items: center;
@@ -25,21 +24,14 @@
   font-size: 12px;
 }
 
-.react-demo__toolbar {
-  min-height: 42px;
-  padding: 0 16px;
-  background: #343434;
-  color: #aaa;
-}
-
-.react-demo__toolbar label {
+.react-demo__status label {
   display: flex;
   align-items: center;
   gap: 7px;
   cursor: pointer;
 }
 
-.react-demo__toolbar input {
+.react-demo__status input {
   width: 13px;
   height: 13px;
   margin: 0;
@@ -62,10 +54,6 @@
   min-height: 330px;
   background: #3d3c3c;
   color: #d5d5d5;
-}
-
-.react-demo__editor [data-codice-header] {
-  padding-top: 12px;
 }
 
 .react-demo__editor textarea,
@@ -98,16 +86,6 @@
   --sh-comment: #6a9955;
   background: #343434;
   color: #d5d5d5;
-}
-
-.react-product .react-demo__editor [data-codice-header],
-.react-product .react-code-preview [data-codice-header] {
-  background: #343434;
-}
-
-.react-product .react-demo__editor [data-codice-title],
-.react-product .react-code-preview [data-codice-title] {
-  color: rgba(221, 221, 221, 0.45);
 }
 
 .react-product .sh__line {
