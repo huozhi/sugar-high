@@ -159,7 +159,7 @@ Use `.sh__line--highlighted` when you add highlight classes yourself (for exampl
 
 ## Remark
 
-Use the [remark plugin](https://sugar-high.vercel.app/remark) to highlight fenced code blocks when processing Markdown with [remark](https://remark.js.org/). Details: [`packages/remark-sugar-high`](https://github.com/huozhi/sugar-high/tree/main/packages/remark-sugar-high).
+Use the [remark plugin](https://sugar-high.vercel.app/remark) to highlight fenced code blocks when processing Markdown with [remark](https://remark.js.org/). Details: [`packages/remark`](https://github.com/huozhi/sugar-high/tree/main/packages/remark).
 
 ## React
 
