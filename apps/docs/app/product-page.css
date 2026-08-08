@@ -144,16 +144,18 @@
 .product-card__bar {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 34px;
-  padding: 0 4px;
-  background: white;
-  color: var(--product-muted);
+  padding: 0 14px;
+  background: #f6f6f6;
+  color: rgba(33, 33, 33, 0.34);
   font-family: var(--font-geist-mono), menlo, monospace;
   font-size: 11px;
 }
 
 .product-card__title {
   margin: 0;
+  line-height: 1;
 }
 
 .product-card__body {
@@ -200,8 +202,8 @@
 }
 
 .product-code [data-codice-header] {
-  background: white;
-  color: var(--product-muted);
+  background: #f6f6f6;
+  color: rgba(33, 33, 33, 0.34);
 }
 
 .product-code pre {
