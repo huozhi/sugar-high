@@ -12,13 +12,15 @@
     "docs:build": "pnpm build && pnpm --filter docs build",
     "release-video:studio": "pnpm --filter release-video dev",
     "release-video:render": "pnpm --filter release-video render",
-    "bump": "npm version --prefix packages/sugar-high --no-git-tag-version",
-    "bump:remark": "npm version --prefix packages/remark --no-git-tag-version"
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm test && pnpm build && changeset publish"
   },
   "packageManager": "pnpm@9.15.9",
   "license": "MIT",
   "author": "huozhi",
   "devDependencies": {
+    "@changesets/cli": "^2.31.1",
     "next": "^16.2.6"
   }
 }
