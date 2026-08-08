@@ -235,13 +235,18 @@ function isSign(ch) {
   return Signs.has(ch)
 }
 
+const HtmlEntities = /** @type {Record<string, string>} */ ({
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#039;',
+})
+
+/** @param {string} str */
 function encode(str) {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
+  if (!/[&<>"']/.test(str)) return str
+  return str.replace(/[&<>"']/g, chr => HtmlEntities[chr])
 }
 
 function isWord(chr) {

@@ -4,6 +4,18 @@ import {
   getTokensAsString,
 } from './testing-utils'
 
+describe('HTML encoding', () => {
+  it('encodes all characters with special meaning in HTML', () => {
+    const html = highlight('& < > " \'')
+
+    expect(html).toContain('&amp;')
+    expect(html).toContain('&lt;')
+    expect(html).toContain('&gt;')
+    expect(html).toContain('&quot;')
+    expect(html).toContain('&#039;')
+  })
+})
+
 describe('function calls', () => {
   it('dot catch should not be determined as keyword', () => {
     const code = `promise.catch(log)`
