@@ -53,7 +53,7 @@ a:hover {
 /* Showcase band — a bit narrower than the old 1200px layout */
 .container-showcase {
   max-width: min(900px, 94vw);
-  padding: 0 16px 40px;
+  padding: 16px;
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
@@ -136,7 +136,7 @@ input[type='checkbox']:checked {
   width: 100%;
   max-width: 100%;
   margin: 2rem auto 0;
-  padding: 2rem 12px 2.5rem;
+  padding: 2rem 12px 0rem;
   box-sizing: border-box;
   overflow: visible;
   min-height: calc(var(--showcase-preview-max-h) + 150px);

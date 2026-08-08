@@ -5,7 +5,6 @@
   justify-content: center;
   max-width: 100vw;
   margin: 0;
-  padding: 24px 0 0;
   background: transparent;
   touch-action: pan-y;
 }
@@ -132,94 +131,6 @@
   overflow-x: auto;
 }
 
-.install-banner__sample-grid {
-  --install-banner-card-edge-spread: min(96px, 14vw);
-  --install-banner-card-inner-spread: min(32px, 5vw);
-  width: 100%;
-  max-width: 720px;
-  height: 320px;
-  position: relative;
-  margin: 52px 0 78px;
-  overflow: visible;
-  overflow-y: visible;
-}
-
-.install-banner__code.install-banner__code--sample {
-  --install-banner-card-shift: 0px;
-  --install-banner-card-rotate: 0deg;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: min(430px, calc(100% - 40px));
-  min-height: 176px;
-  border: 1px solid rgb(255 255 255 / 10%);
-  border-radius: 6px;
-  background-color: rgb(56 56 56 / 88%);
-  box-shadow:
-    0 -1px 0 rgb(255 255 255 / 8%),
-    0 12px 28px rgb(0 0 0 / 16%);
-  backdrop-filter: blur(2px);
-  transform: translateX(-50%) translateX(var(--install-banner-card-shift, 0))
-    translateY(var(--install-banner-card-lift, 0))
-    rotate(var(--install-banner-card-rotate, 0deg));
-  transform-origin: 50% 100%;
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.22s ease,
-    color 0.3s ease,
-    transform 0.56s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.install-banner__sample-grid--spread .install-banner__code--sample {
-  --install-banner-card-shift: var(--install-banner-card-final-shift, 0px);
-  --install-banner-card-rotate: var(--install-banner-card-final-rotate, 0deg);
-}
-
-.install-banner__sample-grid .install-banner__code--sample:hover,
-.install-banner__sample-grid .install-banner__code--sample:focus-within {
-  box-shadow:
-    0 -1px 0 rgb(255 255 255 / 10%),
-    0 22px 42px rgb(0 0 0 / 22%);
-}
-
-.install-banner__sample-grid .install-banner__code--sample:nth-child(1) {
-  --install-banner-card-final-shift: calc(var(--install-banner-card-edge-spread) * -1);
-  --install-banner-card-final-rotate: -13deg;
-  z-index: 1;
-}
-
-.install-banner__sample-grid .install-banner__code--sample:nth-child(2) {
-  --install-banner-card-final-shift: calc(var(--install-banner-card-inner-spread) * -1);
-  --install-banner-card-final-rotate: -4deg;
-  z-index: 2;
-}
-
-.install-banner__sample-grid .install-banner__code--sample:nth-child(3) {
-  --install-banner-card-final-shift: var(--install-banner-card-inner-spread);
-  --install-banner-card-final-rotate: 5deg;
-  z-index: 3;
-}
-
-.install-banner__sample-grid .install-banner__code--sample:nth-child(4) {
-  --install-banner-card-final-shift: var(--install-banner-card-edge-spread);
-  --install-banner-card-final-rotate: 14deg;
-  z-index: 4;
-}
-
-.install-banner__sample-grid .install-banner__code--sample.install-banner__code--sample-active {
-  --install-banner-card-lift: -26px;
-  z-index: 10;
-  box-shadow:
-    0 -1px 0 rgb(255 255 255 / 12%),
-    0 28px 52px rgb(0 0 0 / 26%);
-}
-
-.install-banner__sample-grid .install-banner__code--sample.install-banner__code--sample-active:hover,
-.install-banner__sample-grid .install-banner__code--sample.install-banner__code--sample-active:focus-within {
-  --install-banner-card-lift: -26px;
-}
-
 .install-banner__code .sh__line--diff-add {
   background-color: color-mix(in srgb, #2da44e 18%, transparent);
 }
@@ -255,27 +166,6 @@
 
 .install-banner[data-install-theme='light'] .install-banner__code .sh__line--highlighted {
   background-color: rgb(73 152 255 / 12%);
-}
-
-.install-banner[data-install-theme='light'] .install-banner__code.install-banner__code--sample {
-  background-color: rgb(246 246 246 / 88%);
-  border-color: rgb(53 65 80 / 10%);
-  box-shadow:
-    0 -1px 0 rgb(255 255 255 / 72%),
-    0 12px 28px rgb(53 65 80 / 12%);
-}
-
-.install-banner[data-install-theme='light'] .install-banner__sample-grid .install-banner__code--sample:hover,
-.install-banner[data-install-theme='light'] .install-banner__sample-grid .install-banner__code--sample:focus-within {
-  box-shadow:
-    0 -1px 0 rgb(255 255 255 / 82%),
-    0 22px 42px rgb(53 65 80 / 18%);
-}
-
-.install-banner[data-install-theme='light'] .install-banner__sample-grid .install-banner__code--sample.install-banner__code--sample-active {
-  box-shadow:
-    0 -1px 0 rgb(255 255 255 / 88%),
-    0 28px 52px rgb(53 65 80 / 22%);
 }
 
 .install-banner__block {
@@ -344,33 +234,4 @@
     height: 30px;
   }
 
-  .install-banner__sample-grid {
-    --install-banner-card-edge-spread: 0px;
-    --install-banner-card-inner-spread: 0px;
-    height: 340px;
-    margin-top: 52px;
-    margin-bottom: 104px;
-    max-width: 100%;
-    overflow: visible;
-    overflow-y: visible;
-  }
-
-  .install-banner__code.install-banner__code--sample {
-    width: min(390px, calc(100% - 24px));
-    --install-banner-card-final-rotate: 0deg;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .install-banner__code.install-banner__code--sample {
-    transition-duration: 0.01ms;
-  }
-
-  .install-banner__sample-grid .install-banner__code--sample:hover,
-  .install-banner__sample-grid .install-banner__code--sample:focus-within,
-  .install-banner__sample-grid .install-banner__code--sample.install-banner__code--sample-active,
-  .install-banner__sample-grid .install-banner__code--sample.install-banner__code--sample-active:hover,
-  .install-banner__sample-grid .install-banner__code--sample.install-banner__code--sample-active:focus-within {
-    --install-banner-card-lift: -8px;
-  }
 }

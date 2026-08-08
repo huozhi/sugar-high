@@ -41,7 +41,7 @@ export const Editor = forwardRef(function Editor(
   } & {
     fontSize?: string | number
     fontFamily?: string
-  } & React.HTMLAttributes<HTMLDivElement>,
+  } & Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>,
   ref: React.Ref<HTMLDivElement>
 ) {
   const [code, setCode] = useState(value)

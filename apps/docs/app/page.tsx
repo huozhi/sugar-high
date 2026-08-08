@@ -17,8 +17,9 @@ export default function Page() {
 
       <SyntaxThemeProvider>
         <Carousel />
-        <LiveEditor />
-        <InstallBanner />
+        <InstallBanner>
+          <LiveEditor />
+        </InstallBanner>
       </SyntaxThemeProvider>
     </>
   )

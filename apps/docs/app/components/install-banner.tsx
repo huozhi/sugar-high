@@ -2,13 +2,12 @@
 
 import {
   useContext,
-  useEffect,
   useMemo,
-  useRef,
   useState,
   type CSSProperties,
   type KeyboardEvent,
   type PointerEvent,
+  type ReactNode,
 } from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from '@sugar-high/react'
@@ -35,57 +34,12 @@ const presetByTitleExample = `\
 import { highlight } from 'sugar-high'
 import { lang } from 'sugar-high/lang'
 
-const ext = (title) => title.split('.').pop()
+highlight('const ready = true') // JavaScript is the default
+highlight('print("hi")', { lang: 'python' }) // canonical name
+highlight('name: sugar-high', { lang: lang('yml') }) // yml → yaml`
 
-highlight('.card { color: red; }', { lang: lang(ext('theme.css')) })
-highlight('def hi():\\n    print("ok")', { lang: lang(ext('main.py')) })`
-
-const cPresetSample = `\
-#include <stdint.h> /* fixed-width ints */
-#define MIX(x,y) (((x) & 0xffu) ^ ((y) >> 8) | (0xab00u)) // bit ops
-typedef struct { uint16_t a; uint32_t b; } hdr_t; // packed header fields
-static inline uint32_t rot(uint32_t x, int n) { return (x << n) | (x >> (32 - n)); } // rotate
-`
-
-const javaPresetSample = `\
-// FQCN-heavy lines: generics, streams, method refs (no extra imports)
-java.util.List<java.util.Map<String, Integer>> rows = java.util.List.of(java.util.Map.of("a", 1), java.util.Map.of("b", 2));
-java.util.stream.Stream.of("x", "y").map(String::toUpperCase).filter(s -> !s.isEmpty()).forEach(System.out::println);
-`
-
-const pythonPresetSample = `\
-from __future__ import annotations  # postponed annotations
-from itertools import chain, groupby  # stdlib
-RE = r"(?x) ^\\s* (?P<name> [A-Za-z_]\\w* ) \\s* = \\s* (?P<val> .+ ) $ "  # verbose regex
-def windows(xs: list[int], n: int) -> list[list[int]]: return [xs[i : i + n] for i in range(0, len(xs), n)]  # slices
-`
-
-const goPresetSample = `\
-package main
-import "encoding/json"; import "fmt"; import "strings" // one line, three imports
-type Row struct { ID string \`json:"id"\`; Tags []string \`json:"tags,omitempty"\` } // struct tags
-func (r Row) Label() string { return fmt.Sprintf("%s [%s]", r.ID, strings.Join(r.Tags, ",")) } // Sprintf + Join
-var _ json.Marshaler = (*Row)(nil) // interface satisfaction
-`
-
-const diffPresetSample = `\
-  export const theme = {
--   accent: '#f47067',
-+   accent: '#2876db',
-    surface: '#ffffff',
-  }
-`
-
-export default function InstallBanner() {
+export default function InstallBanner({ children }: { children?: ReactNode }) {
   const [bannerTheme, setBannerTheme] = useState<'light' | 'dark'>('light')
-  const [activeLanguageSampleIndex, setActiveLanguageSampleIndex] =
-    useState<number | null>(null)
-  const [hasSpreadLanguageSamples, setHasSpreadLanguageSamples] =
-    useState(false)
-  const lastLanguageSampleHoverPoint = useRef<{ x: number; y: number } | null>(
-    null
-  )
-  const languageSampleGridRef = useRef<HTMLDivElement | null>(null)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
   const plateColors =
@@ -126,16 +80,6 @@ ${formatPlateAsCssVars(darkPlate)}
   const darkCodeShVars = useMemo(() => plateToShVarMap(darkPlate), [darkPlate])
   const codeShVars = bannerTheme === 'light' ? lightCodeShVars : darkCodeShVars
 
-  const languagePresetSamples = useMemo(
-    () => [
-      { title: 'main.c', markup: highlight(cPresetSample, { lang: 'c' }) },
-      { title: 'main.go', markup: highlight(goPresetSample, { lang: 'go' }) },
-      { title: 'App.java', markup: highlight(javaPresetSample, { lang: 'java' }) },
-      { title: 'main.py', markup: highlight(pythonPresetSample, { lang: 'python' }) },
-    ],
-    []
-  )
-
   const presetByTitleMarkup = useMemo(
     () =>
       highlight(presetByTitleExample, {
@@ -153,27 +97,6 @@ ${formatPlateAsCssVars(darkPlate)}
       }),
     []
   )
-
-  const activateLanguageSampleFromPointer = (
-    index: number,
-    event: PointerEvent<HTMLDivElement>
-  ) => {
-    if (event.pointerType === 'touch') return
-
-    const point = { x: event.clientX, y: event.clientY }
-    const previousPoint = lastLanguageSampleHoverPoint.current
-
-    if (
-      previousPoint &&
-      previousPoint.x === point.x &&
-      previousPoint.y === point.y
-    ) {
-      return
-    }
-
-    lastLanguageSampleHoverPoint.current = point
-    setActiveLanguageSampleIndex(index)
-  }
 
   const activateThemeFromPointer = (
     theme: 'light' | 'dark',
@@ -194,37 +117,6 @@ ${formatPlateAsCssVars(darkPlate)}
     }
   }
 
-  useEffect(() => {
-    const grid = languageSampleGridRef.current
-    if (!grid) return
-
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    )
-
-    if (prefersReducedMotion.matches || !('IntersectionObserver' in window)) {
-      setHasSpreadLanguageSamples(true)
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return
-
-        setHasSpreadLanguageSamples(true)
-        observer.disconnect()
-      },
-      {
-        rootMargin: '0px 0px -12% 0px',
-        threshold: 0.28,
-      }
-    )
-
-    observer.observe(grid)
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
     <div
       className="install-banner"
@@ -233,7 +125,7 @@ ${formatPlateAsCssVars(darkPlate)}
     >
       <style>
         {`
-        .install-banner [data-codice-header] {
+        .install-banner__code [data-codice-header] {
           display: none;
         }
         `}
@@ -312,8 +204,9 @@ ${formatPlateAsCssVars(darkPlate)}
         <div className="install-banner__block">
           <h2>Languages</h2>
           <p>
-            Pass a canonical language name to <code>highlight</code>, or normalize a filename
-            extension with <code>sugar-high/lang</code>.
+            JavaScript works by default. Pass canonical names directly. <code>lang()</code> turns
+            aliases and extensions such as <code>py</code> and <code>yml</code> into
+            <code>python</code> and <code>yaml</code>.
           </p>
         </div>
         <div
@@ -325,61 +218,13 @@ ${formatPlateAsCssVars(darkPlate)}
           </Code>
           <CopyButton codeSnippet={presetByTitleExample} />
         </div>
-        <div
-          ref={languageSampleGridRef}
-          className={`install-banner__sample-grid${
-            hasSpreadLanguageSamples
-              ? ' install-banner__sample-grid--spread'
-              : ''
-          }`}
-        >
-          {languagePresetSamples.map((sample, index) => (
-            <div
-              key={sample.title}
-              className={`install-banner__code install-banner__code--sample${
-                activeLanguageSampleIndex === index
-                  ? ' install-banner__code--sample-active'
-                  : ''
-              }`}
-              style={codeShVars as CSSProperties}
-              role="button"
-              tabIndex={0}
-              aria-pressed={activeLanguageSampleIndex === index}
-              aria-label={`Bring ${sample.title} example to the front`}
-              onPointerMove={(event) =>
-                activateLanguageSampleFromPointer(index, event)
-              }
-              onPointerDownCapture={() => setActiveLanguageSampleIndex(index)}
-              onFocus={() => setActiveLanguageSampleIndex(index)}
-              onClick={() => setActiveLanguageSampleIndex(index)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault()
-                  setActiveLanguageSampleIndex(index)
-                }
-              }}
-            >
-              <Code title={sample.title} asMarkup preformatted>
-                {sample.markup}
-              </Code>
-            </div>
-          ))}
-        </div>
         <div className="install-banner__block">
-          <h2>Diff examples</h2>
+          <h2>Code block &amp; editor</h2>
           <p>
-            Diff and patch files use <code>lang: 'diff'</code> to mark added, removed, hunk, and
-            metadata lines.
+            Use the <Link href="/react">{`<Editor /> & <Code />`}</Link> to present or edit highlighted code.
           </p>
         </div>
-        <div
-          className="install-banner__code"
-          style={codeShVars as CSSProperties}
-        >
-          <Code title="theme.diff" asMarkup preformatted>
-            {highlight(diffPresetSample, { lang: 'diff' })}
-          </Code>
-        </div>
+        {children}
         <div className="install-banner__block">
           <h2>Usage with remark.js</h2>
           <p>
