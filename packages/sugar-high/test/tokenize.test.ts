@@ -15,6 +15,14 @@ describe('tokenize - typeKeywords', () => {
   })
 })
 
+describe('tokenize - whitespace', () => {
+  it('handles long whitespace runs without rescanning the accumulated token', () => {
+    const spaces = ' '.repeat(100_000)
+
+    expect(tokenize(spaces)).toEqual([[10, spaces]])
+  })
+})
+
 describe('tokenize - customized keywords', () => {
   it('should tokenize the input string with the given keywords', () => {
     const input = 'def f(): return 1'
