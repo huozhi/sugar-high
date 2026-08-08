@@ -1,7 +1,7 @@
 // @ts-check
 
 import {
-  generate, toParsedCode, SugarHigh, toHtml, T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER,
+  assemble, generate, SugarHigh, toHtml, T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER,
   T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 } from './shared.js'
 
@@ -133,7 +133,7 @@ function tokenize(code, options) {
 
 /** @param {string} code @param {ParseOptions | undefined} options */
 function parse(code, options) {
-  const parsed = toParsedCode(code, tokenize(code, options))
+  const parsed = assemble(code, tokenize(code, options))
   if (options?.markLine) {
     for (const line of parsed.lines) options.markLine(line)
   }

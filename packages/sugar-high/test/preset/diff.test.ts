@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { generate, highlight, tokenize } from '../..'
-import { diff } from '../../lib/presets/index.js'
+import { highlight } from '../..'
+import { generate, parse } from '../../lib/core.js'
+import * as diff from '../../lib/presets/lang/diff.js'
 
 describe('diff preset', () => {
   it('adds line classes for simple line diffs', () => {
@@ -15,7 +16,7 @@ describe('diff preset', () => {
       '+const newValue = true',
     ].join('\n')
 
-    const lines = generate(tokenize(input, diff), diff)
+    const lines = generate(parse(input, diff))
     const classNames = lines.map((line) => line.properties.className)
 
     expect(classNames).toEqual([
@@ -31,7 +32,7 @@ describe('diff preset', () => {
   })
 
   it('includes diff line classes in highlighted HTML', () => {
-    const html = highlight('-old\n+new', diff)
+    const html = highlight('-old\n+new', { lang: 'diff' })
 
     expect(html).toContain('class="sh__line sh__line--diff-remove"')
     expect(html).toContain('class="sh__line sh__line--diff-add"')

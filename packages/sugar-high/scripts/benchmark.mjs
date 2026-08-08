@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { brotliCompressSync, constants, gzipSync } from 'node:zlib'
-import { highlight as highlightBuiltin } from '../lib/index.js'
+import { highlight } from '../lib/index.js'
 import { parse, render } from '../lib/core.js'
 import * as python from '../lib/presets/lang/python.js'
 
@@ -81,7 +81,7 @@ try {
   })))
 
   const performance = [
-    benchmark('builtin: { lang: "python" }', () => highlightBuiltin(source, { lang: 'python' })),
+    benchmark('builtin: { lang: "python" }', () => highlight(source, { lang: 'python' })),
     benchmark('core: parse and render python', () => render(parse(source, python))),
   ]
 

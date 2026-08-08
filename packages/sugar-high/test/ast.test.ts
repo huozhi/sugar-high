@@ -1,8 +1,19 @@
 import { describe, expect, it } from 'vitest'
-import { tokenize, generate, highlight } from '../lib'
+import { highlight } from '../lib'
+import * as core from '../lib/core.js'
+import * as javascript from '../lib/presets/lang/javascript.js'
+import { assemble } from '../lib/shared.js'
 import {
   getTokensAsString,
 } from './testing-utils'
+
+const tokenize = (code, options = {}) =>
+  core.tokenize(code, { ...javascript, ...options })
+
+const generate = (tokens, options?) => {
+  const value = tokens.map(([, tokenValue]) => tokenValue).join('')
+  return core.generate(assemble(value, tokens), options)
+}
 
 describe('HTML encoding', () => {
   it('encodes all characters with special meaning in HTML', () => {

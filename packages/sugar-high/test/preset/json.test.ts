@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { tokenize } from '../..'
+import { tokenize } from '../../lib/core.js'
 import { json } from '../../lib/presets/index.js'
+import * as javascript from '../../lib/presets/lang/javascript.js'
 import { getTokensAsString } from '../testing-utils'
 
 describe('tokenize - json preset', () => {
@@ -16,29 +17,19 @@ describe('tokenize - json preset', () => {
 
     expect(actual).toEqual([
       '{ => sign',
-      '" => property',
-      'name => property',
-      '" => property',
+      '"name" => property',
       ': => sign',
-      '" => string',
-      'Alice => string',
-      '" => string',
+      '"Alice" => string',
       ', => sign',
-      '" => property',
-      'age => property',
-      '" => property',
+      '"age" => property',
       ': => sign',
       '30 => class',
       ', => sign',
-      '" => property',
-      'active => property',
-      '" => property',
+      '"active" => property',
       ': => sign',
       'true => keyword',
       ', => sign',
-      '" => property',
-      'other => property',
-      '" => property',
+      '"other" => property',
       ': => sign',
       'null => keyword',
       '} => sign',
@@ -50,32 +41,25 @@ describe('tokenize - json preset', () => {
     const actual = getTokensAsString(tokenize(input, json))
 
     expect(actual.filter((token) => token.includes('=> property'))).toEqual([
-      '" => property',
-      'items => property',
-      '" => property',
-      '" => property',
-      'label => property',
-      '" => property',
+      '"items" => property',
+      '"label" => property',
     ])
-    expect(actual).toContain('one:two => string')
+    expect(actual).toContain('"one:two" => string')
   })
 
   it('handles an escaped quote inside a property key', () => {
     const actual = getTokensAsString(tokenize('{"a\\"b": 1}', json))
 
     expect(actual.filter((token) => token.includes('=> property'))).toEqual([
-      '" => property',
-      'a\\ => property',
-      '" => property',
-      'b => property',
-      '" => property',
+      '"a\\"b" => property',
     ])
   })
 
   it('does not change default JavaScript string classification', () => {
-    const actual = getTokensAsString(tokenize('{"name": "Alice"}'))
+    const actual = getTokensAsString(tokenize('{"name": "Alice"}', javascript))
 
     expect(actual).not.toContain('name => property')
+    expect(actual).toContain('" => string')
     expect(actual).toContain('name => string')
   })
 })

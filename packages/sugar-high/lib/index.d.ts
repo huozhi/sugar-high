@@ -2,12 +2,10 @@ import type {
   DisplayOptions,
   MarkLine,
   MarkToken,
-  ParsedCode,
-  ParsedLine,
   TokenType,
 } from './core.js'
 
-export type { DisplayOptions, MarkLine, MarkToken, ParsedCode, ParsedLine, TokenType }
+export type { DisplayOptions, MarkLine, MarkToken, TokenType }
 
 export type LanguageName =
   | 'javascript'
@@ -42,13 +40,6 @@ export type HighlightOptions = DisplayOptions & {
 }
 
 export function highlight(code: string, options?: HighlightOptions): string
-
-/** Structured parsing for integrations. Most users only need highlight(). */
-export function parse(code: string, options?: { lang?: LanguageName }): ParsedCode
-export { generate, render } from './core.js'
-
-/** Low-level compatibility export. */
-export function tokenize(code: string, options?: { lang?: LanguageName }): Array<[number, string]>
 
 export const SugarHigh: {
   TokenTypes: { [key: number]: string }

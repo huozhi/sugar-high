@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { highlight, tokenize } from 'sugar-high'
+import { highlight } from 'sugar-high'
+import * as core from 'sugar-high/core'
 import { lang, languages } from 'sugar-high/lang'
 import { getTokensAsString } from './testing-utils'
+
+const tokenize = (code, { lang }) =>
+  core.tokenize(code, languages.find(({ id }) => id === lang)?.config)
 
 describe('language registry', () => {
   it.each([

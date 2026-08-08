@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { tokenize } from '..'
+import * as core from '../lib/core.js'
+import * as javascript from '../lib/presets/lang/javascript.js'
 import { getTokensAsString } from './testing-utils'
+
+const tokenize = (code, options = {}) =>
+  core.tokenize(code, { ...javascript, ...options })
 
 describe('tokenize - typeKeywords', () => {
   it('classifies typeKeywords as class before keywords', () => {

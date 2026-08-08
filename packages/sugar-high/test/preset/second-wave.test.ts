@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { tokenize } from '../..'
 import type { LanguageName } from '../..'
+import * as core from '../../lib/core.js'
+import { languages } from '../../lib/lang.js'
 import { getTokensAsString } from '../testing-utils'
+
+const tokenize = (code, { lang }) =>
+  core.tokenize(code, languages.find(({ id }) => id === lang)?.config)
 
 const cases: Array<[LanguageName, string, string, string]> = [
   ['kotlin', 'data class User(val name: String)', 'data => keyword', 'String => class'],
