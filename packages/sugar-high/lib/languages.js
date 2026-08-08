@@ -104,7 +104,7 @@ for (const language of languages) {
  * @param {string} name
  * @returns {Language | undefined}
  */
-function getLanguage(name) {
+function findLanguage(name) {
   if (typeof name !== 'string') return undefined
   return languageLookup.get(normalizeLanguageName(name))
 }
@@ -115,26 +115,16 @@ function getLanguage(name) {
  * @param {string} name
  * @returns {Language | undefined}
  */
-function getCanonicalLanguage(name) {
-  if (typeof name !== 'string') return undefined
-  const normalized = normalizeLanguageName(name)
-  const language = languageLookup.get(normalized)
-  return language?.id === normalized ? language : undefined
-}
-
 /**
  * Resolve a name, alias, or extension to its canonical language name.
  * @param {string} name
  * @returns {string | undefined}
  */
-function resolveLanguage(name) {
-  return getLanguage(name)?.id
+function lang(name) {
+  return findLanguage(name)?.id
 }
 
 export {
-  getCanonicalLanguage,
-  getLanguage,
+  lang,
   languages,
-  normalizeLanguageName,
-  resolveLanguage,
 }

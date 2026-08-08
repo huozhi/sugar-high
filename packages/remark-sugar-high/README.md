@@ -38,6 +38,10 @@ await remark()
   .process(file, (err, file) => console.log(String(file)));
 ```
 
+Fence aliases are normalized to canonical Sugar High language names. For example, `bash` and `sh`
+use `shell`, `jsonc` uses `json`, and `tf` uses `hcl`. Generated `sh-lang--*` classes and the
+`data-sh-language` attribute use the canonical name.
+
 <details>
 <summary>Output HTML</summary>
 <p>

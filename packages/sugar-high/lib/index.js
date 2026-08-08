@@ -1,6 +1,8 @@
 // @ts-check
 
-import { getCanonicalLanguage } from './languages.js'
+import { languages } from './languages.js'
+
+const canonicalLang = (name) => languages.find((language) => language.id === name)
 
 const JSXBrackets = new Set(['<', '>', '{', '}', '[', ']'])
 const Keywords_Js = new Set([
@@ -127,7 +129,7 @@ const DefaultOptions = {
  * @returns {HighlightOptions}
  */
 function resolveHighlightOptions(options) {
-  const language = options?.lang ? getCanonicalLanguage(options.lang) : undefined
+  const language = options?.lang ? canonicalLang(options.lang) : undefined
   return {
     ...DefaultOptions,
     ...language?.config,
@@ -340,7 +342,7 @@ function isPropertyKey(code, quoteEnd) {
  * @return {Array<[number, string]>}
  */
 function tokenize(code, options) {
-  const language = options?.lang ? getCanonicalLanguage(options.lang) : undefined
+  const language = options?.lang ? canonicalLang(options.lang) : undefined
   const mergedOptions = resolveHighlightOptions(options)
   const hasCustomKeywords = mergedOptions.keywords !== DefaultOptions.keywords
   const isTs = language?.id === 'typescript' ||

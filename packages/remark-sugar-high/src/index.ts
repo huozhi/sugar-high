@@ -1,5 +1,5 @@
 import { tokenize, generate, type HighlightOptions } from 'sugar-high'
-import * as languagePresets from 'sugar-high/presets'
+import { lang as canonicalizeLang } from 'sugar-high/languages'
 import { map as unistMap } from 'unist-util-map'
 import rangeParser from 'parse-numeric-range'
 
@@ -87,11 +87,11 @@ const highlight = () => (tree) => {
       }
     })
 
-    let options: HighlightOptions | undefined = undefined
-
-    if (lang in languagePresets) {
-      options = languagePresets[lang]
-    }
+    const canonicalLang = canonicalizeLang(lang)
+    const outputLang = canonicalLang || lang
+    const options: HighlightOptions | undefined = canonicalLang
+      ? { lang: canonicalLang }
+      : undefined
 
     const codeText =
       node.value ||
@@ -150,8 +150,8 @@ const highlight = () => (tree) => {
     const code = h(
       'code',
       {
-        className: `sh-lang--${lang}`,
-        ['data-sh-language']: `${lang}`,
+        className: `sh-lang--${outputLang}`,
+        ['data-sh-language']: `${outputLang}`,
       },
       childrenLines
     )
@@ -159,7 +159,7 @@ const highlight = () => (tree) => {
     const pre = h(
       'pre',
       {
-        className: `sh-lang--${lang}`,
+        className: `sh-lang--${outputLang}`,
       },
       [code]
     )

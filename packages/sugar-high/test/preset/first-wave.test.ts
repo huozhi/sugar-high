@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { tokenize } from '../..'
+import { highlight, tokenize } from '../..'
 import { getTokensAsString } from '../testing-utils'
 
 describe('first-wave language presets', () => {
@@ -61,8 +61,9 @@ describe('first-wave language presets', () => {
   })
 
   it('adds semantic line classes to Markdown', () => {
-    const html = tokenize('# Title\n- one\n> quote', { lang: 'markdown' })
-    // Tokenization remains source-preserving; line semantics are applied during generation.
-    expect(html.map(([, value]) => value).join('')).toBe('# Title\n- one\n> quote')
+    const html = highlight('# Title\n- one\n> quote', { lang: 'markdown' })
+    expect(html).toContain('sh__line sh__line--heading')
+    expect(html).toContain('sh__line sh__line--list')
+    expect(html).toContain('sh__line sh__line--quote')
   })
 })

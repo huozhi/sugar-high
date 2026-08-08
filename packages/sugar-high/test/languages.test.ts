@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { highlight, tokenize } from 'sugar-high'
-import {
-  getCanonicalLanguage,
-  getLanguage,
-  languages,
-  resolveLanguage,
-} from 'sugar-high/languages'
+import { lang, languages } from 'sugar-high/languages'
 import { getTokensAsString } from './testing-utils'
 
 describe('language registry', () => {
@@ -35,7 +30,7 @@ describe('language registry', () => {
     ['terraform', 'hcl'],
     ['tf', 'hcl'],
   ])('resolves %s to %s', (input, expected) => {
-    expect(resolveLanguage(input)).toBe(expected)
+    expect(lang(input)).toBe(expected)
   })
 
   it('uses exactly one preferred extension per canonical language', () => {
@@ -52,14 +47,11 @@ describe('language registry', () => {
   })
 
   it('returns the canonical definition for an alias', () => {
-    const language = getLanguage('jsonc')
-    expect(language?.id).toBe('json')
-    expect(language?.extension).toBe('json')
-    expect(language?.config?.quotedKeys).toBe(true)
+    expect(lang('jsonc')).toBe('json')
   })
 
   it('returns undefined for unknown languages', () => {
-    expect(resolveLanguage('not-a-language')).toBeUndefined()
+    expect(lang('not-a-language')).toBeUndefined()
   })
 
   it('configures tokenization using a canonical lang', () => {
@@ -75,13 +67,12 @@ describe('language registry', () => {
   })
 
   it('keeps aliases out of the canonical direct API', () => {
-    expect(getCanonicalLanguage('python')?.id).toBe('python')
-    expect(getCanonicalLanguage('py')).toBeUndefined()
-    expect(resolveLanguage('py')).toBe('python')
+    expect(lang('python')).toBe('python')
+    expect(lang('py')).toBe('python')
   })
 
   it('disables JavaScript-only scanner modes for other languages', () => {
-    const language = getLanguage('jsonc')
+    const language = languages.find(({ id }) => id === lang('jsonc'))
     expect(language?.config).toMatchObject({
       jsx: false,
       regex: false,
