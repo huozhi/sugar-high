@@ -343,7 +343,6 @@ export default function LiveEditor({
               controls={false}
               value={displayCode}
               fontSize={15}
-              lineNumbersWidth='2rem'
               extension={fileExtension}
               onChange={handleEditorChange}
             />
