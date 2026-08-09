@@ -67,8 +67,8 @@ describe('first-wave language presets', () => {
 
   it('adds semantic line classes to Markdown', () => {
     const html = highlight('# Title\n- one\n> quote', { lang: 'markdown' })
-    expect(html).toContain('sh__line sh__line--heading')
-    expect(html).toContain('sh__line sh__line--list')
-    expect(html).toContain('sh__line sh__line--quote')
+    expect(html).toContain('sh__line sh__line--markdown-heading')
+    expect(html).toContain('sh__line sh__line--markdown-list')
+    expect(html).toContain('sh__line sh__line--markdown-quote')
   })
 })
