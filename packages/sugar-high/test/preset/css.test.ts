@@ -11,4 +11,22 @@ describe('tokenize - css preset', () => {
     expect(actual).toContain('media => identifier')
     expect(actual).toContain('/* note */ => comment')
   })
+
+  it('keeps CSS hex colors together regardless of their first digit', () => {
+    const input = 'a { color: #fff; color: #abcd; color: #abcdef; color: #abcdef80; color: #12345678; }'
+    const actual = getTokensAsString(tokenize(input, css))
+
+    for (const color of ['#fff', '#abcd', '#abcdef', '#abcdef80', '#12345678']) {
+      expect(actual).toContain(`${color} => string`)
+    }
+  })
+
+  it('does not consume invalid hex lengths or identifier-like hashes', () => {
+    const input = 'a { color: #ff; color: #fffff; color: #fffffff; color: #fffffffff; } #face-value {}'
+    const actual = tokenize(input, css).map(([, value]) => value)
+
+    for (const value of ['#ff', '#fffff', '#fffffff', '#fffffffff', '#face-value']) {
+      expect(actual).not.toContain(value)
+    }
+  })
 })
