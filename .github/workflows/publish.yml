@@ -41,7 +41,7 @@ jobs:
       - name: Create or update release PR
         uses: changesets/action@v1
         with:
-          version: pnpm version
+          version: pnpm run version
           title: Release packages
           commit: Release packages
         env:
