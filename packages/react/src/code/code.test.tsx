@@ -1,8 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import { Code } from '.'
+import { getLineNumbersWidth } from './code'
 import { renderToString } from 'react-dom/server'
 
 describe('Code', () => {
+  it('expands the line number gutter for long files', () => {
+    expect(getLineNumbersWidth('line\n'.repeat(998))).toBeUndefined()
+    expect(getLineNumbersWidth('line\n'.repeat(999))).toBe('calc(4ch + 14px)')
+    expect(getLineNumbersWidth('line', '5rem')).toBe('5rem')
+  })
+
   it('default props', () => {
     expect(renderToString(<Code>test</Code>)).toMatchInlineSnapshot(`
       "<div data-codice="code" data-codice-code="true" data-codice-line-numbers="false"><style data-codice-style="true">@scope {
@@ -80,7 +87,7 @@ describe('Code', () => {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(2rem - 6px);
+        min-width: calc(var(--codice-code-line-number-width) - 14px);
         margin-left: calc(var(--codice-code-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
@@ -178,7 +185,7 @@ describe('Code', () => {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(2rem - 6px);
+        min-width: calc(var(--codice-code-line-number-width) - 14px);
         margin-left: calc(var(--codice-code-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
@@ -319,7 +326,7 @@ describe('Code', () => {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(2rem - 6px);
+        min-width: calc(var(--codice-code-line-number-width) - 14px);
         margin-left: calc(var(--codice-code-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
@@ -460,7 +467,7 @@ describe('Code', () => {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(2rem - 6px);
+        min-width: calc(var(--codice-code-line-number-width) - 14px);
         margin-left: calc(var(--codice-code-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
@@ -556,7 +563,7 @@ describe('Code', () => {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(2rem - 6px);
+        min-width: calc(var(--codice-code-line-number-width) - 14px);
         margin-left: calc(var(--codice-code-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;

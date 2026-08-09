@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, forwardRef } from 'react'
-import { CodeHeader, getExtension, Code } from '../code/code'
+import { CodeHeader, getExtension, getLineNumbersWidth, Code } from '../code/code'
 import { ScopedStyle } from '../style'
 import { css } from './css'
 import type { HighlightOptions, LanguageName } from 'sugar-high'
@@ -45,6 +45,7 @@ export const Editor = forwardRef(function Editor(
   ref: React.Ref<HTMLDivElement>
 ) {
   const [code, setCode] = useState(value)
+  const resolvedLineNumbersWidth = getLineNumbersWidth(code, lineNumbersWidth)
 
   function update(textContent: string) {
     setCode(textContent)
@@ -74,7 +75,7 @@ export const Editor = forwardRef(function Editor(
       data-codice-controls={!!controls}
       data-codice-line-numbers={!!lineNumbers}
     >
-      <ScopedStyle css={css({ fontSize, padding, lineNumbersWidth, fontFamily })} />
+      <ScopedStyle css={css({ fontSize, padding, lineNumbersWidth: resolvedLineNumbersWidth, fontFamily })} />
       {/* Display the header outside of the matched textarea and code, by default display controls */}
       <CodeHeader title={title} controls={controls} onChangeTitle={onChangeTitle} />
       <div data-codice-content>
@@ -87,7 +88,7 @@ export const Editor = forwardRef(function Editor(
           mark={mark}
           controls={false}
           lineNumbers={lineNumbers}
-          lineNumbersWidth={lineNumbersWidth}
+          lineNumbersWidth={resolvedLineNumbersWidth}
           padding={padding}
           // Do not pass fontSize to Code in Editor.
           // It will control both the textarea and code font size.
