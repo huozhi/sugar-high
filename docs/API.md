@@ -15,7 +15,8 @@ highlight('print("hi")', { lang: 'python' })
 ```
 
 The `lang` option accepts canonical language names only. TypeScript autocompletes the supported
-names.
+names. In plain JavaScript, an unrecognized name uses the general-purpose lexer. Normalize external
+input with `lang()` when you want to detect unsupported names before highlighting.
 
 ### `sugar-high/core`
 
@@ -34,7 +35,7 @@ const html = render(parsed, {
 })
 ```
 
-### `sugar-high/lang`
+### Advanced: `sugar-high/lang`
 
 `lang(input)` normalizes a canonical name, filename extension, or common fence alias to the
 canonical name accepted by the default highlighter. It trims whitespace, ignores case, accepts a
@@ -49,8 +50,9 @@ lang('.PY')    // 'python'
 lang('unknown') // undefined
 ```
 
-Use it at integration boundaries, such as Markdown fence names or a file extension supplied by an
-editor. If you already have a canonical name, pass it directly to `highlight`.
+You do not need `lang()` when the language is already known. Use it at integration boundaries,
+such as Markdown fence names or a file extension supplied by an editor. If you already have a
+canonical name, pass it directly to `highlight`.
 
 ```js
 highlight(source, { lang: 'python' })
@@ -195,7 +197,7 @@ highlight(source, {
 The higher-level integrations provide their own line-selection syntax:
 
 ```tsx
-import { Code } from '@sugar-high/react/code'
+import { Code } from '@sugar-high/react'
 
 <Code highlightLines={[1, [4, 7]]}>{source}</Code>
 ```
@@ -238,3 +240,13 @@ Core API. Converts parsed code to HTML and accepts only display customization: `
 Core API. Builds typed line and token nodes for integrations that render through React or another
 syntax tree instead of HTML. Generated token nodes expose their semantic `tokenType` separately
 from the syntax-tree `type: 'element'` field.
+
+## Processing order
+
+Parsing tokenizes the source, assembles lines, and then runs the language configuration's
+`annotateLine` hook. Generation creates default annotation classes and runs `markLine`; each token
+then receives its default class and style, followed by `cx` and `mark`. `render()` serializes those
+generated nodes to HTML.
+
+`annotateLine` belongs to language configurations and records syntax meaning. `markLine`, `cx`, and
+`mark` belong to display options and control presentation.

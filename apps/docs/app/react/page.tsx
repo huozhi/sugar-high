@@ -1,10 +1,10 @@
-import { Code } from '@sugar-high/react/code'
+import { Code } from '@sugar-high/react'
 import Link from 'next/link'
 import { ReactDemo } from './react-demo'
 import '../product-page.css'
 import './page.css'
 
-const codeBlockExample = `import { Code } from '@sugar-high/react/code'
+const codeBlockExample = `import { Code } from '@sugar-high/react'
 import { highlight } from 'sugar-high'
 
 function renderMarkup() {

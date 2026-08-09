@@ -70,4 +70,29 @@ describe('composable core export', () => {
     expect(line.children[0].type).toBe('element')
     expect(line.children[0].tokenType).toBe('keyword')
   })
+
+  it('runs syntax annotation before line and token display hooks', () => {
+    const calls: string[] = []
+    const parsed = parse('const', {
+      keywords: new Set(['const']),
+      annotateLine(line) {
+        calls.push('annotateLine')
+        line.annotations.push('example')
+      },
+    })
+
+    generate(parsed, {
+      cx: { keyword: 'bold' },
+      markLine(line) {
+        calls.push('markLine')
+        expect(line.className).toContain('sh__line--example')
+      },
+      mark(token) {
+        calls.push('mark')
+        expect(token.className).toContain('bold')
+      },
+    })
+
+    expect(calls).toEqual(['annotateLine', 'markLine', 'mark'])
+  })
 })

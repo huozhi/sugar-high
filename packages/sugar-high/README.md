@@ -33,10 +33,11 @@ highlight('+ added', { lang: 'diff' })
 
 The `lang` option is typed and accepts canonical names only.
 
-## Normalize extensions and aliases
+## Advanced: normalize extensions and aliases
 
-Use `lang()` when input comes from a filename extension, Markdown fence, or another integration.
-It converts aliases to the canonical name expected by `highlight`:
+You do not need `lang()` when the language is already known. Use it only when input comes from a
+filename extension, Markdown fence, or another integration. It converts aliases to the canonical
+name expected by `highlight`:
 
 ```js
 import { lang } from 'sugar-high/lang'
@@ -178,8 +179,7 @@ pre code {
 and textarea-overlay `<Editor />` as separate composable exports.
 
 ```tsx
-import { Editor } from '@sugar-high/react'
-import { Code } from '@sugar-high/react/code'
+import { Code, Editor } from '@sugar-high/react'
 
 <Editor lang="typescript" value={source} onChange={setSource} />
 <Code lang="typescript" lineNumbers>{source}</Code>
@@ -192,8 +192,9 @@ processing Markdown. Fence aliases are normalized through the same `lang()` mapp
 
 ## API
 
-See [`docs/API.md`](../../docs/API.md) for package exports, the full language mapping, highlighting
-options, and lower-level functions.
+See [`docs/API.md`](https://github.com/huozhi/sugar-high/blob/main/docs/API.md) for package exports, the full language mapping, highlighting
+options, and lower-level functions. Upgrading from v1? Read the
+[v2 migration guide](https://github.com/huozhi/sugar-high/blob/main/docs/MIGRATION.md).
 
 ## Benchmarking
 

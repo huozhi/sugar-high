@@ -14,14 +14,6 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    },
-    "./editor": {
-      "types": "./dist/editor/index.d.ts",
-      "default": "./dist/editor/index.js"
-    },
-    "./code": {
-      "types": "./dist/code/index.d.ts",
-      "default": "./dist/code/index.js"
     }
   },
   "files": [
