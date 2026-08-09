@@ -13,8 +13,8 @@ function configFor(name) {
 
 /** @param {string} code @param {HighlightOptions | undefined} options */
 function highlight(code, options) {
-  const { lang, cx, mark, markLine, ...config } = options || {}
-  const parsed = parse(code, { ...configFor(lang), ...config })
+  const { lang, cx, mark, markLine } = options || {}
+  const parsed = parse(code, configFor(lang))
   return render(parsed, { cx, mark, markLine })
 }
 

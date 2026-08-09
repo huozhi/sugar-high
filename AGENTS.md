@@ -8,6 +8,20 @@
 - Add a Changeset with `pnpm changeset` for user-facing package changes. Do not add one for
   internal-only work unless requested.
 
+# Architecture
+
+- Keep the default API focused on the common path. Put advanced composition in existing subpaths
+  such as `sugar-high/core`; do not add an export or option when the current API can express it.
+- Prefer short canonical names with one meaning. Avoid aliases for the same operation, duplicate
+  exports, and separate language implementations for compatible dialects.
+- Keep options few and orthogonal: language selection, class composition, and mutable display
+  hooks should remain distinct. The root highlighter must not forward undocumented options into
+  core parsing.
+- Treat exported language metadata and configurations as shared read-only data. Do not mutate the
+  registry at runtime; copy a configuration before extending it.
+- Bundle size is part of every API and architecture decision. Measure affected entry points and
+  prefer the simpler design when added abstraction does not earn its bytes.
+
 # Releases
 
 - Pushes to `main` may create/update the Changesets version PR but must never publish packages.

@@ -26,6 +26,15 @@ describe('composable core export', () => {
     )
   })
 
+  it('keeps parser configuration exclusive to core', () => {
+    const html = highlight('custom', {
+      keywords: new Set(['custom']),
+    } as any)
+
+    expect(html).toContain('sh__token--identifier')
+    expect(html).not.toContain('sh__token--keyword')
+  })
+
   it('retains the JavaScript defaults when no preset is supplied', () => {
     const source = 'const answer = 42'
     expect(tokenize(source).map(([, value]) => value).join('')).toBe(source)
