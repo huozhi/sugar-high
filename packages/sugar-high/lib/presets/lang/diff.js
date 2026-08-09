@@ -3,10 +3,10 @@
 export const keywords = new Set([])
 
 export const annotateLine = (line) => {
-  let className = ''
-  if (line.value.startsWith('+') && !line.value.startsWith('+++')) className = 'sh__line--diff-add'
-  else if (line.value.startsWith('-') && !line.value.startsWith('---')) className = 'sh__line--diff-remove'
-  else if (line.value.startsWith('@@')) className = 'sh__line--diff-hunk'
-  else if (/^(diff --git|index |--- |\+\+\+ )/.test(line.value)) className = 'sh__line--diff-meta'
-  if (className) line.className += ` ${className}`
+  let annotation = ''
+  if (line.value.startsWith('+') && !line.value.startsWith('+++')) annotation = 'diff-add'
+  else if (line.value.startsWith('-') && !line.value.startsWith('---')) annotation = 'diff-remove'
+  else if (line.value.startsWith('@@')) annotation = 'diff-hunk'
+  else if (/^(diff --git|index |--- |\+\+\+ )/.test(line.value)) annotation = 'diff-meta'
+  if (annotation) line.annotations.push(annotation)
 }

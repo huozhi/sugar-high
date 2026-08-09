@@ -158,7 +158,7 @@ export { generate, parse, render, SugarHigh, tokenize }
  * @property {boolean} [caseInsensitive]
  * @property {boolean} [templateStrings]
  * @property {(code: string, options: ParseOptions) => Array<[number, string]>} [tokenize]
- * @property {(line: MarkLine) => void} [annotateLine]
+ * @property {(line: AnnotateLine) => void} [annotateLine]
  */
 
 /**
@@ -182,10 +182,13 @@ export { generate, parse, render, SugarHigh, tokenize }
  *   index: number
  *   value: string
  *   tokens: ParsedToken[]
+ *   annotations: string[]
+ * }} ParsedLine
+ * @typedef {ParsedLine} AnnotateLine
+ * @typedef {ParsedLine & {
  *   className: string
  *   style: Record<string, string | number>
  *   properties: Record<string, string | number | boolean>
- * }} ParsedLine
- * @typedef {ParsedLine} MarkLine
+ * }} MarkLine
  * @typedef {{ value: string, lines: ParsedLine[] }} ParsedCode
  */

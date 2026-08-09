@@ -60,6 +60,6 @@ describe('composable core export', () => {
     expect(html).toContain('class="sh__line selected"')
     expect(html).toContain('style="font-weight:700"')
     expect(html).toContain('data-line="2"')
-    expect(parsed.lines[1].className).toBe('sh__line')
+    expect(parsed.lines[1].annotations).toEqual([])
   })
 })
