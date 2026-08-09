@@ -1,122 +1,57 @@
 import type { CSSProperties } from 'react'
 import { highlight, type LanguageName } from 'sugar-high'
-import { STACK_FRAMES } from '../constants'
-import {
-  codeCardShell,
-  codeSurface,
-  codeTitleBarBase,
-  preHighlighted,
-} from '../code-block-styles'
+import { Easing, interpolate } from 'remotion'
 import { compactHighlightedHtml } from '../compact-highlight-html'
-import { DOCS_FONT_SANS, DOCS_TEXT } from '../docs-ui'
+import { STACK_CARD_INTERVAL, STACK_FRAMES, STACK_TITLE_FRAMES } from '../constants'
+import { DOCS_FONT_MONO, DOCS_FONT_SANS, DOCS_TEXT } from '../docs-ui'
 import { STYLISH_LIGHT } from '../plates'
 import { plateToShVars, SH_TOKEN_INLINE_CSS } from '../plate-css'
-import { LIB_RS, MAIN_PY, THEME_CSS } from '../stack-examples'
 
-const EXAMPLES: {
-  title: string
-  code: string
-  lang: LanguageName
-}[] = [
-  { title: 'lib.rs', code: LIB_RS, lang: 'rust' },
-  { title: 'main.py', code: MAIN_PY, lang: 'python' },
-  { title: 'theme.css', code: THEME_CSS, lang: 'css' },
+const CARDS: { lang: LanguageName; label: string; code: string }[] = [
+  { lang: 'typescript', label: 'TypeScript', code: `type Release = { version: number }\n\nconst release: Release = { version: 2 }\nconst message = \`sugar-high v\${release.version}\`\nconsole.log(message)` },
+  { lang: 'python', label: 'Python', code: `def highlight(source, language):\n    tokens = parse(source, language)\n    return render(tokens)\n\nprint(highlight(code, "python"))` },
+  { lang: 'rust', label: 'Rust', code: `fn highlight(source: &str) -> String {\n    let tokens = parse(source);\n    render(tokens)\n}\n\nprintln!("{}", highlight(code));` },
+  { lang: 'go', label: 'Go', code: `func Highlight(code string) string {\n    tokens := Parse(code)\n    return Render(tokens)\n}\n\nfmt.Println(Highlight(source))` },
+  { lang: 'shell', label: 'Shell', code: `#!/bin/sh\n\nfor file in ./src/*; do\n  echo "highlighting $file"\n  sugar-high "$file"\ndone` },
+  { lang: 'css', label: 'CSS', code: `:root {\n  --keyword: #f47067;\n  --string: #00a99a;\n}\n\ncode { color: var(--keyword); }` },
 ]
+const ROTATIONS = [-2.4, 1.6, -1.1, 2.2, -1.8, 1.2]
+const TOPS = [115, 285, 150, 330, 92, 245]
 
-const N = EXAMPLES.length
-
-type Props = {
-  relFrame: number
-}
-
-export function StackScene({ relFrame }: Props) {
-  const segment = STACK_FRAMES / N
-  const activeIndex = Math.min(N - 1, Math.floor(relFrame / segment))
-
-  const baseVars = plateToShVars(STYLISH_LIGHT) as CSSProperties
-  const surface = codeSurface()
+export function StackScene({ relFrame }: { relFrame: number }) {
+  if (relFrame < STACK_TITLE_FRAMES) return <TitleBeat>Multi Languages</TitleBeat>
 
   return (
     <div style={root}>
       <style>{SH_TOKEN_INLINE_CSS}</style>
-      <h2 style={sectionTitle}>Multi-language support</h2>
-      <div style={stage}>
-        {EXAMPLES.map((ex, i) => {
-          const isActive = activeIndex === i
-          const raw = highlight(ex.code, { lang: ex.lang })
-          const html = compactHighlightedHtml(raw)
-
-          return (
-            <div
-              key={ex.title}
-              style={{
-                ...cardSlot,
-                opacity: isActive ? 1 : 0,
-                zIndex: isActive ? 2 : 0,
-                pointerEvents: isActive ? 'auto' : 'none',
-              }}
-              aria-hidden={!isActive}
-            >
-              <div style={{ ...codeCardShell, ...surface }}>
-                <div style={{ ...codeTitleBarBase, ...surface }}>{ex.title}</div>
-                <pre
-                  style={{
-                    ...preHighlighted,
-                    ...baseVars,
-                    ...surface,
-                    maxHeight: 680,
-                  }}
-                  dangerouslySetInnerHTML={{ __html: html }}
-                />
-              </div>
-            </div>
-          )
-        })}
-      </div>
+      {CARDS.map((card, index) => {
+        const start = STACK_TITLE_FRAMES + index * STACK_CARD_INTERVAL
+        return (
+          <div key={card.label} style={{
+            ...snippet,
+            ...plateToShVars(STYLISH_LIGHT) as CSSProperties,
+            left: 70 + index * 228,
+            top: TOPS[index],
+            zIndex: index,
+            rotate: `${ROTATIONS[index]}deg`,
+            opacity: interpolate(relFrame, [start, start + 3, STACK_FRAMES - 5, STACK_FRAMES], [0, 1, 1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
+            translate: `${interpolate(relFrame, [start, start + 14], [1250, 0], { easing: Easing.bezier(.16, 1, .3, 1), extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })}px 0`,
+          }}>
+            <div style={cardLabel}>{card.label}</div>
+            <pre style={pre} dangerouslySetInnerHTML={{ __html: compactHighlightedHtml(highlight(card.code, { lang: card.lang })) }} />
+          </div>
+        )
+      })}
     </div>
   )
 }
 
-const root: CSSProperties = {
-  position: 'relative',
-  width: '100%',
-  minHeight: '100%',
-  boxSizing: 'border-box',
-  padding: '44px 48px 48px',
-  background: 'transparent',
-  fontFamily: DOCS_FONT_SANS,
-  display: 'flex',
-  flexDirection: 'column',
+function TitleBeat({ children }: { children: string }) {
+  return <div style={titleBeat}>{children}</div>
 }
 
-const sectionTitle: CSSProperties = {
-  position: 'absolute',
-  top: 40,
-  left: 48,
-  margin: 0,
-  fontSize: 44,
-  fontWeight: 700,
-  color: DOCS_TEXT,
-  letterSpacing: '-0.02em',
-  zIndex: 3,
-}
-
-const stage: CSSProperties = {
-  position: 'relative',
-  width: '100%',
-  flex: 1,
-  minHeight: 620,
-  marginTop: 56,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}
-
-const cardSlot: CSSProperties = {
-  position: 'absolute',
-  left: '50%',
-  top: '47%',
-  transform: 'translate(-50%, -50%)',
-  width: 'min(1200px, 94%)',
-  maxWidth: 1200,
-}
+const root: CSSProperties = { width: '100%', height: '100%', position: 'relative', overflow: 'hidden', fontFamily: DOCS_FONT_SANS, color: DOCS_TEXT }
+const titleBeat: CSSProperties = { width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: DOCS_FONT_SANS, color: DOCS_TEXT, fontSize: 132, fontWeight: 750, letterSpacing: '-0.05em' }
+const snippet: CSSProperties = { position: 'absolute', width: 670, height: 640, overflow: 'hidden', borderRadius: 18, background: '#eef2f5', boxShadow: '0 20px 60px rgba(53,65,80,.14)' }
+const cardLabel: CSSProperties = { padding: '25px 32px 10px', color: '#75818c', fontSize: 31, fontWeight: 650 }
+const pre: CSSProperties = { margin: 0, padding: '30px 32px', fontFamily: DOCS_FONT_MONO, fontSize: 28, lineHeight: 1.58, whiteSpace: 'pre-wrap' }
