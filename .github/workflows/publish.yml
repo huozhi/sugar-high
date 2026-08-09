@@ -49,9 +49,12 @@ jobs:
 
   publish:
     if: github.event_name == 'workflow_dispatch' && inputs.confirm == 'publish'
+    concurrency:
+      group: npm-publish
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     env:
       NPM_CONFIG_PROVENANCE: "true"
@@ -71,5 +74,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Publish packages through npm trusted publishing
-        run: pnpm release
+      - name: Publish packages and create GitHub releases
+        uses: changesets/action@v1
+        with:
+          publish: pnpm release
+          createGithubReleases: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
