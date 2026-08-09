@@ -253,3 +253,17 @@ generated nodes to HTML.
 
 `annotateLine` belongs to language configurations and records syntax meaning. `markLine`, `cx`, and
 `mark` belong to display options and control presentation.
+
+## Size and performance
+
+[![sugar-high bundle size](https://deno.bundlejs.com/?q=sugar-high&badge=detailed)](https://bundlejs.com/?q=sugar-high)
+[![sugar-high/core bundle size](https://deno.bundlejs.com/?q=sugar-high%2Fcore&badge=detailed)](https://bundlejs.com/?q=sugar-high%2Fcore)
+
+The badges show the minified and gzip-compressed cost of the latest published package. To measure
+the current checkout together with highlighting throughput:
+
+```sh
+pnpm --filter sugar-high benchmark
+```
+
+The benchmark runs 50,000 iterations by default. Set `BENCH_ITERATIONS` to change the count.
