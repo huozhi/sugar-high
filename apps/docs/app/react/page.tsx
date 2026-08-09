@@ -80,6 +80,70 @@ export default function ReactPage() {
           </Window>
         </section>
 
+        <section className="product-section react-api">
+          <div className="product-section__head">
+            <h2>API</h2>
+            <p>Props at a glance. Both components also accept standard div attributes.</p>
+          </div>
+          <div className="react-api__component">
+            <h3>{'<Editor />'}</h3>
+            <div className="react-api__table-wrap">
+              <table>
+                <thead><tr><th>Prop</th><th>Type / default</th><th>Purpose</th></tr></thead>
+                <tbody>
+                  <tr><td><code>value</code></td><td><code>string · ''</code></td><td>Controlled source text.</td></tr>
+                  <tr><td><code>onChange</code></td><td><code>(code) =&gt; void</code></td><td>Runs when the source changes.</td></tr>
+                  <tr><td><code>title</code></td><td><code>string | null</code></td><td>Editable filename and language hint.</td></tr>
+                  <tr><td><code>onChangeTitle</code></td><td><code>(title) =&gt; void</code></td><td>Makes the title editable.</td></tr>
+                  <tr><td><code>lang</code></td><td><code>LanguageName</code></td><td>Canonical language; overrides the title.</td></tr>
+                  <tr><td><code>extension</code></td><td><code>string</code></td><td>Legacy language hint when no lang is set.</td></tr>
+                  <tr><td><code>controls</code></td><td><code>boolean · true</code></td><td>Shows the header controls.</td></tr>
+                  <tr><td><code>lineNumbers</code></td><td><code>boolean · true</code></td><td>Shows one-based line numbers.</td></tr>
+                  <tr><td><code>lineNumbersWidth</code></td><td><code>string</code></td><td>Sets the line-number gutter width.</td></tr>
+                  <tr><td><code>cx</code></td><td><code>HighlightOptions['cx']</code></td><td>Maps token types to classes.</td></tr>
+                  <tr><td><code>mark</code></td><td><code>HighlightOptions['mark']</code></td><td>Mutates generated token properties.</td></tr>
+                  <tr><td><code>padding</code></td><td><code>string</code></td><td>Sets editor content padding.</td></tr>
+                  <tr><td><code>fontSize</code></td><td><code>string | number</code></td><td>Sets the editor font size.</td></tr>
+                  <tr><td><code>fontFamily</code></td><td><code>string</code></td><td>Sets the editor font family.</td></tr>
+                  <tr><td><code>textareaRef</code></td><td><code>Ref&lt;HTMLTextAreaElement&gt;</code></td><td>Accesses the underlying textarea.</td></tr>
+                  <tr><td><code>ref</code></td><td><code>Ref&lt;HTMLDivElement&gt;</code></td><td>Accesses the editor root.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="react-api__component">
+            <h3>{'<Code />'}</h3>
+            <div className="react-api__table-wrap">
+              <table>
+                <thead><tr><th>Prop</th><th>Type / default</th><th>Purpose</th></tr></thead>
+                <tbody>
+                  <tr><td><code>children</code></td><td><code>string · required</code></td><td>Source or generated markup to render.</td></tr>
+                  <tr><td><code>lang</code></td><td><code>LanguageName</code></td><td>Canonical language; overrides the title.</td></tr>
+                  <tr><td><code>title</code></td><td><code>string</code></td><td>Filename shown in the header and used as a language hint.</td></tr>
+                  <tr><td><code>extension</code></td><td><code>string</code></td><td>Legacy language hint when no lang is set.</td></tr>
+                  <tr><td><code>controls</code></td><td><code>boolean · false</code></td><td>Shows header controls.</td></tr>
+                  <tr><td><code>lineNumbers</code></td><td><code>boolean · false</code></td><td>Shows one-based line numbers.</td></tr>
+                  <tr><td><code>highlightLines</code></td><td><code>(number | [number, number])[]</code></td><td>Highlights lines and inclusive ranges.</td></tr>
+                  <tr><td><code>cx</code></td><td><code>HighlightOptions['cx']</code></td><td>Maps token types to classes.</td></tr>
+                  <tr><td><code>mark</code></td><td><code>HighlightOptions['mark']</code></td><td>Mutates generated token properties.</td></tr>
+                  <tr><td><code>markLine</code></td><td><code>HighlightOptions['markLine']</code></td><td>Mutates generated line properties.</td></tr>
+                  <tr><td><code>preformatted</code></td><td><code>boolean · true</code></td><td>Uses a pre and code wrapper.</td></tr>
+                  <tr><td><code>asMarkup</code></td><td><code>boolean · false</code></td><td>Treats children as highlighted HTML.</td></tr>
+                  <tr><td><code>lineNumbersWidth</code></td><td><code>string</code></td><td>Sets the line-number gutter width.</td></tr>
+                  <tr><td><code>padding</code></td><td><code>string</code></td><td>Sets code content padding.</td></tr>
+                  <tr><td><code>fontSize</code></td><td><code>string | number</code></td><td>Sets the code font size.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <a
+            className="react-api__link"
+            href="https://github.com/huozhi/sugar-high/blob/main/packages/react/README.md"
+          >
+            Read the full React API on GitHub ↗
+          </a>
+        </section>
+
       </div>
     </div>
   )

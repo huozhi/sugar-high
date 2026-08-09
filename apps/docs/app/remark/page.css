@@ -11,6 +11,16 @@
   --sh-comment: #a19595;
 }
 
+.remark-product .product-section > .product-card,
+.remark-product .product-section > .product-grid {
+  width: min(600px, 100%);
+  margin-inline: auto;
+}
+
+.remark-product .product-grid {
+  grid-template-columns: 1fr;
+}
+
 .remark-source,
 .remark-preview {
   min-height: 300px;

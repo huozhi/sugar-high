@@ -199,6 +199,7 @@
 }
 
 .product-card__bar {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -208,6 +209,20 @@
   color: rgba(33, 33, 33, 0.34);
   font-family: var(--font-geist-mono), menlo, monospace;
   font-size: 14px;
+}
+
+.product-card__controls {
+  position: absolute;
+  left: 14px;
+  display: flex;
+  gap: 5px;
+}
+
+.product-card__controls span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a5a5a5;
 }
 
 .product-card__title {

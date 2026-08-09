@@ -113,7 +113,7 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
   const [variantKey, setVariantKey] = useState('sugar-high:light')
   const [previewKeys, setPreviewKeys] = useState([
     'sugar-high:light',
-    'nord-light:light',
+    'gruvbox:dark',
     'soft-minimal:light',
   ])
   const [randomTick, setRandomTick] = useState(0)
@@ -157,7 +157,7 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
 
         <section className="product-section">
           <div className="product-section__head">
-            <h2>Comfortable by default.</h2>
+            <h2>Comfortable by default</h2>
             <p>Three calm light palettes adapted from the themes used by Codice.</p>
           </div>
           <div className="theme-preview-grid">

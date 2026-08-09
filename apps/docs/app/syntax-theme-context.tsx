@@ -17,6 +17,8 @@ import {
 export type SyntaxThemeContextValue = {
   themeIndex: number
   setThemeIndex: Dispatch<SetStateAction<number>>
+  previewMode: 'light' | 'dark'
+  setPreviewMode: Dispatch<SetStateAction<'light' | 'dark'>>
   colorPlateColors: LiveEditorColorPlate
   setColorPlateColors: Dispatch<SetStateAction<LiveEditorColorPlate>>
 }
@@ -27,6 +29,7 @@ export const SyntaxThemeContext = createContext<SyntaxThemeContextValue | null>(
 
 export function SyntaxThemeProvider({ children }: { children: ReactNode }) {
   const [themeIndex, setThemeIndex] = useState(0)
+  const [previewMode, setPreviewMode] = useState<'light' | 'dark'>('light')
   const [colorPlateColors, setColorPlateColors] = useState<LiveEditorColorPlate>(
     () => LIVE_EDITOR_THEME_PRESETS[0].colors
   )
@@ -39,10 +42,12 @@ export function SyntaxThemeProvider({ children }: { children: ReactNode }) {
     () => ({
       themeIndex,
       setThemeIndex,
+      previewMode,
+      setPreviewMode,
       colorPlateColors,
       setColorPlateColors,
     }),
-    [themeIndex, colorPlateColors]
+    [themeIndex, previewMode, colorPlateColors]
   )
 
   return (

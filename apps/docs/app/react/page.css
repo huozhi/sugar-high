@@ -16,6 +16,82 @@
   --sh-comment: #a19595;
 }
 
+.react-product .product-section > .product-card {
+  width: min(600px, 100%);
+  margin-inline: auto;
+}
+
+.react-api {
+  width: min(600px, 100%);
+  margin-inline: auto;
+}
+
+.react-api__component + .react-api__component {
+  margin-top: 42px;
+}
+
+.react-api__component h3 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+}
+
+.react-api__table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.react-api table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.react-api th,
+.react-api td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e5e9ec;
+  vertical-align: top;
+}
+
+.react-api th {
+  color: #9aa3ac;
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.react-api td:first-child {
+  width: 24%;
+  color: #354150;
+}
+
+.react-api td:nth-child(2) {
+  width: 32%;
+  color: #596571;
+}
+
+.react-api td:last-child {
+  color: #788592;
+}
+
+.react-api td code {
+  font-size: 12px;
+}
+
+.react-api__link {
+  display: inline-block;
+  margin-top: 18px;
+  color: #788592;
+  text-underline-offset: 4px;
+}
+
+.react-api__link:hover {
+  color: #354150;
+}
+
 .react-demo__status {
   display: flex;
   align-items: center;

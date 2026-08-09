@@ -39,8 +39,9 @@ highlight('print("hi")', { lang: 'python' }) // canonical name
 highlight('name: sugar-high', { lang: lang('yml') }) // yml → yaml`
 
 export default function InstallBanner({ children }: { children?: ReactNode }) {
-  const [bannerTheme, setBannerTheme] = useState<'light' | 'dark'>('light')
+  const [localBannerTheme, setLocalBannerTheme] = useState<'light' | 'dark'>('light')
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
+  const bannerTheme = syntaxThemeCtx?.previewMode ?? localBannerTheme
   const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
   const plateColors =
     syntaxThemeCtx?.colorPlateColors ?? LIVE_EDITOR_THEME_PRESETS[0].colors
@@ -79,6 +80,11 @@ ${formatPlateAsCssVars(darkPlate)}
   const lightCodeShVars = useMemo(() => plateToShVarMap(plateColors), [plateColors])
   const darkCodeShVars = useMemo(() => plateToShVarMap(darkPlate), [darkPlate])
   const codeShVars = bannerTheme === 'light' ? lightCodeShVars : darkCodeShVars
+
+  const setBannerTheme = (theme: 'light' | 'dark') => {
+    setLocalBannerTheme(theme)
+    syntaxThemeCtx?.setPreviewMode(theme)
+  }
 
   const presetByTitleMarkup = useMemo(
     () =>

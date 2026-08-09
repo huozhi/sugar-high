@@ -27,11 +27,26 @@ const message = 'Small API, bright code'
 console.log(message)
 \`\`\``
 
-function Window({ title, children }: { title: string; children: React.ReactNode }) {
+function Window({
+  title,
+  controls = false,
+  children,
+}: {
+  title?: string
+  controls?: boolean
+  children: React.ReactNode
+}) {
   return (
     <div className="product-card">
       <div className="product-card__bar">
-        <span className="product-card__title">{title}</span>
+        {controls && (
+          <span className="product-card__controls" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+        )}
+        {title ? <span className="product-card__title">{title}</span> : null}
       </div>
       {children}
     </div>
@@ -56,48 +71,64 @@ export default function RemarkPage() {
   return (
     <div className="product-page remark-product">
       <div className="product-shell">
-        <ProductNav
-          active="remark"
-          source="https://github.com/huozhi/sugar-high/tree/main/packages/remark"
-        />
+        <ProductNav active="remark" source="https://github.com/huozhi/sugar-high/tree/main/packages/remark" />
 
         <header className="product-hero">
-          <h1>Remark plugin.<ProductStrike /></h1>
-          <div className="product-install"><code>npm install @sugar-high/remark</code></div>
+          <h1>
+            Remark plugin.
+            <ProductStrike />
+          </h1>
+          <div className="product-install">
+            <code>npm install @sugar-high/remark</code>
+          </div>
         </header>
 
         <section className="product-section">
           <div className="product-section__head">
-            <h2>Markdown in.<br />Highlighted HTML out.</h2>
+            <h2>
+              Markdown in
+              <br />
+              Highlighted HTML out
+            </h2>
             <p>Transform fenced code into highlighted HTML.</p>
           </div>
           <div className="product-grid remark-demo-grid">
-            <Window title="readme.md"><div className="remark-source"><pre>{previewMarkdown}</pre></div></Window>
-            <Window title="preview.html"><MarkdownPreview /></Window>
+            <Window title="readme.md">
+              <div className="remark-source">
+                <pre>{previewMarkdown}</pre>
+              </div>
+            </Window>
+            <Window controls>
+              <MarkdownPreview />
+            </Window>
           </div>
         </section>
 
         <section className="product-section">
           <div className="product-section__head">
-            <h2>One plugin.</h2>
-            <p>Add it before your HTML compiler.</p>
+            <h2>Usage</h2>
           </div>
           <Window title="remark-plugin.js">
-            <Code className="product-code" title="remark-plugin.js" lang="javascript">{usageCode}</Code>
+            <Code className="product-code" title="remark-plugin.js" lang="javascript">
+              {usageCode}
+            </Code>
           </Window>
         </section>
 
         <section className="product-section">
           <div className="product-section__head">
-            <h2>Across languages.</h2>
+            <h2>Across languages</h2>
             <p>Use every language supported by Sugar High.</p>
           </div>
           <div className="product-grid">
-            <Window title="script.js"><CodeExample filename="script.js" code={jsCode} /></Window>
-            <Window title="mod.rs"><CodeExample filename="mod.rs" code={rustCode} /></Window>
+            <Window title="script.js">
+              <CodeExample filename="script.js" code={jsCode} />
+            </Window>
+            <Window title="mod.rs">
+              <CodeExample filename="mod.rs" code={rustCode} />
+            </Window>
           </div>
         </section>
-
       </div>
     </div>
   )
