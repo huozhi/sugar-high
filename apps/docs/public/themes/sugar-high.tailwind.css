@@ -1,25 +1,4 @@
-export const cssRecipe = `.sh-theme {
-  --sh-class: #8d85ff;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-property: #4e8fdf;
-  --sh-entity: #6eafad;
-  --sh-jsxliterals: #bf7db6;
-  --sh-string: #00a99a;
-  --sh-keyword: #f47067;
-  --sh-comment: #a19595;
-}
-
-.sh-theme .sh__token--keyword,
-.sh-theme .sh__token--class {
-  font-weight: 600;
-}
-
-.sh-theme .sh__token--comment {
-  font-style: italic;
-}`
-
-export const tailwindRecipe = `@import 'tailwindcss';
+@import 'tailwindcss';
 
 @layer components {
   .sh-theme {
@@ -42,4 +21,4 @@ export const tailwindRecipe = `@import 'tailwindcss';
   .sh-theme .sh__token--comment {
     @apply italic opacity-80;
   }
-}`
+}

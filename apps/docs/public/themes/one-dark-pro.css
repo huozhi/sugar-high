@@ -1,0 +1,28 @@
+.sh-theme--one-dark-pro {
+  --theme-surface: #fafafa;
+  --theme-muted: #a0a1a7;
+  --sh-class: #a626a4;
+  --sh-identifier: #383a42;
+  --sh-sign: #383a42;
+  --sh-string: #50a14f;
+  --sh-keyword: #a626a4;
+  --sh-comment: #a0a1a7;
+  --sh-jsxliterals: #c18401;
+  --sh-entity: #4078f2;
+  --sh-property: #0184bc;
+}
+
+[data-theme='dark'] .sh-theme--one-dark-pro,
+.sh-theme--one-dark-pro[data-theme='dark'] {
+  --theme-surface: #282c34;
+  --theme-muted: #5c6370;
+  --sh-class: #e06c75;
+  --sh-identifier: #abb2bf;
+  --sh-sign: #abb2bf;
+  --sh-string: #98c379;
+  --sh-keyword: #c678dd;
+  --sh-comment: #5c6370;
+  --sh-jsxliterals: #e5c07b;
+  --sh-entity: #61afef;
+  --sh-property: #56b6c2;
+}

@@ -1,3 +1,5 @@
+'use client'
+
 import "./copy-button.css"
 
 export function CopyButton({ codeSnippet, ...props }) {

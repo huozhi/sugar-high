@@ -1,0 +1,13 @@
+.sh-theme--nord-light {
+  --theme-surface: #f6f6f6;
+  --theme-muted: #9099a8;
+  --sh-class: #8f6f9f;
+  --sh-identifier: #364152;
+  --sh-sign: #7d8795;
+  --sh-string: #66835e;
+  --sh-keyword: #58769d;
+  --sh-comment: #9099a8;
+  --sh-jsxliterals: #a07855;
+  --sh-entity: #92705f;
+  --sh-property: #4f7f8c;
+}

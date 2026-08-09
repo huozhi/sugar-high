@@ -1,0 +1,40 @@
+.sh-theme,
+.sh-theme--sugar-high {
+  --theme-surface: #f6f6f6;
+  --theme-muted: #a19595;
+  --sh-class: #8d85ff;
+  --sh-identifier: #354150;
+  --sh-sign: #8996a3;
+  --sh-property: #4e8fdf;
+  --sh-entity: #6eafad;
+  --sh-jsxliterals: #bf7db6;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
+}
+
+.sh-theme .sh__token--keyword,
+.sh-theme .sh__token--class {
+  font-weight: 600;
+}
+
+.sh-theme .sh__token--comment {
+  font-style: italic;
+}
+
+[data-theme='dark'] .sh-theme,
+[data-theme='dark'] .sh-theme--sugar-high,
+.sh-theme[data-theme='dark'],
+.sh-theme--sugar-high[data-theme='dark'] {
+  --theme-surface: #25272d;
+  --theme-muted: #8b8b8b;
+  --sh-class: #7eb5ff;
+  --sh-identifier: #d4d4d4;
+  --sh-sign: #8b949e;
+  --sh-property: #79c0ff;
+  --sh-entity: #56d4dd;
+  --sh-jsxliterals: #d2a8ff;
+  --sh-string: #88bbb6;
+  --sh-keyword: #ffada8;
+  --sh-comment: #8b8b8b;
+}

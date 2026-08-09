@@ -1,6 +1,7 @@
 import { Code } from '@sugar-high/react'
-import Link from 'next/link'
 import { renderMarkdown } from './markdown'
+import { ProductNav } from '../product-nav'
+import { ProductStrike } from '../product-strike'
 import { code as jsCode } from './languages/javascript'
 import { code as rustCode } from './languages/rust'
 import './page.css'
@@ -55,20 +56,13 @@ export default function RemarkPage() {
   return (
     <div className="product-page remark-product">
       <div className="product-shell">
-        <nav className="product-nav" aria-label="Product navigation">
-          <Link className="product-nav__brand" href="/">Sugar High</Link>
-          <div className="product-nav__links">
-            <Link href="/react">React</Link>
-            <a href="https://github.com/huozhi/sugar-high/tree/main/packages/remark">Source ↗</a>
-          </div>
-        </nav>
+        <ProductNav
+          active="remark"
+          source="https://github.com/huozhi/sugar-high/tree/main/packages/remark"
+        />
 
         <header className="product-hero">
-          <div className="product-eyebrow">@sugar-high/remark</div>
-          <h1>Remark plugin.</h1>
-          <p className="product-lede">
-            Highlight fenced code blocks with Sugar High during your Markdown build.
-          </p>
+          <h1>Remark plugin.<ProductStrike /></h1>
           <div className="product-install"><code>npm install @sugar-high/remark</code></div>
         </header>
 

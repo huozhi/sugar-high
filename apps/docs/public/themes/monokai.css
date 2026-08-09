@@ -1,0 +1,28 @@
+.sh-theme--monokai {
+  --theme-surface: #f7f7f5;
+  --theme-muted: #99998e;
+  --sh-class: #c72565;
+  --sh-identifier: #6b8e23;
+  --sh-sign: #3a7ca5;
+  --sh-string: #a68e39;
+  --sh-keyword: #c72565;
+  --sh-comment: #99998e;
+  --sh-jsxliterals: #7b5fc9;
+  --sh-entity: #cc7b18;
+  --sh-property: #6b8e23;
+}
+
+[data-theme='dark'] .sh-theme--monokai,
+.sh-theme--monokai[data-theme='dark'] {
+  --theme-surface: #272822;
+  --theme-muted: #75715e;
+  --sh-class: #f92672;
+  --sh-identifier: #a6e22e;
+  --sh-sign: #66d9ef;
+  --sh-string: #e6db74;
+  --sh-keyword: #f92672;
+  --sh-comment: #75715e;
+  --sh-jsxliterals: #ae81ff;
+  --sh-entity: #fd971f;
+  --sh-property: #a6e22e;
+}

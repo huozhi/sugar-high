@@ -1,6 +1,7 @@
 import { Code } from '@sugar-high/react'
-import Link from 'next/link'
 import { ReactDemo } from './react-demo'
+import { ProductNav } from '../product-nav'
+import { ProductStrike } from '../product-strike'
 import '../product-page.css'
 import './page.css'
 
@@ -43,20 +44,13 @@ export default function ReactPage() {
   return (
     <div className="product-page react-product">
       <div className="product-shell">
-        <nav className="product-nav" aria-label="Product navigation">
-          <Link className="product-nav__brand" href="/">Sugar High</Link>
-          <div className="product-nav__links">
-            <Link href="/remark">Remark</Link>
-            <a href="https://github.com/huozhi/sugar-high/tree/main/packages/react">Source ↗</a>
-          </div>
-        </nav>
+        <ProductNav
+          active="react"
+          source="https://github.com/huozhi/sugar-high/tree/main/packages/react"
+        />
 
         <header className="product-hero">
-          <div className="product-eyebrow">@sugar-high/react</div>
-          <h1>Code editor & block</h1>
-          <p className="product-lede">
-            Edit and present highlighted code with two lightweight React components.
-          </p>
+          <h1>Editor & Code<ProductStrike /></h1>
           <div className="product-install"><code>npm install @sugar-high/react sugar-high</code></div>
         </header>
 
