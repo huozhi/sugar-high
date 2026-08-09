@@ -1,0 +1,13 @@
+.sh-theme--soft-minimal {
+  --theme-surface: #f5f3ed;
+  --theme-muted: #9a978f;
+  --sh-class: #404040;
+  --sh-identifier: #404040;
+  --sh-sign: #77746d;
+  --sh-string: #78756e;
+  --sh-keyword: #55524c;
+  --sh-comment: #99968f;
+  --sh-jsxliterals: #404040;
+  --sh-entity: #66635d;
+  --sh-property: #62605a;
+}

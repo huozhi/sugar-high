@@ -1,0 +1,28 @@
+.sh-theme--minimal {
+  --theme-surface: #f6f6f6;
+  --theme-muted: #999999;
+  --sh-class: #404040;
+  --sh-identifier: #404040;
+  --sh-sign: #404040;
+  --sh-string: #808080;
+  --sh-keyword: #606060;
+  --sh-comment: #999999;
+  --sh-jsxliterals: #404040;
+  --sh-entity: #404040;
+  --sh-property: #404040;
+}
+
+[data-theme='dark'] .sh-theme--minimal,
+.sh-theme--minimal[data-theme='dark'] {
+  --theme-surface: #252525;
+  --theme-muted: #a0a0a0;
+  --sh-class: #909090;
+  --sh-identifier: #909090;
+  --sh-sign: #909090;
+  --sh-string: #808080;
+  --sh-keyword: #b0b0b0;
+  --sh-comment: #a0a0a0;
+  --sh-jsxliterals: #909090;
+  --sh-entity: #909090;
+  --sh-property: #909090;
+}

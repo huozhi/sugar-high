@@ -1,0 +1,28 @@
+.sh-theme--tokyo-night {
+  --theme-surface: #f5f5f7;
+  --theme-muted: #848cb5;
+  --sh-class: #5a4a78;
+  --sh-identifier: #565a6e;
+  --sh-sign: #565a6e;
+  --sh-string: #485e30;
+  --sh-keyword: #8c4351;
+  --sh-comment: #848cb5;
+  --sh-jsxliterals: #8f5e15;
+  --sh-entity: #0f4b6e;
+  --sh-property: #166775;
+}
+
+[data-theme='dark'] .sh-theme--tokyo-night,
+.sh-theme--tokyo-night[data-theme='dark'] {
+  --theme-surface: #1a1b26;
+  --theme-muted: #565f89;
+  --sh-class: #bb9af7;
+  --sh-identifier: #c0caf5;
+  --sh-sign: #c0caf5;
+  --sh-string: #9ece6a;
+  --sh-keyword: #f7768e;
+  --sh-comment: #565f89;
+  --sh-jsxliterals: #e0af68;
+  --sh-entity: #7dcfff;
+  --sh-property: #73daca;
+}

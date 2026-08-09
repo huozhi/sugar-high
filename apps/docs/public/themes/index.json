@@ -1,0 +1,11 @@
+[
+  { "id": "sugar-high", "label": "Sugar High", "file": "sugar-high.css", "className": "sh-theme--sugar-high", "dark": true },
+  { "id": "vscode", "label": "VS Code", "file": "vscode.css", "className": "sh-theme--vscode", "dark": true },
+  { "id": "one-dark-pro", "label": "One Dark Pro", "file": "one-dark-pro.css", "className": "sh-theme--one-dark-pro", "dark": true },
+  { "id": "monokai", "label": "Monokai", "file": "monokai.css", "className": "sh-theme--monokai", "dark": true },
+  { "id": "minimal", "label": "Minimal", "file": "minimal.css", "className": "sh-theme--minimal", "dark": true },
+  { "id": "gruvbox", "label": "Gruvbox", "file": "gruvbox.css", "className": "sh-theme--gruvbox", "dark": true },
+  { "id": "tokyo-night", "label": "Tokyo Night", "file": "tokyo-night.css", "className": "sh-theme--tokyo-night", "dark": true },
+  { "id": "nord-light", "label": "Nord Light", "file": "nord-light.css", "className": "sh-theme--nord-light", "dark": false },
+  { "id": "soft-minimal", "label": "Soft Minimal", "file": "soft-minimal.css", "className": "sh-theme--soft-minimal", "dark": false }
+]

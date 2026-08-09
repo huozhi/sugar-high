@@ -189,6 +189,14 @@ ${formatPlateAsCssVars(darkPlate)}
         </div>
 
         <div className="install-banner__block">
+          <h2>Themes</h2>
+          <p>
+            Set token colors with scoped CSS variables, then use <code>cx</code> for emphasis.
+            Explore the copyable <Link href="/theme">CSS and Tailwind theme guide</Link>.
+          </p>
+        </div>
+
+        <div className="install-banner__block">
           <h2>Line highlighting</h2>
           <p>
             Each line is a <code>.sh__line</code>, so target lines with CSS selectors or a custom

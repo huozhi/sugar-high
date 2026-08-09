@@ -1,0 +1,28 @@
+.sh-theme--vscode {
+  --theme-surface: #f6f8fa;
+  --theme-muted: #6e7781;
+  --sh-class: #6f42c1;
+  --sh-identifier: #24292f;
+  --sh-sign: #24292f;
+  --sh-string: #032f62;
+  --sh-keyword: #cf222e;
+  --sh-comment: #6e7781;
+  --sh-jsxliterals: #8250df;
+  --sh-entity: #953800;
+  --sh-property: #0550ae;
+}
+
+[data-theme='dark'] .sh-theme--vscode,
+.sh-theme--vscode[data-theme='dark'] {
+  --theme-surface: #1e1e1e;
+  --theme-muted: #6a9955;
+  --sh-class: #4ec9b0;
+  --sh-identifier: #9cdcfe;
+  --sh-sign: #d4d4d4;
+  --sh-string: #ce9178;
+  --sh-keyword: #569cd6;
+  --sh-comment: #6a9955;
+  --sh-jsxliterals: #ff8c42;
+  --sh-entity: #dcdcaa;
+  --sh-property: #9cdcfe;
+}

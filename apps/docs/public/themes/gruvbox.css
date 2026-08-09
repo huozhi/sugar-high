@@ -1,0 +1,28 @@
+.sh-theme--gruvbox {
+  --theme-surface: #fbf1c7;
+  --theme-muted: #928374;
+  --sh-class: #b57614;
+  --sh-identifier: #3c3836;
+  --sh-sign: #3c3836;
+  --sh-string: #79740e;
+  --sh-keyword: #9d0006;
+  --sh-comment: #928374;
+  --sh-jsxliterals: #af3a03;
+  --sh-entity: #427b58;
+  --sh-property: #076678;
+}
+
+[data-theme='dark'] .sh-theme--gruvbox,
+.sh-theme--gruvbox[data-theme='dark'] {
+  --theme-surface: #282828;
+  --theme-muted: #928374;
+  --sh-class: #fabd2f;
+  --sh-identifier: #ebdbb2;
+  --sh-sign: #ebdbb2;
+  --sh-string: #b8bb26;
+  --sh-keyword: #fb4934;
+  --sh-comment: #928374;
+  --sh-jsxliterals: #fe8019;
+  --sh-entity: #8ec07c;
+  --sh-property: #83a598;
+}

@@ -22,6 +22,6 @@
   "author": "huozhi",
   "devDependencies": {
     "@changesets/cli": "^2.31.1",
-    "next": "^16.2.6"
+    "next": "^16.3.0"
   }
 }
