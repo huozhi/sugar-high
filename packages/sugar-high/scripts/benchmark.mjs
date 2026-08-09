@@ -57,40 +57,78 @@ function measureBundle(entry, output) {
 const formatSize = (bytes) => `${(bytes / 1024).toFixed(2)} KiB`
 const formatRate = (rate) => `${Math.round(rate).toLocaleString('en-US')} ops/s`
 const benchmarkDir = mkdtempSync(join(tmpdir(), 'sugar-high-benchmark-'))
+const markdown = process.argv.includes('--markdown')
+const baseIndex = process.argv.indexOf('--base')
+const base = baseIndex === -1 ? undefined : process.argv[baseIndex + 1]
 
-try {
-  const javascriptEntry = join(benchmarkDir, 'javascript-entry.js')
+function measureSizes(directory, prefix) {
+  const javascriptEntry = join(benchmarkDir, `${prefix}-javascript-entry.js`)
   writeFileSync(javascriptEntry, [
-    `import { parse, render } from ${JSON.stringify(join(process.cwd(), 'lib/core.js'))}`,
-    `import * as javascript from ${JSON.stringify(join(process.cwd(), 'lib/presets/lang/javascript.js'))}`,
+    `import { parse, render } from ${JSON.stringify(join(directory, 'lib/core.js'))}`,
+    `import * as javascript from ${JSON.stringify(join(directory, 'lib/presets/lang/javascript.js'))}`,
     'export const run = code => render(parse(code, javascript))',
   ].join('\n'))
 
-  const sizes = [
-    ['sugar-high', measureBundle('lib/index.js', join(benchmarkDir, 'builtin.js'))],
-    ['sugar-high/core', measureBundle('lib/core.js', join(benchmarkDir, 'core.js'))],
-    ['core + javascript', measureBundle(javascriptEntry, join(benchmarkDir, 'javascript.js'))],
-  ]
+  return {
+    'sugar-high': measureBundle(join(directory, 'lib/index.js'), join(benchmarkDir, `${prefix}-builtin.js`)),
+    'sugar-high/core': measureBundle(join(directory, 'lib/core.js'), join(benchmarkDir, `${prefix}-core.js`)),
+    'core + javascript': measureBundle(javascriptEntry, join(benchmarkDir, `${prefix}-javascript.js`)),
+  }
+}
 
-  console.log(`Size (Bun browser ESM, minified)\n`)
-  console.table(sizes.map(([name, size]) => ({
-    entry: name,
-    minified: formatSize(size.minified),
-    gzip: formatSize(size.gzip),
-    brotli: formatSize(size.brotli),
-  })))
+function formatDelta(current, previous) {
+  const difference = current - previous
+  if (!difference) return '—'
+  const sign = difference > 0 ? '+' : '−'
+  const percentage = Math.abs(difference / previous * 100).toFixed(1)
+  return `${sign}${Math.abs(difference)} B (${sign}${percentage}%)`
+}
 
-  const performance = [
-    benchmark('builtin: { lang: "python" }', () => highlight(source, { lang: 'python' })),
-    benchmark('core: parse and render python', () => render(parse(source, python))),
-  ]
+try {
+  const sizes = measureSizes(process.cwd(), 'current')
 
-  console.log(`\nHighlight performance (${iterations.toLocaleString('en-US')} iterations)\n`)
-  console.table(performance.map(result => ({
-    benchmark: result.name,
-    time: `${result.milliseconds.toFixed(1)} ms`,
-    throughput: formatRate(result.operationsPerSecond),
-  })))
+  if (markdown) {
+    if (!base) throw new Error('--markdown requires --base <git-ref>')
+    const baseDirectory = join(benchmarkDir, 'base')
+    execFileSync('git', ['worktree', 'add', '--detach', baseDirectory, base], { stdio: 'pipe' })
+    try {
+      const previous = measureSizes(join(baseDirectory, 'packages/sugar-high'), 'base')
+      console.log('<!-- sugar-high-size-report -->')
+      console.log('### Bundle size')
+      console.log('')
+      console.log('| Entry | Base gzip | PR gzip | Change |')
+      console.log('| --- | ---: | ---: | ---: |')
+      for (const name of ['sugar-high', 'sugar-high/core']) {
+        console.log(`| \`${name}\` | ${formatSize(previous[name].gzip)} | ${formatSize(sizes[name].gzip)} | ${formatDelta(sizes[name].gzip, previous[name].gzip)} |`)
+      }
+      console.log('')
+      console.log('_Bun browser ESM bundle, minified and gzip-compressed._')
+    } finally {
+      execFileSync('git', ['worktree', 'remove', '--force', baseDirectory], { stdio: 'pipe' })
+    }
+  }
+
+  if (!markdown) {
+    console.log(`Size (Bun browser ESM, minified)\n`)
+    console.table(Object.entries(sizes).map(([name, size]) => ({
+      entry: name,
+      minified: formatSize(size.minified),
+      gzip: formatSize(size.gzip),
+      brotli: formatSize(size.brotli),
+    })))
+
+    const performance = [
+      benchmark('builtin: { lang: "python" }', () => highlight(source, { lang: 'python' })),
+      benchmark('core: parse and render python', () => render(parse(source, python))),
+    ]
+
+    console.log(`\nHighlight performance (${iterations.toLocaleString('en-US')} iterations)\n`)
+    console.table(performance.map(result => ({
+      benchmark: result.name,
+      time: `${result.milliseconds.toFixed(1)} ms`,
+      throughput: formatRate(result.operationsPerSecond),
+    })))
+  }
 } finally {
   rmSync(benchmarkDir, { recursive: true, force: true })
 }

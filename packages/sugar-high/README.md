@@ -200,6 +200,12 @@ options, and lower-level functions. Upgrading from v1? Read the
 
 Measure bundle size and highlighting throughput locally:
 
+[![sugar-high bundle size](https://deno.bundlejs.com/?q=sugar-high&badge=detailed)](https://bundlejs.com/?q=sugar-high)
+[![sugar-high/core bundle size](https://deno.bundlejs.com/?q=sugar-high%2Fcore&badge=detailed)](https://bundlejs.com/?q=sugar-high%2Fcore)
+
+The badges show the minified and gzip-compressed cost of the latest published package. To measure
+the current checkout together with highlighting performance:
+
 ```sh
 pnpm --filter sugar-high benchmark
 ```
