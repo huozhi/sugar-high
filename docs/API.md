@@ -94,6 +94,9 @@ input map to that canonical name. Canonical names themselves are always accepted
 
 Related dialects intentionally share one canonical language. JavaScript includes JSX, TypeScript
 includes TSX, JSON includes JSONC comments, Shell includes sh/Bash/Zsh, and HCL includes Terraform.
+An alias only affects lookup: it does not create another language implementation or public name.
+Integrations use the canonical name for generated `sh-lang--*` classes and `data-sh-language`
+attributes.
 
 ## Highlight options
 
