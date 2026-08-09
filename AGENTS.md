@@ -31,3 +31,5 @@
 - Publishing is manual: Actions → Publish → Run workflow on `main`, with confirmation `publish`.
 - npm publishing uses trusted publishing through OIDC. Do not add npm tokens or publish directly
   from CI.
+- The manual publish job uses Changesets to create package tags and GitHub Releases from the
+  reviewed changelogs. Major umbrella releases may still use separately curated `vX.Y.Z` notes.

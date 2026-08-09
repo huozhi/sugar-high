@@ -41,6 +41,7 @@ pnpm check:packages
 2. Select the `main` branch.
 3. Enter `publish` in the confirmation field and run the workflow.
 4. Confirm that the publish job used npm provenance and completed for every intended package.
+5. Confirm that Changesets pushed a package tag and created a GitHub Release for every package published by the run.
 
 The workflow is guarded so pushes to `main` can only prepare the version PR. Publishing runs only for a manual dispatch whose confirmation is exactly `publish`.
 
@@ -64,11 +65,12 @@ import { Code, Editor } from '@sugar-high/react'
 import remarkSugarHigh from '@sugar-high/remark'
 ```
 
-For major releases, publish the curated GitHub release notes after npm verification. Routine tag and GitHub Release automation is tracked in issue #202.
+Changesets creates package-specific tags and GitHub Releases from the reviewed changelogs. For an occasional major umbrella release, a maintainer may additionally publish curated notes under the repository's `vX.Y.Z` tag after npm verification.
 
 ## Failure handling
 
 - If preparation fails, fix the Changeset or workflow in a normal PR; never edit generated versions directly on `main`.
 - If publishing fails before a package reaches npm, fix the cause and rerun the manual workflow.
 - If only some packages publish, do not change their versions. Rerun after fixing the failure; Changesets skips versions already present on npm and publishes the remaining packages.
+- If npm succeeds but GitHub release creation fails, create the missing package tag and release manually from its generated changelog; already-published versions are not recreated by a later publish run.
 - Never replace OIDC with a long-lived npm token as a workaround.
