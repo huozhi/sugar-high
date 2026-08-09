@@ -47,3 +47,4 @@ jobs:
               await github.rest.issues.updateComment({ owner, repo, comment_id: previous.id, body })
             } else {
               await github.rest.issues.createComment({ owner, repo, issue_number, body })
+            }
