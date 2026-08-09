@@ -12,6 +12,12 @@ export function getExtension(title: string | undefined) {
   return (title || '').split('.').pop() || ''
 }
 
+export function getLineNumbersWidth(code: string, width?: string) {
+  if (width) return width
+  const digits = String(code.split('\n').length).length
+  return digits > 3 ? `calc(${digits}ch + 14px)` : undefined
+}
+
 function generateHighlightedLines(
   codeText: string,
   highlightLines: ([number, number] | number)[],
@@ -185,6 +191,7 @@ export function Code({
   mark?: HighlightOptions['mark']
   markLine?: HighlightOptions['markLine']
 } & React.HTMLAttributes<HTMLDivElement>) {
+  const resolvedLineNumbersWidth = getLineNumbersWidth(code, lineNumbersWidth)
   const lineElements = useMemo(() =>
     asMarkup
       ? code
@@ -200,7 +207,7 @@ export function Code({
       data-codice-code
       data-codice-line-numbers={lineNumbers}
     >
-      <ScopedStyle css={css({ fontSize, lineNumbersWidth, padding })} />
+      <ScopedStyle css={css({ fontSize, lineNumbersWidth: resolvedLineNumbersWidth, padding })} />
       <CodeHeader title={title} controls={controls} />
       <CodeFrame preformatted={preformatted} asMarkup={asMarkup}>
         {lineElements}

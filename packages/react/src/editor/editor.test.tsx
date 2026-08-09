@@ -196,7 +196,7 @@ describe('Code', () => {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(2rem - 6px);
+        min-width: calc(var(--codice-code-line-number-width) - 14px);
         margin-left: calc(var(--codice-code-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
@@ -410,7 +410,7 @@ describe('Code', () => {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(2rem - 6px);
+        min-width: calc(var(--codice-code-line-number-width) - 14px);
         margin-left: calc(var(--codice-code-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
@@ -581,7 +581,7 @@ describe('Code', () => {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(2rem - 6px);
+        min-width: calc(var(--codice-code-line-number-width) - 14px);
         margin-left: calc(var(--codice-code-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
