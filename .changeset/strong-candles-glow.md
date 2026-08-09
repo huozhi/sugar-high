@@ -1,6 +1,7 @@
 ---
 'sugar-high': major
 '@sugar-high/react': major
+'@sugar-high/remark': major
 ---
 
 Release Sugar High v2 with canonical multi-language highlighting, a composable core, typed generated nodes, granular token and line styling, first-party React components, Remark integration, themes, and updated documentation.
