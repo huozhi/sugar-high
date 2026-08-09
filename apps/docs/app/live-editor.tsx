@@ -8,7 +8,7 @@ import {
   useCallback,
   useContext,
 } from 'react'
-import { SugarHigh } from 'sugar-high'
+import { SugarHigh } from 'sugar-high/core'
 import { Editor } from '@sugar-high/react'
 import { CopyButton } from './components/copy-button'
 import {

@@ -3,13 +3,13 @@ import { onCommentEnd, onCommentStart } from './plain-base.js'
 
 export const keywords = new Set([])
 
-export const markLine = (line) => {
-  let className = ''
-  if (/^#{1,6}\s/.test(line.value)) className = 'sh__line--heading'
-  else if (/^\s*>/.test(line.value)) className = 'sh__line--quote'
-  else if (/^\s*(?:[-*+] |\d+[.)] )/.test(line.value)) className = 'sh__line--list'
-  else if (/^\s*```/.test(line.value)) className = 'sh__line--fence'
-  if (className) line.className += ` ${className}`
+export const annotateLine = (line) => {
+  let annotation = ''
+  if (/^#{1,6}\s/.test(line.value)) annotation = 'markdown-heading'
+  else if (/^\s*>/.test(line.value)) annotation = 'markdown-quote'
+  else if (/^\s*(?:[-*+] |\d+[.)] )/.test(line.value)) annotation = 'markdown-list'
+  else if (/^\s*```/.test(line.value)) annotation = 'markdown-fence'
+  if (annotation) line.annotations.push(annotation)
 }
 
 export { onCommentEnd, onCommentStart }

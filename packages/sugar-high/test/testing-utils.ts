@@ -1,4 +1,4 @@
-import { SugarHigh } from '..'
+import { SugarHigh } from '../lib/core.js'
 
 function getTypeName(token) {
   return SugarHigh.TokenTypes[token[0]]

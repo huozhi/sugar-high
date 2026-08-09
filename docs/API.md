@@ -149,13 +149,47 @@ highlight(source, {
 })
 ```
 
-Every generated line has `.sh__line`; the returned class is appended to it. Sugar High does not
-assign visual styles to custom line classes, so the application controls the appearance:
+Every generated line starts with `.sh__line`. Sugar High does not assign visual styles to custom
+line classes, so the application controls the appearance:
 
 ```css
 .sh__line--highlighted {
   background: #fff8c5;
 }
+```
+
+Language presets can attach semantic annotations to a line. Sugar High turns each annotation into
+a default BEM-style class using `.sh__line--<annotation>`. For example, a Markdown heading has the
+`markdown-heading` annotation and receives `.sh__line--markdown-heading`; an added Diff line
+receives `.sh__line--diff-add`.
+
+`markLine` receives the annotations and the generated class name. Append classes to preserve the
+defaults, or replace `className` to use your own naming convention:
+
+```js
+highlight(source, {
+  lang: 'markdown',
+  markLine(line) {
+    line.className = [
+      'line',
+      ...line.annotations.map(annotation => `line-${annotation}`),
+    ].join(' ')
+  },
+})
+```
+
+This renders a Markdown heading with `class="line line-markdown-heading"`. `markLine` can also
+customize inline styles and HTML properties:
+
+```js
+highlight(source, {
+  markLine(line) {
+    if (line.annotations.includes('diff-add')) {
+      line.style.background = '#e6ffec'
+      line.properties['data-change'] = 'addition'
+    }
+  },
+})
 ```
 
 The higher-level integrations provide their own line-selection syntax:
@@ -184,14 +218,12 @@ tokenizer configuration and does not produce HTML.
 
 ```ts
 type ParsedCode = {
-  value: string
-  lines: Array<{
-    index: number
-    value: string
-    tokens: Array<{ type: TokenType; value: string }>
-    className: string
-    style: Record<string, string | number>
-    properties: Record<string, string | number | boolean>
+  readonly value: string
+  readonly lines: ReadonlyArray<{
+    readonly index: number
+    readonly value: string
+    readonly tokens: ReadonlyArray<{ type: TokenType; value: string }>
+    readonly annotations: readonly string[]
   }>
 }
 ```

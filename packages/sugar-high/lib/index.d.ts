@@ -40,8 +40,3 @@ export type HighlightOptions = DisplayOptions & {
 }
 
 export function highlight(code: string, options?: HighlightOptions): string
-
-export const SugarHigh: {
-  TokenTypes: { [key: number]: string }
-  TokenMap: Map<string, number>
-}

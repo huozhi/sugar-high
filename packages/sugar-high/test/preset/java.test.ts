@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize } from '../../lib/core.js'
-import { java } from '../../lib/presets/index.js'
+import * as java from '../../lib/presets/lang/java.js'
 import { getTokensAsString } from '../testing-utils'
 
 describe('tokenize - java preset', () => {

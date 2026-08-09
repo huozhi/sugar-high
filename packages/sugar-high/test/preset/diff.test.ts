@@ -16,8 +16,12 @@ describe('diff preset', () => {
       '+const newValue = true',
     ].join('\n')
 
-    const lines = generate(parse(input, diff))
+    const parsed = parse(input, diff)
+    const lines = generate(parsed)
     const classNames = lines.map((line) => line.properties.className)
+
+    expect(parsed.lines[6].annotations).toEqual(['diff-remove'])
+    expect(parsed.lines[7].annotations).toEqual(['diff-add'])
 
     expect(classNames).toEqual([
       'sh__line sh__line--diff-meta',

@@ -16,26 +16,41 @@ export type ParsedToken = {
   value: string
 }
 
-export type MarkToken = ParsedToken & {
+export type MarkToken = {
+  type: TokenType
+  value: string
   className: string
   style: Record<string, string | number>
   properties: Record<string, string | number | boolean>
 }
 
 export type ParsedLine = {
-  index: number
-  value: string
-  tokens: ParsedToken[]
+  readonly index: number
+  readonly value: string
+  readonly tokens: readonly ParsedToken[]
+  readonly annotations: readonly string[]
+}
+
+export type AnnotateLine = {
+  readonly index: number
+  readonly value: string
+  readonly tokens: readonly ParsedToken[]
+  annotations: string[]
+}
+
+export type MarkLine = {
+  readonly index: number
+  readonly value: string
+  readonly tokens: readonly ParsedToken[]
+  readonly annotations: readonly string[]
   className: string
   style: Record<string, string | number>
   properties: Record<string, string | number | boolean>
 }
 
-export type MarkLine = ParsedLine
-
 export type ParsedCode = {
-  value: string
-  lines: ParsedLine[]
+  readonly value: string
+  readonly lines: readonly ParsedLine[]
 }
 
 export type DisplayOptions = {
@@ -57,8 +72,8 @@ export type ParseOptions = {
   caseInsensitive?: boolean
   typescript?: boolean
   tokenize?: (code: string, options: ParseOptions) => Array<[number, string]>
-  /** Apply syntax-specific line metadata while parsing. */
-  markLine?: (line: MarkLine) => void
+  /** Apply syntax-specific semantic annotations while parsing. */
+  annotateLine?: (line: AnnotateLine) => void
 }
 
 export function parse(code: string, options?: ParseOptions): ParsedCode

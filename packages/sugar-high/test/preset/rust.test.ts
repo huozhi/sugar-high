@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize } from '../../lib/core.js'
-import { rust } from '../../lib/presets/index.js'
+import * as rust from '../../lib/presets/lang/rust.js'
 import { getTokensAsString } from '../testing-utils'
 
 describe('tokenize - rust preset', () => {

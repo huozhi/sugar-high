@@ -28,9 +28,7 @@ function assemble(value, tokens) {
         type: TokenTypes[type],
         value: tokenValue,
       })),
-      className: 'sh__line',
-      style: {},
-      properties: {},
+      annotations: [],
     })
   }
 
@@ -80,9 +78,10 @@ function generate(parsed, options) {
       index: parsedLine.index,
       value: parsedLine.value,
       tokens: parsedLine.tokens,
-      className: parsedLine.className,
-      style: { ...parsedLine.style },
-      properties: { ...parsedLine.properties },
+      annotations: parsedLine.annotations,
+      className: `sh__line${parsedLine.annotations.map(annotation => ` sh__line--${annotation}`).join('')}`,
+      style: {},
+      properties: {},
     }
     markLine?.(line)
 
