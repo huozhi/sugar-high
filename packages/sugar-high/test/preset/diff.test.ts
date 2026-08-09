@@ -41,4 +41,23 @@ describe('diff preset', () => {
     expect(html).toContain('class="sh__line sh__line--diff-remove"')
     expect(html).toContain('class="sh__line sh__line--diff-add"')
   })
+
+  it('does not highlight filename extensions in metadata', () => {
+    const parsed = parse([
+      'diff --git a/src/index.tsx b/src/index.tsx',
+      '--- a/theme.css',
+      '+++ b/theme.css',
+      '+const value = data.name',
+    ].join('\n'), diff)
+
+    for (const line of parsed.lines.slice(0, 3)) {
+      expect(line.tokens.filter(token => ['tsx', 'css'].includes(token.value)))
+        .toEqual(expect.arrayContaining([
+          expect.objectContaining({ type: 'identifier' }),
+        ]))
+      expect(line.tokens.some(token => token.type === 'property')).toBe(false)
+    }
+
+    expect(parsed.lines[3].tokens).toContainEqual({ type: 'property', value: 'name' })
+  })
 })
