@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { highlight } from 'sugar-high'
-import { parse, render, tokenize } from 'sugar-high/core'
+import { generate, parse, render, tokenize } from 'sugar-high/core'
 import * as javascript from '../lib/presets/lang/javascript.js'
 import * as python from '../lib/presets/lang/python.js'
 import * as typescript from '../lib/presets/lang/typescript.js'
@@ -61,5 +61,13 @@ describe('composable core export', () => {
     expect(html).toContain('style="font-weight:700"')
     expect(html).toContain('data-line="2"')
     expect(parsed.lines[1].annotations).toEqual([])
+  })
+
+  it('keeps syntax-tree and semantic token types separate', () => {
+    const [line] = generate(parse('const ready = true', javascript))
+
+    expect(line.type).toBe('element')
+    expect(line.children[0].type).toBe('element')
+    expect(line.children[0].tokenType).toBe('keyword')
   })
 })
