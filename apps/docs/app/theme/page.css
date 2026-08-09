@@ -8,7 +8,7 @@
 
 .theme-hero,
 .theme-product .product-section__head {
-  width: min(720px, 100%);
+  width: min(600px, 100%);
   margin-right: auto;
   margin-left: auto;
 }
@@ -117,7 +117,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: min(720px, 100%);
+  width: min(600px, 100%);
   margin-inline: auto;
 }
 
@@ -305,7 +305,7 @@
 
 .theme-agent {
   position: relative;
-  width: min(720px, 100%);
+  width: min(600px, 100%);
   margin: -8px 0 20px;
   margin-inline: auto;
 }

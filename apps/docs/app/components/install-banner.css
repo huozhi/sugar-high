@@ -16,7 +16,7 @@
   width: 100%;
   max-width: 720px;
   min-height: 258px;
-  margin: 16px 0;
+  margin: 16px auto;
   overflow: hidden;
   border-radius: 6px;
   background: linear-gradient(90deg, #f6f6f6 0 50%, #383838 50% 100%);
@@ -118,6 +118,7 @@
   padding: 0 16px;
   width: 100%;
   max-width: 600px;
+  margin-inline: auto;
   border-radius: 4px;
   overflow: hidden;
   /* Smooth bg when View Transitions are unavailable */
@@ -171,11 +172,17 @@
 .install-banner__block {
   position: relative;
   font-size: 1rem;
+  margin-top: clamp(44px, 6vw, 64px);
+  margin-inline: auto;
   padding: 8px 16px;
   width: 100%;
   max-width: 600px;
   border-radius: 2px;
   color: var(--docs-ui-secondary, #5c6570);
+}
+
+.install-banner__theme-split + .install-banner__block {
+  margin-top: 28px;
 }
 
 .install-banner__block h2 {
@@ -228,6 +235,14 @@
   .install-banner__theme-pane {
     padding: 0 8px 10px;
     font-size: 11px;
+  }
+
+  .install-banner__block {
+    margin-top: 44px;
+  }
+
+  .install-banner__theme-split + .install-banner__block {
+    margin-top: 24px;
   }
 
   .install-banner__theme-pane-label {

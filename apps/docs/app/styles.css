@@ -107,6 +107,17 @@ input[type='checkbox']:checked {
   padding: 2rem 0;
   color: #354150;
 }
+
+.product-shell.home-product-nav {
+  width: min(920px, 100%);
+  padding-top: 4px;
+}
+
+.home-product-nav .product-nav {
+  justify-content: flex-end;
+  margin-bottom: 0;
+}
+
 .header h1 span {
   font-size: 5rem;
   font-weight: 800;

@@ -8,10 +8,18 @@ const links: { href: `/${Product}`; label: string; id: Product }[] = [
   { href: '/remark', label: 'Remark', id: 'remark' },
 ]
 
-export function ProductNav({ active, source }: { active: Product; source: string }) {
+export function ProductNav({
+  active,
+  source,
+  showBrand = true,
+}: {
+  active?: Product
+  source: string
+  showBrand?: boolean
+}) {
   return (
     <nav className="product-nav" aria-label="Product navigation">
-      <Link className="product-nav__brand" href="/">Sugar High</Link>
+      {showBrand && <Link className="product-nav__brand" href="/">Sugar High</Link>}
       <div className="product-nav__links">
         {links.map(link => (
           <Link
