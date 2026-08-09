@@ -23,7 +23,7 @@
       "default": "./lib/lang.js"
     }
   },
-  "description": "Super lightweight JSX syntax highlighter",
+  "description": "Lightweight, zero-dependency syntax highlighting for popular programming languages",
   "files": [
     "lib"
   ],

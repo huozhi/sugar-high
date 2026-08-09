@@ -10,6 +10,7 @@
     "clean": "pnpm -r run clean",
     "site": "pnpm --filter docs dev",
     "docs:build": "pnpm build && pnpm --filter docs build",
+    "check:packages": "node scripts/check-packages.mjs",
     "release-video:studio": "pnpm --filter release-video dev",
     "release-video:render": "pnpm --filter release-video render",
     "changeset": "changeset",
