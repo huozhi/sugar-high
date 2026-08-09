@@ -9,9 +9,13 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v6
         with:
           version: 9.15.9
@@ -23,3 +27,21 @@ jobs:
       - run: pnpm test
       - run: pnpm build
       - run: pnpm check:packages
+      - name: Set up Bun for bundle measurement
+        if: github.event_name == 'pull_request'
+        uses: oven-sh/setup-bun@v2
+      - name: Compare bundle size
+        if: github.event_name == 'pull_request'
+        working-directory: packages/sugar-high
+        run: node scripts/benchmark.mjs --markdown --base origin/${{ github.base_ref }} > size-report.md
+      - name: Add bundle size to summary
+        if: github.event_name == 'pull_request'
+        working-directory: packages/sugar-high
+        run: cat size-report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload bundle size report
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v6
+        with:
+          name: bundle-size-report-${{ github.event.number }}
+          path: packages/sugar-high/size-report.md
+          retention-days: 1

@@ -21,6 +21,8 @@
   registry at runtime; copy a configuration before extending it.
 - Bundle size is part of every API and architecture decision. Measure affected entry points and
   prefer the simpler design when added abstraction does not earn its bytes.
+- Run `pnpm --filter sugar-high benchmark` for architecture changes and include the affected
+  minified and gzip sizes in the pull request description.
 
 # Releases
 
