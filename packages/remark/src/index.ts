@@ -2,7 +2,6 @@ import { type HighlightOptions } from 'sugar-high'
 import { parse, generate } from 'sugar-high/core'
 import { lang as canonicalizeLang, languages } from 'sugar-high/lang'
 import { map as unistMap } from 'unist-util-map'
-import rangeParser from 'parse-numeric-range'
 
 type HighlightRange = number | [number, number]
 
@@ -30,27 +29,6 @@ function parseHighlightMeta(meta?: string): HighlightRange[] {
   return ranges
 }
 
-const parseLang = (str) => {
-  const match = (regexp) => {
-    const m = (str || '').match(regexp)
-    return Array.isArray(m) ? m.filter(Boolean) : []
-  }
-
-  const [lang = 'unknown'] = match(/^[a-zA-Z\d-]*/g)
-
-  const range = rangeParser(
-    match(/\{(.*?)\}$/g)
-      .join(',')
-      .replace(/^\{/, '')
-      .replace(/\}$/, '')
-  )
-
-  return {
-    lang,
-    range,
-  }
-}
-
 const h = (type, attrs, children) => {
   return {
     type: 'element',
@@ -65,7 +43,7 @@ const h = (type, attrs, children) => {
   }
 }
 
-type RemarkSugarHighOptions = {
+export type RemarkSugarHighOptions = {
   cx?: HighlightOptions['cx']
   mark?: HighlightOptions['mark']
   markLine?: HighlightOptions['markLine']
@@ -76,7 +54,7 @@ const highlight = ({ cx, mark, markLine }: RemarkSugarHighOptions = {}) => (tree
     const { type, tagName } = node
     if (tagName !== 'code' && type !== 'code') return node
 
-    const { lang } = parseLang(node.lang)
+    const language = String(node.lang || '').match(/^[a-zA-Z\d-]*/)?.[0] || 'unknown'
 
     const highlightRanges = parseHighlightMeta(node.meta)
     const highlightLineNumbers = new Set<number>()
@@ -90,8 +68,8 @@ const highlight = ({ cx, mark, markLine }: RemarkSugarHighOptions = {}) => (tree
       }
     })
 
-    const canonicalLang = canonicalizeLang(lang)
-    const outputLang = canonicalLang || lang
+    const canonicalLang = canonicalizeLang(language)
+    const outputLang = canonicalLang || language
     const codeText =
       node.value ||
       node.children

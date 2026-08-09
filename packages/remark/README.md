@@ -1,69 +1,46 @@
 # @sugar-high/remark
 
-Remark plugin for [Sugar High](https://sugar-high.vercel.app) syntax highlighter.
+Remark plugin for the [Sugar High](https://sugar-high.vercel.app) syntax highlighter.
 
-[Website](https://sugar-high.vercel.app/remark)
+## Install
 
-
-## Installation
-
-```bash
-$ npm i -S @sugar-high/remark
+```sh
+npm install @sugar-high/remark sugar-high
 ```
 
 ## Usage
 
-Input markdown file:
+```js
+import { remark } from 'remark'
+import html from 'remark-html'
+import remarkSugarHigh from '@sugar-high/remark'
 
+const output = await remark()
+  .use(remarkSugarHigh, {
+    cx: { keyword: 'font-bold' },
+  })
+  .use(html, { sanitize: false })
+  .process(markdown)
 ```
-\`\`\`javascript {2,5}
-// Here is a simple function
-async function hello() {
-    console.log('Hello, world from JavaScript!')
-    return 123 // return a number
-}
 
-await hello()
-\`\`\`
-```
-
-Using [remark](https://github.com/remarkjs/remark):
+The named `highlight` export is available for integrations that prefer named imports:
 
 ```js
-const { highlight } = require('@sugar-high/remark');
-
-await remark()
-  .use(highlight, { cx: { keyword: 'font-bold' } })
-  .use(require('remark-html'))
-  .process(file, (err, file) => console.log(String(file)));
+import { highlight } from '@sugar-high/remark'
 ```
 
-Fence aliases are normalized to canonical Sugar High language names. For example, `bash` and `sh`
-use `shell`, `jsonc` uses `json`, and `tf` uses `hcl`. Generated `sh-lang--*` classes and the
-`data-sh-language` attribute use the canonical name.
+Fence aliases are normalized through [`lang()`](https://github.com/huozhi/sugar-high/blob/main/docs/API.md#sugar-highlang), so `bash` uses `shell`, `jsonc` uses `json`, and `tf` uses `hcl`.
 
-<details>
-<summary>Output HTML</summary>
-<p>
+Use one-based ranges in fence metadata to highlight lines:
 
-```html
-<pre
-  class="sh-lang--javascript"
-><code class="sh-lang--javascript" data-sh-language="javascript"><span class="sh__line"><span class="sh__token--comment" style="color: var(--sh-comment)">// Here is a simple function</span><span class="sh__token--line">
-</span></span><span class="sh__line sh__line--highlighted"><span class="sh__token--comment" style="color: var(--sh-comment)"></span><span class="sh__token--keyword" style="color: var(--sh-keyword)">async</span><span class="sh__token--space" style="color: var(--sh-space)"> </span><span class="sh__token--keyword" style="color: var(--sh-keyword)">function</span><span class="sh__token--space" style="color: var(--sh-space)"> </span><span class="sh__token--identifier" style="color: var(--sh-identifier)">hello</span><span class="sh__token--sign" style="color: var(--sh-sign)">(</span><span class="sh__token--sign" style="color: var(--sh-sign)">)</span><span class="sh__token--space" style="color: var(--sh-space)"> </span><span class="sh__token--sign" style="color: var(--sh-sign)">{</span><span class="sh__token--break" style="color: var(--sh-break)"></span><span class="sh__token--line">
-</span></span><span class="sh__line"><span class="sh__token--space" style="color: var(--sh-space)">    </span><span class="sh__token--identifier" style="color: var(--sh-identifier)">console</span><span class="sh__token--sign" style="color: var(--sh-sign)">.</span><span class="sh__token--property" style="color: var(--sh-property)">log</span><span class="sh__token--sign" style="color: var(--sh-sign)">(</span><span class="sh__token--string" style="color: var(--sh-string)">'</span><span class="sh__token--string" style="color: var(--sh-string)">Hello, world from JavaScript!</span><span class="sh__token--string" style="color: var(--sh-string)">'</span><span class="sh__token--sign" style="color: var(--sh-sign)">)</span><span class="sh__token--break" style="color: var(--sh-break)"></span><span class="sh__token--line">
-</span></span><span class="sh__line"><span class="sh__token--space" style="color: var(--sh-space)">    </span><span class="sh__token--keyword" style="color: var(--sh-keyword)">return</span><span class="sh__token--space" style="color: var(--sh-space)"> </span><span class="sh__token--class" style="color: var(--sh-class)">123</span><span class="sh__token--space" style="color: var(--sh-space)"> </span><span class="sh__token--comment" style="color: var(--sh-comment)">// return a number</span><span class="sh__token--line">
-</span></span><span class="sh__line sh__line--highlighted"><span class="sh__token--comment" style="color: var(--sh-comment)"></span><span class="sh__token--sign" style="color: var(--sh-sign)">}</span><span class="sh__token--break" style="color: var(--sh-break)"></span><span class="sh__token--line">
-</span></span><span class="sh__line"><span class="sh__token--break" style="color: var(--sh-break)"></span><span class="sh__token--line">
-</span></span><span class="sh__line"><span class="sh__token--keyword" style="color: var(--sh-keyword)">await</span><span class="sh__token--space" style="color: var(--sh-space)"> </span><span class="sh__token--identifier" style="color: var(--sh-identifier)">hello</span><span class="sh__token--sign" style="color: var(--sh-sign)">(</span><span class="sh__token--sign" style="color: var(--sh-sign)">)</span><span class="sh__token--line">
-</span></span></code></pre>
+````md
+```js {2,5-7}
+const ready = true
 ```
-</p>
+````
 
-</details>
-
-Customize the color theme with sugar-high CSS variables. Check [sugar-high highlight-with-css section](https://github.com/huozhi/sugar-high#highlight-with-css) for more details.
-
+The plugin accepts the same display options as `highlight`: `cx`, `mark`, and `markLine`. See the
+[API reference](https://github.com/huozhi/sugar-high/blob/main/docs/API.md#highlight-options).
 
 ## License
 

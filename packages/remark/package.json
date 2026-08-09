@@ -10,8 +10,15 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "bunchee",
+    "test": "vitest --run",
     "prepublishOnly": "pnpm build"
   },
   "files": [
@@ -26,13 +33,13 @@
     "access": "public"
   },
   "dependencies": {
-    "parse-numeric-range": "^1.3.0",
     "sugar-high": "workspace:^",
     "unist-util-map": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.12.0",
     "bunchee": "^7.0.1",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vitest": "^3.2.4"
   }
 }
