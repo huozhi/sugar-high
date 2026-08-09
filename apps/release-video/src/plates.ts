@@ -1,5 +1,5 @@
 /**
- * First docs palette (Stylish) — mirrors apps/docs live-editor-presets light/dark.
+ * First docs palette (Stylish) — mirrors apps/site live-editor-presets light/dark.
  */
 export type ColorPlate = {
   class: string

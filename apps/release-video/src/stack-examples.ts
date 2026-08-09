@@ -1,5 +1,5 @@
 /**
- * Snippets aligned with apps/docs/app/carousel.tsx showcase cards (tighter whitespace).
+ * Snippets aligned with apps/site/app/carousel.tsx showcase cards (tighter whitespace).
  */
 export const LIB_RS = `use std::fmt::Display;
 

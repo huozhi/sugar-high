@@ -148,7 +148,7 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
       <div className="product-shell">
         <ProductNav
           active="theme"
-          source="https://github.com/huozhi/sugar-high/tree/main/apps/docs/app/theme"
+          source="https://github.com/huozhi/sugar-high/tree/main/apps/site/app/theme"
         />
 
         <header className="product-hero theme-hero">
