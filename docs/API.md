@@ -232,3 +232,9 @@ type ParsedCode = {
 
 Core API. Converts parsed code to HTML and accepts only display customization: `cx`, `mark`, and
 `markLine`.
+
+### `generate(parsed, options?)`
+
+Core API. Builds typed line and token nodes for integrations that render through React or another
+syntax tree instead of HTML. Generated token nodes expose their semantic `tokenType` separately
+from the syntax-tree `type: 'element'` field.

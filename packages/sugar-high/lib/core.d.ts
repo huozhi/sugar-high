@@ -53,6 +53,32 @@ export type ParsedCode = {
   readonly lines: readonly ParsedLine[]
 }
 
+export type GeneratedProperties = {
+  className: string
+  style: Record<string, string | number>
+  [name: string]: unknown
+}
+
+export type GeneratedText = {
+  type: 'text'
+  value: string
+}
+
+export type GeneratedToken = {
+  type: 'element'
+  tokenType: TokenType
+  tagName: 'span'
+  children: GeneratedText[]
+  properties: GeneratedProperties
+}
+
+export type GeneratedLine = {
+  type: 'element'
+  tagName: 'span'
+  children: GeneratedToken[]
+  properties: GeneratedProperties
+}
+
 export type DisplayOptions = {
   cx?: Partial<Record<TokenType, string>>
   mark?: (token: MarkToken) => void
@@ -81,8 +107,8 @@ export function render(parsed: ParsedCode, options?: DisplayOptions): string
 
 /** Low-level token API used by language presets and integrations. */
 export function tokenize(code: string, options?: ParseOptions): Array<[number, string]>
-/** Build renderable nodes from parsed code. */
-export function generate(parsed: ParsedCode, options?: DisplayOptions): Array<any>
+/** Build renderable line nodes for HTML, React, and syntax-tree integrations. */
+export function generate(parsed: ParsedCode, options?: DisplayOptions): GeneratedLine[]
 
 export const SugarHigh: {
   TokenTypes: { [key: number]: string }

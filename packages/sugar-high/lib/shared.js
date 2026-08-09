@@ -100,6 +100,7 @@ function generate(parsed, options) {
         mark?.(token)
         return {
           type: 'element',
+          tokenType: token.type,
           tagName: 'span',
           children: [{ type: 'text', value: token.value }],
           properties: {
