@@ -196,22 +196,6 @@ See [`docs/API.md`](https://github.com/huozhi/sugar-high/blob/main/docs/API.md) 
 options, and lower-level functions. Upgrading from v1? Read the
 [v2 migration guide](https://github.com/huozhi/sugar-high/blob/main/docs/MIGRATION.md).
 
-## Benchmarking
-
-Measure bundle size and highlighting throughput locally:
-
-[![sugar-high bundle size](https://deno.bundlejs.com/?q=sugar-high&badge=detailed)](https://bundlejs.com/?q=sugar-high)
-[![sugar-high/core bundle size](https://deno.bundlejs.com/?q=sugar-high%2Fcore&badge=detailed)](https://bundlejs.com/?q=sugar-high%2Fcore)
-
-The badges show the minified and gzip-compressed cost of the latest published package. To measure
-the current checkout together with highlighting performance:
-
-```sh
-pnpm --filter sugar-high benchmark
-```
-
-Set `BENCH_ITERATIONS` to change the default 50,000 performance iterations.
-
 ## License
 
 MIT
