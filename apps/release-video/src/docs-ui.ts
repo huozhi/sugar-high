@@ -1,5 +1,5 @@
 /**
- * Typography aligned with apps/docs/app/styles.css (`html` + codice code).
+ * Typography aligned with apps/site/app/styles.css (`html` + codice code).
  */
 export const DOCS_FONT_SANS =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
