@@ -15,6 +15,37 @@ importers:
         specifier: ^16.3.0
         version: 16.3.0(@types/node@22.12.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
 
+  apps/release-video:
+    dependencies:
+      '@remotion/media':
+        specifier: 4.0.438
+        version: 4.0.438(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
+      remotion:
+        specifier: ^4.0.340
+        version: 4.0.438(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      sugar-high:
+        specifier: workspace:*
+        version: link:../../packages/sugar-high
+    devDependencies:
+      '@remotion/bundler':
+        specifier: ^4.0.340
+        version: 4.0.438(@swc/helpers@0.5.23)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@remotion/cli':
+        specifier: ^4.0.340
+        version: 4.0.438(@swc/helpers@0.5.23)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@types/react':
+        specifier: ^19.2.0
+        version: 19.2.18
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+
   apps/site:
     dependencies:
       '@sugar-high/react':
@@ -51,34 +82,6 @@ importers:
       '@types/node':
         specifier: 22.12.0
         version: 22.12.0
-      '@types/react':
-        specifier: ^19.2.0
-        version: 19.2.18
-      typescript:
-        specifier: 6.0.2
-        version: 6.0.2
-
-  apps/release-video:
-    dependencies:
-      react:
-        specifier: ^19.2.0
-        version: 19.2.0
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.0(react@19.2.0)
-      remotion:
-        specifier: ^4.0.340
-        version: 4.0.438(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      sugar-high:
-        specifier: workspace:*
-        version: link:../../packages/sugar-high
-    devDependencies:
-      '@remotion/bundler':
-        specifier: ^4.0.340
-        version: 4.0.438(@swc/helpers@0.5.23)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@remotion/cli':
-        specifier: ^4.0.340
-        version: 4.0.438(@swc/helpers@0.5.23)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/react':
         specifier: ^19.2.0
         version: 19.2.18
@@ -1001,6 +1004,12 @@ packages:
 
   '@remotion/media-utils@4.0.438':
     resolution: {integrity: sha512-ncXhPkpO2RTEYFhtHmeWgQiXJQ3JLFVx3q7h4N5DtI8CXn0A3lOuzExkUaVYM6Gr8dTwoStLbYnt+WX9Ev6Lxg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+
+  '@remotion/media@4.0.438':
+    resolution: {integrity: sha512-l47r+8Gyrv8KqqumLC9HU0Gq2CWNm8cGaRKkwC1VbdnqZ4bPQUf9SnYJV1U4IsWR8eAhk0i1QGa1Hc4VKYqKVQ==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -3786,14 +3795,14 @@ snapshots:
       '@remotion/studio-shared': 4.0.438(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@rspack/core': 1.7.6(@swc/helpers@0.5.23)
       '@rspack/plugin-react-refresh': 1.6.1(react-refresh@0.18.0)
-      css-loader: 5.2.7(webpack@5.105.0(esbuild@0.25.0))
+      css-loader: 5.2.7(webpack@5.105.0)
       esbuild: 0.25.0
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
       react-refresh: 0.18.0
       remotion: 4.0.438(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       source-map: 0.7.3
-      style-loader: 4.0.0(webpack@5.105.0(esbuild@0.25.0))
+      style-loader: 4.0.0(webpack@5.105.0)
       webpack: 5.105.0(esbuild@0.25.0)
     transitivePeerDependencies:
       - '@swc/core'
@@ -3861,6 +3870,14 @@ snapshots:
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
       remotion: 4.0.438(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+
+  '@remotion/media@4.0.438(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+    dependencies:
+      mediabunny: 1.39.2
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
+      remotion: 4.0.438(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      zod: 4.3.6
 
   '@remotion/player@4.0.438(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
@@ -4645,7 +4662,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  css-loader@5.2.7(webpack@5.105.0(esbuild@0.25.0)):
+  css-loader@5.2.7(webpack@5.105.0):
     dependencies:
       icss-utils: 5.1.0(postcss@8.5.6)
       loader-utils: 2.0.4
@@ -5886,7 +5903,7 @@ snapshots:
     dependencies:
       js-tokens: 9.0.1
 
-  style-loader@4.0.0(webpack@5.105.0(esbuild@0.25.0)):
+  style-loader@4.0.0(webpack@5.105.0):
     dependencies:
       webpack: 5.105.0(esbuild@0.25.0)
 

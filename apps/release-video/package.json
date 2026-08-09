@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev-video": "remotion studio",
-    "build-video": "remotion render src/index.ts Main out/release-video.mp4",
+    "dev": "remotion studio",
+    "render": "remotion render src/index.ts Main out/release-video.mp4",
     "still": "remotion still src/index.ts Main out/poster.png --frame=300"
   },
   "dependencies": {
+    "@remotion/media": "4.0.438",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "remotion": "^4.0.340",
