@@ -294,6 +294,7 @@ export default function Carousel() {
       '--showcase-line-highlight': `color-mix(in srgb, ${plateColors.keyword} 14%, ${previewMode === 'dark' ? '#383838' : '#fffef6'})`,
       '--codice-title-color': previewMode === 'dark' ? '#a8a8a8' : '#707070',
       '--codice-control-color': previewMode === 'dark' ? '#8b8b8b' : '#a4a4a4',
+      '--showcase-dim-bg': previewMode === 'dark' ? '#34373a' : '#e9ecee',
     } as CSSProperties
   }, [plateColors, previewMode])
 

@@ -154,8 +154,19 @@ input[type='checkbox']:checked {
 }
 
 .showcase-stack--isolating .showcase-card--stack:not(.showcase-card--hovered) {
-  opacity: 0.28;
-  filter: brightness(0.94) saturate(0.8);
+  --showcase-card-bg: var(--showcase-dim-bg);
+  opacity: 1;
+  filter: none;
+}
+
+.showcase-stack--isolating
+  .showcase-card--stack:not(.showcase-card--hovered)
+  :is([data-codice-header], [data-codice-code-content]) {
+  opacity: 0.34;
+}
+
+.showcase-card--stack :is([data-codice-header], [data-codice-code-content]) {
+  transition: opacity 0.2s ease;
 }
 
 .showcase-card--stack {
