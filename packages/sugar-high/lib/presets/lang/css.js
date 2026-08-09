@@ -12,3 +12,8 @@ export const onCommentStart = (currentChar, nextChar) => {
 export const onCommentEnd = (prevChar, currChar) => {
   return '*/' === (prevChar + currChar) ? 1 : 0
 }
+
+export const onLiteral = (curr, index, code) => {
+  if (curr !== '#') return 0
+  return code.slice(index).match(/^#(?:[\da-f]{8}|[\da-f]{6}|[\da-f]{4}|[\da-f]{3})(?![\w-])/i)?.[0].length || 0
+}

@@ -63,6 +63,13 @@ function tokenize(code, options) {
       continue
     }
 
+    const literalLength = options?.onLiteral?.(curr, i, code)
+    if (literalLength) {
+      append(T_STRING, code.slice(i, i + literalLength))
+      i += literalLength
+      continue
+    }
+
     if (typeof options?.onQuote === 'function' && curr === "'") {
       const length = options.onQuote(curr, i, code)
       if (typeof length === 'number' && length >= 1) {
@@ -153,6 +160,7 @@ export { generate, parse, render, SugarHigh, tokenize }
  * @property {Set<string>} [typeKeywords]
  * @property {(curr: string, next: string, index: number, code: string) => number | boolean} [onCommentStart]
  * @property {(prev: string, curr: string, index: number, code: string) => number | boolean} [onCommentEnd]
+ * @property {(curr: string, index: number, code: string) => number | null | undefined} [onLiteral]
  * @property {(curr: string, index: number, code: string) => number | null | undefined} [onQuote]
  * @property {boolean} [quotedKeys]
  * @property {boolean} [caseInsensitive]
