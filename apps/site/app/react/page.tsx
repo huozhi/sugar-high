@@ -29,6 +29,34 @@ render(
   </div>
 )`
 
+const stylingExample = `const style = {
+  backgroundColor: '#f6f8fa',
+  '--codice-background-color': 'transparent',
+  '--codice-caret-color': '#24292f',
+  '--codice-title-color': '#57606a',
+  '--codice-control-color': '#afb8c1',
+  '--codice-code-line-number-color': '#8c959f',
+  '--codice-code-highlight-color': '#fff8c5',
+  '--sh-keyword': '#cf222e',
+  '--sh-string': '#0a3069',
+} as React.CSSProperties
+
+<Editor style={style} value={source} onChange={setSource} />`
+
+const styleVariables = [
+  ['--codice-text-color', 'Editor', 'transparent', 'Textarea text; transparent over highlighted code.'],
+  ['--codice-background-color', 'Editor', 'transparent', 'Textarea background.'],
+  ['--codice-caret-color', 'Both', 'inherit', 'Editor and editable-title caret.'],
+  ['--codice-font-family', 'Both', 'Editor monospace; Code inherited', 'Code, textarea, and title font.'],
+  ['--codice-font-size', 'Both', 'inherit', 'Code and textarea font size.'],
+  ['--codice-code-padding', 'Both', '1rem', 'Content and header spacing.'],
+  ['--codice-code-line-number-width', 'Both', '2.5rem / auto', 'Line-number gutter width.'],
+  ['--codice-control-color', 'Both', 'unset', 'Header control-dot color.'],
+  ['--codice-title-color', 'Both', 'unset', 'Header filename color.'],
+  ['--codice-code-line-number-color', 'Both', 'unset', 'Line-number color.'],
+  ['--codice-code-highlight-color', 'Both', 'unset', 'Highlighted-line background.'],
+] as const
+
 function Window({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="product-card">
@@ -78,6 +106,35 @@ export default function ReactPage() {
               {codeBlockExample}
             </Code>
           </Window>
+        </section>
+
+        <section className="product-section react-api">
+          <div className="product-section__head">
+            <h2>Styling</h2>
+            <p>Compose frame variables with Sugar High token themes.</p>
+          </div>
+          <Code className="react-style-example" lang="typescript" title="editor-theme.tsx">
+            {stylingExample}
+          </Code>
+          <div className="react-api__table-wrap react-style-variables">
+            <table>
+              <thead><tr><th>Variable</th><th>Scope / default</th><th>Purpose</th></tr></thead>
+              <tbody>
+                {styleVariables.map(([name, scope, defaultValue, purpose]) => (
+                  <tr key={name}>
+                    <td><code>{name}</code></td>
+                    <td>{scope}<br /><code>{defaultValue}</code></td>
+                    <td>{purpose}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="react-style-note">
+            Set these inline or on the component root. Use <code>--sh-*</code> variables for token
+            colors; the <a href="/theme">theme guide</a> lists copyable presets. Keep the editor
+            textarea colors transparent to preserve its highlighted overlay.
+          </p>
         </section>
 
         <section className="product-section react-api">

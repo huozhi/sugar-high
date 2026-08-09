@@ -92,6 +92,31 @@
   color: #354150;
 }
 
+.react-style-example[data-codice-code] {
+  margin-bottom: 24px;
+  background: #f6f6f6;
+}
+
+.react-style-variables td:first-child {
+  width: 39%;
+}
+
+.react-style-variables td:nth-child(2) {
+  width: 27%;
+}
+
+.react-style-note {
+  margin: 18px 0 0;
+  color: #788592;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.react-style-note a {
+  color: #596571;
+  text-underline-offset: 3px;
+}
+
 .react-demo__status {
   display: flex;
   align-items: center;
