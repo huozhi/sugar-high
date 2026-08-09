@@ -78,7 +78,7 @@ export function Main() {
           <Audio
             src={staticFile('audio/mechanical-key.wav')}
             playbackRate={[0.96, 1, 1.04][index % 3]}
-            volume={0.46}
+            volume={0.26}
           />
         </Sequence>
       ))}

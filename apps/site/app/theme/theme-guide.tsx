@@ -53,7 +53,7 @@ export function ThemedCode({ className = '', ...props }: CodeProps) {
 
 <ThemedCode lang="typescript">{source}</ThemedCode>`
 
-const tailwindAgentCommand = `curl -fsSL https://sugar-high.vercel.app/themes/sugar-high.tailwind.css -o src/sugar-high-theme.css`
+const tailwindAgentCommand = `curl -fsSL https://sugar-high.vercel.app/themes/sugar-high.tailwind.css -o sugar-high-theme.css`
 
 export type ThemeOption = {
   id: string
@@ -121,7 +121,7 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
   const cssUsage = `<Code className="${selected.theme.className}"${selected.mode === 'dark' ? ' data-theme="dark"' : ''} lang="typescript">
   {source}
 </Code>`
-  const cssAgentCommand = `curl -fsSL https://sugar-high.vercel.app/themes/${selected.theme.file} -o src/${selected.theme.file}`
+  const cssAgentCommand = `curl -fsSL https://sugar-high.vercel.app/themes/${selected.theme.file} -o ${selected.theme.file}`
 
   const randomTheme = () => {
     const choices = variants.filter(variant => variant.key !== selected.key)
@@ -192,7 +192,6 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
           <div className="product-section__head theme-section-head">
             <div>
               <h2>Plain CSS</h2>
-              <p>Import one local file and scope the theme with a class.</p>
             </div>
             <div className="theme-switcher">
               <select

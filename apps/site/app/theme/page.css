@@ -210,7 +210,6 @@
   align-items: center;
   justify-content: flex-end;
   gap: 7px;
-  flex-wrap: wrap;
 }
 
 .theme-switcher select,
