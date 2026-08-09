@@ -2,10 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { highlight } from 'sugar-high'
 import * as core from 'sugar-high/core'
 import { lang, languages } from 'sugar-high/lang'
+import { registry } from 'sugar-high/registry'
 import { getTokensAsString } from './testing-utils'
 
 const tokenize = (code, { lang }) =>
-  core.tokenize(code, languages.find(({ id }) => id === lang)?.config)
+  core.tokenize(code, registry.find(({ id }) => id === lang)?.config)
 
 describe('language registry', () => {
   it.each([
@@ -76,7 +77,7 @@ describe('language registry', () => {
   })
 
   it('disables JavaScript-only scanner modes for other languages', () => {
-    const language = languages.find(({ id }) => id === lang('jsonc'))
+    const language = registry.find(({ id }) => id === lang('jsonc'))
     expect(language?.config).toMatchObject({
       jsx: false,
       regex: false,

@@ -57,6 +57,23 @@ highlight(source, { lang: 'python' })
 highlight(source, { lang: lang(extension) })
 ```
 
+This entry contains only language metadata and normalization logic, so using `lang()` does not
+bundle the syntax implementations.
+
+### `sugar-high/registry`
+
+Advanced integrations that combine built-in languages with `parse()` can use the heavier registry:
+
+```js
+import { parse } from 'sugar-high/core'
+import { registry } from 'sugar-high/registry'
+
+const python = registry.find(language => language.id === 'python')
+const parsed = parse(source, python?.config)
+```
+
+Most applications should use `highlight()` and do not need the registry.
+
 ## `lang()` mapping
 
 Canonical names appear in the first column. The preferred extension and every additional accepted

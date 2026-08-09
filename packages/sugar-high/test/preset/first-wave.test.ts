@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { highlight } from '../..'
 import * as core from '../../lib/core.js'
-import { languages } from '../../lib/lang.js'
+import { registry } from '../../lib/registry.js'
 import { getTokensAsString } from '../testing-utils'
 
 const tokenize = (code, { lang }) =>
-  core.tokenize(code, languages.find(({ id }) => id === lang)?.config)
+  core.tokenize(code, registry.find(({ id }) => id === lang)?.config)
 
 describe('first-wave language presets', () => {
   it('highlights the canonical shell language and hash comments', () => {

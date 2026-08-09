@@ -1,83 +1,43 @@
 // @ts-check
 
-import * as c from './presets/lang/c.js'
-import * as cpp from './presets/lang/cpp.js'
-import * as csharp from './presets/lang/csharp.js'
-import * as css from './presets/lang/css.js'
-import * as diff from './presets/lang/diff.js'
-import * as dockerfile from './presets/lang/dockerfile.js'
-import * as go from './presets/lang/go.js'
-import * as html from './presets/lang/html.js'
-import * as graphql from './presets/lang/graphql.js'
-import * as hcl from './presets/lang/hcl.js'
-import * as java from './presets/lang/java.js'
-import * as json from './presets/lang/json.js'
-import * as javascript from './presets/lang/javascript.js'
-import * as kotlin from './presets/lang/kotlin.js'
-import * as markdown from './presets/lang/markdown.js'
-import * as php from './presets/lang/php.js'
-import * as powershell from './presets/lang/powershell.js'
-import * as python from './presets/lang/python.js'
-import * as rust from './presets/lang/rust.js'
-import * as shell from './presets/lang/shell.js'
-import * as sql from './presets/lang/sql.js'
-import * as swift from './presets/lang/swift.js'
-import * as toml from './presets/lang/toml.js'
-import * as typescript from './presets/lang/typescript.js'
-import * as yaml from './presets/lang/yaml.js'
-
 /**
- * @typedef {import('./core.js').ParseOptions} ParseOptions
  * @typedef {{
  *   id: string
  *   extension: string
  *   aliases: readonly string[]
- *   config?: ParseOptions
  * }} Language
  */
 
-/**
- * Disable JavaScript-only scanner modes for a non-JavaScript language.
- * @param {ParseOptions} config
- * @returns {ParseOptions}
- */
-function nonJavaScript(config) {
-  return {
-    ...config,
-    jsx: false,
-    regex: false,
-    templateStrings: false,
-  }
-}
+const definitions = Object.freeze([
+  { id: 'javascript', extension: 'js', aliases: Object.freeze(['js', 'jsx', 'node']) },
+  { id: 'typescript', extension: 'ts', aliases: Object.freeze(['ts', 'tsx']) },
+  { id: 'css', extension: 'css', aliases: Object.freeze(['scss']) },
+  { id: 'python', extension: 'py', aliases: Object.freeze(['py', 'python3']) },
+  { id: 'c', extension: 'c', aliases: Object.freeze([]) },
+  { id: 'go', extension: 'go', aliases: Object.freeze(['golang']) },
+  { id: 'java', extension: 'java', aliases: Object.freeze([]) },
+  { id: 'rust', extension: 'rs', aliases: Object.freeze(['rs']) },
+  { id: 'json', extension: 'json', aliases: Object.freeze(['jsonc']) },
+  { id: 'diff', extension: 'diff', aliases: Object.freeze(['patch']) },
+  { id: 'shell', extension: 'sh', aliases: Object.freeze(['sh', 'bash', 'zsh']) },
+  { id: 'cpp', extension: 'cpp', aliases: Object.freeze(['c++', 'cc', 'cxx']) },
+  { id: 'csharp', extension: 'cs', aliases: Object.freeze(['c#', 'cs', 'dotnet']) },
+  { id: 'sql', extension: 'sql', aliases: Object.freeze([]) },
+  { id: 'html', extension: 'html', aliases: Object.freeze(['htm', 'xml']) },
+  { id: 'yaml', extension: 'yaml', aliases: Object.freeze(['yml']) },
+  { id: 'markdown', extension: 'md', aliases: Object.freeze(['md', 'mdx']) },
+  { id: 'kotlin', extension: 'kt', aliases: Object.freeze(['kts']) },
+  { id: 'swift', extension: 'swift', aliases: Object.freeze([]) },
+  { id: 'php', extension: 'php', aliases: Object.freeze([]) },
+  { id: 'toml', extension: 'toml', aliases: Object.freeze([]) },
+  { id: 'powershell', extension: 'ps1', aliases: Object.freeze(['pwsh']) },
+  { id: 'dockerfile', extension: 'dockerfile', aliases: Object.freeze(['docker']) },
+  { id: 'graphql', extension: 'graphql', aliases: Object.freeze(['gql']) },
+  { id: 'hcl', extension: 'hcl', aliases: Object.freeze(['terraform', 'tf']) },
+])
 
 /** @type {readonly Language[]} */
-const languages = Object.freeze([
-  { id: 'javascript', extension: 'js', aliases: Object.freeze(['js', 'jsx', 'node']), config: javascript },
-  { id: 'typescript', extension: 'ts', aliases: Object.freeze(['ts', 'tsx']), config: typescript },
-  { id: 'css', extension: 'css', aliases: Object.freeze(['scss']), config: nonJavaScript(css) },
-  { id: 'python', extension: 'py', aliases: Object.freeze(['py', 'python3']), config: nonJavaScript(python) },
-  { id: 'c', extension: 'c', aliases: Object.freeze([]), config: nonJavaScript(c) },
-  { id: 'go', extension: 'go', aliases: Object.freeze(['golang']), config: nonJavaScript(go) },
-  { id: 'java', extension: 'java', aliases: Object.freeze([]), config: nonJavaScript(java) },
-  { id: 'rust', extension: 'rs', aliases: Object.freeze(['rs']), config: nonJavaScript(rust) },
-  { id: 'json', extension: 'json', aliases: Object.freeze(['jsonc']), config: nonJavaScript(json) },
-  { id: 'diff', extension: 'diff', aliases: Object.freeze(['patch']), config: nonJavaScript(diff) },
-  { id: 'shell', extension: 'sh', aliases: Object.freeze(['sh', 'bash', 'zsh']), config: nonJavaScript(shell) },
-  { id: 'cpp', extension: 'cpp', aliases: Object.freeze(['c++', 'cc', 'cxx']), config: nonJavaScript(cpp) },
-  { id: 'csharp', extension: 'cs', aliases: Object.freeze(['c#', 'cs', 'dotnet']), config: nonJavaScript(csharp) },
-  { id: 'sql', extension: 'sql', aliases: Object.freeze([]), config: nonJavaScript(sql) },
-  { id: 'html', extension: 'html', aliases: Object.freeze(['htm', 'xml']), config: html },
-  { id: 'yaml', extension: 'yaml', aliases: Object.freeze(['yml']), config: nonJavaScript(yaml) },
-  { id: 'markdown', extension: 'md', aliases: Object.freeze(['md', 'mdx']), config: nonJavaScript(markdown) },
-  { id: 'kotlin', extension: 'kt', aliases: Object.freeze(['kts']), config: nonJavaScript(kotlin) },
-  { id: 'swift', extension: 'swift', aliases: Object.freeze([]), config: nonJavaScript(swift) },
-  { id: 'php', extension: 'php', aliases: Object.freeze([]), config: nonJavaScript(php) },
-  { id: 'toml', extension: 'toml', aliases: Object.freeze([]), config: nonJavaScript(toml) },
-  { id: 'powershell', extension: 'ps1', aliases: Object.freeze(['pwsh']), config: nonJavaScript(powershell) },
-  { id: 'dockerfile', extension: 'dockerfile', aliases: Object.freeze(['docker']), config: nonJavaScript(dockerfile) },
-  { id: 'graphql', extension: 'graphql', aliases: Object.freeze(['gql']), config: nonJavaScript(graphql) },
-  { id: 'hcl', extension: 'hcl', aliases: Object.freeze(['terraform', 'tf']), config: nonJavaScript(hcl) },
-])
+const languages = definitions
 
 /** @param {string} value */
 function normalizeLanguageName(value) {
@@ -87,7 +47,7 @@ function normalizeLanguageName(value) {
 /** @type {Map<string, Language>} */
 const languageLookup = new Map()
 
-for (const language of languages) {
+for (const language of definitions) {
   const names = new Set([language.id, language.extension, ...language.aliases])
   for (const name of names) {
     const normalized = normalizeLanguageName(name)

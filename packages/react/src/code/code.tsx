@@ -3,7 +3,8 @@
 import { type HighlightOptions, type LanguageName } from 'sugar-high'
 import { parse, generate } from 'sugar-high/core'
 import { css, HEADER_CSS } from './css'
-import { lang as canonicalLang, languages } from 'sugar-high/lang'
+import { lang as canonicalLang } from 'sugar-high/lang'
+import { registry } from 'sugar-high/registry'
 import { useMemo } from 'react'
 import { ScopedStyle } from '../style'
 
@@ -25,7 +26,7 @@ function generateHighlightedLines(
 ) {
   const ext = extension || getExtension(title)
   const resolvedLang = language || canonicalLang(ext)
-  const config = languages.find(({ id }) => id === (resolvedLang || 'javascript'))?.config
+  const config = registry.find(({ id }) => id === (resolvedLang || 'javascript'))?.config
   const parsed = parse(codeText, config)
   const childrenLines = generate(parsed, { cx, mark, markLine })
 

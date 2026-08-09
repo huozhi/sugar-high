@@ -60,16 +60,22 @@ const benchmarkDir = mkdtempSync(join(tmpdir(), 'sugar-high-benchmark-'))
 
 try {
   const javascriptEntry = join(benchmarkDir, 'javascript-entry.js')
+  const langEntry = join(benchmarkDir, 'lang-entry.js')
   writeFileSync(javascriptEntry, [
     `import { parse, render } from ${JSON.stringify(join(process.cwd(), 'lib/core.js'))}`,
     `import * as javascript from ${JSON.stringify(join(process.cwd(), 'lib/presets/lang/javascript.js'))}`,
     'export const run = code => render(parse(code, javascript))',
+  ].join('\n'))
+  writeFileSync(langEntry, [
+    `import { lang } from ${JSON.stringify(join(process.cwd(), 'lib/lang.js'))}`,
+    'export const run = lang',
   ].join('\n'))
 
   const sizes = [
     ['sugar-high', measureBundle('lib/index.js', join(benchmarkDir, 'builtin.js'))],
     ['sugar-high/core', measureBundle('lib/core.js', join(benchmarkDir, 'core.js'))],
     ['core + javascript', measureBundle(javascriptEntry, join(benchmarkDir, 'javascript.js'))],
+    ['sugar-high/lang', measureBundle(langEntry, join(benchmarkDir, 'lang.js'))],
   ]
 
   console.log(`Size (Bun browser ESM, minified)\n`)

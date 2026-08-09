@@ -1,6 +1,7 @@
 import { type HighlightOptions } from 'sugar-high'
 import { parse, generate } from 'sugar-high/core'
-import { lang as canonicalizeLang, languages } from 'sugar-high/lang'
+import { lang as canonicalizeLang } from 'sugar-high/lang'
+import { registry } from 'sugar-high/registry'
 import { map as unistMap } from 'unist-util-map'
 
 type HighlightRange = number | [number, number]
@@ -77,7 +78,7 @@ const highlight = ({ cx, mark, markLine }: RemarkSugarHighOptions = {}) => (tree
         .map(({ value }) => value)
         .pop()
 
-    const config = languages.find(({ id }) => id === (canonicalLang || 'javascript'))?.config
+    const config = registry.find(({ id }) => id === (canonicalLang || 'javascript'))?.config
     const parsed = parse(codeText, config)
     const childrenLines = generate(parsed, {
       cx,

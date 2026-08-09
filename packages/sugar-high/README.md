@@ -48,8 +48,9 @@ lang('.yml')  // 'yaml'
 ```
 
 If you already have a canonical name, pass it directly—`lang()` is not required.
+The `/lang` entry is metadata-only and does not bundle the syntax implementations.
 
-See [the API reference](../../docs/API.md#lang-mapping) for the complete mapping and normalization
+See [the API reference](https://github.com/huozhi/sugar-high/blob/main/docs/API.md#lang-mapping) for the complete mapping and normalization
 behavior.
 
 ## Built-in languages
@@ -192,7 +193,7 @@ processing Markdown. Fence aliases are normalized through the same `lang()` mapp
 
 ## API
 
-See [`docs/API.md`](../../docs/API.md) for package exports, the full language mapping, highlighting
+See [`docs/API.md`](https://github.com/huozhi/sugar-high/blob/main/docs/API.md) for package exports, the full language mapping, highlighting
 options, and lower-level functions.
 
 ## Benchmarking

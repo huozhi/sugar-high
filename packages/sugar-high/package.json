@@ -21,6 +21,10 @@
     "./lang": {
       "types": "./lib/lang.d.ts",
       "default": "./lib/lang.js"
+    },
+    "./registry": {
+      "types": "./lib/registry.d.ts",
+      "default": "./lib/registry.js"
     }
   },
   "description": "Super lightweight JSX syntax highlighter",
