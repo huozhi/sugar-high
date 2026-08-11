@@ -7,6 +7,7 @@ import {
   useMemo,
   useCallback,
   useContext,
+  type CSSProperties,
 } from 'react'
 import { SugarHigh } from 'sugar-high/core'
 import { Editor } from '@sugar-high/react'
@@ -154,25 +155,19 @@ export default function LiveEditor({
 
   const editorRef = useRef(null)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
-  const syncThemeWithBanner = Boolean(colorPlate && syntaxThemeCtx)
+  const syncThemeWithPage = Boolean(colorPlate && syntaxThemeCtx)
 
   const [localThemeIndex, setLocalThemeIndex] = useState(0)
-  const [localColorPlateColors, setLocalColorPlateColors] = useState(
+  const [colorPlateColors, setColorPlateColors] = useState(
     () => themes[0].colors
   )
 
-  const currentThemeIndex = syncThemeWithBanner
+  const currentThemeIndex = syncThemeWithPage
     ? syntaxThemeCtx!.themeIndex
     : localThemeIndex
-  const setCurrentThemeIndex = syncThemeWithBanner
+  const setCurrentThemeIndex = syncThemeWithPage
     ? syntaxThemeCtx!.setThemeIndex
     : setLocalThemeIndex
-  const colorPlateColors = syncThemeWithBanner
-    ? syntaxThemeCtx!.colorPlateColors
-    : localColorPlateColors
-  const setColorPlateColors = syncThemeWithBanner
-    ? syntaxThemeCtx!.setColorPlateColors
-    : setLocalColorPlateColors
 
   const [textareaColor, setTextareaColor] = useState('transparent')
 
@@ -185,9 +180,9 @@ export default function LiveEditor({
   }
 
   useEffect(() => {
-    if (!colorPlate || syncThemeWithBanner) return
-    setLocalColorPlateColors(themes[localThemeIndex].colors)
-  }, [localThemeIndex, colorPlate, syncThemeWithBanner])
+    if (!colorPlate) return
+    setColorPlateColors(themes[currentThemeIndex].colors)
+  }, [currentThemeIndex, colorPlate])
 
   const toggleTextareaColor = () => {
     setTextareaColor((prev) =>
@@ -259,30 +254,28 @@ export default function LiveEditor({
   }, [activePlateColors, currentThemeIndex])
 
   const textareaTint = colorPlate ? textareaColor : 'transparent'
+  const editorStyle = useMemo(
+    () =>
+      ({
+        '--sh-class': activePlateColors.class,
+        '--sh-identifier': activePlateColors.identifier,
+        '--sh-sign': activePlateColors.sign,
+        '--sh-property': activePlateColors.property,
+        '--sh-entity': activePlateColors.entity,
+        '--sh-string': activePlateColors.string,
+        '--sh-keyword': activePlateColors.keyword,
+        '--sh-comment': activePlateColors.comment,
+        '--sh-jsxliterals': activePlateColors.jsxliterals,
+        '--live-editor-textarea-color': textareaTint,
+      }) as CSSProperties,
+    [activePlateColors, textareaTint]
+  )
 
   const sectionClass =
     `live-editor-section${className ? ` ${className}` : ''}`.trim()
 
   return (
     <div className={sectionClass}>
-      <style>{`
-        ${`
-        .live-editor-section {
-          --sh-class: ${activePlateColors.class};
-          --sh-identifier: ${activePlateColors.identifier};
-          --sh-sign: ${activePlateColors.sign};
-          --sh-property: ${activePlateColors.property};
-          --sh-entity: ${activePlateColors.entity};
-          --sh-string: ${activePlateColors.string};
-          --sh-keyword: ${activePlateColors.keyword};
-          --sh-comment: ${activePlateColors.comment};
-          --sh-jsxliterals: ${activePlateColors.jsxliterals};
-        }
-        .live-editor-section .live-editor textarea {
-          color: ${textareaTint} !important;
-        }
-        `}`}</style>
-
       {colorPlate && (
         <div className="container-720 live-editor__top-bar">
           <div className="top-controls">
@@ -310,6 +303,7 @@ export default function LiveEditor({
             </div>
           )}
           <div
+            style={editorStyle}
             className={
               'live-editor' +
               (onFileExtensionChange ? ' live-editor--with-syntax-toolbar' : '')

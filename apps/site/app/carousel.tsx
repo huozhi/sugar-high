@@ -284,7 +284,7 @@ export default function Carousel() {
   const activePreset = LIVE_EDITOR_THEME_PRESETS[syntaxThemeCtx?.themeIndex ?? 0]
   const plateColors = previewMode === 'dark'
     ? activePreset.colorsDark ?? activePreset.colors
-    : syntaxThemeCtx?.colorPlateColors ?? activePreset.colors
+    : activePreset.colors
 
   const showcaseStyle = useMemo(() => {
     const base = plateToThemedDocsVars(plateColors)

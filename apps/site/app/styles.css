@@ -391,6 +391,10 @@ code {
   box-shadow: none;
 }
 
+.live-editor textarea {
+  color: var(--live-editor-textarea-color, transparent) !important;
+}
+
 /* Top-right syntax preset (GitHub playground): four options, compact */
 .live-editor__syntax-toolbar {
   position: absolute;

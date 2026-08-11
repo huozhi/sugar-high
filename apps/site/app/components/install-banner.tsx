@@ -43,8 +43,7 @@ export default function InstallBanner({ children }: { children?: ReactNode }) {
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const bannerTheme = syntaxThemeCtx?.previewMode ?? localBannerTheme
   const themeIndex = syntaxThemeCtx?.themeIndex ?? 0
-  const plateColors =
-    syntaxThemeCtx?.colorPlateColors ?? LIVE_EDITOR_THEME_PRESETS[0].colors
+  const plateColors = LIVE_EDITOR_THEME_PRESETS[themeIndex].colors
 
   const darkPlate = useMemo(
     () => darkPlateForPresetIndex(themeIndex),
