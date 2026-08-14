@@ -181,6 +181,21 @@
   color: var(--docs-ui-secondary, #5c6570);
 }
 
+.install-banner__section-title {
+  width: 100%;
+  max-width: 600px;
+  margin: clamp(44px, 6vw, 64px) auto 0;
+  padding: 8px 16px;
+  border-top: 1px solid color-mix(in srgb, var(--docs-ui-secondary, #5c6570) 22%, transparent);
+}
+
+.install-banner__section-title h2 {
+  margin: 14px 0 0;
+  color: var(--docs-ui-primary, #354150);
+  font-size: 1.35rem;
+  letter-spacing: -0.025em;
+}
+
 .install-banner__theme-split + .install-banner__block {
   margin-top: 28px;
 }

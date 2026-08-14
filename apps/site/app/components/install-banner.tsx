@@ -6,7 +6,6 @@ import {
   useState,
   type CSSProperties,
   type KeyboardEvent,
-  type PointerEvent,
   type ReactNode,
 } from 'react'
 import { CopyButton } from './copy-button'
@@ -107,15 +106,6 @@ ${formatPlateAsCssVars(darkPlate)}
     []
   )
 
-  const activateThemeFromPointer = (
-    theme: 'light' | 'dark',
-    event: PointerEvent<HTMLDivElement>
-  ) => {
-    if (event.pointerType !== 'touch') {
-      setBannerTheme(theme)
-    }
-  }
-
   const activateThemeFromKeyboard = (
     theme: 'light' | 'dark',
     event: KeyboardEvent<HTMLDivElement>
@@ -156,9 +146,7 @@ ${formatPlateAsCssVars(darkPlate)}
             tabIndex={0}
             aria-pressed={bannerTheme === 'light'}
             aria-label="Use light theme preview"
-            onPointerEnter={(event) => activateThemeFromPointer('light', event)}
             onClick={() => setBannerTheme('light')}
-            onFocus={() => setBannerTheme('light')}
             onKeyDown={(event) => activateThemeFromKeyboard('light', event)}
           >
             <div className="install-banner__theme-pane-label">light.css</div>
@@ -175,9 +163,7 @@ ${formatPlateAsCssVars(darkPlate)}
             tabIndex={0}
             aria-pressed={bannerTheme === 'dark'}
             aria-label="Use dark theme preview"
-            onPointerEnter={(event) => activateThemeFromPointer('dark', event)}
             onClick={() => setBannerTheme('dark')}
-            onFocus={() => setBannerTheme('dark')}
             onKeyDown={(event) => activateThemeFromKeyboard('dark', event)}
           >
             <div className="install-banner__theme-pane-label">dark.css</div>
@@ -192,15 +178,6 @@ ${formatPlateAsCssVars(darkPlate)}
             />
           </div>
         </div>
-
-        <div className="install-banner__block">
-          <h2>Themes</h2>
-          <p>
-            Set token colors with scoped CSS variables, then use <code>cx</code> for emphasis.
-            Explore the copyable <Link href="/theme">CSS and Tailwind theme guide</Link>.
-          </p>
-        </div>
-
         <div className="install-banner__block">
           <h2>Line highlighting</h2>
           <p>
@@ -235,15 +212,25 @@ ${formatPlateAsCssVars(darkPlate)}
           </Code>
           <CopyButton codeSnippet={presetByTitleExample} />
         </div>
+        <div className="install-banner__section-title">
+          <h2>Solution</h2>
+        </div>
         <div className="install-banner__block">
-          <h2>Code block &amp; editor</h2>
+          <h2>Themes</h2>
           <p>
-            Use the <Link href="/react">{`<Editor /> & <Code />`}</Link> to present or edit highlighted code.
+            Set token colors with scoped CSS variables, then use <code>cx</code> for emphasis.
+            Explore the copyable <Link href="/theme">CSS and Tailwind theme guide</Link>.
+          </p>
+        </div>
+        <div className="install-banner__block">
+          <h2>React Components</h2>
+          <p>
+            <Link href="/react"><code>@sugar-high/react</code></Link> provides {`<Editor /> & <Code />`} to present or edit highlighted code.
           </p>
         </div>
         {children}
         <div className="install-banner__block">
-          <h2>Usage with remark.js</h2>
+          <h2>Remark plugin</h2>
           <p>
             <a href='https://remark.js.org/' target='_blank' rel='noreferrer'>Remark.js</a>{' '}
             is a powerful markdown processor, you can use the <Link href='/remark'>sugar-high remark plugin</Link> with remark.js to highlight code blocks in markdown.

@@ -276,7 +276,6 @@ function CodeFrame(
 
 export default function Carousel() {
   const examples = EXAMPLE_PAIRS
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [hasSpreadStack, setHasSpreadStack] = useState(false)
   const stackRef = useRef<HTMLDivElement>(null)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
@@ -343,7 +342,7 @@ export default function Carousel() {
         ref={stackRef}
         className={`showcase-stack${
           hasSpreadStack ? ' showcase-stack--spread' : ''
-        }${hoveredIndex !== null ? ' showcase-stack--isolating' : ''}`}
+        }`}
         style={
           {
             '--showcase-count': String(n),
@@ -364,14 +363,8 @@ export default function Carousel() {
           return (
             <div
               key={exampleIndex}
-              className={`showcase-card showcase-card--stack showcase-card--${exampleIndex}${
-                hoveredIndex === exampleIndex ? ' showcase-card--hovered' : ''
-              }`}
+              className={`showcase-card showcase-card--stack showcase-card--${exampleIndex}`}
               style={stackStyle}
-              onMouseEnter={() => setHoveredIndex(exampleIndex)}
-              onMouseLeave={() => setHoveredIndex(current =>
-                current === exampleIndex ? null : current
-              )}
             >
               <div className="showcase-card-lift">
                 <div
@@ -398,6 +391,26 @@ export default function Carousel() {
             </div>
           )
         })}
+      </div>
+      <div className="showcase-swipe-guide" aria-label="Swipe to explore examples">
+        <svg viewBox="0 0 116 16" aria-hidden="true">
+          <defs>
+            <filter id="showcase-chalk" x="-6%" y="-35%" width="112%" height="170%">
+              <feTurbulence baseFrequency="0.045 0.5" numOctaves="2" seed="8" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.4" />
+            </filter>
+          </defs>
+          <path
+            className="showcase-swipe-guide__main"
+            d="M112 4C82 7 42 9 4 12"
+            filter="url(#showcase-chalk)"
+          />
+          <path
+            className="showcase-swipe-guide__soft"
+            d="M110 12C76 10 39 6 7 7"
+            filter="url(#showcase-chalk)"
+          />
+        </svg>
       </div>
     </div>
   )
