@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.0.1
+
+### Patch Changes
+
+- 01dee18: Classify CSS declaration names as property tokens.
+
 ## 2.0.0
 
 ### Major Changes
