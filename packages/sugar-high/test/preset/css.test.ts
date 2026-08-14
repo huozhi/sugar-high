@@ -29,4 +29,45 @@ describe('tokenize - css preset', () => {
       expect(actual).not.toContain(value)
     }
   })
+
+  it('classifies declaration names as properties', () => {
+    const input = `body {
+  background: #000;
+  display: none;
+  visibility: hidden;
+  height: calc(var(--deathDate) - var(--birthDate));
+  font-family: "Transylvania";
+  opacity: 0;
+  --accent-color: #ff79c6;
+}`
+    const actual = getTokensAsString(tokenize(input, css))
+
+    for (const property of [
+      'background',
+      'display',
+      'visibility',
+      'height',
+      'font-family',
+      'opacity',
+      '--accent-color',
+    ]) {
+      expect(actual).toContain(`${property} => property`)
+    }
+    expect(actual).toContain('#000 => string')
+    expect(actual).toContain('#ff79c6 => string')
+  })
+
+  it('does not classify selectors and custom-property references as properties', () => {
+    const input = `a:hover, #dracula {
+  color: var(--accent-color);
+  &::before { content: ""; }
+}`
+    const actual = getTokensAsString(tokenize(input, css))
+
+    expect(actual).not.toContain('hover => property')
+    expect(actual).not.toContain('dracula => property')
+    expect(actual).not.toContain('accent => property')
+    expect(actual).toContain('color => property')
+    expect(actual).toContain('content => property')
+  })
 })
