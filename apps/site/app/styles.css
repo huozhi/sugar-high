@@ -1097,6 +1097,26 @@ code {
   margin-left: auto;
 }
 
+.live-editor__padding-select {
+  height: 24px;
+  width: 92px;
+  max-width: 92px;
+  padding: 0 18px 0 6px;
+  border: 0;
+  border-radius: 5px;
+  color: #7c8791;
+  background-color: transparent;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.live-editor__padding-select:hover,
+.live-editor__padding-select:focus {
+  outline: none;
+  color: #354150;
+  background-color: #e9edf0;
+}
+
 .live-editor__header::-webkit-scrollbar {
   display: none;
 }
@@ -1189,6 +1209,7 @@ code {
   border-radius: 5px;
   background: transparent;
   cursor: pointer;
+  margin-right: 6px;
 }
 
 .live-editor__appearance-toggle:hover {
@@ -1213,16 +1234,25 @@ code {
   display: block;
   flex: 0 0 auto;
   min-height: 0;
+  width: max-content;
   max-width: none;
-  padding: 0;
-  background: transparent;
+  box-sizing: border-box;
+  background: var(--live-editor-canvas-surface);
+  transition: background-color 0.25s ease;
 }
 
-.live-editor__capture-area > .codice.editor {
+.live-editor__window {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 8px 28px rgba(50, 60, 70, 0.12);
+}
+
+.live-editor__capture-area .codice.editor {
   overflow: hidden;
   border-radius: 0 0 6px 6px;
   background: var(--live-editor-window-surface);
-  box-shadow: 0 6px 24px rgba(50, 60, 70, 0.09);
+  box-shadow: none;
 }
 
 .live-editor__resize-handle {
@@ -1242,7 +1272,7 @@ code {
 .live-editor__resize-handle--right { right: -5px; }
 .live-editor__resize-handle--left { left: -5px; }
 
-.live-editor.live-editor--with-header > .live-editor__capture-area > .codice.editor {
+.live-editor.live-editor--with-header .live-editor__capture-area .codice.editor {
   border-radius: 0 0 6px 6px;
 }
 
@@ -1290,7 +1320,7 @@ code {
   border: 0;
   border-radius: 4px;
   outline: none;
-  color: var(--sh-sign);
+  color: #7c8791;
   background: transparent;
   font: 500 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
   text-align: center;
@@ -1298,8 +1328,8 @@ code {
 
 .live-editor__filename:hover,
 .live-editor__filename:focus {
-  color: var(--sh-identifier);
-  background: color-mix(in srgb, var(--sh-identifier) 8%, transparent);
+  color: #5f6973;
+  background: rgba(124, 135, 145, 0.1);
 }
 
 .live-editor__screenshot-preview {
@@ -1484,6 +1514,10 @@ code {
     height: auto !important;
   }
 
+  .live-editor__window {
+    width: 100% !important;
+  }
+
   .live-editor__color {
     display: flex;
     flex-direction: row;
@@ -1582,17 +1616,17 @@ code {
   background-color: #f6f6f6;
 }
 
-.live-editor__capture-area > .codice.editor,
-.live-editor__capture-area > .codice.editor [data-codice-content] {
+.live-editor__capture-area .codice.editor,
+.live-editor__capture-area .codice.editor [data-codice-content] {
   background-color: var(--live-editor-window-surface);
 }
 
-.live-editor__capture-area > .codice.editor textarea,
-.live-editor__capture-area > .codice.editor code {
+.live-editor__capture-area .codice.editor textarea,
+.live-editor__capture-area .codice.editor code {
   background-color: transparent;
 }
 
-.live-editor__capture-area > .codice.editor textarea {
+.live-editor__capture-area .codice.editor textarea {
   caret-color: var(--sh-identifier);
 }
 

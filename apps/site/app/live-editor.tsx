@@ -179,6 +179,7 @@ export default function LiveEditor({
   const captureRef = useRef<HTMLDivElement>(null)
   const [isCapturing, setIsCapturing] = useState(false)
   const [captureFilename, setCaptureFilename] = useState('.code')
+  const [capturePadding, setCapturePadding] = useState<20 | 36 | 56>(36)
   const [editorSize, setEditorSize] = useState<{ width: number }>({
     width: 640,
   })
@@ -226,7 +227,7 @@ export default function LiveEditor({
       const dataUrl = await domToImage.toPng(node, {
         width: node.scrollWidth,
         height: node.scrollHeight,
-        bgcolor: '#f6f6f6',
+        bgcolor: isDarkTheme ? '#3a3d42' : '#eef1f3',
       })
 
       const preview = document.createElement('img')
@@ -245,7 +246,7 @@ export default function LiveEditor({
     } finally {
       setIsCapturing(false)
     }
-  }, [isCapturing])
+  }, [isCapturing, isDarkTheme])
 
   const startResize = useCallback(
     (edge: 'right' | 'left', event: ReactPointerEvent) => {
@@ -353,6 +354,7 @@ export default function LiveEditor({
         '--sh-jsxliterals': activePlateColors.jsxliterals,
         '--live-editor-textarea-color': textareaTint,
         '--live-editor-window-surface': isDarkTheme ? '#242629' : '#ffffff',
+        '--live-editor-canvas-surface': isDarkTheme ? '#3a3d42' : '#eef1f3',
         '--live-editor-window-border': isDarkTheme ? '#34373b' : '#e4e7e9',
       }) as CSSProperties,
     [activePlateColors, isDarkTheme, textareaTint]
@@ -447,6 +449,19 @@ export default function LiveEditor({
                   <span aria-hidden="true" />
                 </button>
                 <div className="live-editor__toolbar-actions">
+                  <select
+                    className="live-editor__padding-select"
+                    value={capturePadding}
+                    onChange={(event) =>
+                      setCapturePadding(Number(event.target.value) as 20 | 36 | 56)
+                    }
+                    aria-label="Screenshot background padding"
+                    title="Screenshot background padding"
+                  >
+                    <option value={20}>Compact</option>
+                    <option value={36}>Balanced</option>
+                    <option value={56}>Spacious</option>
+                  </select>
                   <CopyButton
                     codeSnippet={customizableColorsString}
                     aria-label="Copy color theme"
@@ -486,42 +501,42 @@ export default function LiveEditor({
             <div
               className="live-editor__capture-area"
               ref={captureRef}
-              style={{
-                width: editorSize.width,
-              }}
+              style={{ padding: capturePadding }}
             >
-              <div className="live-editor__window-header">
-                <div className="live-editor__window-buttons" aria-hidden="true">
-                  <span />
-                  <span />
-                  <span />
+              <div className="live-editor__window" style={{ width: editorSize.width }}>
+                <div className="live-editor__window-header">
+                  <div className="live-editor__window-buttons" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                  <input
+                    className="live-editor__filename"
+                    value={captureFilename}
+                    onChange={(event) => setCaptureFilename(event.target.value)}
+                    aria-label="Screenshot filename"
+                    spellCheck={false}
+                  />
+                  <span className="live-editor__window-header-spacer" aria-hidden="true" />
                 </div>
-                <input
-                  className="live-editor__filename"
-                  value={captureFilename}
-                  onChange={(event) => setCaptureFilename(event.target.value)}
-                  aria-label="Screenshot filename"
-                  spellCheck={false}
+                <Editor
+                  ref={editorRef}
+                  className="codice editor flex-1"
+                  controls={false}
+                  value={displayCode}
+                  fontSize={15}
+                  extension={activeFileExtension}
+                  onChange={handleEditorChange}
                 />
-                <span className="live-editor__window-header-spacer" aria-hidden="true" />
+                {(['right', 'left'] as const).map((edge) => (
+                  <div
+                    key={edge}
+                    className={`live-editor__resize-handle live-editor__resize-handle--${edge}`}
+                    onPointerDown={(event) => startResize(edge, event)}
+                    aria-hidden="true"
+                  />
+                ))}
               </div>
-              <Editor
-                ref={editorRef}
-                className="codice editor flex-1"
-                controls={false}
-                value={displayCode}
-                fontSize={15}
-                extension={activeFileExtension}
-                onChange={handleEditorChange}
-              />
-              {(['right', 'left'] as const).map((edge) => (
-                <div
-                  key={edge}
-                  className={`live-editor__resize-handle live-editor__resize-handle--${edge}`}
-                  onPointerDown={(event) => startResize(edge, event)}
-                  aria-hidden="true"
-                />
-              ))}
             </div>
           </div>
         </div>
