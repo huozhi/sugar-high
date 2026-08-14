@@ -12,6 +12,7 @@ import {
 import { SugarHigh } from 'sugar-high/core'
 import { Editor } from '@sugar-high/react'
 import { CopyButton } from './components/copy-button'
+import { copyImageDataUrl } from './lib/copy-image'
 import {
   SYNTAX_PRESET_SELECT_OPTIONS,
   fileExtensionFromSyntaxSelect,
@@ -240,15 +241,11 @@ export default function LiveEditor({
       requestAnimationFrame(() => preview.classList.add('live-editor__screenshot-preview--minimized'))
       preview.addEventListener('animationend', () => preview.remove(), { once: true })
 
-      const download = document.createElement('a')
-      download.href = dataUrl
-      const safeFilename = captureFilename.trim().replace(/[^a-zA-Z0-9._-]+/g, '-') || '.code'
-      download.download = `${safeFilename}.png`
-      download.click()
+      await copyImageDataUrl(dataUrl)
     } finally {
       setIsCapturing(false)
     }
-  }, [captureFilename, isCapturing])
+  }, [isCapturing])
 
   const startResize = useCallback(
     (edge: 'right' | 'left', event: ReactPointerEvent) => {
@@ -474,8 +471,8 @@ export default function LiveEditor({
                     className="live-editor__screenshot-button"
                     onClick={captureScreenshot}
                     disabled={isCapturing}
-                    aria-label="Download code screenshot"
-                    title="Download code screenshot"
+                    aria-label="Copy code screenshot"
+                    title="Copy code screenshot"
                   >
                     <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M8.5 5.5 10 3.5h4l1.5 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-10a2 2 0 0 1 2-2h3.5Z" />

@@ -1,0 +1,17 @@
+# Sugar High client-side screenshot tool
+
+Open `/capture` with base64url-encoded state in the URL fragment:
+
+`/capture#code=<base64url-utf8>&lang=<language>&theme=<light|dark>&filename=<name>&width=<320-1200>`
+
+The fragment is decoded entirely in the browser and is not sent to the server.
+
+Agent workflow:
+
+1. Base64url-encode the UTF-8 source code without padding.
+2. Open the capture URL in a browser.
+3. Wait until `[data-sugar-high-capture="ready"]` exists.
+4. Screenshot that same `[data-sugar-high-capture="ready"]` element.
+
+JavaScript is the default language. Language names, aliases, and file extensions supported by
+Sugar High are accepted. Invalid values fall back to JavaScript, light mode, and a width of 640px.
