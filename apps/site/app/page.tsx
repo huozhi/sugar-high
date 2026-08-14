@@ -25,9 +25,8 @@ export default function Page() {
 
       <SyntaxThemeProvider>
         <Carousel />
-        <InstallBanner>
-          <LiveEditor languageSwitcher />
-        </InstallBanner>
+        <LiveEditor languageSwitcher />
+        <InstallBanner />
       </SyntaxThemeProvider>
     </>
   )

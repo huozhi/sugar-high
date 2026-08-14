@@ -130,6 +130,15 @@ ${formatPlateAsCssVars(darkPlate)}
         `}
       </style>
       <div className="container-960">
+        <div className="install-banner__section-title">
+          <h2>Basics</h2>
+        </div>
+        <div className="install-banner__block">
+          <h2>Light &amp; dark</h2>
+          <p>
+            Match light and dark token palettes for your theme
+          </p>
+        </div>
         <div
           className="install-banner__theme-split"
           role="group"
@@ -198,9 +207,15 @@ ${formatPlateAsCssVars(darkPlate)}
         <div className="install-banner__block">
           <h2>Languages</h2>
           <p>
-            JavaScript works by default. Pass canonical names directly. <code>lang()</code> turns
-            aliases and extensions such as <code>py</code> and <code>yml</code> into
-            <code>python</code> and <code>yaml</code>.
+            Sugar High includes 25 languages out of the box—no extra grammars or setup required.
+            JavaScript and JSX work by default; pass a canonical name to highlight TypeScript,
+            Python, CSS, Rust, Go, HTML, SQL, Markdown, and the other built-ins.
+          </p>
+          <p>
+            Related dialects share the same built-in implementation, including TSX, JSONC,
+            Bash/Zsh, and Terraform. Use <code>lang()</code> when input comes from a filename or
+            integration: it turns aliases and extensions such as <code>py</code>, <code>yml</code>,
+            and <code>gql</code> into their canonical language names.
           </p>
         </div>
         <div

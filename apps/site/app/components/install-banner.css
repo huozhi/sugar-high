@@ -196,6 +196,10 @@
   letter-spacing: -0.025em;
 }
 
+.install-banner__section-title + .install-banner__block {
+  margin-top: 8px;
+}
+
 .install-banner__theme-split + .install-banner__block {
   margin-top: 28px;
 }
