@@ -1,3 +1,4 @@
+import { lang, languages } from 'sugar-high/lang'
 import { fileExtensionForHighlight } from './github-source'
 
 /**
@@ -17,22 +18,13 @@ export const SYNTAX_PRESET_CODICE_EXTENSIONS = new Set([
   'less',
 ])
 
-/** Select `value` for default JSX/TSX (Codice: no preset). */
-const SYNTAX_SELECT_JSX = 'js'
-
 export const SYNTAX_PRESET_SELECT_OPTIONS: readonly {
   value: string
   label: string
-}[] = [
-  { value: SYNTAX_SELECT_JSX, label: 'jsx/tsx' },
-  { value: 'c', label: 'c' },
-  { value: 'go', label: 'go' },
-  { value: 'java', label: 'java' },
-  { value: 'json', label: 'json' },
-  { value: 'css', label: 'css' },
-  { value: 'py', label: 'python' },
-  { value: 'rs', label: 'rust' },
-]
+}[] = languages.map(({ id, extension }) => ({
+  value: extension,
+  label: id,
+}))
 
 /** Map loaded repo path → Codice `extension` when a preset exists; else `undefined`. */
 export function presetHighlightExtensionFromPath(
@@ -43,48 +35,17 @@ export function presetHighlightExtensionFromPath(
   return ext
 }
 
-/** Current `fileExtension` state → `<select>` value (one of four options). */
+/** Current `fileExtension` state → the preferred extension used by `<select>`. */
 export function syntaxPresetSelectValue(
   extension: string | undefined
 ): string {
-  if (extension === 'py') return 'py'
-  if (extension === 'rs') return 'rs'
-  if (extension === 'c') return 'c'
-  if (extension === 'go') return 'go'
-  if (extension === 'java') return 'java'
-  if (extension === 'json') return 'json'
-  if (
-    extension &&
-    (extension === 'css' ||
-      extension === 'scss' ||
-      extension === 'sass' ||
-      extension === 'less')
-  ) {
-    return 'css'
-  }
-  return SYNTAX_SELECT_JSX
+  const language = languages.find(({ id }) => id === lang(extension || ''))
+  return language?.extension || 'js'
 }
 
 /** `<select>` value → `fileExtension` for Codice `Editor`. */
 export function fileExtensionFromSyntaxSelect(
   selectValue: string
 ): string | undefined {
-  switch (selectValue) {
-    case 'py':
-      return 'py'
-    case 'rs':
-      return 'rs'
-    case 'c':
-      return 'c'
-    case 'go':
-      return 'go'
-    case 'java':
-      return 'java'
-    case 'json':
-      return 'json'
-    case 'css':
-      return 'css'
-    default:
-      return undefined
-  }
+  return lang(selectValue) === 'javascript' ? undefined : selectValue
 }

@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { Editor } from '@sugar-high/react'
+import type { LanguageName } from 'sugar-high'
+import { languages } from 'sugar-high/lang'
 
 const initialCode = `import { useState } from 'react'
 import { Editor } from '@sugar-high/react'
@@ -24,13 +26,14 @@ export default function Page() {
 
 export function ReactDemo() {
   const [code, setCode] = useState(initialCode)
+  const [language, setLanguage] = useState<LanguageName>('typescript')
   const [lineNumbers, setLineNumbers] = useState(true)
 
   return (
     <div className="react-demo">
       <Editor
         className="react-demo__editor"
-        lang="typescript"
+        lang={language}
         title={null}
         controls={false}
         value={code}
@@ -38,14 +41,28 @@ export function ReactDemo() {
         onChange={setCode}
       />
       <div className="react-demo__status">
-        <label>
-          <input
-            type="checkbox"
-            checked={lineNumbers}
-            onChange={(event) => setLineNumbers(event.target.checked)}
-          />
-          line numbers
-        </label>
+        <div className="react-demo__settings">
+          <label>
+            <span className="sr-only">Language</span>
+            <select
+              aria-label="Language"
+              value={language}
+              onChange={(event) => setLanguage(event.target.value as LanguageName)}
+            >
+              {languages.map(({ id }) => (
+                <option key={id} value={id}>{id}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={lineNumbers}
+              onChange={(event) => setLineNumbers(event.target.checked)}
+            />
+            line numbers
+          </label>
+        </div>
         <span>{code.split('\n').length} lines · {code.length} characters</span>
       </div>
     </div>

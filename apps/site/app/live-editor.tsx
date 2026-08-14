@@ -6,7 +6,6 @@ import {
   useRef,
   useMemo,
   useCallback,
-  useContext,
   type CSSProperties,
 } from 'react'
 import { SugarHigh } from 'sugar-high/core'
@@ -23,7 +22,6 @@ import {
   buildFlatVarsCopySnippet,
   type LiveEditorColorPlate,
 } from './live-editor-presets'
-import { SyntaxThemeContext } from './syntax-theme-context'
 
 const themes = LIVE_EDITOR_THEME_PRESETS
 
@@ -129,6 +127,8 @@ export type LiveEditorProps = {
   onChange?: (code: string) => void
   /** When false, use default syntax palette and hide theme / color rail (compact embeds). */
   colorPlate?: boolean
+  /** Show a language control, using local state unless `onFileExtensionChange` is provided. */
+  languageSwitcher?: boolean
   /**
    * Passed to Codice as `extension` so sugar-high presets apply (e.g. `py` → Python `#` comments).
    */
@@ -148,26 +148,24 @@ export default function LiveEditor({
   value,
   onChange,
   colorPlate = true,
+  languageSwitcher = false,
   fileExtension,
   onFileExtensionChange,
 }: LiveEditorProps) {
   const isControlled = value !== undefined && onChange !== undefined
+  const [localFileExtension, setLocalFileExtension] = useState<string | undefined>(
+    fileExtension
+  )
+  const showLanguageSwitcher = languageSwitcher || Boolean(onFileExtensionChange)
+  const activeFileExtension = languageSwitcher && !onFileExtensionChange
+    ? localFileExtension
+    : fileExtension
 
   const editorRef = useRef(null)
-  const syntaxThemeCtx = useContext(SyntaxThemeContext)
-  const syncThemeWithPage = Boolean(colorPlate && syntaxThemeCtx)
-
-  const [localThemeIndex, setLocalThemeIndex] = useState(0)
+  const [currentThemeIndex, setCurrentThemeIndex] = useState(0)
   const [colorPlateColors, setColorPlateColors] = useState(
     () => themes[0].colors
   )
-
-  const currentThemeIndex = syncThemeWithPage
-    ? syntaxThemeCtx!.themeIndex
-    : localThemeIndex
-  const setCurrentThemeIndex = syncThemeWithPage
-    ? syntaxThemeCtx!.setThemeIndex
-    : setLocalThemeIndex
 
   const [textareaColor, setTextareaColor] = useState('transparent')
 
@@ -191,7 +189,6 @@ export default function LiveEditor({
   }
 
   const isInspecting = textareaColor !== 'transparent'
-  const buttonText = isInspecting ? 'Matching' : 'Matched'
 
   const { defaultLiveCode, setDefaultLiveCode } = useDefaultLiveCode(
     defaultCode,
@@ -274,70 +271,80 @@ export default function LiveEditor({
   const sectionClass =
     `live-editor-section${className ? ` ${className}` : ''}`.trim()
 
+  const languageControl = showLanguageSwitcher ? (
+    <div className="live-editor__syntax-toolbar">
+      <select
+        className="live-editor__syntax-toolbar-select"
+        aria-label="Syntax language"
+        title="Syntax language"
+        value={syntaxPresetSelectValue(activeFileExtension)}
+        onChange={(e) => {
+          const nextExtension = fileExtensionFromSyntaxSelect(e.target.value)
+          if (onFileExtensionChange) {
+            onFileExtensionChange(nextExtension)
+          } else {
+            setLocalFileExtension(nextExtension)
+          }
+        }}
+      >
+        {SYNTAX_PRESET_SELECT_OPTIONS.map(({ value, label }) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
+      </select>
+    </div>
+  ) : null
+
   return (
     <div className={sectionClass}>
-      {colorPlate && (
-        <div className="container-720 live-editor__top-bar">
-          <div className="top-controls">
-            <button
-              onClick={toggleTheme}
-              className={`theme-mode-button theme-mode-button--mobile ${isMinimalMode ? 'theme-mode-button--minimal' : 'theme-mode-button--stylish'}`}
-              aria-label={`Next syntax theme (${nextTheme.name})`}
-            >
-              {currentTheme.name}
-            </button>
-          </div>
-        </div>
-      )}
       <div className="live-editor-layout">
         <div className="live-editor-editor-col">
-          {colorPlate && process.env.NODE_ENV === 'development' && (
-            <div className="textarea-color-toggle-container">
-              <button
-                type="button"
-                onClick={toggleTextareaColor}
-                className={`textarea-color-toggle ${isInspecting ? 'textarea-color-toggle--active' : ''}`}
-              >
-                {buttonText}
-              </button>
-            </div>
-          )}
           <div
             style={editorStyle}
             className={
               'live-editor' +
-              (onFileExtensionChange ? ' live-editor--with-syntax-toolbar' : '')
+              (colorPlate ? ' live-editor--with-header' : '') +
+              (!colorPlate && showLanguageSwitcher
+                ? ' live-editor--with-syntax-toolbar'
+                : '')
             }
           >
-            {onFileExtensionChange && (
-              <div className="live-editor__syntax-toolbar">
-                <select
-                  id="live-editor-syntax-preset"
-                  className="live-editor__syntax-toolbar-select"
-                  aria-label="Syntax language"
-                  title="Syntax language"
-                  value={syntaxPresetSelectValue(fileExtension)}
-                  onChange={(e) => {
-                    onFileExtensionChange(
-                      fileExtensionFromSyntaxSelect(e.target.value)
-                    )
-                  }}
+            {colorPlate && (
+              <div className="live-editor__header">
+                <button
+                  type="button"
+                  onClick={toggleTextareaColor}
+                  className={`textarea-color-toggle ${isInspecting ? 'textarea-color-toggle--active' : ''}`}
+                  aria-label={isInspecting ? 'Hide alignment overlay' : 'Show alignment overlay'}
+                  aria-pressed={isInspecting}
+                  title={isInspecting ? 'Hide alignment overlay' : 'Show alignment overlay'}
                 >
-                  {SYNTAX_PRESET_SELECT_OPTIONS.map(({ value, label }) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    width="14"
+                    height="14"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  >
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+                  </svg>
+                </button>
+                {languageControl}
               </div>
             )}
+            {!colorPlate && languageControl}
             <Editor
               ref={editorRef}
               className="codice editor flex-1"
               controls={false}
               value={displayCode}
               fontSize={15}
-              extension={fileExtension}
+              extension={activeFileExtension}
               onChange={handleEditorChange}
             />
           </div>
@@ -355,7 +362,11 @@ export default function LiveEditor({
                 >
                   <span className="theme-mode-button__full">{currentTheme.name}</span>
                 </button>
-                <CopyButton codeSnippet={customizableColorsString} />
+                <CopyButton
+                  codeSnippet={customizableColorsString}
+                  aria-label="Copy color theme"
+                  title="Copy color theme"
+                />
               </div>
             </li>
             {customizableColors.map(([tokenType, tokenTypeName]) => {

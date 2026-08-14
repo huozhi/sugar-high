@@ -363,17 +363,16 @@ code {
   color: var(--text-primary, #111827);
 }
 
-/* Out of flow so editor + color rail share one top edge; toggle floats above the codice card */
-.live-editor-section .live-editor-editor-col .textarea-color-toggle-container {
-  position: absolute;
-  right: 0;
-  top: 0;
-  transform: translateY(calc(-100% - 6px));
+/* Shared editor controls align with the color plate controls in the adjacent column. */
+.live-editor__header {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
-  width: 100%;
-  z-index: 5;
-  pointer-events: auto;
+  gap: 4px;
+  height: 28px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #e8ebed;
 }
 
 .live-editor {
@@ -391,20 +390,31 @@ code {
   box-shadow: none;
 }
 
+.live-editor--with-header {
+  background: #f6f6f6;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.07);
+  transition: box-shadow 0.3s ease;
+}
+
 .live-editor textarea {
   color: var(--live-editor-textarea-color, transparent) !important;
 }
 
-/* Top-right syntax preset (GitHub playground): four options, compact */
+/* Compact language control. It lives in the header when a color plate is present. */
 .live-editor__syntax-toolbar {
+  flex: 0 0 auto;
+  pointer-events: auto;
+}
+
+.live-editor:not(.live-editor--with-header) .live-editor__syntax-toolbar {
   position: absolute;
   top: 6px;
   right: 6px;
   z-index: 6;
-  pointer-events: auto;
 }
 
 .live-editor__syntax-toolbar-select {
+  height: 22px;
   font-size: 0.6875rem;
   line-height: 1.2;
   font-family: inherit;
@@ -431,6 +441,24 @@ code {
   outline-offset: 0;
 }
 
+.live-editor__header .live-editor__syntax-toolbar-select {
+  color: #68727f;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.live-editor__header .live-editor__syntax-toolbar {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.live-editor__header .live-editor__syntax-toolbar-select:hover {
+  color: #333;
+  background-color: #eceff1;
+  border-color: transparent;
+}
+
 .live-editor.live-editor--with-syntax-toolbar {
   padding-top: 1.75rem;
 }
@@ -439,6 +467,16 @@ code {
   outline: none;
   /* Vertical-only lift — no shadow cast to the right */
   box-shadow: 0 14px 44px rgba(93, 89, 89, 0.28);
+}
+
+.live-editor.live-editor--with-header:focus-within {
+  box-shadow: 0 14px 44px rgba(93, 89, 89, 0.28);
+}
+
+.live-editor.live-editor--with-header > .codice.editor,
+.live-editor.live-editor--with-header:focus-within > .codice.editor {
+  border-radius: 0 0 6px 6px;
+  box-shadow: none;
 }
 
 .live-editor-section {
@@ -456,16 +494,6 @@ code {
 
 .live-editor-section--github-preview .live-editor__color {
   display: none;
-}
-
-.live-editor-section .container-720 {
-  max-width: var(--live-editor-pane-max);
-}
-
-@media (min-width: 641px) {
-  .live-editor__top-bar {
-    display: none;
-  }
 }
 
 /* Smooth color transitions for syntax highlighting */
@@ -777,17 +805,6 @@ code {
   white-space: nowrap;
 }
 
-.top-controls {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.theme-mode-button--mobile {
-  display: none;
-}
-
 .theme-mode-button {
   background: none;
   border: none;
@@ -818,8 +835,7 @@ code {
 .live-editor__color {
   grid-column: 3;
   margin: 0;
-  /* Give extra bottom padding to visually align with the top title */
-  padding: 8px 10px 12px;
+  padding: 0 10px 12px;
   list-style: none;
   width: 132px;
   max-width: 132px;
@@ -831,10 +847,14 @@ code {
 }
 
 .live-editor__color__theme {
+  display: flex;
+  align-items: center;
+  min-height: 28px;
   list-style: none;
-  margin: 0;
-  padding: 0;
-  width: 100%;
+  margin: 0 -10px 6px;
+  padding: 0 10px;
+  width: auto;
+  border-bottom: 1px solid #e8ebed;
 }
 
 .live-editor__color .theme-mode-button__full {
@@ -845,22 +865,52 @@ code {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
   color: #68727f;
-  font-size: 12px;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+}
+
+.live-editor__color .color-theme-title .theme-mode-button {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.live-editor__color .color-theme-title .copy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+}
+
+.live-editor__color .color-theme-title .copy-button svg {
+  width: 12px;
+  height: 12px;
 }
 
 .textarea-color-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
   background: none;
   border: none;
   color: #a4a4a4;
   font-size: 12px;
-  padding: 4px 8px;
+  padding: 0;
   cursor: pointer;
-  border-radius: 3px;
   transition: all 0.2s ease;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
 .textarea-color-toggle:hover {
@@ -874,10 +924,6 @@ code {
 
 .textarea-color-toggle--active:hover {
   background-color: #f8f8f8;
-}
-.textarea-color-toggle-container {
-  display: flex;
-  justify-content: flex-end;
 }
 .live-editor__color input[type='color'] {
   display: inline;
@@ -1087,16 +1133,17 @@ code {
     display: none;
   }
 
-  /* Theme circle pinned left; token swatches group toward the right */
+  /* Keep the color-plate header pinned while token swatches scroll. */
   .live-editor__color__theme {
     flex: 0 0 auto;
     width: auto;
-    margin: 0;
-    margin-right: auto;
+    min-height: auto;
+    margin: 0 auto 0 0;
     position: sticky;
     left: 0;
     z-index: 2;
-    padding-right: 8px;
+    padding: 0 14px 0 0;
+    border: 0;
     background: linear-gradient(
       90deg,
       rgba(246, 246, 246, 0.98) 0%,
@@ -1107,59 +1154,13 @@ code {
 
   .live-editor__color .color-theme-title {
     margin: 0;
-    gap: 0;
+    gap: 8px;
+    width: auto;
   }
 
   .live-editor__color .color-theme-title .copy-button {
-    display: none;
-  }
-
-  /* Same 16px circle as token swatches; neutral, no label, no press/hover visuals */
-  .live-editor__color .theme-mode-button__full {
-    display: none;
-  }
-
-  .live-editor__color .color-theme-title .theme-mode-button {
-    display: block;
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    min-height: 16px;
-    margin: 0;
-    padding: 0;
-    border-radius: 999px;
-    font-size: 0;
-    line-height: 0;
-    overflow: hidden;
-    color: transparent;
-    background: #d4d4d4;
-    border: 1px solid #c8c8c8;
-    box-sizing: border-box;
-    cursor: default;
-    transition: none;
-    -webkit-tap-highlight-color: transparent;
-    appearance: none;
-  }
-
-  .live-editor__color .color-theme-title .theme-mode-button--minimal,
-  .live-editor__color .color-theme-title .theme-mode-button--stylish {
-    background: #d4d4d4;
-    border-color: #c8c8c8;
-  }
-
-  .live-editor__color .color-theme-title .theme-mode-button:hover,
-  .live-editor__color .color-theme-title .theme-mode-button:active,
-  .live-editor__color .color-theme-title .theme-mode-button:focus,
-  .live-editor__color .color-theme-title .theme-mode-button:focus-visible {
-    outline: none;
-    color: transparent;
-    background: #d4d4d4;
-    border-color: #c8c8c8;
-    filter: none;
-  }
-
-  .live-editor-section .top-controls .theme-mode-button--mobile {
-    display: none;
+    display: inline-flex;
+    color: #68727f;
   }
 
   .live-editor__color__item__name {
@@ -1184,9 +1185,6 @@ code {
     margin: 0;
   }
 
-  .theme-mode-button--mobile {
-    display: block;
-  }
   .header h1 span {
     font-size: 200%;
   }

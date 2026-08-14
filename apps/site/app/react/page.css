@@ -132,10 +132,29 @@
   cursor: pointer;
 }
 
-.react-demo__status input {
+.react-demo__settings {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.react-demo__status input[type='checkbox'] {
   width: 13px;
   height: 13px;
   margin: 0;
+}
+
+.react-demo__status select {
+  color: inherit;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.react-demo__status select:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
 }
 
 .react-demo__editor {
