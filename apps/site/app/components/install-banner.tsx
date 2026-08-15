@@ -5,7 +5,6 @@ import {
   useMemo,
   useState,
   type CSSProperties,
-  type KeyboardEvent,
   type ReactNode,
 } from 'react'
 import { CopyButton } from './copy-button'
@@ -55,16 +54,14 @@ export default function InstallBanner({ children }: { children?: ReactNode }) {
   )
 
   const lightThemeCss = useMemo(
-    () => `/* light.css */
-:root {
+    () => `:root {
 ${formatPlateAsCssVars(plateColors)}
 }`,
     [plateColors]
   )
 
   const darkThemeCss = useMemo(
-    () => `/* dark.css */
-:root[data-theme='dark'] {
+    () => `:root[data-theme='dark'] {
 ${formatPlateAsCssVars(darkPlate)}
 }`,
     [darkPlate]
@@ -106,16 +103,6 @@ ${formatPlateAsCssVars(darkPlate)}
     []
   )
 
-  const activateThemeFromKeyboard = (
-    theme: 'light' | 'dark',
-    event: KeyboardEvent<HTMLDivElement>
-  ) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      setBannerTheme(theme)
-    }
-  }
-
   return (
     <div
       className="install-banner"
@@ -151,34 +138,38 @@ ${formatPlateAsCssVars(darkPlate)}
                 : ''
             }`}
             style={lightCodeShVars as CSSProperties}
-            role="button"
-            tabIndex={0}
-            aria-pressed={bannerTheme === 'light'}
-            aria-label="Use light theme preview"
             onClick={() => setBannerTheme('light')}
-            onKeyDown={(event) => activateThemeFromKeyboard('light', event)}
           >
             <div className="install-banner__theme-pane-label">light.css</div>
-            <Code title="light.css">
+            <Code title={null}>
               {lightThemeCss}
             </Code>
+            <button
+              type="button"
+              className="install-banner__theme-pane-action"
+              aria-label="Use light theme preview"
+              aria-pressed={bannerTheme === 'light'}
+              onClick={() => setBannerTheme('light')}
+            />
           </div>
           <div
             className={`install-banner__theme-pane install-banner__theme-pane--dark${
               bannerTheme === 'dark' ? ' install-banner__theme-pane--active' : ''
             }`}
             style={darkCodeShVars as CSSProperties}
-            role="button"
-            tabIndex={0}
-            aria-pressed={bannerTheme === 'dark'}
-            aria-label="Use dark theme preview"
             onClick={() => setBannerTheme('dark')}
-            onKeyDown={(event) => activateThemeFromKeyboard('dark', event)}
           >
             <div className="install-banner__theme-pane-label">dark.css</div>
-            <Code title="dark.css">
+            <Code title={null}>
               {darkThemeCss}
             </Code>
+            <button
+              type="button"
+              className="install-banner__theme-pane-action"
+              aria-label="Use dark theme preview"
+              aria-pressed={bannerTheme === 'dark'}
+              onClick={() => setBannerTheme('dark')}
+            />
           </div>
           <div className="install-banner__theme-copy">
             <CopyButton

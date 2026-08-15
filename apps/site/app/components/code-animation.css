@@ -55,7 +55,7 @@
 /* If live/decoded, apply styles immediately or via transition */
 .code-block-colored.code-block-live {
   opacity: 1;
-  filter: grayscale(0%);
+  filter: none;
   overflow: hidden;
 }
 
@@ -122,4 +122,3 @@
     transform: translateY(0);
   }
 }
-

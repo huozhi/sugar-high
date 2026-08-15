@@ -250,7 +250,22 @@ input[type='checkbox']:checked {
 
 .showcase-section .code-frame,
 .showcase-section .codice.code-snippet {
+  --codice-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
   background: var(--showcase-card-bg, #f6f6f6);
+}
+
+.showcase-section .codice[data-codice-code] code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  letter-spacing: -0.15px;
+}
+
+.showcase-section .sh__line {
+  display: block;
+  white-space: pre;
 }
 
 .showcase-section .sh__line--diff-add {
@@ -266,7 +281,7 @@ input[type='checkbox']:checked {
   color: var(--sh-comment);
 }
 
-.showcase-swipe-guide {
+.showcase-pagination {
   display: none;
 }
 
@@ -320,57 +335,28 @@ input[type='checkbox']:checked {
     scroll-snap-stop: always;
   }
 
-  .showcase-swipe-guide {
-    display: block;
-    width: 110px;
-    height: 18px;
-    margin: 4px auto 0;
+  .showcase-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 2px auto 0;
   }
 
-  .showcase-swipe-guide svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
+  .showcase-pagination__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--docs-ui-secondary, #5c6570) 28%, transparent);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
   }
 
-  .showcase-swipe-guide path {
-    fill: none;
-    stroke: #f47067;
-    stroke-linecap: round;
-    stroke-dasharray: 140;
-    stroke-dashoffset: 140;
-    animation: showcase-swipe-guide 1.8s ease-in-out infinite;
-  }
-
-  .showcase-swipe-guide__main {
-    --showcase-guide-opacity: 0.68;
-    stroke-width: 3.6;
-  }
-
-  .showcase-swipe-guide__soft {
-    --showcase-guide-opacity: 0.28;
-    stroke-width: 1.7;
-    animation-delay: 0.12s !important;
-  }
-
-  @keyframes showcase-swipe-guide {
-    0% {
-      opacity: var(--showcase-guide-opacity);
-      stroke-dashoffset: 140;
-    }
-    72%,
-    100% {
-      opacity: var(--showcase-guide-opacity);
-      stroke-dashoffset: 0;
-    }
-  }
-}
-
-@media (max-width: 680px) and (prefers-reduced-motion: reduce) {
-  .showcase-swipe-guide path {
-    animation: none;
-    opacity: var(--showcase-guide-opacity);
-    stroke-dashoffset: 0;
+  .showcase-pagination__dot[aria-current='true'] {
+    background: #f47067;
+    transform: scale(1.3);
   }
 }
 
@@ -1512,17 +1498,83 @@ code {
     top: 0;
     z-index: 30;
     width: 100%;
+    height: auto;
+    min-height: 38px;
+    padding: 6px 8px;
     box-sizing: border-box;
+    flex-wrap: wrap;
+    overflow: visible;
     background: rgba(246, 246, 246, 0.96);
     backdrop-filter: blur(10px);
   }
 
+  .live-editor__header > .theme-mode-button {
+    height: 32px;
+  }
+
+  .live-editor__swatches {
+    flex: 1 1 150px;
+    gap: 1px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .live-editor__swatches::-webkit-scrollbar {
+    display: none;
+  }
+
   .live-editor__swatch {
-    padding: 0 2px;
+    min-width: 24px;
+    height: 32px;
+    padding: 0 3px;
+    justify-content: center;
+  }
+
+  .live-editor__swatch-dot {
+    width: 13px;
+    height: 13px;
+  }
+
+  .live-editor__toolbar-separator {
+    display: none;
+  }
+
+  .live-editor__appearance-toggle {
+    width: 32px;
+    height: 32px;
+    margin-right: 0;
+  }
+
+  .live-editor__toolbar-actions {
+    flex: 1 0 100%;
+    width: 100%;
+    margin-left: 0;
+    gap: 6px;
+  }
+
+  .live-editor__padding-select {
+    flex: 1 1 auto;
+    width: auto;
+    max-width: none;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .live-editor__toolbar-actions > .copy-button,
+  .live-editor__screenshot-button,
+  .live-editor__header .textarea-color-toggle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .live-editor__header .live-editor__syntax-toolbar-select {
+    height: 32px;
+    max-width: 7rem;
+    font-size: 12px;
   }
 
   .live-editor__capture-area {
-    padding: 14px;
+    padding: 16px !important;
   }
 
   .live-editor-editor-col {
@@ -1634,10 +1686,6 @@ code {
 
   .header h1 span {
     font-size: 200%;
-  }
-  /* Prevent zoom on mobile when clicking editor */
-  .codice[data-codice-code] textarea {
-    font-size: 16px !important;
   }
 }
 

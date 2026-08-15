@@ -30,7 +30,7 @@
   --codice-caret-color: currentColor;
   position: relative;
   min-width: 0;
-  padding: 0 16px 14px;
+  padding: 0 0 14px;
   overflow: hidden;
   font-size: var(--docs-code-font-size, 15px);
   line-height: 1.5;
@@ -60,20 +60,17 @@
 }
 
 .install-banner__theme-pane:hover,
-.install-banner__theme-pane:focus-visible,
 .install-banner__theme-pane--active {
   opacity: 1;
-}
-
-.install-banner__theme-pane:focus-visible {
-  outline: 2px solid var(--docs-ui-accent, #354150);
-  outline-offset: -2px;
 }
 
 .install-banner__theme-pane-label {
   height: 34px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: 0 12px;
   font-size: 0.78rem;
   font-weight: 500;
   color: var(--codice-title-color);
@@ -82,6 +79,55 @@
 .install-banner__theme-pane pre {
   margin: 0;
   overflow: hidden;
+}
+
+.install-banner__theme-pane [data-codice-code-content],
+.install-banner__theme-pane .sh__line {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.install-banner__theme-pane [data-codice-code],
+.install-banner__theme-pane [data-codice-code-content] {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.install-banner__theme-pane-action {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 52px;
+  padding: 0;
+  border: 0;
+  outline-offset: -3px;
+  background: linear-gradient(90deg, transparent, rgb(127 127 127 / 9%));
+  box-shadow: -8px 8px 18px rgb(0 0 0 / 12%);
+  cursor: pointer;
+}
+
+.install-banner__theme-pane-action:hover,
+.install-banner__theme-pane-action:focus-visible {
+  background: linear-gradient(90deg, transparent, rgb(127 127 127 / 18%));
+  box-shadow: -10px 10px 22px rgb(0 0 0 / 18%);
+}
+
+@media screen and (min-width: 641px) {
+  .install-banner__theme-pane-action {
+    top: 0;
+    height: auto;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .install-banner__theme-pane-action:hover,
+  .install-banner__theme-pane-action:focus-visible {
+    background: transparent;
+    box-shadow: none;
+  }
 }
 
 .install-banner__theme-copy {
@@ -98,12 +144,12 @@
   align-items: center;
   justify-content: center;
   color: #fff;
-  background: rgb(0 0 0 / 24%);
+  background: transparent;
   border-radius: 2px;
 }
 
 .install-banner__theme-copy .copy-button:hover {
-  background: rgb(0 0 0 / 34%);
+  background: rgb(255 255 255 / 8%);
 }
 
 .install-banner__code {
@@ -174,7 +220,7 @@
   font-size: 1rem;
   margin-top: clamp(44px, 6vw, 64px);
   margin-inline: auto;
-  padding: 8px 16px;
+  padding: 8px 0;
   width: 100%;
   max-width: 600px;
   border-radius: 2px;
@@ -185,7 +231,7 @@
   width: 100%;
   max-width: 600px;
   margin: clamp(44px, 6vw, 64px) auto 0;
-  padding: 8px 16px;
+  padding: 8px 0;
   border-top: 1px solid color-mix(in srgb, var(--docs-ui-secondary, #5c6570) 22%, transparent);
 }
 
@@ -246,14 +292,47 @@
   }
 
   .install-banner__theme-split {
-    min-height: 224px;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
     margin: 12px 0;
     max-width: 100%;
+    background: linear-gradient(180deg, #f6f6f6 0 50%, #383838 50% 100%);
   }
 
   .install-banner__theme-pane {
-    padding: 0 8px 10px;
+    position: relative;
+    height: 142px;
+    padding: 0 0 8px;
     font-size: 11px;
+  }
+
+  .install-banner__theme-pane::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    right: 52px;
+    bottom: 0;
+    left: 0;
+    height: 38px;
+    pointer-events: none;
+  }
+
+  .install-banner__theme-pane--light::after {
+    background: linear-gradient(transparent, #f6f6f6 88%);
+  }
+
+  .install-banner__theme-pane--dark::after {
+    background: linear-gradient(transparent, #383838 88%);
+  }
+
+  .install-banner__theme-pane + .install-banner__theme-pane {
+    border-top: 1px solid rgb(255 255 255 / 16%);
+    border-left: 0;
+  }
+
+  .install-banner__theme-pane [data-codice-content] {
+    max-height: 88px;
+    overflow: hidden;
   }
 
   .install-banner__block {
@@ -265,7 +344,16 @@
   }
 
   .install-banner__theme-pane-label {
-    height: 30px;
+    height: 24px;
+  }
+
+  .install-banner__theme-copy .copy-button {
+    color: #707070;
+    background: transparent;
+  }
+
+  .install-banner__theme-copy .copy-button:hover {
+    background: rgb(0 0 0 / 5%);
   }
 
 }

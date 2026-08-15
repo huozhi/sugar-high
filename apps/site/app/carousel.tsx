@@ -183,7 +183,8 @@ function useTypedCode(code: string, typing: boolean, delay: number) {
     if (!typing) return
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reducedMotion) {
+    const mobile = window.matchMedia('(max-width: 680px)').matches
+    if (reducedMotion || mobile) {
       setLength(code.length)
       return
     }
@@ -255,8 +256,10 @@ export default function Carousel() {
   const examples = EXAMPLE_PAIRS
   const [hasSpreadStack, setHasSpreadStack] = useState(false)
   const [poppedCard, setPoppedCard] = useState<number | null>(null)
+  const [activeCard, setActiveCard] = useState(0)
   const stackRef = useRef<HTMLDivElement>(null)
   const popTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hasInteractedRef = useRef(false)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const previewMode = syntaxThemeCtx?.previewMode ?? 'light'
   const activePreset = LIVE_EDITOR_THEME_PRESETS[syntaxThemeCtx?.themeIndex ?? 0]
@@ -325,6 +328,57 @@ export default function Carousel() {
     if (popTimerRef.current) clearTimeout(popTimerRef.current)
   }, [])
 
+  function scrollToCard(index: number) {
+    const stack = stackRef.current
+    const card = stack?.children[index] as HTMLElement | undefined
+    if (!stack || !card) return
+
+    stack.scrollTo({
+      left: card.offsetLeft - (stack.clientWidth - card.offsetWidth) / 2,
+      behavior: 'smooth',
+    })
+    setActiveCard(index)
+  }
+
+  function stopAutoplay() {
+    hasInteractedRef.current = true
+  }
+
+  useEffect(() => {
+    const mobile = window.matchMedia('(max-width: 680px)')
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (!mobile.matches || reducedMotion.matches) return
+
+    const interval = window.setInterval(() => {
+      if (hasInteractedRef.current) return
+      setActiveCard((current) => {
+        const next = (current + 1) % n
+        scrollToCard(next)
+        return next
+      })
+    }, 3600)
+
+    return () => window.clearInterval(interval)
+  }, [n])
+
+  function updateActiveCard() {
+    const stack = stackRef.current
+    if (!stack) return
+    const center = stack.scrollLeft + stack.clientWidth / 2
+    const cards = Array.from(stack.children) as HTMLElement[]
+    let closestIndex = 0
+    let closestDistance = Number.POSITIVE_INFINITY
+
+    cards.forEach((card, index) => {
+      const distance = Math.abs(card.offsetLeft + card.offsetWidth / 2 - center)
+      if (distance < closestDistance) {
+        closestDistance = distance
+        closestIndex = index
+      }
+    })
+    setActiveCard(closestIndex)
+  }
+
   return (
     <div className="showcase-section carousel container-showcase" style={showcaseStyle}>
       <div
@@ -332,6 +386,10 @@ export default function Carousel() {
         className={`showcase-stack${
           hasSpreadStack ? ' showcase-stack--spread' : ''
         }`}
+        onPointerDown={stopAutoplay}
+        onWheel={stopAutoplay}
+        onKeyDown={stopAutoplay}
+        onScroll={updateActiveCard}
         style={
           {
             '--showcase-count': String(n),
@@ -388,25 +446,20 @@ export default function Carousel() {
           )
         })}
       </div>
-      <div className="showcase-swipe-guide" aria-label="Swipe to explore examples">
-        <svg viewBox="0 0 116 16" aria-hidden="true">
-          <defs>
-            <filter id="showcase-chalk" x="-6%" y="-35%" width="112%" height="170%">
-              <feTurbulence baseFrequency="0.045 0.5" numOctaves="2" seed="8" result="noise" />
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.4" />
-            </filter>
-          </defs>
-          <path
-            className="showcase-swipe-guide__main"
-            d="M112 4C82 7 42 9 4 12"
-            filter="url(#showcase-chalk)"
+      <div className="showcase-pagination" aria-label="Code examples">
+        {examples.map(([name], index) => (
+          <button
+            key={name}
+            type="button"
+            className="showcase-pagination__dot"
+            aria-label={`Show ${name}`}
+            aria-current={activeCard === index ? 'true' : undefined}
+            onClick={() => {
+              stopAutoplay()
+              scrollToCard(index)
+            }}
           />
-          <path
-            className="showcase-swipe-guide__soft"
-            d="M110 12C76 10 39 6 7 7"
-            filter="url(#showcase-chalk)"
-          />
-        </svg>
+        ))}
       </div>
     </div>
   )
