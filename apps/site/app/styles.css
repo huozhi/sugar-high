@@ -202,6 +202,38 @@ input[type='checkbox']:checked {
   box-shadow: -3px 8px 28px rgba(0, 0, 0, 0.22);
   background: var(--showcase-card-bg, transparent);
   transform: translateY(0);
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.24s ease;
+}
+
+@media (hover: hover) {
+  .showcase-card:hover {
+    z-index: 30;
+  }
+
+  .showcase-card:hover .showcase-card-lift {
+    transform: translateY(-18px) scale(1.02);
+    box-shadow: -3px 16px 34px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.showcase-card:focus-within {
+  z-index: 30;
+}
+
+.showcase-card:focus-within .showcase-card-lift {
+  transform: translateY(-18px) scale(1.02);
+  box-shadow: -3px 16px 34px rgba(0, 0, 0, 0.25);
+}
+
+.showcase-card--popped .showcase-card-hit {
+  animation: showcase-card-shake 0.46s ease-in-out;
+}
+
+@keyframes showcase-card-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  25% { transform: translateX(-3px) rotate(-0.32deg); }
+  50% { transform: translateX(3px) rotate(0.28deg); }
+  75% { transform: translateX(-1.5px) rotate(-0.14deg); }
 }
 
 .showcase-card-hit {
@@ -246,8 +278,10 @@ input[type='checkbox']:checked {
       transform 0.01ms;
   }
 
-  .showcase-card-lift {
+  .showcase-card-lift,
+  .showcase-card-hit {
     animation: none !important;
+    transition-duration: 0.01ms;
   }
 }
 

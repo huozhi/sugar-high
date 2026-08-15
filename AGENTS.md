@@ -2,6 +2,8 @@
 
 - Packages live in `packages/`: `sugar-high`, `react` (`@sugar-high/react`), and `remark`
   (`@sugar-high/remark`). Apps live in `apps/`.
+- Always use the running development server at `http://localhost:3000` to verify site changes; do
+  not run a production build for verification.
 - Use pnpm. Run `pnpm test`, `pnpm build`, and `git diff --check` before submitting changes.
 - Keep internal package dependencies on `workspace:^` (or `workspace:*` for private apps); pnpm
   rewrites them to normal semver ranges when publishing.

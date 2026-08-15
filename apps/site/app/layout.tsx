@@ -1,5 +1,6 @@
 import './global.css'
 import './styles.css'
+import type { Metadata } from 'next'
 
 const GITHUB_REPO_URL = 'https://github.com/huozhi/sugar-high'
 const X_URL = 'https://x.com/huozhi'
@@ -37,10 +38,20 @@ export default function Layout({ children }) {
   )
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Sugar High',
   authors: [{ name: '@huozhi' }],
   description: 'Super lightweight syntax highlighter solution',
+  icons: {
+    icon: [
+      { url: '/icon-light.svg', type: 'image/svg+xml' },
+      {
+        url: '/icon-dark.svg',
+        type: 'image/svg+xml',
+        media: '(prefers-color-scheme: dark)',
+      },
+    ],
+  },
 }
 
 export const viewport = {

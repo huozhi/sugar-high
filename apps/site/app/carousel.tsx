@@ -23,30 +23,16 @@ const EXAMPLE_PAIRS = [
     `\
 use std::fmt::Display;
 
-/// Build a short Cartesian label for two displayable values.
 pub fn label<T: Display>(x: T, y: T) -> String {
-    // format pair
     format!("({}, {})", x, y)
 }
-
-pub fn labels<I, T>(pairs: I) -> Vec<String>
-where
-    I: IntoIterator<Item = (T, T)>,
-    T: Display,
-{
-    pairs.into_iter().map(|(a, b)| label(a, b)).collect()
-}
-
 fn main() {
-    let pts = vec![(1u32, 2u32), (3, 4)];
-    for line in labels(pts) {
-        println!("point {line}");
-    }
-    println!("{}", label("x", "y"));
+    let point = label(3, 4);
+    println!("point: {point}");
 }
 `,
     {
-      highlightedLines: [6],
+      highlightedLines: [4],
     },
   ],
 
@@ -55,56 +41,17 @@ fn main() {
     `theme.css`,
     `\
 :root {
-  --accent: #2d5e9d;
   --surface: #f6f8fa;
   --text: #24292f;
-  --radius: 8px;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  color: var(--text);
-  background: var(--surface);
-}
-
+.card { color: var(--text); background: var(--surface); }
 @media (prefers-color-scheme: dark) {
-  :root {
-    --surface: hsl(220 14% 12%);
-    --text: #e6edf3;
-  }
-
-  .card {
-    background: color-mix(in srgb, var(--surface) 92%, #000);
-    border: 1px solid rgb(255 255 255 / 8%);
-  }
-}
-
-/* motion */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.stack-item:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  :root { --surface: #202124; --text: #f5f5f5; }
 }
 `,
     {
-      highlightedLines: [28],
+      highlightedLines: [8],
     },
   ],
   [
@@ -112,98 +59,49 @@ body {
     `\
 type Point = { readonly x: number; y: number }
 
-interface Cluster {
-  center: Point
-  members: ReadonlyArray<Point>
-}
+const origin: Point = { x: 0, y: 0 }
 
-export const origin = { x: 0, y: 0 } as const satisfies Point
+const distance = (a: Point, b: Point) =>
+  Math.hypot(a.x - b.x, a.y - b.y)
 
-export function distance(a: Point, b: Point): number {
-  return Math.hypot(a.x - b.x, a.y - b.y)
-}
-
-export function nearest<T extends Point>(
-  items: readonly T[],
-  ref: Point
-): T | undefined {
-  return items.reduce<T | undefined>((best, item) => {
-    if (!best) return item
-    const db = distance(best, ref)
-    const di = distance(item, ref)
-    return di < db ? item : best
-  }, undefined)
-}
-
-export function bbox(points: readonly Point[]) {
-  if (!points.length) return null
-  let minX = Infinity
-  let minY = Infinity
-  let maxX = -Infinity
-  let maxY = -Infinity
-  for (const p of points) {
-    minX = Math.min(minX, p.x)
-    minY = Math.min(minY, p.y)
-    maxX = Math.max(maxX, p.x)
-    maxY = Math.max(maxY, p.y)
-  }
-  return { minX, minY, maxX, maxY }
-}
+const target = { x: 3, y: 4 }
+console.log(distance(origin, target))
 `,
     {
-      highlightedLines: [8],
+      highlightedLines: [5],
     },
   ],
   [
     `literals.js`,
     `\
-export const matchBoundary = (s) => /^[/][\\w-]+[/]$/u.test(s)
+const path = /^[/][\\w-]+[/]$/u
 
 // Slashes in comments are not regex delimiters
-// path: /usr/local/bin
-
-/** @see https://example.com/docs/foo/bar */
 const afterBlock = /foo/g.exec('foo')?.[0]
 
 // Regex vs division (tokenizer stress test)
 const mixed = 12 / /\\d+/.test('3') ? 1 : 0
-const expr = 100 - /50/.test('5') + 25
 
-const flags = ['g', 'i', 'm'].filter(Boolean).join('')
-const re = new RegExp('\\\\d+', flags)
-
-export function pickDelim(str) {
-  const i = str.indexOf('/')
-  return i < 0 ? str : str.slice(0, i) + str.slice(i + 1)
-}
-
-// trailing note: / is both operator and literal starter
-console.log(mixed, expr, re.test('99'))
+console.log(path.test('/docs/'), afterBlock, mixed)
 `,
     {
-      highlightedLines: [10],
+      highlightedLines: [7],
     },
   ],
   [
     `query.py`,
     `\
 from dataclasses import dataclass
-
 @dataclass(frozen=True)
 class Filter:
     field: str
     value: str
-
-def build_where(filters: list[Filter]) -> str:
-    if not filters:
-        return "1 = 1"
-    parts = [f"{f.field} = :{f.field}" for f in filters]
-    return " AND ".join(parts)
-
-print(build_where([Filter("status", "open"), Filter("owner", "me")]))
+active = Filter("status", "open")
+query = f"{active.field} = :{active.field}"
+print(query)
 `,
     {
-      highlightedLines: [8],
+      highlightedLines: [7],
     },
   ],
   [
@@ -224,12 +122,12 @@ diff --git a/config/release.json b/config/release.json
 ] as const
 
 const SHOWCASE_SPREAD = [
-  { x: -342, y: 18, rotate: -7 },
-  { x: -198, y: -16, rotate: 12 },
-  { x: -72, y: 27, rotate: -4 },
-  { x: 104, y: -12, rotate: 9 },
-  { x: 224, y: 25, rotate: -15 },
-  { x: 318, y: -4, rotate: 5 },
+  { x: -370, y: 18, rotate: -7 },
+  { x: -216, y: -16, rotate: 12 },
+  { x: -78, y: 27, rotate: -4 },
+  { x: 114, y: -12, rotate: 9 },
+  { x: 246, y: 25, rotate: -15 },
+  { x: 350, y: -4, rotate: 5 },
 ] as const
 
 const SHOWCASE_Z_ORDER = [14, 12, 18, 16, 10, 15] as const
@@ -240,14 +138,17 @@ function CodeFrame(
     title = 'Untitled',
     index,
     highlightedLines = [],
+    typing,
   }: {
     code: string
     title: string
     index: number
     highlightedLines: readonly number[] | number[]
+    typing: boolean
   }) {
+  const typedCode = useTypedCode(code, typing, index * 90)
   const isDiff = title.endsWith('.diff')
-  const codeContent = isDiff ? highlight(code, { lang: 'diff' }) : code
+  const codeContent = isDiff ? highlight(typedCode, { lang: 'diff' }) : typedCode
 
   return (
     <div className="code-frame" id={`code-frame-${index}`}>
@@ -264,6 +165,8 @@ function CodeFrame(
         title={title}
         className='codice code-snippet'
         data-disabled="true"
+        data-typing={typedCode.length < code.length}
+        aria-busy={typedCode.length < code.length}
         asMarkup={isDiff}
         preformatted={isDiff}
       >
@@ -273,11 +176,87 @@ function CodeFrame(
   )
 }
 
+function useTypedCode(code: string, typing: boolean, delay: number) {
+  const [length, setLength] = useState(0)
+
+  useEffect(() => {
+    if (!typing) return
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion) {
+      setLength(code.length)
+      return
+    }
+
+    let frame = 0
+    let timer = 0
+    let cancelled = false
+    const initialDuration = Math.min(2200, Math.max(900, code.length * 3.2))
+    const trimmedEnd = code.trimEnd().length
+    const lastLineStart = code.lastIndexOf('\n', trimmedEnd - 1)
+    const previousLineStart = code.lastIndexOf('\n', lastLineStart - 1)
+    const editStart = Math.max(0, previousLineStart + 1)
+
+    const wait = (duration: number, next: () => void) => {
+      timer = window.setTimeout(next, duration)
+    }
+
+    const animate = (from: number, to: number, duration: number, done: () => void) => {
+      let startedAt = 0
+      let lastLength = from
+      setLength(from)
+
+      const step = (now: number) => {
+        if (cancelled) return
+        if (!startedAt) startedAt = now
+
+        const progress = Math.min(1, (now - startedAt) / duration)
+        const nextLength = Math.round(from + (to - from) * progress)
+        if (nextLength !== lastLength) {
+          lastLength = nextLength
+          setLength(nextLength)
+        }
+
+        if (progress < 1) frame = requestAnimationFrame(step)
+        else done()
+      }
+
+      frame = requestAnimationFrame(step)
+    }
+
+    const replayEdit = () => {
+      animate(code.length, editStart, Math.max(450, (code.length - editStart) * 18), () => {
+        wait(350, () => {
+          animate(editStart, code.length, Math.max(650, (code.length - editStart) * 25), () => {
+            wait(4200 + delay * 3, replayEdit)
+          })
+        })
+      })
+    }
+
+    timer = window.setTimeout(() => {
+      animate(0, code.length, initialDuration, () => {
+        wait(3600 + delay * 4, replayEdit)
+      })
+    }, delay)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+      cancelAnimationFrame(frame)
+    }
+  }, [code, delay, typing])
+
+  return code.slice(0, length)
+}
+
 
 export default function Carousel() {
   const examples = EXAMPLE_PAIRS
   const [hasSpreadStack, setHasSpreadStack] = useState(false)
+  const [poppedCard, setPoppedCard] = useState<number | null>(null)
   const stackRef = useRef<HTMLDivElement>(null)
+  const popTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const previewMode = syntaxThemeCtx?.previewMode ?? 'light'
   const activePreset = LIVE_EDITOR_THEME_PRESETS[syntaxThemeCtx?.themeIndex ?? 0]
@@ -336,6 +315,16 @@ export default function Carousel() {
     )
   }
 
+  function popCard(index: number) {
+    if (popTimerRef.current) clearTimeout(popTimerRef.current)
+    setPoppedCard(index)
+    popTimerRef.current = setTimeout(() => setPoppedCard(null), 720)
+  }
+
+  useEffect(() => () => {
+    if (popTimerRef.current) clearTimeout(popTimerRef.current)
+  }, [])
+
   return (
     <div className="showcase-section carousel container-showcase" style={showcaseStyle}>
       <div
@@ -363,7 +352,9 @@ export default function Carousel() {
           return (
             <div
               key={exampleIndex}
-              className={`showcase-card showcase-card--stack showcase-card--${exampleIndex}`}
+              className={`showcase-card showcase-card--stack showcase-card--${exampleIndex}${
+                poppedCard === exampleIndex ? ' showcase-card--popped' : ''
+              }`}
               style={stackStyle}
             >
               <div className="showcase-card-lift">
@@ -372,11 +363,15 @@ export default function Carousel() {
                   role="button"
                   tabIndex={0}
                   aria-label={`Switch syntax theme from the ${name} example`}
-                  onClick={switchTheme}
+                  onClick={() => {
+                    switchTheme()
+                    popCard(exampleIndex)
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault()
                       switchTheme()
+                      popCard(exampleIndex)
                     }
                   }}
                 >
@@ -385,6 +380,7 @@ export default function Carousel() {
                     title={name}
                     index={exampleIndex}
                     highlightedLines={config.highlightedLines}
+                    typing={hasSpreadStack}
                   />
                 </div>
               </div>
