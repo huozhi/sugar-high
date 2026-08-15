@@ -141,7 +141,7 @@ ${formatPlateAsCssVars(darkPlate)}
             onClick={() => setBannerTheme('light')}
           >
             <div className="install-banner__theme-pane-label">light.css</div>
-            <Code title={null}>
+            <Code title={null} lang="css">
               {lightThemeCss}
             </Code>
             <button
@@ -160,7 +160,7 @@ ${formatPlateAsCssVars(darkPlate)}
             onClick={() => setBannerTheme('dark')}
           >
             <div className="install-banner__theme-pane-label">dark.css</div>
-            <Code title={null}>
+            <Code title={null} lang="css">
               {darkThemeCss}
             </Code>
             <button
