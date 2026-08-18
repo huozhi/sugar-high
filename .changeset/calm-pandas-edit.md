@@ -1,5 +1,5 @@
 ---
-'@sugar-high/react': minor
+'@sugar-high/react': major
 ---
 
 Improve editor value synchronization and highlighting performance, add `defaultValue` for
