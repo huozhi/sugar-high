@@ -1,15 +1,16 @@
 'use client'
 
-import { useEffect, useState, forwardRef } from 'react'
+import { useState, forwardRef } from 'react'
 import { CodeHeader, getExtension, getLineNumbersWidth, Code } from '../code/code'
-import { ScopedStyle } from '../style'
+import { fontSizeCss, ScopedStyle } from '../style'
 import { css } from './css'
 import type { HighlightOptions, LanguageName } from 'sugar-high'
 
 export const Editor = forwardRef(function Editor(
   {
     title,
-    value = '',
+    value,
+    defaultValue = '',
     controls = true,
     lineNumbers = true,
     lineNumbersWidth,
@@ -18,15 +19,17 @@ export const Editor = forwardRef(function Editor(
     cx,
     mark,
     padding,
-    onChange = () => {},
+    onChange,
     fontSize,
     fontFamily,
-    onChangeTitle = () => {},
+    onChangeTitle,
     textareaRef,
+    style,
     ...props
   }: {
     title?: string | null
     value?: string
+    defaultValue?: string
     controls?: boolean
     lineNumbers?: boolean
     lineNumbersWidth?: string
@@ -44,41 +47,42 @@ export const Editor = forwardRef(function Editor(
   } & Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>,
   ref: React.Ref<HTMLDivElement>
 ) {
-  const [code, setCode] = useState(value)
+  const [uncontrolledCode, setUncontrolledCode] = useState(defaultValue)
+  const code = value ?? uncontrolledCode
   const resolvedLineNumbersWidth = getLineNumbersWidth(code, lineNumbersWidth)
-
-  function update(textContent: string) {
-    setCode(textContent)
-    onChange(textContent)
-  }
-
-  useEffect(() => {
-    if (value !== code) {
-      update(value)
-    }
-  }, [value, code])
 
   function onInput(event: React.ChangeEvent<HTMLTextAreaElement>) {
     const textContent = event.target.value || ''
-    update(textContent)
+    if (value === undefined) setUncontrolledCode(textContent)
+    onChange?.(textContent)
   }
 
   return (
     <div
       ref={ref}
       {...props}
+      style={{
+        '--sh-font-size': fontSizeCss(fontSize),
+        '--sh-line-number-width': resolvedLineNumbersWidth || '2.5rem',
+        '--sh-padding': padding ?? '1rem',
+        '--sh-font-family': fontFamily ?? 'Consolas, Monaco, monospace',
+        ...style,
+      } as React.CSSProperties}
       data-codice="editor"
       data-codice-editor
+      data-sh="editor"
+      data-sh-editor
       // DOM attributes for selecting the stateful editor easily.
       // e.g. [data-codice-line-numbers="true"]
       data-codice-title={title || ''}
       data-codice-controls={!!controls}
       data-codice-line-numbers={!!lineNumbers}
+      data-sh-line-numbers={!!lineNumbers}
     >
-      <ScopedStyle css={css({ fontSize, padding, lineNumbersWidth: resolvedLineNumbersWidth, fontFamily })} />
+      <ScopedStyle css={css} href="sugar-high-react-editor" />
       {/* Display the header outside of the matched textarea and code, by default display controls */}
       <CodeHeader title={title} controls={controls} onChangeTitle={onChangeTitle} />
-      <div data-codice-content>
+      <div data-codice-content data-sh-content>
         {/* hide controls component inside Code to keep content matched with textarea */}
         <Code
           title={null}

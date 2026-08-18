@@ -1,7 +1,7 @@
-export function ScopedStyle({ css }: { css: string }) {
+export function ScopedStyle({ css, href }: { css: string; href: string }) {
   return (
-    <style data-codice-style>
-      {`@scope {\n${css}\n}`}
+    <style data-codice-style data-sh-style href={href} precedence="default">
+      {css}
     </style>
   )
 }

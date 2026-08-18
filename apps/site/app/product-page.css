@@ -241,7 +241,7 @@
 }
 
 .product-code {
-  --codice-code-padding: 18px;
+  --sh-padding: 18px;
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
   --sh-sign: #8996a3;

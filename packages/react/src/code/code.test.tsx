@@ -10,208 +10,116 @@ describe('Code', () => {
     expect(getLineNumbersWidth('line', '5rem')).toBe('5rem')
   })
 
+  it('exposes Sugar High markers and clamps highlighted ranges', () => {
+    const html = renderToString(
+      <Code highlightLines={[[1, Number.MAX_SAFE_INTEGER]]}>{'first\nsecond'}</Code>
+    )
+
+    expect(html).toContain('data-sh="code"')
+    expect(html.match(/data-highlight="true"/g)).toHaveLength(2)
+  })
+
   it('default props', () => {
     expect(renderToString(<Code>test</Code>)).toMatchInlineSnapshot(`
-      "<div data-codice="code" data-codice-code="true" data-codice-line-numbers="false"><style data-codice-style="true">@scope {
-      :scope[data-codice-code] {
-        padding: calc(var(--codice-code-padding) / 2) 0;
+      "<style data-precedence="default" data-href="sugar-high-react-code">[data-sh-code] {
+        padding: calc(var(--sh-padding) / 2) 0;
       }
-      :scope[data-codice-code] [data-codice-code-content] {
-        padding: calc(var(--codice-code-padding) * 0.25) 0;
+      [data-sh-code] [data-sh-code-content] {
+        padding: calc(var(--sh-padding) * 0.25) 0;
       }
-      :scope[data-codice-code] pre {
+      [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
       }
-      :scope[data-codice-code] code {
+      [data-sh-code] code {
         display: block;
         border: none;
       }
-      :scope[data-codice-code] .sh__line {
+      [data-sh-code] .sh__line {
         display: inline-block;
         width: 100%;
       }
-      :scope[data-codice-code] .sh__line[data-highlight] {
-        background-color: var(--codice-code-highlight-color);
+      [data-sh-code] .sh__line[data-highlight] {
+        background-color: var(--sh-line-highlight-color);
       }
 
-      :scope[data-codice-header] {
-        position: relative;
-        display: flex;
-        padding: calc(var(--codice-code-padding) * 0.25)
-          var(--codice-code-padding)
-          calc(var(--codice-code-padding) * 0.25);
-        align-items: center;
-      }
-      :scope[data-codice-header] [data-codice-title] {
-        display: inline-block;
-        flex: 1 0;
-        text-align: center;
-        line-height: 1;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        caret-color: var(--codice-caret-color);
-        color: var(--codice-title-color);
-        font-family: var(--codice-font-family);
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        display: inline-flex;
-        align-self: center;
-        justify-self: start;
-        align-items: center;
-        justify-content: center;
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        width: 52px;
-      }
-      :scope[data-codice-header][data-codice-header-controls="true"] [data-codice-title] {
-        padding-right: 52px;
-      }
-      :scope[data-codice-header] [data-codice-control] {
-        display: flex;
-        width: 10px;
-        height: 10px;
-        margin: 3px;
-        border-radius: 50%;
-        background-color: var(--codice-control-color);
-      }
-
-      :scope[data-codice-line-numbers="true"] code {
+      [data-sh-line-numbers="true"] code {
         counter-reset: codice-code-line-number;
       }
-      :scope[data-codice-line-numbers="true"] .sh__line:has(> [data-codice-code-line-number]) {
-        padding-left: var(--codice-code-line-number-width);
+      [data-sh-line-numbers="true"] .sh__line:has(> [data-sh-code-line-number]) {
+        padding-left: var(--sh-line-number-width);
       }
-      :scope[data-codice-line-numbers="true"] [data-codice-code-line-number] {
+      [data-sh-line-numbers="true"] [data-sh-code-line-number] {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(var(--codice-code-line-number-width) - 14px);
-        margin-left: calc(var(--codice-code-line-number-width) * -1);
+        min-width: calc(var(--sh-line-number-width) - 14px);
+        margin-left: calc(var(--sh-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
         user-select: none;
-        color: var(--codice-code-line-number-color);
+        color: var(--sh-line-number-color);
       }
-      :scope[data-codice-line-numbers="false"] .sh__line {
-        padding-left: var(--codice-code-padding);
+      [data-sh-line-numbers="false"] .sh__line {
+        padding-left: var(--sh-padding);
       }
-
-      :scope[data-codice-code] {
-        --codice-font-size: inherit;
-        --codice-code-line-number-width: 2.5rem;
-        --codice-code-padding: 1rem;
-      }
-
-      }</style><pre data-codice-code-content="true"><code><span class="sh__line" data-codice-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
+      </style><div style="--sh-font-size:inherit;--sh-line-number-width:2.5rem;--sh-padding:1rem" data-codice="code" data-codice-code="true" data-sh="code" data-sh-code="true" data-codice-line-numbers="false" data-sh-line-numbers="false"><pre data-codice-code-content="true" data-sh-code-content="true"><code><span class="sh__line" data-codice-code-line="true" data-sh-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
     `)
   })
 
   it('with title', () => {
     expect(renderToString(<Code title="file.js">test</Code>)).toMatchInlineSnapshot(`
-      "<div data-codice="code" data-codice-code="true" data-codice-line-numbers="false"><style data-codice-style="true">@scope {
-      :scope[data-codice-code] {
-        padding: calc(var(--codice-code-padding) / 2) 0;
+      "<style data-precedence="default" data-href="sugar-high-react-code sugar-high-react-header">[data-sh-code] {
+        padding: calc(var(--sh-padding) / 2) 0;
       }
-      :scope[data-codice-code] [data-codice-code-content] {
-        padding: calc(var(--codice-code-padding) * 0.25) 0;
+      [data-sh-code] [data-sh-code-content] {
+        padding: calc(var(--sh-padding) * 0.25) 0;
       }
-      :scope[data-codice-code] pre {
+      [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
       }
-      :scope[data-codice-code] code {
+      [data-sh-code] code {
         display: block;
         border: none;
       }
-      :scope[data-codice-code] .sh__line {
+      [data-sh-code] .sh__line {
         display: inline-block;
         width: 100%;
       }
-      :scope[data-codice-code] .sh__line[data-highlight] {
-        background-color: var(--codice-code-highlight-color);
+      [data-sh-code] .sh__line[data-highlight] {
+        background-color: var(--sh-line-highlight-color);
       }
 
-      :scope[data-codice-header] {
-        position: relative;
-        display: flex;
-        padding: calc(var(--codice-code-padding) * 0.25)
-          var(--codice-code-padding)
-          calc(var(--codice-code-padding) * 0.25);
-        align-items: center;
-      }
-      :scope[data-codice-header] [data-codice-title] {
-        display: inline-block;
-        flex: 1 0;
-        text-align: center;
-        line-height: 1;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        caret-color: var(--codice-caret-color);
-        color: var(--codice-title-color);
-        font-family: var(--codice-font-family);
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        display: inline-flex;
-        align-self: center;
-        justify-self: start;
-        align-items: center;
-        justify-content: center;
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        width: 52px;
-      }
-      :scope[data-codice-header][data-codice-header-controls="true"] [data-codice-title] {
-        padding-right: 52px;
-      }
-      :scope[data-codice-header] [data-codice-control] {
-        display: flex;
-        width: 10px;
-        height: 10px;
-        margin: 3px;
-        border-radius: 50%;
-        background-color: var(--codice-control-color);
-      }
-
-      :scope[data-codice-line-numbers="true"] code {
+      [data-sh-line-numbers="true"] code {
         counter-reset: codice-code-line-number;
       }
-      :scope[data-codice-line-numbers="true"] .sh__line:has(> [data-codice-code-line-number]) {
-        padding-left: var(--codice-code-line-number-width);
+      [data-sh-line-numbers="true"] .sh__line:has(> [data-sh-code-line-number]) {
+        padding-left: var(--sh-line-number-width);
       }
-      :scope[data-codice-line-numbers="true"] [data-codice-code-line-number] {
+      [data-sh-line-numbers="true"] [data-sh-code-line-number] {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(var(--codice-code-line-number-width) - 14px);
-        margin-left: calc(var(--codice-code-line-number-width) * -1);
+        min-width: calc(var(--sh-line-number-width) - 14px);
+        margin-left: calc(var(--sh-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
         user-select: none;
-        color: var(--codice-code-line-number-color);
+        color: var(--sh-line-number-color);
       }
-      :scope[data-codice-line-numbers="false"] .sh__line {
-        padding-left: var(--codice-code-padding);
+      [data-sh-line-numbers="false"] .sh__line {
+        padding-left: var(--sh-padding);
       }
-
-      :scope[data-codice-code] {
-        --codice-font-size: inherit;
-        --codice-code-line-number-width: 2.5rem;
-        --codice-code-padding: 1rem;
-      }
-
-      }</style><div data-codice-header="true" data-codice-header-controls="false"><style data-codice-style="true">@scope {
-      :scope[data-codice-header] {
+      [data-sh-header] {
         position: relative;
         display: flex;
-        padding: calc(var(--codice-code-padding) * 0.25)
-          var(--codice-code-padding)
-          calc(var(--codice-code-padding) * 0.25);
+        padding: calc(var(--sh-padding) * 0.25)
+          var(--sh-padding)
+          calc(var(--sh-padding) * 0.25);
         align-items: center;
       }
-      :scope[data-codice-header] [data-codice-title] {
+      [data-sh-header] [data-sh-title] {
         display: inline-block;
         flex: 1 0;
         text-align: center;
@@ -219,140 +127,86 @@ describe('Code', () => {
         background-color: transparent;
         outline: none;
         border: none;
-        caret-color: var(--codice-caret-color);
-        color: var(--codice-title-color);
-        font-family: var(--codice-font-family);
+        caret-color: var(--sh-caret-color);
+        color: var(--sh-title-color);
+        font-family: var(--sh-font-family);
       }
-      :scope[data-codice-header] [data-codice-controls] {
+      [data-sh-header] [data-sh-controls] {
         display: inline-flex;
         align-self: center;
         justify-self: start;
         align-items: center;
         justify-content: center;
-      }
-      :scope[data-codice-header] [data-codice-controls] {
         width: 52px;
       }
-      :scope[data-codice-header][data-codice-header-controls="true"] [data-codice-title] {
+      [data-sh-header][data-sh-header-controls="true"] [data-sh-title] {
         padding-right: 52px;
       }
-      :scope[data-codice-header] [data-codice-control] {
+      [data-sh-header] [data-sh-control] {
         display: flex;
         width: 10px;
         height: 10px;
         margin: 3px;
         border-radius: 50%;
-        background-color: var(--codice-control-color);
+        background-color: var(--sh-control-color);
       }
-
-      }</style><input data-codice-title="true" readOnly="" value="file.js"/></div><pre data-codice-code-content="true"><code><span class="sh__line" data-codice-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
+      </style><div style="--sh-font-size:inherit;--sh-line-number-width:2.5rem;--sh-padding:1rem" data-codice="code" data-codice-code="true" data-sh="code" data-sh-code="true" data-codice-line-numbers="false" data-sh-line-numbers="false"><div data-codice-header="true" data-sh-header="true" data-codice-header-controls="false" data-sh-header-controls="false"><input data-codice-title="true" data-sh-title="true" readOnly="" value="file.js"/></div><pre data-codice-code-content="true" data-sh-code-content="true"><code><span class="sh__line" data-codice-code-line="true" data-sh-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
     `)
   })
 
   it('with controls', () => {
     expect(renderToString(<Code controls>test</Code>)).toMatchInlineSnapshot(`
-      "<div data-codice="code" data-codice-code="true" data-codice-line-numbers="false"><style data-codice-style="true">@scope {
-      :scope[data-codice-code] {
-        padding: calc(var(--codice-code-padding) / 2) 0;
+      "<style data-precedence="default" data-href="sugar-high-react-code sugar-high-react-header">[data-sh-code] {
+        padding: calc(var(--sh-padding) / 2) 0;
       }
-      :scope[data-codice-code] [data-codice-code-content] {
-        padding: calc(var(--codice-code-padding) * 0.25) 0;
+      [data-sh-code] [data-sh-code-content] {
+        padding: calc(var(--sh-padding) * 0.25) 0;
       }
-      :scope[data-codice-code] pre {
+      [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
       }
-      :scope[data-codice-code] code {
+      [data-sh-code] code {
         display: block;
         border: none;
       }
-      :scope[data-codice-code] .sh__line {
+      [data-sh-code] .sh__line {
         display: inline-block;
         width: 100%;
       }
-      :scope[data-codice-code] .sh__line[data-highlight] {
-        background-color: var(--codice-code-highlight-color);
+      [data-sh-code] .sh__line[data-highlight] {
+        background-color: var(--sh-line-highlight-color);
       }
 
-      :scope[data-codice-header] {
-        position: relative;
-        display: flex;
-        padding: calc(var(--codice-code-padding) * 0.25)
-          var(--codice-code-padding)
-          calc(var(--codice-code-padding) * 0.25);
-        align-items: center;
-      }
-      :scope[data-codice-header] [data-codice-title] {
-        display: inline-block;
-        flex: 1 0;
-        text-align: center;
-        line-height: 1;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        caret-color: var(--codice-caret-color);
-        color: var(--codice-title-color);
-        font-family: var(--codice-font-family);
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        display: inline-flex;
-        align-self: center;
-        justify-self: start;
-        align-items: center;
-        justify-content: center;
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        width: 52px;
-      }
-      :scope[data-codice-header][data-codice-header-controls="true"] [data-codice-title] {
-        padding-right: 52px;
-      }
-      :scope[data-codice-header] [data-codice-control] {
-        display: flex;
-        width: 10px;
-        height: 10px;
-        margin: 3px;
-        border-radius: 50%;
-        background-color: var(--codice-control-color);
-      }
-
-      :scope[data-codice-line-numbers="true"] code {
+      [data-sh-line-numbers="true"] code {
         counter-reset: codice-code-line-number;
       }
-      :scope[data-codice-line-numbers="true"] .sh__line:has(> [data-codice-code-line-number]) {
-        padding-left: var(--codice-code-line-number-width);
+      [data-sh-line-numbers="true"] .sh__line:has(> [data-sh-code-line-number]) {
+        padding-left: var(--sh-line-number-width);
       }
-      :scope[data-codice-line-numbers="true"] [data-codice-code-line-number] {
+      [data-sh-line-numbers="true"] [data-sh-code-line-number] {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(var(--codice-code-line-number-width) - 14px);
-        margin-left: calc(var(--codice-code-line-number-width) * -1);
+        min-width: calc(var(--sh-line-number-width) - 14px);
+        margin-left: calc(var(--sh-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
         user-select: none;
-        color: var(--codice-code-line-number-color);
+        color: var(--sh-line-number-color);
       }
-      :scope[data-codice-line-numbers="false"] .sh__line {
-        padding-left: var(--codice-code-padding);
+      [data-sh-line-numbers="false"] .sh__line {
+        padding-left: var(--sh-padding);
       }
-
-      :scope[data-codice-code] {
-        --codice-font-size: inherit;
-        --codice-code-line-number-width: 2.5rem;
-        --codice-code-padding: 1rem;
-      }
-
-      }</style><div data-codice-header="true" data-codice-header-controls="true"><style data-codice-style="true">@scope {
-      :scope[data-codice-header] {
+      [data-sh-header] {
         position: relative;
         display: flex;
-        padding: calc(var(--codice-code-padding) * 0.25)
-          var(--codice-code-padding)
-          calc(var(--codice-code-padding) * 0.25);
+        padding: calc(var(--sh-padding) * 0.25)
+          var(--sh-padding)
+          calc(var(--sh-padding) * 0.25);
         align-items: center;
       }
-      :scope[data-codice-header] [data-codice-title] {
+      [data-sh-header] [data-sh-title] {
         display: inline-block;
         flex: 1 0;
         text-align: center;
@@ -360,227 +214,124 @@ describe('Code', () => {
         background-color: transparent;
         outline: none;
         border: none;
-        caret-color: var(--codice-caret-color);
-        color: var(--codice-title-color);
-        font-family: var(--codice-font-family);
+        caret-color: var(--sh-caret-color);
+        color: var(--sh-title-color);
+        font-family: var(--sh-font-family);
       }
-      :scope[data-codice-header] [data-codice-controls] {
+      [data-sh-header] [data-sh-controls] {
         display: inline-flex;
         align-self: center;
         justify-self: start;
         align-items: center;
         justify-content: center;
-      }
-      :scope[data-codice-header] [data-codice-controls] {
         width: 52px;
       }
-      :scope[data-codice-header][data-codice-header-controls="true"] [data-codice-title] {
+      [data-sh-header][data-sh-header-controls="true"] [data-sh-title] {
         padding-right: 52px;
       }
-      :scope[data-codice-header] [data-codice-control] {
+      [data-sh-header] [data-sh-control] {
         display: flex;
         width: 10px;
         height: 10px;
         margin: 3px;
         border-radius: 50%;
-        background-color: var(--codice-control-color);
+        background-color: var(--sh-control-color);
       }
-
-      }</style><div data-codice-controls="true"><span data-codice-control="true"></span><span data-codice-control="true"></span><span data-codice-control="true"></span></div></div><pre data-codice-code-content="true"><code><span class="sh__line" data-codice-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
+      </style><div style="--sh-font-size:inherit;--sh-line-number-width:2.5rem;--sh-padding:1rem" data-codice="code" data-codice-code="true" data-sh="code" data-sh-code="true" data-codice-line-numbers="false" data-sh-line-numbers="false"><div data-codice-header="true" data-sh-header="true" data-codice-header-controls="true" data-sh-header-controls="true"><div data-codice-controls="true" data-sh-controls="true"><span data-codice-control="true" data-sh-control="true"></span><span data-codice-control="true" data-sh-control="true"></span><span data-codice-control="true" data-sh-control="true"></span></div></div><pre data-codice-code-content="true" data-sh-code-content="true"><code><span class="sh__line" data-codice-code-line="true" data-sh-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
     `)
   })
 
   it('with fontSize', () => {
     expect(renderToString(<Code fontSize={14}>test</Code>)).toMatchInlineSnapshot(`
-      "<div data-codice="code" data-codice-code="true" data-codice-line-numbers="false"><style data-codice-style="true">@scope {
-      :scope[data-codice-code] {
-        padding: calc(var(--codice-code-padding) / 2) 0;
+      "<style data-precedence="default" data-href="sugar-high-react-code">[data-sh-code] {
+        padding: calc(var(--sh-padding) / 2) 0;
       }
-      :scope[data-codice-code] [data-codice-code-content] {
-        padding: calc(var(--codice-code-padding) * 0.25) 0;
+      [data-sh-code] [data-sh-code-content] {
+        padding: calc(var(--sh-padding) * 0.25) 0;
       }
-      :scope[data-codice-code] pre {
+      [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
       }
-      :scope[data-codice-code] code {
+      [data-sh-code] code {
         display: block;
         border: none;
       }
-      :scope[data-codice-code] .sh__line {
+      [data-sh-code] .sh__line {
         display: inline-block;
         width: 100%;
       }
-      :scope[data-codice-code] .sh__line[data-highlight] {
-        background-color: var(--codice-code-highlight-color);
+      [data-sh-code] .sh__line[data-highlight] {
+        background-color: var(--sh-line-highlight-color);
       }
 
-      :scope[data-codice-header] {
-        position: relative;
-        display: flex;
-        padding: calc(var(--codice-code-padding) * 0.25)
-          var(--codice-code-padding)
-          calc(var(--codice-code-padding) * 0.25);
-        align-items: center;
-      }
-      :scope[data-codice-header] [data-codice-title] {
-        display: inline-block;
-        flex: 1 0;
-        text-align: center;
-        line-height: 1;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        caret-color: var(--codice-caret-color);
-        color: var(--codice-title-color);
-        font-family: var(--codice-font-family);
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        display: inline-flex;
-        align-self: center;
-        justify-self: start;
-        align-items: center;
-        justify-content: center;
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        width: 52px;
-      }
-      :scope[data-codice-header][data-codice-header-controls="true"] [data-codice-title] {
-        padding-right: 52px;
-      }
-      :scope[data-codice-header] [data-codice-control] {
-        display: flex;
-        width: 10px;
-        height: 10px;
-        margin: 3px;
-        border-radius: 50%;
-        background-color: var(--codice-control-color);
-      }
-
-      :scope[data-codice-line-numbers="true"] code {
+      [data-sh-line-numbers="true"] code {
         counter-reset: codice-code-line-number;
       }
-      :scope[data-codice-line-numbers="true"] .sh__line:has(> [data-codice-code-line-number]) {
-        padding-left: var(--codice-code-line-number-width);
+      [data-sh-line-numbers="true"] .sh__line:has(> [data-sh-code-line-number]) {
+        padding-left: var(--sh-line-number-width);
       }
-      :scope[data-codice-line-numbers="true"] [data-codice-code-line-number] {
+      [data-sh-line-numbers="true"] [data-sh-code-line-number] {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(var(--codice-code-line-number-width) - 14px);
-        margin-left: calc(var(--codice-code-line-number-width) * -1);
+        min-width: calc(var(--sh-line-number-width) - 14px);
+        margin-left: calc(var(--sh-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
         user-select: none;
-        color: var(--codice-code-line-number-color);
+        color: var(--sh-line-number-color);
       }
-      :scope[data-codice-line-numbers="false"] .sh__line {
-        padding-left: var(--codice-code-padding);
+      [data-sh-line-numbers="false"] .sh__line {
+        padding-left: var(--sh-padding);
       }
-
-      :scope[data-codice-code] {
-        --codice-font-size: 14px;
-        --codice-code-line-number-width: 2.5rem;
-        --codice-code-padding: 1rem;
-      }
-
-      }</style><pre data-codice-code-content="true"><code><span class="sh__line" data-codice-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
+      </style><div style="--sh-font-size:14px;--sh-line-number-width:2.5rem;--sh-padding:1rem" data-codice="code" data-codice-code="true" data-sh="code" data-sh-code="true" data-codice-line-numbers="false" data-sh-line-numbers="false"><pre data-codice-code-content="true" data-sh-code-content="true"><code><span class="sh__line" data-codice-code-line="true" data-sh-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
     `)
 
     expect(renderToString(<Code fontSize={'1rem'}>test</Code>)).toMatchInlineSnapshot(`
-      "<div data-codice="code" data-codice-code="true" data-codice-line-numbers="false"><style data-codice-style="true">@scope {
-      :scope[data-codice-code] {
-        padding: calc(var(--codice-code-padding) / 2) 0;
+      "<style data-precedence="default" data-href="sugar-high-react-code">[data-sh-code] {
+        padding: calc(var(--sh-padding) / 2) 0;
       }
-      :scope[data-codice-code] [data-codice-code-content] {
-        padding: calc(var(--codice-code-padding) * 0.25) 0;
+      [data-sh-code] [data-sh-code-content] {
+        padding: calc(var(--sh-padding) * 0.25) 0;
       }
-      :scope[data-codice-code] pre {
+      [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
       }
-      :scope[data-codice-code] code {
+      [data-sh-code] code {
         display: block;
         border: none;
       }
-      :scope[data-codice-code] .sh__line {
+      [data-sh-code] .sh__line {
         display: inline-block;
         width: 100%;
       }
-      :scope[data-codice-code] .sh__line[data-highlight] {
-        background-color: var(--codice-code-highlight-color);
+      [data-sh-code] .sh__line[data-highlight] {
+        background-color: var(--sh-line-highlight-color);
       }
 
-      :scope[data-codice-header] {
-        position: relative;
-        display: flex;
-        padding: calc(var(--codice-code-padding) * 0.25)
-          var(--codice-code-padding)
-          calc(var(--codice-code-padding) * 0.25);
-        align-items: center;
-      }
-      :scope[data-codice-header] [data-codice-title] {
-        display: inline-block;
-        flex: 1 0;
-        text-align: center;
-        line-height: 1;
-        background-color: transparent;
-        outline: none;
-        border: none;
-        caret-color: var(--codice-caret-color);
-        color: var(--codice-title-color);
-        font-family: var(--codice-font-family);
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        display: inline-flex;
-        align-self: center;
-        justify-self: start;
-        align-items: center;
-        justify-content: center;
-      }
-      :scope[data-codice-header] [data-codice-controls] {
-        width: 52px;
-      }
-      :scope[data-codice-header][data-codice-header-controls="true"] [data-codice-title] {
-        padding-right: 52px;
-      }
-      :scope[data-codice-header] [data-codice-control] {
-        display: flex;
-        width: 10px;
-        height: 10px;
-        margin: 3px;
-        border-radius: 50%;
-        background-color: var(--codice-control-color);
-      }
-
-      :scope[data-codice-line-numbers="true"] code {
+      [data-sh-line-numbers="true"] code {
         counter-reset: codice-code-line-number;
       }
-      :scope[data-codice-line-numbers="true"] .sh__line:has(> [data-codice-code-line-number]) {
-        padding-left: var(--codice-code-line-number-width);
+      [data-sh-line-numbers="true"] .sh__line:has(> [data-sh-code-line-number]) {
+        padding-left: var(--sh-line-number-width);
       }
-      :scope[data-codice-line-numbers="true"] [data-codice-code-line-number] {
+      [data-sh-line-numbers="true"] [data-sh-code-line-number] {
         counter-increment: codice-code-line-number 1;
         content: counter(codice-code-line-number);
         display: inline-block;
-        min-width: calc(var(--codice-code-line-number-width) - 14px);
-        margin-left: calc(var(--codice-code-line-number-width) * -1);
+        min-width: calc(var(--sh-line-number-width) - 14px);
+        margin-left: calc(var(--sh-line-number-width) * -1);
         margin-right: 14px;
         text-align: right;
         user-select: none;
-        color: var(--codice-code-line-number-color);
+        color: var(--sh-line-number-color);
       }
-      :scope[data-codice-line-numbers="false"] .sh__line {
-        padding-left: var(--codice-code-padding);
+      [data-sh-line-numbers="false"] .sh__line {
+        padding-left: var(--sh-padding);
       }
-
-      :scope[data-codice-code] {
-        --codice-font-size: 1rem;
-        --codice-code-line-number-width: 2.5rem;
-        --codice-code-padding: 1rem;
-      }
-
-      }</style><pre data-codice-code-content="true"><code><span class="sh__line" data-codice-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
+      </style><div style="--sh-font-size:1rem;--sh-line-number-width:2.5rem;--sh-padding:1rem" data-codice="code" data-codice-code="true" data-sh="code" data-sh-code="true" data-codice-line-numbers="false" data-sh-line-numbers="false"><pre data-codice-code-content="true" data-sh-code-content="true"><code><span class="sh__line" data-codice-code-line="true" data-sh-code-line="true"><span data-sh-token-type="identifier" class="sh__token--identifier" style="color:var(--sh-identifier)">test</span></span></code></pre></div>"
     `)
   })
 })
