@@ -26,8 +26,8 @@
 }
 
 .install-banner__theme-pane {
-  --codice-title-color: currentColor;
-  --codice-caret-color: currentColor;
+  --sh-title-color: currentColor;
+  --sh-caret-color: currentColor;
   position: relative;
   min-width: 0;
   padding: 0 0 14px;
@@ -73,7 +73,7 @@
   padding: 0 12px;
   font-size: 0.78rem;
   font-weight: 500;
-  color: var(--codice-title-color);
+  color: var(--sh-title-color);
 }
 
 .install-banner__theme-pane pre {
@@ -153,9 +153,9 @@
 }
 
 .install-banner__code {
-  /* codice header title: color: var(--codice-title-color) */
-  --codice-title-color: #b0b0b0;
-  --codice-caret-color: #ccc;
+  /* codice header title: color: var(--sh-title-color) */
+  --sh-title-color: #b0b0b0;
+  --sh-caret-color: #ccc;
   /* --sh-* inherited from .install-banner (live theme) */
   position: relative;
   background-color: #383838;
@@ -198,8 +198,8 @@
 
 .install-banner[data-install-theme='light'] .install-banner__code {
   background-color: #f6f6f6;
-  --codice-title-color: #707070;
-  --codice-caret-color: #333;
+  --sh-title-color: #707070;
+  --sh-caret-color: #333;
 }
 
 .install-banner[data-install-theme='light'] .install-banner__code button {

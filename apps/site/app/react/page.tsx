@@ -31,12 +31,12 @@ render(
 
 const stylingExample = `const style = {
   backgroundColor: '#f6f8fa',
-  '--codice-background-color': 'transparent',
-  '--codice-caret-color': '#24292f',
-  '--codice-title-color': '#57606a',
-  '--codice-control-color': '#afb8c1',
-  '--codice-code-line-number-color': '#8c959f',
-  '--codice-code-highlight-color': '#fff8c5',
+  '--sh-editor-background-color': 'transparent',
+  '--sh-caret-color': '#24292f',
+  '--sh-title-color': '#57606a',
+  '--sh-control-color': '#afb8c1',
+  '--sh-line-number-color': '#8c959f',
+  '--sh-line-highlight-color': '#fff8c5',
   '--sh-keyword': '#cf222e',
   '--sh-string': '#0a3069',
 } as React.CSSProperties
@@ -44,17 +44,17 @@ const stylingExample = `const style = {
 <Editor style={style} value={source} onChange={setSource} />`
 
 const styleVariables = [
-  ['--codice-text-color', 'Editor', 'transparent', 'Textarea text; transparent over highlighted code.'],
-  ['--codice-background-color', 'Editor', 'transparent', 'Textarea background.'],
-  ['--codice-caret-color', 'Both', 'inherit', 'Editor and editable-title caret.'],
-  ['--codice-font-family', 'Both', 'Editor monospace; Code inherited', 'Code, textarea, and title font.'],
-  ['--codice-font-size', 'Both', 'inherit', 'Code and textarea font size.'],
-  ['--codice-code-padding', 'Both', '1rem', 'Content and header spacing.'],
-  ['--codice-code-line-number-width', 'Both', '2.5rem / auto', 'Line-number gutter width.'],
-  ['--codice-control-color', 'Both', 'unset', 'Header control-dot color.'],
-  ['--codice-title-color', 'Both', 'unset', 'Header filename color.'],
-  ['--codice-code-line-number-color', 'Both', 'unset', 'Line-number color.'],
-  ['--codice-code-highlight-color', 'Both', 'unset', 'Highlighted-line background.'],
+  ['--sh-editor-text-color', 'Editor', 'transparent', 'Textarea text; transparent over highlighted code.'],
+  ['--sh-editor-background-color', 'Editor', 'transparent', 'Textarea background.'],
+  ['--sh-caret-color', 'Both', 'inherit', 'Editor and editable-title caret.'],
+  ['--sh-font-family', 'Both', 'Editor monospace; Code inherited', 'Code, textarea, and title font.'],
+  ['--sh-font-size', 'Both', 'inherit', 'Code and textarea font size.'],
+  ['--sh-padding', 'Both', '1rem', 'Content and header spacing.'],
+  ['--sh-line-number-width', 'Both', '2.5rem / auto', 'Line-number gutter width.'],
+  ['--sh-control-color', 'Both', 'unset', 'Header control-dot color.'],
+  ['--sh-title-color', 'Both', 'unset', 'Header filename color.'],
+  ['--sh-line-number-color', 'Both', 'unset', 'Line-number color.'],
+  ['--sh-line-highlight-color', 'Both', 'unset', 'Highlighted-line background.'],
 ] as const
 
 function Window({ title, children }: { title: string; children: React.ReactNode }) {

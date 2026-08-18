@@ -1,8 +1,8 @@
 :root {
-  --codice-caret-color: #333;
-  --codice-code-line-number-color: #a4a4a4;
-  --codice-code-highlight-color: #555555;
-  --codice-control-color: #8d8989;
+  --sh-caret-color: #333;
+  --sh-line-number-color: #a4a4a4;
+  --sh-line-highlight-color: #555555;
+  --sh-control-color: #8d8989;
 }
 
 ::selection {
@@ -250,7 +250,7 @@ input[type='checkbox']:checked {
 
 .showcase-section .code-frame,
 .showcase-section .codice.code-snippet {
-  --codice-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+  --sh-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
   background: var(--showcase-card-bg, #f6f6f6);
 }
