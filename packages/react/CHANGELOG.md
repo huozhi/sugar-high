@@ -1,5 +1,14 @@
 # @sugar-high/react
 
+## 2.0.0
+
+### Major Changes
+
+- e0bd2d1: Improve editor value synchronization and highlighting performance, add `defaultValue` for
+  uncontrolled editors, and introduce canonical `data-sh-*` component markers while retaining the
+  Codice compatibility attributes. Replace the legacy `--codice-*` styling variables with canonical
+  `--sh-*` variables.
+
 ## 1.0.0
 
 ### Major Changes
