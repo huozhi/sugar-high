@@ -2,6 +2,10 @@
   --product-accent: #f47067;
 }
 
+.theme-product .product-code {
+  --sh-entity: #665ac7;
+}
+
 .theme-hero::before {
   display: none;
 }

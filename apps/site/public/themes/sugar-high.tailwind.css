@@ -6,7 +6,7 @@
     --sh-identifier: var(--color-slate-700);
     --sh-sign: var(--color-slate-400);
     --sh-property: var(--color-blue-500);
-    --sh-entity: var(--color-teal-500);
+    --sh-entity: var(--color-indigo-600);
     --sh-jsxliterals: var(--color-fuchsia-400);
     --sh-string: var(--color-emerald-600);
     --sh-keyword: var(--color-rose-400);
