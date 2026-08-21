@@ -132,20 +132,6 @@
   opacity: 0.8;
 }
 
-.theme-palette--tailwind {
-  --theme-surface: #f6f6f6;
-  --theme-muted: #a19595;
-  --sh-class: #8d85ff;
-  --sh-identifier: #354150;
-  --sh-sign: #8996a3;
-  --sh-property: #4e8fdf;
-  --sh-entity: #6eafad;
-  --sh-jsxliterals: #bf7db6;
-  --sh-string: #00a99a;
-  --sh-keyword: #f47067;
-  --sh-comment: #a19595;
-}
-
 .theme-usage {
   display: flex;
   flex-direction: column;
@@ -160,6 +146,11 @@
 
 .theme-usage__result {
   width: 100%;
+}
+
+.theme-usage__result--isolated {
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgb(53 65 80 / 14%);
 }
 
 .theme-snippet {
@@ -179,23 +170,15 @@
 }
 
 .theme-snippet .product-code {
-  --sh-class: #272c33;
-  --sh-identifier: #47505a;
-  --sh-sign: #20252b;
-  --sh-property: #46515e;
-  --sh-entity: #3f4853;
-  --sh-jsxliterals: #333a43;
-  --sh-string: #59636e;
-  --sh-keyword: #242a31;
-  --sh-comment: #9ba0a7;
   max-height: 210px;
   overflow-y: scroll;
   scrollbar-color: #b6bbc2 transparent;
   scrollbar-width: thin;
 }
 
-.theme-snippet .sh__token--keyword {
-  font-weight: 700;
+.theme-css-section .theme-usage__result .sh-theme--sugar-high .sh__token--keyword,
+.theme-css-section .theme-usage__result .sh-theme--sugar-high .sh__token--class {
+  font-weight: 400;
 }
 
 .theme-section-head {

@@ -42,16 +42,12 @@ const emphasis = {
   comment: 'theme-token-comment',
 } as const
 
-const tailwindUsage = `import { Code } from '@sugar-high/react'
-import type { ComponentProps } from 'react'
-
-type CodeProps = ComponentProps<typeof Code>
-
-export function ThemedCode({ className = '', ...props }: CodeProps) {
-  return <Code {...props} className={\`sh-theme font-mono ${'${className}'}\`} />
-}
-
-<ThemedCode lang="typescript">{source}</ThemedCode>`
+const tailwindUsage = `<Code
+  className="sh-theme font-mono"
+  lang="typescript"
+>
+  {source}
+</Code>`
 
 const tailwindAgentCommand = `curl -fsSL https://sugar-high.vercel.app/themes/sugar-high.tailwind.css -o sugar-high-theme.css`
 
@@ -75,7 +71,7 @@ function Window({ title, children, className = '', mode }: { title: string; chil
   )
 }
 
-function Snippet({ title, code, lang = 'css' }: { title: string; code: string; lang?: 'css' | 'javascript' }) {
+function Snippet({ title, code, lang = 'css' }: { title: string; code: string; lang?: 'css' | 'javascript' | 'typescript' }) {
   return (
     <div className="theme-snippet">
       <Window title={title}>
@@ -97,10 +93,10 @@ function AgentSetup({ command }: { command: string }) {
   )
 }
 
-function Result({ className, mode, cx }: { className: string; mode?: 'light' | 'dark'; cx?: typeof emphasis }) {
+function Result({ className, mode }: { className: string; mode?: 'light' | 'dark' }) {
   return (
     <Window title="result.ts" className={className} mode={mode}>
-      <Code className="theme-result" lang="typescript" cx={cx}>{sugarExample}</Code>
+      <Code className="theme-result" lang="typescript">{sugarExample}</Code>
     </Window>
   )
 }
@@ -118,7 +114,10 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
   ])
   const [randomTick, setRandomTick] = useState(0)
   const selected = variants.find(variant => variant.key === variantKey) ?? variants[0]
-  const cssUsage = `<Code className="${selected.theme.className}"${selected.mode === 'dark' ? ' data-theme="dark"' : ''} lang="typescript">
+  const cssUsage = `<Code
+  className="${selected.theme.className}"
+  lang="typescript"${selected.mode === 'dark' ? '\n  data-theme="dark"' : ''}
+>
   {source}
 </Code>`
   const cssAgentCommand = `curl -fsSL https://sugar-high.vercel.app/themes/${selected.theme.file} -o ${selected.theme.file}`
@@ -188,7 +187,7 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
           </div>
         </section>
 
-        <section className="product-section">
+        <section className="product-section theme-css-section">
           <div className="product-section__head theme-section-head">
             <div>
               <h2>Plain CSS</h2>
@@ -216,13 +215,13 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
             </p>
           </div>
           <div className="theme-usage">
-            <div className="theme-usage__result"><Result className={selected.theme.className} mode={selected.mode} /></div>
+            <div className="theme-usage__result theme-usage__result--isolated"><Result className={selected.theme.className} mode={selected.mode} /></div>
             <div className="theme-stage-label theme-stage-label--setup">Agent Setup</div>
             <AgentSetup command={cssAgentCommand} />
             <div className="theme-stage-label">Manual Setup</div>
             <div className="theme-usage__source">
               <Snippet title={selected.theme.file} code={selected.theme.css} />
-              <Snippet title="usage.tsx" code={cssUsage} lang="javascript" />
+              <Snippet title="usage.tsx" code={cssUsage} lang="typescript" />
             </div>
           </div>
         </section>
@@ -233,7 +232,6 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
             <p>Compose a small component with Tailwind's CSS theme variables.</p>
           </div>
           <div className="theme-usage">
-            <div className="theme-usage__result"><Result className="theme-palette--tailwind" cx={emphasis} /></div>
             <div className="theme-stage-label theme-stage-label--setup">Agent Setup</div>
             <AgentSetup command={tailwindAgentCommand} />
             <div className="theme-stage-label">Manual Setup</div>

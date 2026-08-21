@@ -221,21 +221,21 @@ ${formatPlateAsCssVars(darkPlate)}
         <div className="install-banner__section-title">
           <h2>Solution</h2>
         </div>
-        <div className="install-banner__block">
+        <div className="install-banner__block install-banner__solution-item">
           <h2>Themes</h2>
           <p>
             Set token colors with scoped CSS variables, then use <code>cx</code> for emphasis.
             Explore the copyable <Link href="/theme">CSS and Tailwind theme guide</Link>.
           </p>
         </div>
-        <div className="install-banner__block">
+        <div className="install-banner__block install-banner__solution-item">
           <h2>React Components</h2>
           <p>
             <Link href="/react"><code>@sugar-high/react</code></Link> provides {`<Editor /> & <Code />`} to present or edit highlighted code.
           </p>
         </div>
         {children}
-        <div className="install-banner__block">
+        <div className="install-banner__block install-banner__solution-item">
           <h2>Remark plugin</h2>
           <p>
             <a href='https://remark.js.org/' target='_blank' rel='noreferrer'>Remark.js</a>{' '}
