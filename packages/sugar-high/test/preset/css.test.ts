@@ -70,4 +70,29 @@ describe('tokenize - css preset', () => {
     expect(actual).toContain('color => property')
     expect(actual).toContain('content => property')
   })
+
+  it('keeps dashed CSS names together outside declarations', () => {
+    const input = `.sh-theme--sugar-high, .button-2xl {
+  color: var(--theme-muted);
+  background: linear-gradient(red, blue);
+  -webkit-font-smoothing: antialiased;
+}`
+    const actual = getTokensAsString(tokenize(input, css))
+
+    expect(actual).toContain('sh-theme--sugar-high => property')
+    expect(actual).toContain('button-2xl => property')
+    expect(actual).toContain('--theme-muted => identifier')
+    expect(actual).toContain('linear-gradient => identifier')
+    expect(actual).toContain('-webkit-font-smoothing => property')
+  })
+
+  it('keeps minus signs separate from numeric CSS values', () => {
+    const input = '.offset-card { margin: -1rem; width: calc(100% - 2px); }'
+    const tokens = tokenize(input, css)
+    const actual = getTokensAsString(tokens)
+
+    expect(actual).toContain('offset-card => property')
+    expect(tokens.filter(([, value]) => value === '-')).toHaveLength(2)
+    expect(tokens.map(([, value]) => value)).not.toContain('-1rem')
+  })
 })
