@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.0.2
+
+### Patch Changes
+
+- 3985855: Keep hyphenated CSS names in a single syntax token
+
 ## 2.0.1
 
 ### Patch Changes
