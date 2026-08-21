@@ -26,6 +26,47 @@ export const onLiteral = (curr, index, code) => {
 const isIgnored = (type) => type === T_SPACE || type === T_BREAK || type === T_COMMENT
 const isPropertyPart = ([type, value]) =>
   type === T_IDENTIFIER || type === T_CLASS || (type === T_SIGN && value === '-')
+const isNamePart = ([type]) =>
+  type === T_IDENTIFIER || type === T_CLASS || type === T_PROPERTY
+const isNameStart = (token) => isNamePart(token) && !/^\d/.test(token[1])
+const isHyphen = ([type, value]) => type === T_SIGN && value === '-'
+
+/**
+ * Rejoin CSS dashed identifiers split by the shared punctuation lexer.
+ * @param {Array<[number, string]>} tokens
+ */
+const mergeDashedNames = (tokens) => {
+  for (let index = 0; index < tokens.length; index++) {
+    let firstWord = index
+    let end = index
+
+    if (isHyphen(tokens[end])) {
+      while (isHyphen(tokens[end])) end++
+      if (!tokens[end] || !isNameStart(tokens[end])) continue
+      firstWord = end++
+    } else if (isNameStart(tokens[end])) {
+      end++
+    } else {
+      continue
+    }
+
+    let dashed = firstWord > index
+    while (tokens[end] && isHyphen(tokens[end])) {
+      const hyphenStart = end
+      while (tokens[end] && isHyphen(tokens[end])) end++
+      if (!tokens[end] || !isNamePart(tokens[end])) {
+        end = hyphenStart
+        break
+      }
+      dashed = true
+      end++
+    }
+
+    if (!dashed) continue
+    const name = tokens.slice(index, end).map(([, value]) => value).join('')
+    tokens.splice(index, end - index, [tokens[firstWord][0], name])
+  }
+}
 
 /** Return true when a colon belongs to a nested selector instead of a declaration. */
 const opensBlock = (tokens, start) => {
@@ -51,6 +92,7 @@ const opensBlock = (tokens, start) => {
  */
 export const tokenize = (code, options) => {
   const tokens = tokenizePlain(code, { ...options, tokenize: undefined })
+  mergeDashedNames(tokens)
   let blockDepth = 0
   let declarationStart = false
 
