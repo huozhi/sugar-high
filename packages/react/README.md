@@ -43,6 +43,15 @@ import { Code } from '@sugar-high/react'
 </Code>
 ```
 
+For excerpts from larger files, set the first displayed line number. Long lines wrap by default;
+disable wrapping to use horizontal scrolling instead. Both options also work with `Editor`.
+
+```tsx
+<Code lineNumbers startingLineNumber={40} wrapLongLines={false}>
+  {source}
+</Code>
+```
+
 `lang` takes a canonical Sugar High language name. When omitted, `title` or the legacy
 `extension` prop is resolved through Sugar High's language aliases.
 

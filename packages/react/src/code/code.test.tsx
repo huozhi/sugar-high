@@ -8,6 +8,32 @@ describe('Code', () => {
     expect(getLineNumbersWidth('line\n'.repeat(998))).toBeUndefined()
     expect(getLineNumbersWidth('line\n'.repeat(999))).toBe('calc(4ch + 14px)')
     expect(getLineNumbersWidth('line', '5rem')).toBe('5rem')
+    expect(getLineNumbersWidth('first\nsecond', undefined, 999)).toBe(
+      'calc(4ch + 14px)'
+    )
+  })
+
+  it('starts displayed line numbers at a custom value without changing highlights', () => {
+    const html = renderToString(
+      <Code lineNumbers startingLineNumber={40} highlightLines={[1]}>
+        {'first\nsecond'}
+      </Code>
+    )
+
+    expect(html).toContain('>40</span>')
+    expect(html).toContain('>41</span>')
+    expect(html.match(/data-highlight="true"/g)).toHaveLength(1)
+  })
+
+  it('can disable long-line wrapping', () => {
+    const html = renderToString(<Code wrapLongLines={false}>long line</Code>)
+
+    expect(html).toContain('data-sh-wrap-long-lines="false"')
+    expect(html).toContain('white-space: pre;')
+    expect(html.match(/data-sh-wrap-long-lines="false"/g)).toHaveLength(3)
+    expect(
+      renderToString(<Code>long line</Code>).match(/data-sh-wrap-long-lines="false"/g)
+    ).toHaveLength(2)
   })
 
   it('exposes Sugar High markers and clamps highlighted ranges', () => {
@@ -30,6 +56,14 @@ describe('Code', () => {
       [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] pre {
+        overflow-x: auto;
+        white-space: pre;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] .sh__line {
+        width: max-content;
+        min-width: 100%;
       }
       [data-sh-code] code {
         display: block;
@@ -78,6 +112,14 @@ describe('Code', () => {
       [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] pre {
+        overflow-x: auto;
+        white-space: pre;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] .sh__line {
+        width: max-content;
+        min-width: 100%;
       }
       [data-sh-code] code {
         display: block;
@@ -166,6 +208,14 @@ describe('Code', () => {
         white-space: pre-wrap;
         margin: 0;
       }
+      [data-sh-code][data-sh-wrap-long-lines="false"] pre {
+        overflow-x: auto;
+        white-space: pre;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] .sh__line {
+        width: max-content;
+        min-width: 100%;
+      }
       [data-sh-code] code {
         display: block;
         border: none;
@@ -253,6 +303,14 @@ describe('Code', () => {
         white-space: pre-wrap;
         margin: 0;
       }
+      [data-sh-code][data-sh-wrap-long-lines="false"] pre {
+        overflow-x: auto;
+        white-space: pre;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] .sh__line {
+        width: max-content;
+        min-width: 100%;
+      }
       [data-sh-code] code {
         display: block;
         border: none;
@@ -298,6 +356,14 @@ describe('Code', () => {
       [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] pre {
+        overflow-x: auto;
+        white-space: pre;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] .sh__line {
+        width: max-content;
+        min-width: 100%;
       }
       [data-sh-code] code {
         display: block;

@@ -89,6 +89,8 @@ export const Editor = forwardRef(function Editor(
     controls = true,
     lineNumbers = true,
     lineNumbersWidth,
+    startingLineNumber = 1,
+    wrapLongLines = true,
     extension,
     lang,
     cx,
@@ -110,6 +112,8 @@ export const Editor = forwardRef(function Editor(
     controls?: boolean
     lineNumbers?: boolean
     lineNumbersWidth?: string
+    startingLineNumber?: number
+    wrapLongLines?: boolean
     padding?: string
     extension?: string
     lang?: LanguageName
@@ -131,7 +135,11 @@ export const Editor = forwardRef(function Editor(
   const selectionRef = useRef<{ start: number; end: number } | null>(null)
   const composingRef = useRef(false)
   const code = value ?? uncontrolledCode
-  const resolvedLineNumbersWidth = getLineNumbersWidth(code, lineNumbersWidth)
+  const resolvedLineNumbersWidth = getLineNumbersWidth(
+    code,
+    lineNumbersWidth,
+    startingLineNumber
+  )
 
   function updateCode(textContent: string) {
     if (value === undefined) setUncontrolledCode(textContent)
@@ -218,6 +226,8 @@ export const Editor = forwardRef(function Editor(
           controls={false}
           lineNumbers={lineNumbers}
           lineNumbersWidth={resolvedLineNumbersWidth}
+          startingLineNumber={startingLineNumber}
+          wrapLongLines={wrapLongLines}
           padding={padding}
           // Do not pass fontSize to Code in Editor.
           // It will control both the textarea and code font size.
@@ -228,6 +238,7 @@ export const Editor = forwardRef(function Editor(
           {...textareaProps}
           ref={setTextareaRef}
           value={code}
+          wrap={wrapLongLines ? undefined : 'off'}
           onChange={onInput}
           onKeyDown={onKeyDown}
           onCompositionStart={(event) => {
@@ -237,6 +248,13 @@ export const Editor = forwardRef(function Editor(
           onCompositionEnd={(event) => {
             composingRef.current = false
             textareaProps?.onCompositionEnd?.(event)
+          }}
+          onScroll={(event) => {
+            textareaProps?.onScroll?.(event)
+            const codeContent = event.currentTarget.previousElementSibling?.querySelector(
+              '[data-sh-code-content]'
+            )
+            if (codeContent) codeContent.scrollLeft = event.currentTarget.scrollLeft
           }}
         />
       </div>

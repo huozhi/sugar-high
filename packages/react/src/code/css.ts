@@ -14,6 +14,14 @@ ${C} pre {
   white-space: pre-wrap;
   margin: 0;
 }
+${C}[data-sh-wrap-long-lines="false"] pre {
+  overflow-x: auto;
+  white-space: pre;
+}
+${C}[data-sh-wrap-long-lines="false"] .sh__line {
+  width: max-content;
+  min-width: 100%;
+}
 ${C} code {
   display: block;
   border: none;
