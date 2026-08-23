@@ -1,10 +1,5 @@
-'use client'
-
-import { type HighlightOptions, type LanguageName } from 'sugar-high'
-import { parse, generate } from 'sugar-high/core'
+import { parse, generate, type DisplayOptions, type ParseOptions } from 'sugar-high/core'
 import { css, HEADER_CSS } from './css'
-import { lang as canonicalLang, languages } from 'sugar-high/lang'
-import { useMemo } from 'react'
 import { fontSizeCss, ScopedStyle } from '../style'
 
 /** utils */
@@ -26,9 +21,9 @@ function generateHighlightedLines(
   parsed: ReturnType<typeof parse>,
   highlightLines: ([number, number] | number)[],
   lineNumbers: boolean,
-  cx: HighlightOptions['cx'],
-  mark: HighlightOptions['mark'],
-  markLine: HighlightOptions['markLine']
+  cx: DisplayOptions['cx'],
+  mark: DisplayOptions['mark'],
+  markLine: DisplayOptions['markLine']
 ) {
   const childrenLines = generate(parsed, { cx, mark, markLine })
 
@@ -159,6 +154,25 @@ function CodeFrame({
   )
 }
 
+export type CodeProps = {
+  children: string
+  /** Language configuration imported from `sugar-high/lang/<language>`. */
+  lang?: ParseOptions
+  /** Whether to use a preformatted block <pre><code> */
+  preformatted?: boolean
+  fontSize?: string | number
+  highlightLines?: ([number, number] | number)[]
+  title?: string
+  controls?: boolean
+  lineNumbers?: boolean
+  lineNumbersWidth?: string
+  padding?: string
+  asMarkup?: boolean
+  cx?: DisplayOptions['cx']
+  mark?: DisplayOptions['mark']
+  markLine?: DisplayOptions['markLine']
+} & React.HTMLAttributes<HTMLDivElement>
+
 export function Code({
   children: code,
   title,
@@ -170,43 +184,18 @@ export function Code({
   lineNumbersWidth,
   padding,
   asMarkup = false,
-  extension,
   lang,
   cx,
   mark,
   markLine,
   style,
   ...props
-}: {
-  children: string
-  /** Whether to use a preformatted block <pre><code> */
-  preformatted?: boolean
-  fontSize?: string | number
-  highlightLines?: ([number, number] | number)[]
-  title?: string
-  controls?: boolean
-  lineNumbers?: boolean
-  lineNumbersWidth?: string
-  padding?: string
-  asMarkup?: boolean
-  extension?: string
-  lang?: LanguageName
-  cx?: HighlightOptions['cx']
-  mark?: HighlightOptions['mark']
-  markLine?: HighlightOptions['markLine']
-} & React.HTMLAttributes<HTMLDivElement>) {
+}: CodeProps) {
   const resolvedLineNumbersWidth = getLineNumbersWidth(code, lineNumbersWidth)
-  const config = useMemo(() => {
-    const resolvedLang = lang || canonicalLang(extension || getExtension(title)) || 'javascript'
-    return languages.find(({ id }) => id === resolvedLang)?.config
-  }, [extension, lang, title])
-  const parsed = useMemo(() => asMarkup ? null : parse(code, config), [asMarkup, code, config])
-  const lineElements = useMemo(() =>
-    asMarkup
-      ? code
-      : generateHighlightedLines(parsed!, highlightLines, lineNumbers, cx, mark, markLine),
-    [code, highlightLines, lineNumbers, cx, mark, markLine, asMarkup, parsed]
-  )
+  const parsed = asMarkup ? null : parse(code, lang)
+  const lineElements = asMarkup
+    ? code
+    : generateHighlightedLines(parsed!, highlightLines, lineNumbers, cx, mark, markLine)
 
   return (
     // Add both attribute because it's both root component and child component (of editor)

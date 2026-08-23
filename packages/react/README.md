@@ -34,6 +34,24 @@ import { Code } from '@sugar-high/react'
 `lang` takes a canonical Sugar High language name. When omitted, `title` or the legacy
 `extension` prop is resolved through Sugar High's language aliases.
 
+### Select languages and render on the server
+
+Use `@sugar-high/react/core` when you only need a few languages or want a server-compatible static
+code block. Import each language configuration explicitly and pass it through `lang`:
+
+```tsx
+import { Code } from '@sugar-high/react/core'
+import * as python from 'sugar-high/lang/python'
+
+<Code lang={python} title="main.py" lineNumbers>
+  {'def hello():\n    return "world"'}
+</Code>
+```
+
+The core React entry does not include the complete language registry or a client directive. The
+default entry remains the convenient choice when string language names and title-based detection
+are more important than selecting the smallest bundle.
+
 Use the `data-sh-*` attributes and `--sh-*` variables for new styles. The package temporarily
 preserves Codice's existing `data-codice-*` attributes so existing structural selectors can
 migrate incrementally.

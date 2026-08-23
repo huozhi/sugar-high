@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, forwardRef } from 'react'
-import { CodeHeader, getExtension, getLineNumbersWidth, Code } from '../code/code'
+import { CodeHeader, getExtension, getLineNumbersWidth } from '../code/code'
+import { Code } from '../code/default'
 import { fontSizeCss, ScopedStyle } from '../style'
 import { css } from './css'
 import type { HighlightOptions, LanguageName } from 'sugar-high'
