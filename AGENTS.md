@@ -30,7 +30,7 @@
 
 - Pushes to `main` may create/update the Changesets version PR but must never publish packages.
 - Merge the version PR to apply versions and changelogs.
-- Publishing is manual: Actions → Publish → Run workflow on `main`, with confirmation `publish`.
+- Publishing is manual: Actions → Publish → Run workflow on `main`.
 - npm publishing uses trusted publishing through OIDC. Do not add npm tokens or publish directly
   from CI.
 - The manual publish job uses Changesets to create package tags and GitHub Releases from the
