@@ -35,6 +35,18 @@ try {
       import * as python from 'sugar-high/lang/python'
       export const render = code => createElement(Code, { lang: python }, code)
     `),
+    measure('headless-python', `
+      import { createElement } from 'react'
+      import { Highlight } from '@sugar-high/react/core'
+      import * as python from 'sugar-high/lang/python'
+      export const render = code => createElement(
+        Highlight,
+        { code, lang: python },
+        ({ lines }) => createElement('pre', null, lines.map((line, index) =>
+          createElement('span', { key: index, ...line.properties }, line.tokens.map(token => token.value))
+        ))
+      )
+    `),
     measure('core-python-json-css', `
       import { createElement } from 'react'
       import { Code } from '@sugar-high/react/core'
