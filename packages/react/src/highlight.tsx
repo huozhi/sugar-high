@@ -7,15 +7,15 @@ import {
   type ParseOptions,
 } from 'sugar-high/core'
 
-export type HighlightToken = Omit<GeneratedToken, 'children'> & {
+type HighlightToken = Omit<GeneratedToken, 'children'> & {
   value: string
 }
 
-export type HighlightLine = Omit<GeneratedLine, 'children'> & {
+type HighlightLine = Omit<GeneratedLine, 'children'> & {
   tokens: HighlightToken[]
 }
 
-export type HighlightResult = {
+type HighlightResult = {
   lines: HighlightLine[]
 }
 
