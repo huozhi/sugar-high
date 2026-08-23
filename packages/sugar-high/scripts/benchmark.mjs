@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { brotliCompressSync, constants, gzipSync } from 'node:zlib'
@@ -63,9 +63,12 @@ const base = baseIndex === -1 ? undefined : process.argv[baseIndex + 1]
 
 function measureSizes(directory, prefix) {
   const javascriptEntry = join(benchmarkDir, `${prefix}-javascript-entry.js`)
+  const languageDirectory = existsSync(join(directory, 'lib/lang/javascript.js'))
+    ? 'lang'
+    : 'presets/lang'
   writeFileSync(javascriptEntry, [
     `import { parse, render } from ${JSON.stringify(join(directory, 'lib/core.js'))}`,
-    `import * as javascript from ${JSON.stringify(join(directory, 'lib/lang/javascript.js'))}`,
+    `import * as javascript from ${JSON.stringify(join(directory, `lib/${languageDirectory}/javascript.js`))}`,
     'export const run = code => render(parse(code, javascript))',
   ].join('\n'))
 
