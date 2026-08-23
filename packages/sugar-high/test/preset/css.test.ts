@@ -95,4 +95,10 @@ describe('tokenize - css preset', () => {
     expect(tokens.filter(([, value]) => value === '-')).toHaveLength(2)
     expect(tokens.map(([, value]) => value)).not.toContain('-1rem')
   })
+
+  it('handles trailing hyphens', () => {
+    for (const input of ['-', '--', '.button-']) {
+      expect(() => tokenize(input, css)).not.toThrow()
+    }
+  })
 })
