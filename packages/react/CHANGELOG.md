@@ -1,5 +1,14 @@
 # @sugar-high/react
 
+## 2.1.0
+
+### Minor Changes
+
+- 2c64725: Add starting line numbers and configurable long-line wrapping to `Code` and `Editor`.
+- 2af2b1d: Add a registry-free, server-compatible `@sugar-high/react/core` entry whose `Code` component accepts language configurations through `lang`.
+- 359f2e3: Add Tab and Shift+Tab indentation to `Editor`, plus `textareaProps` for customizing the underlying textarea.
+- 3ecadac: Add a server-compatible headless `Highlight` API with a `render` prop to `@sugar-high/react/core`.
+
 ## 2.0.0
 
 ### Major Changes

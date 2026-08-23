@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.1.0
+
+### Minor Changes
+
+- 8236314: Expose individual language configurations from `sugar-high/lang/<language>` for smaller custom highlighter bundles.
+
 ## 2.0.3
 
 ### Patch Changes
