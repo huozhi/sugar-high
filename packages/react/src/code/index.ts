@@ -1,1 +1,1 @@
-export { Code } from './code'
+export { Code, type CodeProps } from './default'
