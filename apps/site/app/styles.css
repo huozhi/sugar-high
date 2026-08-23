@@ -340,10 +340,11 @@ input[type='checkbox']:checked {
 
   .showcase-pagination {
     display: flex;
+    order: -1;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin: 2px auto 0;
+    margin: 2px auto -0.5rem;
   }
 
   .showcase-pagination__dot {
@@ -1456,7 +1457,7 @@ code {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    touch-action: pan-x;
+    touch-action: pan-x pan-y;
   }
 
   .showcase-stack .showcase-card-hit::-webkit-scrollbar {
