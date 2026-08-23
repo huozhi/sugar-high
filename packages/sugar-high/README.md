@@ -79,6 +79,20 @@ const html = render(parsed, {
 })
 ```
 
+If bundle size matters and you only need a few built-in languages, import their configurations
+directly instead of loading the complete registry from `sugar-high` or `sugar-high/lang`:
+
+```js
+import { parse, render } from 'sugar-high/core'
+import * as css from 'sugar-high/lang/css'
+import * as python from 'sugar-high/lang/python'
+
+const languages = { css, python }
+
+const highlight = (code, language) =>
+  render(parse(code, languages[language]))
+```
+
 Use the default `sugar-high` export when you want built-in languages and one-step `highlight()`.
 
 ## Customize tokens

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize } from '../../lib/core.js'
-import * as json from '../../lib/presets/lang/json.js'
-import * as javascript from '../../lib/presets/lang/javascript.js'
+import * as json from '../../lib/lang/json.js'
+import * as javascript from '../../lib/lang/javascript.js'
 import { getTokensAsString } from '../testing-utils'
 
 describe('tokenize - json preset', () => {

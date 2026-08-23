@@ -21,6 +21,10 @@
     "./lang": {
       "types": "./lib/lang.d.ts",
       "default": "./lib/lang.js"
+    },
+    "./lang/*": {
+      "types": "./lib/lang/*.d.ts",
+      "default": "./lib/lang/*.js"
     }
   },
   "description": "Lightweight, zero-dependency syntax highlighting for popular programming languages",

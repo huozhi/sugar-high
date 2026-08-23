@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize } from '../../lib/core.js'
-import * as go from '../../lib/presets/lang/go.js'
+import * as go from '../../lib/lang/go.js'
 import { getTokensAsString } from '../testing-utils'
 
 describe('tokenize - go preset', () => {

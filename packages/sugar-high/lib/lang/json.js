@@ -1,6 +1,6 @@
 // @ts-check
 
-import { onCommentEnd, onCommentStart } from './clike-base.js'
+import { onCommentEnd, onCommentStart } from '../presets/clike-base.js'
 
 export const keywords = new Set(['true', 'false', 'null'])
 export const quotedKeys = true

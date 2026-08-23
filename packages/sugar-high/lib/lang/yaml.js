@@ -1,5 +1,5 @@
 // @ts-check
-import { onCommentEnd, onCommentStart } from './hash-comment-base.js'
+import { onCommentEnd, onCommentStart } from '../presets/hash-comment-base.js'
 
 export const keywords = new Set([
   'false', 'False', 'FALSE', 'no', 'No', 'NO', 'null', 'Null', 'NULL',

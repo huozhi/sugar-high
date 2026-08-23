@@ -1,5 +1,5 @@
 // @ts-check
-import { tokenize as tokenizeJavaScript } from './javascript-runtime.js'
+import { tokenize as tokenizeJavaScript } from '../presets/javascript-runtime.js'
 
 export const keywords = new Set([])
 export const jsx = true

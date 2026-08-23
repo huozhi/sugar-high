@@ -1,5 +1,5 @@
 // @ts-check
-import { onCommentEnd, onCommentStart } from './clike-base.js'
+import { onCommentEnd, onCommentStart } from '../presets/clike-base.js'
 
 export const keywords = new Set([
   'alignas', 'alignof', 'and', 'and_eq', 'asm', 'auto', 'bitand', 'bitor', 'break',

@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { brotliCompressSync, constants, gzipSync } from 'node:zlib'
 import { highlight } from '../lib/index.js'
 import { parse, render } from '../lib/core.js'
-import * as python from '../lib/presets/lang/python.js'
+import * as python from '../lib/lang/python.js'
 
 const iterations = Number.parseInt(process.env.BENCH_ITERATIONS || '50000', 10)
 const warmupIterations = Math.min(2000, iterations)
@@ -65,7 +65,7 @@ function measureSizes(directory, prefix) {
   const javascriptEntry = join(benchmarkDir, `${prefix}-javascript-entry.js`)
   writeFileSync(javascriptEntry, [
     `import { parse, render } from ${JSON.stringify(join(directory, 'lib/core.js'))}`,
-    `import * as javascript from ${JSON.stringify(join(directory, 'lib/presets/lang/javascript.js'))}`,
+    `import * as javascript from ${JSON.stringify(join(directory, 'lib/lang/javascript.js'))}`,
     'export const run = code => render(parse(code, javascript))',
   ].join('\n'))
 

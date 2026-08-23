@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { highlight } from 'sugar-high'
 import { generate, parse, render, tokenize } from 'sugar-high/core'
-import * as javascript from '../lib/presets/lang/javascript.js'
-import * as python from '../lib/presets/lang/python.js'
-import * as typescript from '../lib/presets/lang/typescript.js'
+import * as javascript from '../lib/lang/javascript.js'
+import * as python from '../lib/lang/python.js'
+import * as typescript from '../lib/lang/typescript.js'
 
 describe('composable core export', () => {
   it('returns structured lines and semantic tokens from parse', () => {
