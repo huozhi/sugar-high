@@ -79,6 +79,21 @@ const html = render(parsed, {
 })
 ```
 
+If bundle size matters and you only need a few simple languages, build a small highlighter with
+local configurations. Importing `sugar-high/core` avoids including the built-in language registry:
+
+```js
+import { parse, render } from 'sugar-high/core'
+
+const languages = {
+  sql: { keywords: new Set(['select', 'from', 'where']) },
+  config: { keywords: new Set(['true', 'false', 'null']) },
+}
+
+const highlight = (code, language) =>
+  render(parse(code, languages[language]))
+```
+
 Use the default `sugar-high` export when you want built-in languages and one-step `highlight()`.
 
 ## Customize tokens
