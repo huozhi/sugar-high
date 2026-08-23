@@ -53,6 +53,17 @@ describe('Code', () => {
     expect(html).toContain('>code</textarea>')
   })
 
+  it('supports starting line numbers and non-wrapping input', () => {
+    const html = renderToString(
+      <Editor value={'first\nsecond'} startingLineNumber={40} wrapLongLines={false} />
+    )
+
+    expect(html).toContain('>40</span>')
+    expect(html).toContain('>41</span>')
+    expect(html).toContain('data-sh-wrap-long-lines="false"')
+    expect(html).toContain('<textarea wrap="off">')
+  })
+
   it('supports controlled and uncontrolled initial values', () => {
     const controlled = renderToString(<Editor value="controlled" defaultValue="ignored" />)
     const uncontrolled = renderToString(<Editor defaultValue="initial" />)
@@ -178,6 +189,14 @@ describe('Code', () => {
       [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] pre {
+        overflow-x: auto;
+        white-space: pre;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] .sh__line {
+        width: max-content;
+        min-width: 100%;
       }
       [data-sh-code] code {
         display: block;
@@ -331,6 +350,14 @@ describe('Code', () => {
         white-space: pre-wrap;
         margin: 0;
       }
+      [data-sh-code][data-sh-wrap-long-lines="false"] pre {
+        overflow-x: auto;
+        white-space: pre;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] .sh__line {
+        width: max-content;
+        min-width: 100%;
+      }
       [data-sh-code] code {
         display: block;
         border: none;
@@ -443,6 +470,14 @@ describe('Code', () => {
       [data-sh-code] pre {
         white-space: pre-wrap;
         margin: 0;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] pre {
+        overflow-x: auto;
+        white-space: pre;
+      }
+      [data-sh-code][data-sh-wrap-long-lines="false"] .sh__line {
+        width: max-content;
+        min-width: 100%;
       }
       [data-sh-code] code {
         display: block;

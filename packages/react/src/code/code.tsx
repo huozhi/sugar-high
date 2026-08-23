@@ -7,13 +7,13 @@ export function getExtension(title: string | undefined) {
   return (title || '').split('.').pop() || ''
 }
 
-export function getLineNumbersWidth(code: string, width?: string) {
+export function getLineNumbersWidth(code: string, width?: string, startingLineNumber = 1) {
   if (width) return width
   let lines = 1
   for (let i = 0; i < code.length; i++) {
     if (code.charCodeAt(i) === 10) lines++
   }
-  const digits = String(lines).length
+  const digits = String(startingLineNumber + lines - 1).length
   return digits > 3 ? `calc(${digits}ch + 14px)` : undefined
 }
 
@@ -23,7 +23,8 @@ function generateHighlightedLines(
   lineNumbers: boolean,
   cx: DisplayOptions['cx'],
   mark: DisplayOptions['mark'],
-  markLine: DisplayOptions['markLine']
+  markLine: DisplayOptions['markLine'],
+  startingLineNumber: number
 ) {
   const childrenLines = generate(parsed, { cx, mark, markLine })
 
@@ -74,7 +75,11 @@ function generateHighlightedLines(
           data-sh-code-line
           key={index}
         >
-          {lineNumbers ? <span key='ln' data-codice-code-line-number data-sh-code-line-number>{index + 1}</span> : null}
+          {lineNumbers ? (
+            <span key="ln" data-codice-code-line-number data-sh-code-line-number>
+              {startingLineNumber + index}
+            </span>
+          ) : null}
           {tokens}
         </Line>
       )
@@ -166,6 +171,8 @@ export type CodeProps = {
   controls?: boolean
   lineNumbers?: boolean
   lineNumbersWidth?: string
+  startingLineNumber?: number
+  wrapLongLines?: boolean
   padding?: string
   asMarkup?: boolean
   cx?: DisplayOptions['cx']
@@ -182,6 +189,8 @@ export function Code({
   preformatted = true,
   lineNumbers = false,
   lineNumbersWidth,
+  startingLineNumber = 1,
+  wrapLongLines = true,
   padding,
   asMarkup = false,
   lang,
@@ -191,11 +200,23 @@ export function Code({
   style,
   ...props
 }: CodeProps) {
-  const resolvedLineNumbersWidth = getLineNumbersWidth(code, lineNumbersWidth)
+  const resolvedLineNumbersWidth = getLineNumbersWidth(
+    code,
+    lineNumbersWidth,
+    startingLineNumber
+  )
   const parsed = asMarkup ? null : parse(code, lang)
   const lineElements = asMarkup
     ? code
-    : generateHighlightedLines(parsed!, highlightLines, lineNumbers, cx, mark, markLine)
+    : generateHighlightedLines(
+        parsed!,
+        highlightLines,
+        lineNumbers,
+        cx,
+        mark,
+        markLine,
+        startingLineNumber
+      )
 
   return (
     // Add both attribute because it's both root component and child component (of editor)
@@ -213,6 +234,7 @@ export function Code({
       data-sh-code
       data-codice-line-numbers={lineNumbers}
       data-sh-line-numbers={lineNumbers}
+      data-sh-wrap-long-lines={wrapLongLines ? undefined : false}
     >
       <ScopedStyle css={css} href="sugar-high-react-code" />
       <CodeHeader title={title} controls={controls} />
