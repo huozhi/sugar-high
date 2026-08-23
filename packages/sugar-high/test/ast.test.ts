@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { highlight } from '../lib'
 import * as core from '../lib/core.js'
-import * as javascript from '../lib/presets/lang/javascript.js'
+import * as javascript from '../lib/lang/javascript.js'
 import { assemble } from '../lib/shared.js'
 import {
   getTokensAsString,

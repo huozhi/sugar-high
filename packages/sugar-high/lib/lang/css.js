@@ -1,8 +1,8 @@
 // @ts-check
 import {
   T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER, T_PROPERTY, T_SIGN, T_SPACE,
-} from '../../shared.js'
-import { tokenize as tokenizePlain } from '../../core.js'
+} from '../shared.js'
+import { tokenize as tokenizePlain } from '../core.js'
 
 export const keywords = new Set([
   // css keywords like @media, @import, @keyframes, etc.
@@ -88,7 +88,7 @@ const opensBlock = (tokens, start) => {
 /**
  * Add CSS declaration context after the shared plain lexer runs.
  * @param {string} code
- * @param {import('../../core.js').ParseOptions} options
+ * @param {import('../core.js').ParseOptions} options
  */
 export const tokenize = (code, options) => {
   const tokens = tokenizePlain(code, { ...options, tokenize: undefined })

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { highlight } from '../..'
 import { generate, parse } from '../../lib/core.js'
-import * as diff from '../../lib/presets/lang/diff.js'
+import * as diff from '../../lib/lang/diff.js'
 
 describe('diff preset', () => {
   it('adds line classes for simple line diffs', () => {

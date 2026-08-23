@@ -3,7 +3,7 @@
 import {
   T_BREAK, T_CLASS as T_CLS_NUMBER, T_COMMENT, T_ENTITY, T_IDENTIFIER,
   T_JSX_LITERALS, T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
-} from '../../shared.js'
+} from '../shared.js'
 
 const JSXBrackets = new Set(['<', '>', '{', '}', '[', ']'])
 const Keywords_Js = new Set([
@@ -777,5 +777,5 @@ export { tokenize }
  * @property {boolean} [templateStrings] Whether JavaScript template strings are enabled.
  * @property {boolean} [caseInsensitive] Whether keyword matching ignores case.
  * @property {boolean} [typescript] Override heuristic TypeScript detection.
- * @property {(line: import('../../core.js').AnnotateLine) => void} [annotateLine]
+ * @property {(line: import('../core.js').AnnotateLine) => void} [annotateLine]
  */

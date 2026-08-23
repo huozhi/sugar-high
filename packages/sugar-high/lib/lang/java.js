@@ -1,5 +1,5 @@
 // @ts-check
-import { onCommentStart, onCommentEnd } from './clike-base.js'
+import { onCommentStart, onCommentEnd } from '../presets/clike-base.js'
 
 export const typeKeywords = new Set([
   'boolean', 'byte', 'char', 'double', 'float', 'int', 'long', 'short', 'void',

@@ -2,12 +2,25 @@ import { describe, expect, it } from 'vitest'
 import { highlight } from 'sugar-high'
 import * as core from 'sugar-high/core'
 import { lang, languages } from 'sugar-high/lang'
+import * as css from 'sugar-high/lang/css'
+import * as json from 'sugar-high/lang/json'
+import * as python from 'sugar-high/lang/python'
 import { getTokensAsString } from './testing-utils'
 
 const tokenize = (code, { lang }) =>
   core.tokenize(code, languages.find(({ id }) => id === lang)?.config)
 
 describe('language registry', () => {
+  it.each(languages.map(({ id }) => id))('exports %s as an individual configuration', async (id) => {
+    expect(Object.keys(await import(`sugar-high/lang/${id}`))).not.toHaveLength(0)
+  })
+
+  it('supports importing individual language configurations', () => {
+    expect(core.render(core.parse('def run():', python))).toContain('sh__token--keyword')
+    expect(core.render(core.parse('{"ready": true}', json))).toContain('sh__token--property')
+    expect(core.render(core.parse('body { color: red; }', css))).toContain('sh__token--property')
+  })
+
   it.each([
     ['javascript', 'javascript'],
     ['js', 'javascript'],

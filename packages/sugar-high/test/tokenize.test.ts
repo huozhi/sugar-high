@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import * as core from '../lib/core.js'
-import * as javascript from '../lib/presets/lang/javascript.js'
+import * as javascript from '../lib/lang/javascript.js'
 import { getTokensAsString } from './testing-utils'
 
 const tokenize = (code, options = {}) =>

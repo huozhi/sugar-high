@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { tokenize } from '../../lib/core.js'
-import * as css from '../../lib/presets/lang/css.js'
+import * as css from '../../lib/lang/css.js'
 import { getTokensAsString } from '../testing-utils'
 
 describe('tokenize - css preset', () => {

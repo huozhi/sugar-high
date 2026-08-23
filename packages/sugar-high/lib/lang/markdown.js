@@ -1,5 +1,5 @@
 // @ts-check
-import { onCommentEnd, onCommentStart } from './plain-base.js'
+import { onCommentEnd, onCommentStart } from '../presets/plain-base.js'
 
 export const keywords = new Set([])
 
