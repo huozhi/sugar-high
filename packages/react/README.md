@@ -73,6 +73,60 @@ The core React entry does not include the complete language registry or a client
 default entry remains the convenient choice when string language names and title-based detection
 are more important than selecting the smallest bundle.
 
+### Headless highlighting
+
+`Highlight` keeps parsing and generated token properties while giving you complete control over
+the markup. It is server-compatible and accepts the same selective language imports, `cx`, `mark`,
+and `markLine` options as core `Code`.
+
+```tsx
+import { Highlight } from '@sugar-high/react/core'
+import * as typescript from 'sugar-high/lang/typescript'
+
+<Highlight
+  code={source}
+  lang={typescript}
+  markLine={(line) => {
+    if (line.annotations.includes('focus')) line.properties['data-focus'] = true
+  }}
+  render={({ lines }) => (
+    <pre>
+      {lines.map((line, index) => (
+        <div key={index} {...line.properties}>
+          {line.tokens.map((token, tokenIndex) => (
+            <span key={tokenIndex} {...token.properties}>
+              {token.value}
+            </span>
+          ))}
+        </div>
+      ))}
+    </pre>
+  )}
+/>
+```
+
+The result is not limited to code-block markup. For example, render each generated line as a table
+row for a diff or virtualized viewer:
+
+```tsx
+<Highlight
+  code={source}
+  lang={typescript}
+  render={({ lines }) => (
+    <table>
+      <tbody>
+        {lines.map((line, index) => (
+          <tr key={index}>
+            <th>{index + 1}</th>
+            <td>{line.tokens.map((token) => token.value).join('')}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+/>
+```
+
 Use the `data-sh-*` attributes and `--sh-*` variables for new styles. The package temporarily
 preserves Codice's existing `data-codice-*` attributes so existing structural selectors can
 migrate incrementally.
