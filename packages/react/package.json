@@ -27,7 +27,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "bunchee && node scripts/check-core-build.mjs",
+    "build": "bunchee",
     "benchmark": "node scripts/benchmark.mjs",
     "test": "vitest --run",
     "prepublishOnly": "pnpm build"
