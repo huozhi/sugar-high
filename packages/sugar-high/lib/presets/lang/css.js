@@ -41,7 +41,7 @@ const mergeDashedNames = (tokens) => {
     let end = index
 
     if (isHyphen(tokens[end])) {
-      while (isHyphen(tokens[end])) end++
+      while (tokens[end] && isHyphen(tokens[end])) end++
       if (!tokens[end] || !isNameStart(tokens[end])) continue
       firstWord = end++
     } else if (isNameStart(tokens[end])) {
