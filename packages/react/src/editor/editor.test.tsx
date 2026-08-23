@@ -1,8 +1,58 @@
 import { describe, expect, it } from 'vitest'
 import { Editor } from '.'
+import { indentCode } from './editor'
 import { renderToString } from 'react-dom/server'
 
 describe('Code', () => {
+  it('indents at the caret and preserves it', () => {
+    expect(indentCode('const value = 1', 6, 6, '  ')).toEqual({
+      value: 'const   value = 1',
+      selectionStart: 8,
+      selectionEnd: 8,
+    })
+  })
+
+  it('indents and outdents selected lines', () => {
+    const indented = indentCode('one\ntwo\nthree', 1, 7, '  ')
+    expect(indented).toEqual({
+      value: '  one\n  two\nthree',
+      selectionStart: 3,
+      selectionEnd: 11,
+    })
+    expect(
+      indentCode(
+        indented.value,
+        indented.selectionStart,
+        indented.selectionEnd,
+        '  ',
+        true
+      )
+    ).toEqual({
+      value: 'one\ntwo\nthree',
+      selectionStart: 1,
+      selectionEnd: 7,
+    })
+  })
+
+  it('passes textarea attributes without exposing value control', () => {
+    const html = renderToString(
+      <Editor
+        value="code"
+        textareaProps={{
+          'aria-label': 'Source code',
+          autoCapitalize: 'off',
+          spellCheck: true,
+        }}
+      />
+    )
+
+    expect(html).toContain('aria-label="Source code"')
+    expect(html).toContain('autoCapitalize="off"')
+    expect(html).toContain('spellCheck="true"')
+    expect(html).toContain('<textarea')
+    expect(html).toContain('>code</textarea>')
+  })
+
   it('supports controlled and uncontrolled initial values', () => {
     const controlled = renderToString(<Editor value="controlled" defaultValue="ignored" />)
     const uncontrolled = renderToString(<Editor defaultValue="initial" />)
