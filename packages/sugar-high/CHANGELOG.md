@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.0.3
+
+### Patch Changes
+
+- da621df: Prevent the CSS tokenizer from crashing on input that ends with hyphens.
+
 ## 2.0.2
 
 ### Patch Changes
