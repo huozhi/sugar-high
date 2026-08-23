@@ -21,6 +21,18 @@ import { Editor } from '@sugar-high/react'
 />
 ```
 
+Press Tab or Shift+Tab to indent or outdent the caret or selected lines. Customize the indentation
+string and underlying textarea attributes with `indent` and `textareaProps`:
+
+```tsx
+<Editor
+  indent="\t"
+  textareaProps={{ 'aria-label': 'Source code', autoCapitalize: 'off' }}
+  value={source}
+  onChange={setSource}
+/>
+```
+
 ## Code
 
 ```tsx
