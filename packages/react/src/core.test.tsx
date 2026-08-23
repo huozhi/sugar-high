@@ -24,8 +24,7 @@ describe('core Code', () => {
         markLine={(line) => {
           line.properties['data-line'] = line.index + 1
         }}
-      >
-        {({ lines }) => (
+        render={({ lines }) => (
           <ol>
             {lines.map((line, index) => (
               <li key={index} {...line.properties}>
@@ -42,7 +41,7 @@ describe('core Code', () => {
             ))}
           </ol>
         )}
-      </Highlight>
+      />
     )
 
     expect(html).toContain('<ol>')

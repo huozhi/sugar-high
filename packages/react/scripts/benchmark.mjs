@@ -41,10 +41,13 @@ try {
       import * as python from 'sugar-high/lang/python'
       export const render = code => createElement(
         Highlight,
-        { code, lang: python },
-        ({ lines }) => createElement('pre', null, lines.map((line, index) =>
-          createElement('span', { key: index, ...line.properties }, line.tokens.map(token => token.value))
-        ))
+        {
+          code,
+          lang: python,
+          render: ({ lines }) => createElement('pre', null, lines.map((line, index) =>
+            createElement('span', { key: index, ...line.properties }, line.tokens.map(token => token.value))
+          )),
+        }
       )
     `),
     measure('core-python-json-css', `

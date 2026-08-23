@@ -68,8 +68,7 @@ import * as typescript from 'sugar-high/lang/typescript'
   markLine={(line) => {
     if (line.annotations.includes('focus')) line.properties['data-focus'] = true
   }}
->
-  {({ lines }) => (
+  render={({ lines }) => (
     <pre>
       {lines.map((line, index) => (
         <div key={index} {...line.properties}>
@@ -82,15 +81,17 @@ import * as typescript from 'sugar-high/lang/typescript'
       ))}
     </pre>
   )}
-</Highlight>
+/>
 ```
 
 The result is not limited to code-block markup. For example, render each generated line as a table
 row for a diff or virtualized viewer:
 
 ```tsx
-<Highlight code={source} lang={typescript}>
-  {({ lines }) => (
+<Highlight
+  code={source}
+  lang={typescript}
+  render={({ lines }) => (
     <table>
       <tbody>
         {lines.map((line, index) => (
@@ -102,7 +103,7 @@ row for a diff or virtualized viewer:
       </tbody>
     </table>
   )}
-</Highlight>
+/>
 ```
 
 Use the `data-sh-*` attributes and `--sh-*` variables for new styles. The package temporarily

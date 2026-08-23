@@ -23,11 +23,11 @@ export type HighlightProps = DisplayOptions & {
   code: string
   /** Language configuration imported from `sugar-high/lang/<language>`. */
   lang?: ParseOptions
-  children: (result: HighlightResult) => React.ReactNode
+  render: (result: HighlightResult) => React.ReactNode
 }
 
 /** Parse and generate highlighted tokens while leaving all React markup to the consumer. */
-export function Highlight({ code, lang, cx, mark, markLine, children }: HighlightProps) {
+export function Highlight({ code, lang, cx, mark, markLine, render }: HighlightProps) {
   const lines = generate(parse(code, lang), { cx, mark, markLine }).map(
     ({ children: generatedTokens, ...line }): HighlightLine => ({
       ...line,
@@ -38,5 +38,5 @@ export function Highlight({ code, lang, cx, mark, markLine, children }: Highligh
     })
   )
 
-  return children({ lines })
+  return render({ lines })
 }
