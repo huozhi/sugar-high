@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@sugar-high/react": "workspace:*",
+    "@sugar-high/remark": "workspace:*",
+    "@vercel/analytics": "^2.0.1",
     "dom-to-image": "^2.6.0",
     "next": "^16.3.0",
     "react": "^19.2.0",
@@ -18,7 +20,6 @@
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
     "remark-html": "^16.0.1",
-    "@sugar-high/remark": "workspace:*",
     "sugar-high": "workspace:*"
   },
   "devDependencies": {
