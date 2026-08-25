@@ -1,6 +1,7 @@
 import './global.css'
 import './styles.css'
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/next'
 
 const GITHUB_REPO_URL = 'https://github.com/huozhi/sugar-high'
 const X_URL = 'https://x.com/huozhi'
@@ -33,6 +34,7 @@ export default function Layout({ children }) {
             </a>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   )
