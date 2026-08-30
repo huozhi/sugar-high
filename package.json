@@ -17,7 +17,7 @@
     "version": "changeset version",
     "release": "pnpm test && pnpm build && changeset publish"
   },
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "pnpm@12.1.0",
   "license": "MIT",
   "author": "huozhi",
   "devDependencies": {
