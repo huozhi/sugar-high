@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.2.0
+
+### Minor Changes
+
+- cccf12a: Add built-in Ruby and plaintext language configurations.
+
 ## 2.1.0
 
 ### Minor Changes
