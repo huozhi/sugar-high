@@ -83,6 +83,8 @@ input map to that canonical name. Canonical names themselves are always accepted
 | `html` | `.html` | `htm`, `xml` |
 | `yaml` | `.yaml` | `yml` |
 | `markdown` | `.md` | `md`, `mdx` |
+| `plaintext` | `.txt` | `text`, `plain` |
+| `ruby` | `.rb` | — |
 | `kotlin` | `.kt` | `kts` |
 | `swift` | `.swift` | — |
 | `php` | `.php` | — |

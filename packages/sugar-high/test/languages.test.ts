@@ -4,7 +4,9 @@ import * as core from 'sugar-high/core'
 import { lang, languages } from 'sugar-high/lang'
 import * as css from 'sugar-high/lang/css'
 import * as json from 'sugar-high/lang/json'
+import * as plaintext from 'sugar-high/lang/plaintext'
 import * as python from 'sugar-high/lang/python'
+import * as ruby from 'sugar-high/lang/ruby'
 import { getTokensAsString } from './testing-utils'
 
 const tokenize = (code, { lang }) =>
@@ -19,6 +21,10 @@ describe('language registry', () => {
     expect(core.render(core.parse('def run():', python))).toContain('sh__token--keyword')
     expect(core.render(core.parse('{"ready": true}', json))).toContain('sh__token--property')
     expect(core.render(core.parse('body { color: red; }', css))).toContain('sh__token--property')
+    expect(core.render(core.parse('class Greeter', ruby))).toContain('sh__token--keyword')
+    expect(core.parse('"plain" # text', plaintext).lines[0].tokens).toEqual([
+      { type: 'identifier', value: '"plain" # text' },
+    ])
   })
 
   it.each([
@@ -46,6 +52,9 @@ describe('language registry', () => {
     ['gql', 'graphql'],
     ['terraform', 'hcl'],
     ['tf', 'hcl'],
+    ['rb', 'ruby'],
+    ['txt', 'plaintext'],
+    ['text', 'plaintext'],
   ])('resolves %s to %s', (input, expected) => {
     expect(lang(input)).toBe(expected)
   })

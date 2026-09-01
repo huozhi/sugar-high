@@ -16,8 +16,10 @@ import * as javascript from './lang/javascript.js'
 import * as kotlin from './lang/kotlin.js'
 import * as markdown from './lang/markdown.js'
 import * as php from './lang/php.js'
+import * as plaintext from './lang/plaintext.js'
 import * as powershell from './lang/powershell.js'
 import * as python from './lang/python.js'
+import * as ruby from './lang/ruby.js'
 import * as rust from './lang/rust.js'
 import * as shell from './lang/shell.js'
 import * as sql from './lang/sql.js'
@@ -69,6 +71,8 @@ const languages = [
   { id: 'html', extension: 'html', aliases: ['htm', 'xml'], config: html },
   { id: 'yaml', extension: 'yaml', aliases: ['yml'], config: nonJavaScript(yaml) },
   { id: 'markdown', extension: 'md', aliases: ['md', 'mdx'], config: nonJavaScript(markdown) },
+  { id: 'plaintext', extension: 'txt', aliases: ['text', 'plain'], config: nonJavaScript(plaintext) },
+  { id: 'ruby', extension: 'rb', aliases: [], config: nonJavaScript(ruby) },
   { id: 'kotlin', extension: 'kt', aliases: ['kts'], config: nonJavaScript(kotlin) },
   { id: 'swift', extension: 'swift', aliases: [], config: nonJavaScript(swift) },
   { id: 'php', extension: 'php', aliases: [], config: nonJavaScript(php) },
