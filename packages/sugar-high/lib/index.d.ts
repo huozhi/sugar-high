@@ -25,6 +25,8 @@ export type LanguageName =
   | 'html'
   | 'yaml'
   | 'markdown'
+  | 'plaintext'
+  | 'ruby'
   | 'kotlin'
   | 'swift'
   | 'php'
