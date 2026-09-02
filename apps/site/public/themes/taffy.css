@@ -1,6 +1,5 @@
-/* Legacy URL and selector. Use taffy.css and .sh-theme--taffy for new integrations. */
 .sh-theme,
-.sh-theme--sugar-high {
+.sh-theme--taffy {
   --theme-surface: #f6f6f6;
   --theme-muted: #a19595;
   --sh-class: #8d85ff;
@@ -24,9 +23,9 @@
 }
 
 [data-theme='dark'] .sh-theme,
-[data-theme='dark'] .sh-theme--sugar-high,
+[data-theme='dark'] .sh-theme--taffy,
 .sh-theme[data-theme='dark'],
-.sh-theme--sugar-high[data-theme='dark'] {
+.sh-theme--taffy[data-theme='dark'] {
   --theme-surface: #25272d;
   --theme-muted: #8b8b8b;
   --sh-class: #7eb5ff;

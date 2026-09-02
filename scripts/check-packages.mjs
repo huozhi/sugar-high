@@ -44,6 +44,7 @@ import { highlight } from 'sugar-high'
 import { generate, parse, render, tokenize, SugarHigh } from 'sugar-high/core'
 import { lang, languages } from 'sugar-high/lang'
 import { Code, Editor } from '@sugar-high/react'
+import { taffy, vercel } from '@sugar-high/react/themes'
 import remarkSugarHigh, { highlight as remarkHighlight } from '@sugar-high/remark'
 
 if (!highlight('const ready = true').includes('sh__token--keyword')) throw new Error('root export')
@@ -52,13 +53,16 @@ if (generate(parse('value'))[0].children[0].tokenType !== 'identifier') throw ne
 if (!tokenize('value').length || !SugarHigh.TokenMap.size) throw new Error('low-level core')
 if (lang('py') !== 'python' || !languages.length) throw new Error('language exports')
 if (!Editor || !Code || remarkSugarHigh !== remarkHighlight) throw new Error('integration exports')
+if (taffy.dark.background !== '#25272d') throw new Error('React theme exports')
+if (vercel.light.keyword !== '#c41562') throw new Error('Vercel theme export')
 `)
 
   writeFileSync(join(temporary, 'check.ts'), `
 import { highlight, type HighlightOptions, type LanguageName } from 'sugar-high'
 import { generate, parse, render, tokenize, SugarHigh } from 'sugar-high/core'
 import { lang, languages } from 'sugar-high/lang'
-import { Code, Editor } from '@sugar-high/react'
+import { Code, Editor, type Theme } from '@sugar-high/react'
+import { taffy, vercel } from '@sugar-high/react/themes'
 import remarkSugarHigh, { highlight as remarkHighlight } from '@sugar-high/remark'
 
 const language: LanguageName = 'typescript'
@@ -72,6 +76,10 @@ lang('tsx')
 languages.length
 Editor
 Code
+const customTheme: Theme = { background: '#fff', foreground: '#111', keyword: '#f00' }
+customTheme
+taffy
+vercel
 remarkSugarHigh
 remarkHighlight
 `)

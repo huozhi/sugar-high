@@ -49,4 +49,29 @@ describe('core Code', () => {
     expect(html).toContain('data-token-type="keyword"')
     expect(html).toContain('data-note="greeting"')
   })
+
+  it('renders a JavaScript theme without choosing the color scheme in React', () => {
+    const html = renderToString(
+      <Code
+        theme={{
+          light: {
+            background: '#ffffff',
+            foreground: '#111111',
+            keyword: '#aa0000',
+          },
+          dark: {
+            background: '#111111',
+            foreground: '#eeeeee',
+            keyword: '#ff7777',
+          },
+        }}
+      >
+        {'const answer = 42'}
+      </Code>
+    )
+
+    expect(html).toContain('background-color:light-dark(#ffffff, #111111)')
+    expect(html).toContain('--sh-keyword:light-dark(#aa0000, #ff7777)')
+    expect(html).not.toContain('color-scheme:')
+  })
 })

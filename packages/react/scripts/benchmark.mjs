@@ -29,6 +29,18 @@ try {
       import { Code } from '@sugar-high/react'
       export const render = code => createElement(Code, null, code)
     `),
+    measure('react-theme', `
+      import { createElement } from 'react'
+      import { Code } from '@sugar-high/react'
+      import { taffy } from '@sugar-high/react/themes'
+      export const render = code => createElement(Code, { theme: taffy }, code)
+    `),
+    measure('react-vercel-theme', `
+      import { createElement } from 'react'
+      import { Code } from '@sugar-high/react'
+      import { vercel } from '@sugar-high/react/themes'
+      export const render = code => createElement(Code, { theme: vercel }, code)
+    `),
     measure('core-python', `
       import { createElement } from 'react'
       import { Code } from '@sugar-high/react/core'
