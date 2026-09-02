@@ -1,5 +1,12 @@
 # @sugar-high/react
 
+## 2.2.0
+
+### Minor Changes
+
+- fdc0a35: Add JavaScript theme objects, a `theme` prop for Code and Editor, ten built-in presets including
+  Taffy and Vercel, and automatic light and dark palettes through the inherited CSS color scheme.
+
 ## 2.1.0
 
 ### Minor Changes
