@@ -65,6 +65,42 @@ function assemble(value, tokens) {
 }
 
 /**
+ * @param {import('./core.js').ParsedLine} parsedLine
+ * @param {import('./core.js').DisplayOptions['markLine']} markLine
+ */
+function createLine(parsedLine, markLine) {
+  const line = {
+    index: parsedLine.index,
+    value: parsedLine.value,
+    tokens: parsedLine.tokens,
+    annotations: parsedLine.annotations,
+    className: `sh__line${parsedLine.annotations.map(annotation => ` sh__line--${annotation}`).join('')}`,
+    style: {},
+    properties: {},
+  }
+  markLine?.(line)
+  return line
+}
+
+/**
+ * @param {import('./core.js').ParsedToken} parsedToken
+ * @param {import('./core.js').DisplayOptions['cx']} cx
+ * @param {import('./core.js').DisplayOptions['mark']} mark
+ */
+function createToken({ type, value }, cx, mark) {
+  const extraClassName = cx?.[type]
+  const token = {
+    type,
+    value,
+    className: `sh__token--${type}${extraClassName ? ` ${extraClassName}` : ''}`,
+    style: { color: `var(--sh-${type})` },
+    properties: {},
+  }
+  mark?.(token)
+  return token
+}
+
+/**
  * @param {import('./core.js').ParsedCode} parsed
  * @param {import('./core.js').DisplayOptions | undefined} options
  */
@@ -74,30 +110,13 @@ function generate(parsed, options) {
   const markLine = options?.markLine
 
   return parsed.lines.map((parsedLine) => {
-    const line = {
-      index: parsedLine.index,
-      value: parsedLine.value,
-      tokens: parsedLine.tokens,
-      annotations: parsedLine.annotations,
-      className: `sh__line${parsedLine.annotations.map(annotation => ` sh__line--${annotation}`).join('')}`,
-      style: {},
-      properties: {},
-    }
-    markLine?.(line)
+    const line = createLine(parsedLine, markLine)
 
     return {
       type: 'element',
       tagName: 'span',
-      children: parsedLine.tokens.map(({ type, value }) => {
-        const extraClassName = cx?.[type]
-        const token = {
-          type,
-          value,
-          className: `sh__token--${type}${extraClassName ? ` ${extraClassName}` : ''}`,
-          style: { color: `var(--sh-${type})` },
-          properties: {},
-        }
-        mark?.(token)
+      children: parsedLine.tokens.map((parsedToken) => {
+        const token = createToken(parsedToken, cx, mark)
         return {
           type: 'element',
           tokenType: token.type,
@@ -119,6 +138,46 @@ function generate(parsed, options) {
   })
 }
 
+/**
+ * Render parsed lines directly while preserving generate()'s markup and mutable display hooks.
+ * @param {import('./core.js').ParsedCode} parsed
+ * @param {import('./core.js').DisplayOptions | undefined} options
+ */
+function render(parsed, options) {
+  const cx = options?.cx
+  const mark = options?.mark
+  const markLine = options?.markLine
+
+  if (!cx && !mark && !markLine) {
+    return parsed.lines.map((line) => {
+      const className = `sh__line${line.annotations.map(annotation => ` sh__line--${annotation}`).join('')}`
+      const children = line.tokens.map(({ type, value }) => (
+        `<span class="sh__token--${type}" style="color:var(--sh-${type})">${encode(value)}</span>`
+      )).join('')
+      return `<span class="${encode(className)}">${children}</span>`
+    }).join('\n')
+  }
+
+  return parsed.lines.map((parsedLine) => {
+    const line = createLine(parsedLine, markLine)
+
+    const children = parsedLine.tokens.map((parsedToken) => {
+      const token = createToken(parsedToken, cx, mark)
+      return `<span ${attributes({
+        ...token.properties,
+        className: token.className,
+        style: token.style,
+      })}>${encode(token.value)}</span>`
+    }).join('')
+
+    return `<span ${attributes({
+      ...line.properties,
+      className: line.className,
+      style: line.style,
+    })}>${children}</span>`
+  }).join('\n')
+}
+
 const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }
 /** @param {string} value */
 const encode = (value) => value.replace(/[&<>"']/g, character => entities[character])
@@ -133,17 +192,7 @@ function attributes(values) {
   return `class="${encode(values.className || '')}"${style ? ` style="${encode(style)}"` : ''}${properties ? ` ${properties}` : ''}`
 }
 
-/** @param {Array<any>} lines */
-function toHtml(lines) {
-  return lines.map(line => {
-    const children = line.children.map(token => {
-      return `<${token.tagName} ${attributes(token.properties)}>${encode(token.children[0].value)}</${token.tagName}>`
-    }).join('')
-    return `<${line.tagName} ${attributes(line.properties)}>${children}</${line.tagName}>`
-  }).join('\n')
-}
-
 export {
-  assemble, encode, generate, SugarHigh, toHtml, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
+  assemble, encode, generate, render, SugarHigh, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
   T_JSX_LITERALS, T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 }

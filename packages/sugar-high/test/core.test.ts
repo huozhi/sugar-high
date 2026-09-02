@@ -1,9 +1,39 @@
 import { describe, expect, it } from 'vitest'
 import { highlight } from 'sugar-high'
-import { generate, parse, render, tokenize } from 'sugar-high/core'
+import { generate, parse, render, tokenize, type DisplayOptions } from 'sugar-high/core'
 import * as javascript from '../lib/lang/javascript.js'
 import * as python from '../lib/lang/python.js'
 import * as typescript from '../lib/lang/typescript.js'
+
+const entities: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#039;',
+}
+
+function encode(value: string) {
+  return value.replace(/[&<>"']/g, character => entities[character])
+}
+
+function attributes(values: Record<string, any>) {
+  const style = Object.entries(values.style || {})
+    .map(([key, value]) => `${key.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}:${value}`).join(';')
+  const properties = Object.entries(values)
+    .filter(([key, value]) => /^[\w:-]+$/.test(key) && key !== 'className' && key !== 'style' && value !== false && value != null)
+    .map(([key, value]) => value === true ? key : `${key}="${encode(String(value))}"`).join(' ')
+  return `class="${encode(values.className || '')}"${style ? ` style="${encode(style)}"` : ''}${properties ? ` ${properties}` : ''}`
+}
+
+function toHtml(lines: ReturnType<typeof generate>) {
+  return lines.map(line => {
+    const children = line.children.map(token => (
+      `<${token.tagName} ${attributes(token.properties)}>${encode(token.children[0].value)}</${token.tagName}>`
+    )).join('')
+    return `<${line.tagName} ${attributes(line.properties)}>${children}</${line.tagName}>`
+  }).join('\n')
+}
 
 describe('composable core export', () => {
   it('returns structured lines and semantic tokens from parse', () => {
@@ -70,6 +100,31 @@ describe('composable core export', () => {
     expect(html).toContain('style="font-weight:700"')
     expect(html).toContain('data-line="2"')
     expect(parsed.lines[1].annotations).toEqual([])
+  })
+
+  it('renders the same markup as serialized generated nodes', () => {
+    const parsed = parse('const view = <Button title="Save">Save</Button>', typescript)
+    expect(render(parsed)).toBe(toHtml(generate(parsed)))
+
+    const annotated = parse('const', {
+      keywords: new Set(['const']),
+      annotateLine(line) {
+        line.annotations.push('quoted"annotation')
+      },
+    })
+    expect(render(annotated)).toBe(toHtml(generate(annotated)))
+
+    const options: DisplayOptions = {
+      cx: { keyword: 'bold', entity: 'tag' },
+      markLine(line) {
+        line.properties['data-line'] = line.index + 1
+      },
+      mark(token) {
+        if (token.type === 'string') token.style.fontWeight = 600
+      },
+    }
+
+    expect(render(parsed, options)).toBe(toHtml(generate(parsed, options)))
   })
 
   it('keeps syntax-tree and semantic token types separate', () => {
