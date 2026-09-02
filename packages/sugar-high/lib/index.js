@@ -4,12 +4,7 @@ import {
   parse,
   render,
 } from './core.js'
-import { languages } from './lang.js'
-
-/** @param {string | undefined} name */
-function configFor(name) {
-  return languages.find(({ id }) => id === (name || 'javascript'))?.config
-}
+import { configFor } from './presets/configs.js'
 
 /** @param {string} code @param {HighlightOptions | undefined} options */
 function highlight(code, options) {

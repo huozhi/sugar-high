@@ -7,12 +7,17 @@ import * as json from 'sugar-high/lang/json'
 import * as plaintext from 'sugar-high/lang/plaintext'
 import * as python from 'sugar-high/lang/python'
 import * as ruby from 'sugar-high/lang/ruby'
+import { configs } from '../lib/presets/configs.js'
 import { getTokensAsString } from './testing-utils'
 
 const tokenize = (code, { lang }) =>
   core.tokenize(code, languages.find(({ id }) => id === lang)?.config)
 
 describe('language registry', () => {
+  it('keeps canonical configs aligned with public language metadata', () => {
+    expect(Object.keys(configs)).toEqual(languages.map(({ id }) => id))
+  })
+
   it.each(languages.map(({ id }) => id))('exports %s as an individual configuration', async (id) => {
     expect(Object.keys(await import(`sugar-high/lang/${id}`))).not.toHaveLength(0)
   })
