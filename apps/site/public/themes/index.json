@@ -1,5 +1,5 @@
 [
-  { "id": "sugar-high", "label": "Sugar High", "file": "sugar-high.css", "className": "sh-theme--sugar-high", "dark": true },
+  { "id": "taffy", "label": "Taffy", "file": "taffy.css", "className": "sh-theme--taffy", "dark": true },
   { "id": "vercel", "label": "Vercel", "file": "vercel.css", "className": "sh-theme--vercel", "dark": true },
   { "id": "vscode", "label": "VS Code", "file": "vscode.css", "className": "sh-theme--vscode", "dark": true },
   { "id": "one-dark-pro", "label": "One Dark Pro", "file": "one-dark-pro.css", "className": "sh-theme--one-dark-pro", "dark": true },

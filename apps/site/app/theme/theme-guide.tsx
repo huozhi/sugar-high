@@ -106,9 +106,9 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
     { key: `${theme.id}:light`, label: `${theme.label} — Light`, theme, mode: 'light' as const },
     ...(theme.dark ? [{ key: `${theme.id}:dark`, label: `${theme.label} — Dark`, theme, mode: 'dark' as const }] : []),
   ]), [themes])
-  const [variantKey, setVariantKey] = useState('sugar-high:light')
+  const [variantKey, setVariantKey] = useState('taffy:light')
   const [previewKeys, setPreviewKeys] = useState([
-    'sugar-high:light',
+    'taffy:light',
     'gruvbox:dark',
     'soft-minimal:light',
   ])
