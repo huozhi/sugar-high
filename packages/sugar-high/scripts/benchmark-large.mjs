@@ -1,14 +1,15 @@
 import { execFileSync } from 'node:child_process'
-import { createRequire } from 'node:module'
-import { cpus } from 'node:os'
-import { fileURLToPath } from 'node:url'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { cpus, tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
-const require = createRequire(import.meta.url)
 const script = fileURLToPath(import.meta.url)
+const sugarHighVersion = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version
 const engines = [
-  { id: 'sugar-high', label: 'Sugar High', packageName: '..' },
-  { id: 'prismjs', label: 'PrismJS', packageName: 'prismjs' },
-  { id: 'highlight.js', label: 'highlight.js', packageName: 'highlight.js' },
+  { id: 'sugar-high', label: 'Sugar High', version: sugarHighVersion },
+  { id: 'prismjs', label: 'PrismJS', version: '1.30.0' },
+  { id: 'highlight.js', label: 'highlight.js', version: '11.12.0' },
 ]
 const phases = [
   { id: 'sugar-high-parse', label: 'parse' },
@@ -64,6 +65,12 @@ function makeSource(targetBytes) {
   return blocks.join('')
 }
 
+function comparisonModule(...path) {
+  const directory = process.env.SUGAR_HIGH_BENCH_MODULES
+  if (!directory) throw new Error('Comparison packages are not installed. Run the benchmark through pnpm.')
+  return pathToFileURL(join(directory, 'node_modules', ...path)).href
+}
+
 async function loadHighlighter(engine) {
   if (engine === 'sugar-high') {
     const { highlight } = await import('../lib/index.js')
@@ -71,15 +78,15 @@ async function loadHighlighter(engine) {
   }
 
   if (engine === 'prismjs') {
-    const { default: Prism } = await import('prismjs')
-    await import('prismjs/components/prism-typescript.js')
+    const { default: Prism } = await import(comparisonModule('prismjs', 'prism.js'))
+    await import(comparisonModule('prismjs', 'components', 'prism-typescript.js'))
     return source => Prism.highlight(source, Prism.languages.typescript, 'typescript')
   }
 
   if (engine === 'highlight.js') {
     const [{ default: hljs }, { default: typescript }] = await Promise.all([
-      import('highlight.js/lib/core'),
-      import('highlight.js/lib/languages/typescript'),
+      import(comparisonModule('highlight.js', 'es', 'core.js')),
+      import(comparisonModule('highlight.js', 'es', 'languages', 'typescript.js')),
     ])
     hljs.registerLanguage('typescript', typescript)
     return source => hljs.highlight(source, { language: 'typescript', ignoreIllegals: true }).value
@@ -176,17 +183,36 @@ async function runWorker() {
   process.stdout.write(JSON.stringify(result))
 }
 
-function packageVersion(packageName) {
-  return require(packageName === '..' ? '../package.json' : `${packageName}/package.json`).version
-}
-
 function formatSize(bytes) {
   return bytes >= 1024 * 1024
     ? `${(bytes / 1024 / 1024).toFixed(2)} MiB`
     : `${(bytes / 1024).toFixed(0)} KiB`
 }
 
-function runSuite() {
+function installComparisons() {
+  const directory = mkdtempSync(join(tmpdir(), 'sugar-high-benchmark-'))
+  const pnpm = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
+  process.stderr.write('Installing temporary benchmark comparisons...\n')
+
+  try {
+    execFileSync(pnpm, [
+      'add',
+      '--dir', directory,
+      '--ignore-workspace',
+      '--ignore-scripts',
+      '--save-exact',
+      '--lockfile=false',
+      ...engines.slice(1).map(engine => `${engine.id}@${engine.version}`),
+    ], { stdio: ['ignore', 'pipe', 'pipe'] })
+    return directory
+  } catch (error) {
+    rmSync(directory, { recursive: true, force: true })
+    if (error.stderr) process.stderr.write(error.stderr)
+    throw error
+  }
+}
+
+function runBenchmarks(comparisonDirectory) {
   const sizes = (process.env.BENCH_SIZES_KIB || '10,100,500')
     .split(',')
     .map(value => positiveNumber(value.trim(), 0))
@@ -208,7 +234,11 @@ function runSuite() {
         String(size),
         String(iterations),
         String(runs),
-      ], { encoding: 'utf8', maxBuffer: 1024 * 1024 })
+      ], {
+        encoding: 'utf8',
+        env: { ...process.env, SUGAR_HIGH_BENCH_MODULES: comparisonDirectory },
+        maxBuffer: 1024 * 1024,
+      })
       results.push(JSON.parse(output))
     }
     for (const phase of phases) {
@@ -220,7 +250,11 @@ function runSuite() {
         String(size),
         String(iterations),
         String(runs),
-      ], { encoding: 'utf8', maxBuffer: 1024 * 1024 })
+      ], {
+        encoding: 'utf8',
+        env: { ...process.env, SUGAR_HIGH_BENCH_MODULES: comparisonDirectory },
+        maxBuffer: 1024 * 1024,
+      })
       phaseResults.push(JSON.parse(output))
     }
   }
@@ -232,7 +266,7 @@ function runSuite() {
     const engine = engines.find(candidate => candidate.id === result.engine)
     return {
       size: formatSize(result.sourceBytes),
-      library: `${engine.label} ${packageVersion(engine.packageName)}`,
+      library: `${engine.label} ${engine.version}`,
       'ms / file': result.milliseconds.toFixed(2),
       throughput: `${result.mibPerSecond.toFixed(2)} MiB/s`,
       'vs Sugar High': `${(result.mibPerSecond / sugarHigh.mibPerSecond).toFixed(2)}×`,
@@ -284,6 +318,15 @@ function runSuite() {
   console.log('\nPhase timings are measured independently, so their percentages need not sum to exactly 100%.')
   console.log('Retained heap is approximate and includes the returned highlighted HTML.')
   console.log('\nThe libraries use different grammars and emit different HTML, so this measures public API cost rather than feature equivalence.')
+}
+
+function runSuite() {
+  const comparisonDirectory = installComparisons()
+  try {
+    runBenchmarks(comparisonDirectory)
+  } finally {
+    rmSync(comparisonDirectory, { recursive: true, force: true })
+  }
 }
 
 if (process.argv[2] === '--worker') await runWorker()
