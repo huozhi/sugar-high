@@ -42,35 +42,47 @@ function nonJavaScript(config) {
   }
 }
 
-/** @type {Record<string, import('../core.js').ParseOptions>} */
-const configs = {
-  javascript,
-  typescript,
-  css: nonJavaScript(css),
-  python: nonJavaScript(python),
-  c: nonJavaScript(c),
-  go: nonJavaScript(go),
-  java: nonJavaScript(java),
-  rust: nonJavaScript(rust),
-  json: nonJavaScript(json),
-  diff: nonJavaScript(diff),
-  shell: nonJavaScript(shell),
-  cpp: nonJavaScript(cpp),
-  csharp: nonJavaScript(csharp),
-  sql: nonJavaScript(sql),
-  html,
-  yaml: nonJavaScript(yaml),
-  markdown: nonJavaScript(markdown),
-  plaintext: nonJavaScript(plaintext),
-  ruby: nonJavaScript(ruby),
-  kotlin: nonJavaScript(kotlin),
-  swift: nonJavaScript(swift),
-  php: nonJavaScript(php),
-  toml: nonJavaScript(toml),
-  powershell: nonJavaScript(powershell),
-  dockerfile: nonJavaScript(dockerfile),
-  graphql: nonJavaScript(graphql),
-  hcl: nonJavaScript(hcl),
+function createConfigs() {
+  return {
+    javascript,
+    typescript,
+    css: nonJavaScript(css),
+    python: nonJavaScript(python),
+    c: nonJavaScript(c),
+    go: nonJavaScript(go),
+    java: nonJavaScript(java),
+    rust: nonJavaScript(rust),
+    json: nonJavaScript(json),
+    diff: nonJavaScript(diff),
+    shell: nonJavaScript(shell),
+    cpp: nonJavaScript(cpp),
+    csharp: nonJavaScript(csharp),
+    sql: nonJavaScript(sql),
+    html,
+    yaml: nonJavaScript(yaml),
+    markdown: nonJavaScript(markdown),
+    plaintext: nonJavaScript(plaintext),
+    ruby: nonJavaScript(ruby),
+    kotlin: nonJavaScript(kotlin),
+    swift: nonJavaScript(swift),
+    php: nonJavaScript(php),
+    toml: nonJavaScript(toml),
+    powershell: nonJavaScript(powershell),
+    dockerfile: nonJavaScript(dockerfile),
+    graphql: nonJavaScript(graphql),
+    hcl: nonJavaScript(hcl),
+  }
 }
 
-export { configs }
+const configs = /* @__PURE__ */ createConfigs()
+
+/** @param {string | undefined} name */
+function configFor(name) {
+  return configs[name || 'javascript']
+}
+
+export {
+  c, configFor, configs, cpp, csharp, css, diff, dockerfile, go, graphql, hcl, html, java,
+  javascript, json, kotlin, markdown, nonJavaScript, php, plaintext, powershell, python, ruby,
+  rust, shell, sql, swift, toml, typescript, yaml,
+}

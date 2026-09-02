@@ -4,12 +4,7 @@ import {
   parse,
   render,
 } from './core.js'
-import { configs } from './presets/configs.js'
-
-/** @param {string | undefined} name */
-function configFor(name) {
-  return configs[name || 'javascript']
-}
+import { configFor } from './presets/configs.js'
 
 /** @param {string} code @param {HighlightOptions | undefined} options */
 function highlight(code, options) {
