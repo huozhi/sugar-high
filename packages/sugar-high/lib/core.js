@@ -1,7 +1,7 @@
 // @ts-check
 
 import {
-  assemble, generate, renderHtml, SugarHigh, T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER,
+  assemble, generate, render, SugarHigh, T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER,
   T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 } from './shared.js'
 
@@ -145,11 +145,6 @@ function parse(code, options) {
     for (const line of parsed.lines) options.annotateLine(line)
   }
   return parsed
-}
-
-/** @param {ParsedCode} parsed @param {DisplayOptions | undefined} options */
-function render(parsed, options) {
-  return renderHtml(parsed, options)
 }
 
 export { generate, parse, render, SugarHigh, tokenize }

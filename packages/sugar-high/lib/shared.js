@@ -143,7 +143,7 @@ function generate(parsed, options) {
  * @param {import('./core.js').ParsedCode} parsed
  * @param {import('./core.js').DisplayOptions | undefined} options
  */
-function renderHtml(parsed, options) {
+function render(parsed, options) {
   const cx = options?.cx
   const mark = options?.mark
   const markLine = options?.markLine
@@ -193,6 +193,6 @@ function attributes(values) {
 }
 
 export {
-  assemble, encode, generate, renderHtml, SugarHigh, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
+  assemble, encode, generate, render, SugarHigh, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
   T_JSX_LITERALS, T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 }
