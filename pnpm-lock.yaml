@@ -244,6 +244,12 @@ importers:
       '@types/node':
         specifier: 22.12.0
         version: 22.12.0
+      highlight.js:
+        specifier: ^11.12.0
+        version: 11.12.0
+      prismjs:
+        specifier: ^1.30.0
+        version: 1.30.0
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -2220,6 +2226,10 @@ packages:
   hast-util-whitespace@3.0.0:
     resolution: {integrity: sha512-88JUN06ipLwsnv+dVn+OIYOvAuvBMy/Qoi6O7mQHxdPXpjy+Cd6xRkWwux7DKO+4sYILtLBRIKgsdpS2gQc7qw==}
 
+  highlight.js@11.12.0:
+    resolution: {integrity: sha512-nbfWpyRMcMrPMmDwJB+dhX/eiaPKtc2RB+0QZskqJ3WjRA/FDS0e9hZrx8EC/lbEv8gXy98FcDbNa/dspAaJMg==}
+    engines: {node: '>=12.0.0'}
+
   html-entities@2.6.0:
     resolution: {integrity: sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ==}
 
@@ -2716,6 +2726,10 @@ packages:
   pretty-bytes@7.1.1:
     resolution: {integrity: sha512-X+vn9z8nOFZQlxOLmfJ0iKDdMD7jYTsTW12OAlCpdoE3Igik6L37pugIZi+N3usuyp5McfgKPWi12q3zvHLeGQ==}
     engines: {node: '>=20'}
+
+  prismjs@1.30.0:
+    resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
+    engines: {node: '>=6'}
 
   prompts@2.4.2:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
@@ -5109,6 +5123,8 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
 
+  highlight.js@11.12.0: {}
+
   html-entities@2.6.0: {}
 
   html-void-elements@3.0.0: {}
@@ -5716,6 +5732,8 @@ snapshots:
   prettier@3.8.1: {}
 
   pretty-bytes@7.1.1: {}
+
+  prismjs@1.30.0: {}
 
   prompts@2.4.2:
     dependencies:

@@ -214,6 +214,19 @@ options, and lower-level functions. Upgrading from v1? Read the
 
 MIT
 
+## Performance benchmark
+
+Run the large-file comparison against PrismJS and highlight.js from the repository root:
+
+```sh
+pnpm --filter sugar-high benchmark:large
+```
+
+The benchmark generates deterministic TypeScript inputs, measures complete highlighting to HTML,
+and reports scaling at 10, 100, and 500 KiB. Customize it with `BENCH_SIZES_KIB`,
+`BENCH_TARGET_MIB`, `BENCH_RUNS`, or `BENCH_ITERATIONS`. The libraries use different grammars and
+emit different HTML, so results compare public API cost rather than feature equivalence.
+
 <!-- Definitions -->
 
 [npm-version-badge]: https://img.shields.io/npm/v/sugar-high?style=flat&colorA=000000&colorB=000000
