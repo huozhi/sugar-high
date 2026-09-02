@@ -31,6 +31,47 @@ export const taffy = {
   },
 } as const satisfies Theme
 
+// Adapted from Vercel's Geist Code Block palette.
+// https://vercel.com/geist/code-block
+export const vercel = {
+  light: {
+    background: '#fff',
+    foreground: '#171717',
+    caret: '#171717',
+    title: '#4d4d4d',
+    control: '#4d4d4d',
+    lineNumber: '#a8a8a8',
+    lineHighlight: '#e0efff',
+    class: '#107d32',
+    identifier: '#171717',
+    sign: '#171717',
+    property: '#d60020',
+    entity: '#107d32',
+    jsxliterals: '#171717',
+    string: '#107d32',
+    keyword: '#c41562',
+    comment: '#4d4d4d',
+  },
+  dark: {
+    background: '#000',
+    foreground: '#ededed',
+    caret: '#ededed',
+    title: '#a0a0a0',
+    control: '#a0a0a0',
+    lineNumber: '#878787',
+    lineHighlight: '#002f62',
+    class: '#00ca52',
+    identifier: '#ededed',
+    sign: '#ededed',
+    property: '#ff5e63',
+    entity: '#00ca52',
+    jsxliterals: '#ededed',
+    string: '#00ca52',
+    keyword: '#ff518d',
+    comment: '#a0a0a0',
+  },
+} as const satisfies Theme
+
 export const vscode = {
   light: {
     background: '#f6f8fa',

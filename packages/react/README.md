@@ -161,9 +161,10 @@ Enable automatic light and dark selection at the application root. Force a schem
 }
 ```
 
-Available themes are `taffy`, `vscode`, `oneDarkPro`, `monokai`, `minimal`, `gruvbox`,
+Available themes are `taffy`, `vercel`, `vscode`, `oneDarkPro`, `monokai`, `minimal`, `gruvbox`,
 `tokyoNight`, `nordLight`, and `softMinimal`. The last two are light-only palettes; the others
-provide light and dark colors.
+provide light and dark colors. `vercel` is adapted from the official
+[Geist Code Block](https://vercel.com/geist/code-block) palette.
 
 A single palette stays the same in light and dark color schemes. Custom themes use the same token
 names as Sugar High. `background` and `foreground` are required; tokens that are not set inherit

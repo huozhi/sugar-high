@@ -1,0 +1,29 @@
+/* Adapted from https://vercel.com/geist/code-block */
+.sh-theme--vercel {
+  --theme-surface: #fff;
+  --theme-muted: #4d4d4d;
+  --sh-class: #107d32;
+  --sh-identifier: #171717;
+  --sh-sign: #171717;
+  --sh-property: #d60020;
+  --sh-entity: #107d32;
+  --sh-jsxliterals: #171717;
+  --sh-string: #107d32;
+  --sh-keyword: #c41562;
+  --sh-comment: #4d4d4d;
+}
+
+[data-theme='dark'] .sh-theme--vercel,
+.sh-theme--vercel[data-theme='dark'] {
+  --theme-surface: #000;
+  --theme-muted: #a0a0a0;
+  --sh-class: #00ca52;
+  --sh-identifier: #ededed;
+  --sh-sign: #ededed;
+  --sh-property: #ff5e63;
+  --sh-entity: #00ca52;
+  --sh-jsxliterals: #ededed;
+  --sh-string: #00ca52;
+  --sh-keyword: #ff518d;
+  --sh-comment: #a0a0a0;
+}
