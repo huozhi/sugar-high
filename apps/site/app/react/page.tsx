@@ -1,4 +1,5 @@
 import { Code } from '@sugar-high/react'
+import { tokyoNight } from '@sugar-high/react/themes'
 import { ReactDemo } from './react-demo'
 import { ProductNav } from '../product-nav'
 import { ProductStrike } from '../product-strike'
@@ -29,19 +30,10 @@ render(
   </div>
 )`
 
-const stylingExample = `const style = {
-  backgroundColor: '#f6f8fa',
-  '--sh-editor-background-color': 'transparent',
-  '--sh-caret-color': '#24292f',
-  '--sh-title-color': '#57606a',
-  '--sh-control-color': '#afb8c1',
-  '--sh-line-number-color': '#8c959f',
-  '--sh-line-highlight-color': '#fff8c5',
-  '--sh-keyword': '#cf222e',
-  '--sh-string': '#0a3069',
-} as React.CSSProperties
+const stylingExample = `import { Editor } from '@sugar-high/react'
+import { tokyoNight } from '@sugar-high/react/themes'
 
-<Editor style={style} value={source} onChange={setSource} />`
+<Editor theme={tokyoNight} value={source} onChange={setSource} />`
 
 const styleVariables = [
   ['--sh-editor-text-color', 'Editor', 'transparent', 'Textarea text; transparent over highlighted code.'],
@@ -110,10 +102,15 @@ export default function ReactPage() {
 
         <section className="product-section react-api">
           <div className="product-section__head">
-            <h2>Styling</h2>
-            <p>Compose frame variables with Sugar High token themes.</p>
+            <h2>Themes</h2>
+            <p>Import a JavaScript theme or pass your own token colors.</p>
           </div>
-          <Code className="react-style-example" lang="typescript" title="editor-theme.tsx">
+          <Code
+            className="react-style-example"
+            lang="typescript"
+            title="editor-theme.tsx"
+            theme={tokyoNight}
+          >
             {stylingExample}
           </Code>
           <div className="react-api__table-wrap react-style-variables">
@@ -131,9 +128,10 @@ export default function ReactPage() {
             </table>
           </div>
           <p className="react-style-note">
-            Set these inline or on the component root. Use <code>--sh-*</code> variables for token
-            colors; the <a href="/theme">theme guide</a> lists copyable presets. Keep the editor
-            textarea colors transparent to preserve its highlighted overlay.
+            Paired themes inherit the standard CSS <code>color-scheme</code>. Set it to{' '}
+            <code>light dark</code> for the system preference, or <code>light</code> /{' '}
+            <code>dark</code> on an ancestor to force a mode. The variables below remain available
+            as low-level overrides.
           </p>
         </section>
 
@@ -153,6 +151,7 @@ export default function ReactPage() {
                   <tr><td><code>title</code></td><td><code>string | null</code></td><td>Editable filename and language hint.</td></tr>
                   <tr><td><code>onChangeTitle</code></td><td><code>(title) =&gt; void</code></td><td>Makes the title editable.</td></tr>
                   <tr><td><code>lang</code></td><td><code>LanguageName</code></td><td>Canonical language; overrides the title.</td></tr>
+                  <tr><td><code>theme</code></td><td><code>Theme</code></td><td>JavaScript token and component colors.</td></tr>
                   <tr><td><code>extension</code></td><td><code>string</code></td><td>Legacy language hint when no lang is set.</td></tr>
                   <tr><td><code>controls</code></td><td><code>boolean · true</code></td><td>Shows the header controls.</td></tr>
                   <tr><td><code>lineNumbers</code></td><td><code>boolean · true</code></td><td>Shows one-based line numbers.</td></tr>
@@ -176,6 +175,7 @@ export default function ReactPage() {
                 <tbody>
                   <tr><td><code>children</code></td><td><code>string · required</code></td><td>Source or generated markup to render.</td></tr>
                   <tr><td><code>lang</code></td><td><code>LanguageName</code></td><td>Canonical language; overrides the title.</td></tr>
+                  <tr><td><code>theme</code></td><td><code>Theme</code></td><td>JavaScript token and component colors.</td></tr>
                   <tr><td><code>title</code></td><td><code>string</code></td><td>Filename shown in the header and used as a language hint.</td></tr>
                   <tr><td><code>extension</code></td><td><code>string</code></td><td>Legacy language hint when no lang is set.</td></tr>
                   <tr><td><code>controls</code></td><td><code>boolean · false</code></td><td>Shows header controls.</td></tr>

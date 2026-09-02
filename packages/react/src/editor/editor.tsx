@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState, forwardRef } from 'react'
 import { CodeHeader, getExtension, getLineNumbersWidth } from '../code/code'
 import { Code } from '../code/default'
 import { fontSizeCss, ScopedStyle } from '../style'
+import { themeStyle, type Theme } from '../theme'
 import { css } from './css'
 import type { HighlightOptions, LanguageName } from 'sugar-high'
 
@@ -103,6 +104,7 @@ export const Editor = forwardRef(function Editor(
     textareaRef,
     textareaProps,
     indent = '  ',
+    theme,
     style,
     ...props
   }: {
@@ -124,6 +126,7 @@ export const Editor = forwardRef(function Editor(
     textareaRef?: React.Ref<HTMLTextAreaElement>
     textareaProps?: TextareaProps
     indent?: string
+    theme?: Theme
   } & {
     fontSize?: string | number
     fontFamily?: string
@@ -199,6 +202,7 @@ export const Editor = forwardRef(function Editor(
         '--sh-line-number-width': resolvedLineNumbersWidth || '2.5rem',
         '--sh-padding': padding ?? '1rem',
         '--sh-font-family': fontFamily ?? 'Consolas, Monaco, monospace',
+        ...themeStyle(theme),
         ...style,
       } as React.CSSProperties}
       data-codice="editor"

@@ -18,6 +18,10 @@
     "./core": {
       "types": "./dist/core.d.ts",
       "default": "./dist/core.mjs"
+    },
+    "./themes": {
+      "types": "./dist/themes.d.ts",
+      "default": "./dist/themes.mjs"
     }
   },
   "files": [

@@ -131,7 +131,62 @@ Use the `data-sh-*` attributes and `--sh-*` variables for new styles. The packag
 preserves Codice's existing `data-codice-*` attributes so existing structural selectors can
 migrate incrementally.
 
-## Styling
+## Themes
+
+Pass a JavaScript theme to `Code` or `Editor`. Paired themes follow the inherited CSS
+[`color-scheme`](https://developer.mozilla.org/docs/Web/CSS/color-scheme), so system and
+application theme changes do not require a React rerender:
+
+```tsx
+import { Editor } from '@sugar-high/react'
+import { tokyoNight } from '@sugar-high/react/themes'
+
+<Editor theme={tokyoNight} value={source} onChange={setSource} />
+```
+
+Enable automatic light and dark selection at the application root. Force a scheme by setting
+`color-scheme` to only `light` or `dark` on any ancestor:
+
+```css
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+```
+
+Available themes are `sugarHigh`, `vscode`, `oneDarkPro`, `monokai`, `minimal`, `gruvbox`,
+`tokyoNight`, `nordLight`, and `softMinimal`. The last two are light-only palettes; the others
+provide light and dark colors.
+
+Custom themes use the same token names as Sugar High. `background` and `foreground` are required;
+tokens that are not set inherit `foreground`:
+
+```tsx
+import type { Theme } from '@sugar-high/react'
+
+const ocean = {
+  background: '#0f172a',
+  foreground: '#e2e8f0',
+  keyword: '#f472b6',
+  string: '#86efac',
+  comment: '#64748b',
+  property: '#7dd3fc',
+} satisfies Theme
+
+<Code theme={ocean}>{source}</Code>
+```
+
+Use `{ light, dark }` for a custom paired theme. Optional component colors are `caret`, `title`,
+`control`, `lineNumber`, and `lineHighlight`.
+
+## Low-level styling
 
 Set Sugar High variables on the component itself for a self-contained theme:
 

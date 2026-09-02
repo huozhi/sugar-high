@@ -93,8 +93,8 @@
 }
 
 .react-style-example[data-codice-code] {
+  color-scheme: light dark;
   margin-bottom: 24px;
-  background: #f6f6f6;
 }
 
 .react-style-variables td:first-child {

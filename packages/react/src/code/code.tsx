@@ -1,6 +1,7 @@
 import { parse, generate, type DisplayOptions, type ParseOptions } from 'sugar-high/core'
 import { css, HEADER_CSS } from './css'
 import { fontSizeCss, ScopedStyle } from '../style'
+import { themeStyle, type Theme } from '../theme'
 
 /** utils */
 export function getExtension(title: string | undefined) {
@@ -178,6 +179,7 @@ export type CodeProps = {
   cx?: DisplayOptions['cx']
   mark?: DisplayOptions['mark']
   markLine?: DisplayOptions['markLine']
+  theme?: Theme
 } & React.HTMLAttributes<HTMLDivElement>
 
 export function Code({
@@ -197,6 +199,7 @@ export function Code({
   cx,
   mark,
   markLine,
+  theme,
   style,
   ...props
 }: CodeProps) {
@@ -226,6 +229,7 @@ export function Code({
         '--sh-font-size': fontSizeCss(fontSize),
         '--sh-line-number-width': resolvedLineNumbersWidth || '2.5rem',
         '--sh-padding': padding ?? '1rem',
+        ...themeStyle(theme),
         ...style,
       } as React.CSSProperties}
       data-codice="code"
