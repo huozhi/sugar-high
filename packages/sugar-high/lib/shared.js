@@ -68,7 +68,7 @@ function assemble(value, tokens) {
  * @param {import('./core.js').ParsedLine} parsedLine
  * @param {import('./core.js').DisplayOptions['markLine']} markLine
  */
-function displayLine(parsedLine, markLine) {
+function createLine(parsedLine, markLine) {
   const line = {
     index: parsedLine.index,
     value: parsedLine.value,
@@ -87,7 +87,7 @@ function displayLine(parsedLine, markLine) {
  * @param {import('./core.js').DisplayOptions['cx']} cx
  * @param {import('./core.js').DisplayOptions['mark']} mark
  */
-function displayToken({ type, value }, cx, mark) {
+function createToken({ type, value }, cx, mark) {
   const extraClassName = cx?.[type]
   const token = {
     type,
@@ -110,13 +110,13 @@ function generate(parsed, options) {
   const markLine = options?.markLine
 
   return parsed.lines.map((parsedLine) => {
-    const line = displayLine(parsedLine, markLine)
+    const line = createLine(parsedLine, markLine)
 
     return {
       type: 'element',
       tagName: 'span',
       children: parsedLine.tokens.map((parsedToken) => {
-        const token = displayToken(parsedToken, cx, mark)
+        const token = createToken(parsedToken, cx, mark)
         return {
           type: 'element',
           tokenType: token.type,
@@ -159,10 +159,10 @@ function render(parsed, options) {
   }
 
   return parsed.lines.map((parsedLine) => {
-    const line = displayLine(parsedLine, markLine)
+    const line = createLine(parsedLine, markLine)
 
     const children = parsedLine.tokens.map((parsedToken) => {
-      const token = displayToken(parsedToken, cx, mark)
+      const token = createToken(parsedToken, cx, mark)
       return `<span ${attributes({
         ...token.properties,
         className: token.className,
