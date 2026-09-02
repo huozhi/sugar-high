@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { themeStyle, type Theme } from './theme'
 
 describe('themeStyle', () => {
-  it('maps a palette to component and token colors', () => {
+  it('keeps a single palette consistent across color schemes', () => {
     const style = themeStyle({
       background: '#ffffff',
       foreground: '#111111',

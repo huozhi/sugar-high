@@ -128,10 +128,10 @@ export default function ReactPage() {
             </table>
           </div>
           <p className="react-style-note">
-            Paired themes inherit the standard CSS <code>color-scheme</code>. Set it to{' '}
-            <code>light dark</code> for the system preference, or <code>light</code> /{' '}
-            <code>dark</code> on an ancestor to force a mode. The variables below remain available
-            as low-level overrides.
+            A single palette stays consistent in every color scheme. Paired themes inherit the
+            standard CSS <code>color-scheme</code>. Set it to <code>light dark</code> for the system
+            preference, or <code>light</code> / <code>dark</code> on an ancestor to force a mode. The
+            variables below remain available as low-level overrides.
           </p>
         </section>
 

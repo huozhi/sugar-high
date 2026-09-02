@@ -165,8 +165,9 @@ Available themes are `sugarHigh`, `vscode`, `oneDarkPro`, `monokai`, `minimal`, 
 `tokyoNight`, `nordLight`, and `softMinimal`. The last two are light-only palettes; the others
 provide light and dark colors.
 
-Custom themes use the same token names as Sugar High. `background` and `foreground` are required;
-tokens that are not set inherit `foreground`:
+A single palette stays the same in light and dark color schemes. Custom themes use the same token
+names as Sugar High. `background` and `foreground` are required; tokens that are not set inherit
+`foreground`:
 
 ```tsx
 import type { Theme } from '@sugar-high/react'
@@ -183,8 +184,8 @@ const ocean = {
 <Code theme={ocean}>{source}</Code>
 ```
 
-Use `{ light, dark }` for a custom paired theme. Optional component colors are `caret`, `title`,
-`control`, `lineNumber`, and `lineHighlight`.
+Use `{ light, dark }` only when the theme should adapt to the inherited color scheme. Optional
+component colors are `caret`, `title`, `control`, `lineNumber`, and `lineHighlight`.
 
 ## Low-level styling
 
