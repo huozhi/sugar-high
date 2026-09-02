@@ -222,10 +222,11 @@ Run the large-file comparison against PrismJS and highlight.js from the reposito
 pnpm --filter sugar-high benchmark:large
 ```
 
-The benchmark generates deterministic TypeScript inputs, measures complete highlighting to HTML,
-and reports scaling at 10, 100, and 500 KiB. Customize it with `BENCH_SIZES_KIB`,
-`BENCH_TARGET_MIB`, `BENCH_RUNS`, or `BENCH_ITERATIONS`. The libraries use different grammars and
-emit different HTML, so results compare public API cost rather than feature equivalence.
+The benchmark generates deterministic TypeScript inputs and reports highlight-to-HTML throughput,
+approximate retained heap, output expansion, and Sugar High's separate parse and render timings at
+10, 100, and 500 KiB. Customize it with `BENCH_SIZES_KIB`, `BENCH_TARGET_MIB`, `BENCH_RUNS`, or
+`BENCH_ITERATIONS`. The libraries use different grammars and emit different HTML, so results compare
+public API cost rather than feature equivalence.
 
 <!-- Definitions -->
 

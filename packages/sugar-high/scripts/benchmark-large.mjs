@@ -237,7 +237,7 @@ function runSuite() {
       throughput: `${result.mibPerSecond.toFixed(2)} MiB/s`,
       'vs Sugar High': `${(result.mibPerSecond / sugarHigh.mibPerSecond).toFixed(2)}×`,
       'sample range': `${result.spreadPercent.toFixed(1)}%`,
-      'heap / file': `${result.retainedHeapMiB.toFixed(1)} MiB`,
+      '~heap / file': `${result.retainedHeapMiB.toFixed(1)} MiB`,
       'HTML / source': `${(result.outputBytes / result.sourceBytes).toFixed(2)}×`,
     }
   })
@@ -259,7 +259,6 @@ function runSuite() {
       'ms / file': result.milliseconds.toFixed(2),
       'share of full': `${(result.milliseconds / sugarHigh.milliseconds * 100).toFixed(0)}%`,
       throughput: `${result.mibPerSecond.toFixed(2)} MiB/s`,
-      'heap / file': `${result.retainedHeapMiB.toFixed(1)} MiB`,
     }))
   })
 
@@ -283,6 +282,7 @@ function runSuite() {
   console.log('\nSugar High phases\n')
   console.table(phaseReport)
   console.log('\nPhase timings are measured independently, so their percentages need not sum to exactly 100%.')
+  console.log('Retained heap is approximate and includes the returned highlighted HTML.')
   console.log('\nThe libraries use different grammars and emit different HTML, so this measures public API cost rather than feature equivalence.')
 }
 
