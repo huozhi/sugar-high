@@ -2,7 +2,7 @@ import type { Theme, ThemePalette } from './theme'
 
 export type { Theme, ThemePalette } from './theme'
 
-export const sugarHigh = {
+export const taffy = {
   light: {
     background: '#f6f6f6',
     foreground: '#354150',

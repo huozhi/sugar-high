@@ -1,5 +1,5 @@
 import { Code } from '@sugar-high/react'
-import { tokyoNight } from '@sugar-high/react/themes'
+import { taffy } from '@sugar-high/react/themes'
 import { ReactDemo } from './react-demo'
 import { ProductNav } from '../product-nav'
 import { ProductStrike } from '../product-strike'
@@ -31,9 +31,9 @@ render(
 )`
 
 const stylingExample = `import { Editor } from '@sugar-high/react'
-import { tokyoNight } from '@sugar-high/react/themes'
+import { taffy } from '@sugar-high/react/themes'
 
-<Editor theme={tokyoNight} value={source} onChange={setSource} />`
+<Editor theme={taffy} value={source} onChange={setSource} />`
 
 const styleVariables = [
   ['--sh-editor-text-color', 'Editor', 'transparent', 'Textarea text; transparent over highlighted code.'],
@@ -109,7 +109,7 @@ export default function ReactPage() {
             className="react-style-example"
             lang="typescript"
             title="editor-theme.tsx"
-            theme={tokyoNight}
+            theme={taffy}
           >
             {stylingExample}
           </Code>

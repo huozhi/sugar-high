@@ -139,9 +139,9 @@ application theme changes do not require a React rerender:
 
 ```tsx
 import { Editor } from '@sugar-high/react'
-import { tokyoNight } from '@sugar-high/react/themes'
+import { taffy } from '@sugar-high/react/themes'
 
-<Editor theme={tokyoNight} value={source} onChange={setSource} />
+<Editor theme={taffy} value={source} onChange={setSource} />
 ```
 
 Enable automatic light and dark selection at the application root. Force a scheme by setting
@@ -161,7 +161,7 @@ Enable automatic light and dark selection at the application root. Force a schem
 }
 ```
 
-Available themes are `sugarHigh`, `vscode`, `oneDarkPro`, `monokai`, `minimal`, `gruvbox`,
+Available themes are `taffy`, `vscode`, `oneDarkPro`, `monokai`, `minimal`, `gruvbox`,
 `tokyoNight`, `nordLight`, and `softMinimal`. The last two are light-only palettes; the others
 provide light and dark colors.
 

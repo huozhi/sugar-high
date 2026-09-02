@@ -32,8 +32,8 @@ try {
     measure('react-theme', `
       import { createElement } from 'react'
       import { Code } from '@sugar-high/react'
-      import { tokyoNight } from '@sugar-high/react/themes'
-      export const render = code => createElement(Code, { theme: tokyoNight }, code)
+      import { taffy } from '@sugar-high/react/themes'
+      export const render = code => createElement(Code, { theme: taffy }, code)
     `),
     measure('core-python', `
       import { createElement } from 'react'
