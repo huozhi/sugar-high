@@ -3,8 +3,37 @@ import { highlight } from 'sugar-high'
 import { generate, parse, render, tokenize, type DisplayOptions } from 'sugar-high/core'
 import * as javascript from '../lib/lang/javascript.js'
 import * as python from '../lib/lang/python.js'
-import { toHtml } from '../lib/shared.js'
 import * as typescript from '../lib/lang/typescript.js'
+
+const entities: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#039;',
+}
+
+function encode(value: string) {
+  return value.replace(/[&<>"']/g, character => entities[character])
+}
+
+function attributes(values: Record<string, any>) {
+  const style = Object.entries(values.style || {})
+    .map(([key, value]) => `${key.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}:${value}`).join(';')
+  const properties = Object.entries(values)
+    .filter(([key, value]) => /^[\w:-]+$/.test(key) && key !== 'className' && key !== 'style' && value !== false && value != null)
+    .map(([key, value]) => value === true ? key : `${key}="${encode(String(value))}"`).join(' ')
+  return `class="${encode(values.className || '')}"${style ? ` style="${encode(style)}"` : ''}${properties ? ` ${properties}` : ''}`
+}
+
+function toHtml(lines: ReturnType<typeof generate>) {
+  return lines.map(line => {
+    const children = line.children.map(token => (
+      `<${token.tagName} ${attributes(token.properties)}>${encode(token.children[0].value)}</${token.tagName}>`
+    )).join('')
+    return `<${line.tagName} ${attributes(line.properties)}>${children}</${line.tagName}>`
+  }).join('\n')
+}
 
 describe('composable core export', () => {
   it('returns structured lines and semantic tokens from parse', () => {

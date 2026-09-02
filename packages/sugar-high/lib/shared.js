@@ -139,8 +139,7 @@ function generate(parsed, options) {
 }
 
 /**
- * Render parsed lines directly while preserving the same markup and mutable display hooks as
- * generate() followed by toHtml().
+ * Render parsed lines directly while preserving generate()'s markup and mutable display hooks.
  * @param {import('./core.js').ParsedCode} parsed
  * @param {import('./core.js').DisplayOptions | undefined} options
  */
@@ -193,17 +192,7 @@ function attributes(values) {
   return `class="${encode(values.className || '')}"${style ? ` style="${encode(style)}"` : ''}${properties ? ` ${properties}` : ''}`
 }
 
-/** @param {Array<any>} lines */
-function toHtml(lines) {
-  return lines.map(line => {
-    const children = line.children.map(token => {
-      return `<${token.tagName} ${attributes(token.properties)}>${encode(token.children[0].value)}</${token.tagName}>`
-    }).join('')
-    return `<${line.tagName} ${attributes(line.properties)}>${children}</${line.tagName}>`
-  }).join('\n')
-}
-
 export {
-  assemble, encode, generate, renderHtml, SugarHigh, toHtml, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
+  assemble, encode, generate, renderHtml, SugarHigh, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
   T_JSX_LITERALS, T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 }
