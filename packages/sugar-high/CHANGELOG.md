@@ -1,5 +1,12 @@
 # sugar-high
 
+## 2.2.1
+
+### Patch Changes
+
+- 30ff8e5: Speed up HTML rendering by serializing parsed lines directly without allocating an intermediate
+  generated syntax tree.
+
 ## 2.2.0
 
 ### Minor Changes
