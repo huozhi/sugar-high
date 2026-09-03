@@ -83,7 +83,6 @@ describe('Code', () => {
       "<style data-precedence="default" data-href="sugar-high-react-editor sugar-high-react-header sugar-high-react-code">[data-sh-editor] {
         --sh-editor-text-color: transparent;
         --sh-editor-background-color: transparent;
-        --sh-caret-color: inherit;
 
         position: relative;
         overflow-y: scroll;
@@ -103,7 +102,7 @@ describe('Code', () => {
         scrollbar-width: none;
         line-height: 1.5;
         font-size: var(--sh-font-size);
-        caret-color: var(--sh-caret-color);
+        caret-color: var(--sh-caret-color, CanvasText);
         border: none;
         outline: none;
         width: 100%;
@@ -157,7 +156,7 @@ describe('Code', () => {
         background-color: transparent;
         outline: none;
         border: none;
-        caret-color: var(--sh-caret-color);
+        caret-color: var(--sh-caret-color, CanvasText);
         color: var(--sh-title-color);
         font-family: var(--sh-font-family);
       }
@@ -243,7 +242,6 @@ describe('Code', () => {
       "<style data-precedence="default" data-href="sugar-high-react-editor sugar-high-react-header sugar-high-react-code">[data-sh-editor] {
         --sh-editor-text-color: transparent;
         --sh-editor-background-color: transparent;
-        --sh-caret-color: inherit;
 
         position: relative;
         overflow-y: scroll;
@@ -263,7 +261,7 @@ describe('Code', () => {
         scrollbar-width: none;
         line-height: 1.5;
         font-size: var(--sh-font-size);
-        caret-color: var(--sh-caret-color);
+        caret-color: var(--sh-caret-color, CanvasText);
         border: none;
         outline: none;
         width: 100%;
@@ -317,7 +315,7 @@ describe('Code', () => {
         background-color: transparent;
         outline: none;
         border: none;
-        caret-color: var(--sh-caret-color);
+        caret-color: var(--sh-caret-color, CanvasText);
         color: var(--sh-title-color);
         font-family: var(--sh-font-family);
       }
@@ -403,7 +401,6 @@ describe('Code', () => {
       "<style data-precedence="default" data-href="sugar-high-react-editor sugar-high-react-code">[data-sh-editor] {
         --sh-editor-text-color: transparent;
         --sh-editor-background-color: transparent;
-        --sh-caret-color: inherit;
 
         position: relative;
         overflow-y: scroll;
@@ -423,7 +420,7 @@ describe('Code', () => {
         scrollbar-width: none;
         line-height: 1.5;
         font-size: var(--sh-font-size);
-        caret-color: var(--sh-caret-color);
+        caret-color: var(--sh-caret-color, CanvasText);
         border: none;
         outline: none;
         width: 100%;

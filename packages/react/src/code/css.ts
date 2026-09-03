@@ -52,7 +52,7 @@ ${H} [data-sh-title] {
   background-color: transparent;
   outline: none;
   border: none;
-  caret-color: var(--sh-caret-color);
+  caret-color: var(--sh-caret-color, CanvasText);
   color: var(--sh-title-color);
   font-family: var(--sh-font-family);
 }

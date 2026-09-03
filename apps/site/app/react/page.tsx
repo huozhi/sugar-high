@@ -38,7 +38,7 @@ import { taffy } from '@sugar-high/react/themes'
 const styleVariables = [
   ['--sh-editor-text-color', 'Editor', 'transparent', 'Textarea text; transparent over highlighted code.'],
   ['--sh-editor-background-color', 'Editor', 'transparent', 'Textarea background.'],
-  ['--sh-caret-color', 'Both', 'inherit', 'Editor and editable-title caret.'],
+  ['--sh-caret-color', 'Both', 'CanvasText', 'Editor and editable-title caret.'],
   ['--sh-font-family', 'Both', 'Editor monospace; Code inherited', 'Code, textarea, and title font.'],
   ['--sh-font-size', 'Both', 'inherit', 'Code and textarea font size.'],
   ['--sh-padding', 'Both', '1rem', 'Content and header spacing.'],
