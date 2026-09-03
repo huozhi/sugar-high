@@ -1,5 +1,12 @@
 # sugar-high
 
+## 2.2.2
+
+### Patch Changes
+
+- 56b1813: Reduce the default bundle size by keeping language aliases and extension metadata out of the
+  canonical highlighting path.
+
 ## 2.2.1
 
 ### Patch Changes
