@@ -22,10 +22,18 @@ describe('tokenize - c preset', () => {
     ])
   })
 
-  it('supports block comments with C-like rules', () => {
-    const input = '/* sum */\nstatic int total = 2;\n'
+  it('keeps multi-line block comments open until */', () => {
+    const input = `/*
+ * Copyright (c) 2009-Present, Redis Ltd.
+ * All rights reserved.
+ */
+static int total = 2;
+`
     const actual = getTokensAsString(tokenize(input, c))
-    expect(actual).toContain('/* sum */ => comment')
+    expect(actual).toContain(`/*
+ * Copyright (c) 2009-Present, Redis Ltd.
+ * All rights reserved.
+ */ => comment`)
     expect(actual).toContain('static => keyword')
     expect(actual).toContain('int => class')
   })
