@@ -71,4 +71,31 @@ describe('first-wave language presets', () => {
     expect(html).toContain('sh__line sh__line--markdown-list')
     expect(html).toContain('sh__line sh__line--markdown-quote')
   })
+
+  it('highlights Markdown syntax without coloring prose or fenced code', () => {
+    const input = `# Bunchee
+
+> **Zero-config** bundler with \`exports\`.
+>
+> \`\`\`sh
+> npm install --save-dev
+> \`\`\`
+
+---
+
+- Read the docs.`
+    const actual = tokenize(input, { lang: 'markdown' })
+    const signs = actual
+      .filter(([type]) => core.SugarHigh.TokenTypes[type] === 'sign')
+      .map(([, value]) => value)
+    const contentTypes = actual
+      .filter(([type]) => core.SugarHigh.TokenTypes[type] !== 'sign')
+      .map(([type]) => core.SugarHigh.TokenTypes[type])
+
+    expect(signs).toEqual([
+      '#', '>', '**', '**', '`', '`', '>', '>', '```', '>', '>', '```', '---', '-',
+    ])
+    expect(new Set(contentTypes)).toEqual(new Set(['identifier']))
+    expect(actual.map(([, value]) => value).join('')).toBe(input)
+  })
 })
