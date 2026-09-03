@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
 } from 'react'
 import { Code } from '@sugar-high/react'
 import { highlight } from 'sugar-high'
@@ -257,9 +258,21 @@ export default function Carousel() {
   const [hasSpreadStack, setHasSpreadStack] = useState(false)
   const [poppedCard, setPoppedCard] = useState<number | null>(null)
   const [activeCard, setActiveCard] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [exitDirection, setExitDirection] = useState<'left' | 'right'>('left')
+  const [autoplayCycle, setAutoplayCycle] = useState(0)
   const stackRef = useRef<HTMLDivElement>(null)
   const popTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const exitDirectionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasInteractedRef = useRef(false)
+  const swipeStartRef = useRef<{
+    pointerId: number
+    x: number
+    y: number
+  } | null>(null)
+  const suppressClickRef = useRef(false)
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const previewMode = syntaxThemeCtx?.previewMode ?? 'light'
   const activePreset = LIVE_EDITOR_THEME_PRESETS[syntaxThemeCtx?.themeIndex ?? 0]
@@ -280,6 +293,14 @@ export default function Carousel() {
   }, [plateColors, previewMode])
 
   const n = examples.length
+
+  useEffect(() => {
+    const mobile = window.matchMedia('(max-width: 680px)')
+    const update = () => setIsMobile(mobile.matches)
+    update()
+    mobile.addEventListener('change', update)
+    return () => mobile.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     const stack = stackRef.current
@@ -326,58 +347,76 @@ export default function Carousel() {
 
   useEffect(() => () => {
     if (popTimerRef.current) clearTimeout(popTimerRef.current)
+    if (exitDirectionTimerRef.current) clearTimeout(exitDirectionTimerRef.current)
   }, [])
 
-  function scrollToCard(index: number) {
-    const stack = stackRef.current
-    const card = stack?.children[index] as HTMLElement | undefined
-    if (!stack || !card) return
-
-    stack.scrollTo({
-      left: card.offsetLeft - (stack.clientWidth - card.offsetWidth) / 2,
-      behavior: 'smooth',
-    })
+  function showCard(index: number) {
     setActiveCard(index)
   }
 
-  function stopAutoplay() {
+  function pauseAutoplay() {
     hasInteractedRef.current = true
   }
 
+  function handlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    pauseAutoplay()
+    if (!isMobile) return
+    swipeStartRef.current = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+    }
+    suppressClickRef.current = false
+    setIsDragging(true)
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  function handlePointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const start = swipeStartRef.current
+    if (!start || start.pointerId !== event.pointerId) return
+    const deltaX = event.clientX - start.x
+    const deltaY = event.clientY - start.y
+    if (Math.abs(deltaX) <= Math.abs(deltaY)) return
+    if (Math.abs(deltaX) > 8) suppressClickRef.current = true
+    setDragOffset(deltaX)
+  }
+
+  function finishSwipe(event: ReactPointerEvent<HTMLDivElement>, cancelled = false) {
+    const start = swipeStartRef.current
+    if (!start || start.pointerId !== event.pointerId) return
+    const deltaX = event.clientX - start.x
+    const deltaY = event.clientY - start.y
+    swipeStartRef.current = null
+    setIsDragging(false)
+    setDragOffset(0)
+    hasInteractedRef.current = false
+    setAutoplayCycle(cycle => cycle + 1)
+
+    if (!cancelled && Math.abs(deltaX) > 48 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      setExitDirection(deltaX < 0 ? 'left' : 'right')
+      setActiveCard(current => (current + 1) % n)
+      if (exitDirectionTimerRef.current) clearTimeout(exitDirectionTimerRef.current)
+      exitDirectionTimerRef.current = setTimeout(() => setExitDirection('left'), 560)
+    }
+
+    if (suppressClickRef.current) {
+      window.setTimeout(() => {
+        suppressClickRef.current = false
+      })
+    }
+  }
+
   useEffect(() => {
-    const mobile = window.matchMedia('(max-width: 680px)')
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (!mobile.matches || reducedMotion.matches) return
+    if (!isMobile || reducedMotion.matches) return
 
     const interval = window.setInterval(() => {
       if (hasInteractedRef.current) return
-      setActiveCard((current) => {
-        const next = (current + 1) % n
-        scrollToCard(next)
-        return next
-      })
+      setActiveCard(current => (current + 1) % n)
     }, 3600)
 
     return () => window.clearInterval(interval)
-  }, [n])
-
-  function updateActiveCard() {
-    const stack = stackRef.current
-    if (!stack) return
-    const center = stack.scrollLeft + stack.clientWidth / 2
-    const cards = Array.from(stack.children) as HTMLElement[]
-    let closestIndex = 0
-    let closestDistance = Number.POSITIVE_INFINITY
-
-    cards.forEach((card, index) => {
-      const distance = Math.abs(card.offsetLeft + card.offsetWidth / 2 - center)
-      if (distance < closestDistance) {
-        closestDistance = distance
-        closestIndex = index
-      }
-    })
-    setActiveCard(closestIndex)
-  }
+  }, [autoplayCycle, isMobile, n])
 
   return (
     <div className="showcase-section carousel container-showcase" style={showcaseStyle}>
@@ -386,10 +425,10 @@ export default function Carousel() {
         className={`showcase-stack${
           hasSpreadStack ? ' showcase-stack--spread' : ''
         }`}
-        onPointerDown={stopAutoplay}
-        onWheel={stopAutoplay}
-        onKeyDown={stopAutoplay}
-        onScroll={updateActiveCard}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={finishSwipe}
+        onPointerCancel={(event) => finishSwipe(event, true)}
         style={
           {
             '--showcase-count': String(n),
@@ -399,12 +438,23 @@ export default function Carousel() {
         {examples.map(([name, code, config], exampleIndex) => {
           const spread = SHOWCASE_SPREAD[exampleIndex % SHOWCASE_SPREAD.length]
           const zIndex = SHOWCASE_Z_ORDER[exampleIndex % SHOWCASE_Z_ORDER.length]
+          const mobileDistance = (exampleIndex - activeCard + n) % n
+          const mobilePosition = mobileDistance === 0
+            ? 'active'
+            : mobileDistance === 1
+              ? 'next'
+              : mobileDistance === 2
+                ? 'after-next'
+                : mobileDistance === n - 1
+                  ? 'previous'
+                  : 'hidden'
 
           const stackStyle = {
             '--showcase-final-x': `${spread.x}px`,
             '--showcase-final-y': `${spread.y}px`,
             '--showcase-final-rotate': `${spread.rotate}deg`,
             '--showcase-z': String(zIndex),
+            '--showcase-drag-x': exampleIndex === activeCard ? `${dragOffset}px` : '0px',
           } as CSSProperties
 
           return (
@@ -412,6 +462,12 @@ export default function Carousel() {
               key={exampleIndex}
               className={`showcase-card showcase-card--stack showcase-card--${exampleIndex}${
                 poppedCard === exampleIndex ? ' showcase-card--popped' : ''
+              } showcase-card--mobile-${mobilePosition}${
+                isDragging && exampleIndex === activeCard ? ' showcase-card--dragging' : ''
+              }${
+                mobilePosition === 'previous' && exitDirection === 'right'
+                  ? ' showcase-card--exit-right'
+                  : ''
               }`}
               style={stackStyle}
             >
@@ -419,9 +475,11 @@ export default function Carousel() {
                 <div
                   className="showcase-card-hit"
                   role="button"
-                  tabIndex={0}
+                  tabIndex={isMobile && exampleIndex !== activeCard ? -1 : 0}
+                  aria-hidden={isMobile && exampleIndex !== activeCard ? true : undefined}
                   aria-label={`Switch syntax theme from the ${name} example`}
                   onClick={() => {
+                    if (suppressClickRef.current) return
                     switchTheme()
                     popCard(exampleIndex)
                   }}
@@ -455,8 +513,8 @@ export default function Carousel() {
             aria-label={`Show ${name}`}
             aria-current={activeCard === index ? 'true' : undefined}
             onClick={() => {
-              stopAutoplay()
-              scrollToCard(index)
+              showCard(index)
+              setAutoplayCycle(cycle => cycle + 1)
             }}
           />
         ))}

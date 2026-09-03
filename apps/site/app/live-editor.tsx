@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  useContext,
   useState,
   useEffect,
   useRef,
@@ -26,6 +27,7 @@ import {
   buildFlatVarsCopySnippet,
   type LiveEditorColorPlate,
 } from './live-editor-presets'
+import { SyntaxThemeContext } from './syntax-theme-context'
 
 const themes = LIVE_EDITOR_THEME_PRESETS
 
@@ -35,19 +37,10 @@ const customizableColors = Object.entries(SugarHigh.TokenTypes)
   .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
   .sort((a, b) => Number(a) - Number(b))
 
-const tokenLabels: Record<string, string> = {
-  class: 'Types',
-  identifier: 'Text',
-  sign: 'Punctuation',
-  entity: 'Tags',
-  property: 'Properties',
-  jsxliterals: 'Markup',
-  string: 'Strings',
-  keyword: 'Keywords',
-  comment: 'Comments',
-}
-
 const DEFAULT_LIVE_CODE = LANGUAGE_EXAMPLES.javascript
+const DEFAULT_LIVE_EDITOR_MIN_HEIGHT = `${
+  DEFAULT_LIVE_CODE.split('\n').length * 1.35 + 1.5
+}rem`
 
 function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onReady) {
   const [text, setText] = useState(enableTypingAnimation ? '' : targetText)
@@ -172,30 +165,36 @@ export default function LiveEditor({
   const [editorSize, setEditorSize] = useState<{ width: number }>({
     width: 640,
   })
-  const [currentThemeIndex, setCurrentThemeIndex] = useState(0)
-  const [isDarkTheme, setIsDarkTheme] = useState(false)
-  const [colorPlateColors, setColorPlateColors] = useState(
-    () => themes[0].colors
-  )
+  const [localThemeIndex, setLocalThemeIndex] = useState(0)
+  const [localIsDarkTheme, setLocalIsDarkTheme] = useState(false)
+  const syntaxThemeCtx = useContext(SyntaxThemeContext)
+  const currentThemeIndex = syntaxThemeCtx?.themeIndex ?? localThemeIndex
+  const isDarkTheme = syntaxThemeCtx
+    ? syntaxThemeCtx.previewMode === 'dark'
+    : localIsDarkTheme
 
   const [textareaColor, setTextareaColor] = useState('transparent')
 
   const currentTheme = themes[currentThemeIndex]
   const nextTheme = themes[(currentThemeIndex + 1) % themes.length]
+  const colorPlateColors =
+    isDarkTheme && currentTheme.colorsDark
+      ? currentTheme.colorsDark
+      : currentTheme.colors
 
   const toggleTheme = () => {
-    setCurrentThemeIndex((prev) => (prev + 1) % themes.length)
+    const nextIndex = (currentThemeIndex + 1) % themes.length
+    if (syntaxThemeCtx) syntaxThemeCtx.setThemeIndex(nextIndex)
+    else setLocalThemeIndex(nextIndex)
   }
 
-  useEffect(() => {
-    if (!colorPlate) return
-    const selectedTheme = themes[currentThemeIndex]
-    setColorPlateColors(
-      isDarkTheme && selectedTheme.colorsDark
-        ? selectedTheme.colorsDark
-        : selectedTheme.colors
-    )
-  }, [currentThemeIndex, colorPlate, isDarkTheme])
+  const toggleAppearance = () => {
+    if (syntaxThemeCtx) {
+      syntaxThemeCtx.setPreviewMode(isDarkTheme ? 'light' : 'dark')
+    } else {
+      setLocalIsDarkTheme(value => !value)
+    }
+  }
 
   const toggleTextareaColor = () => {
     setTextareaColor((prev) =>
@@ -345,6 +344,7 @@ export default function LiveEditor({
         '--live-editor-window-surface': isDarkTheme ? '#242629' : '#ffffff',
         '--live-editor-canvas-surface': isDarkTheme ? '#3a3d42' : '#eef1f3',
         '--live-editor-window-border': isDarkTheme ? '#34373b' : '#e4e7e9',
+        '--live-editor-preset-min-height': DEFAULT_LIVE_EDITOR_MIN_HEIGHT,
       }) as CSSProperties,
     [activePlateColors, isDarkTheme, textareaTint]
   )
@@ -395,55 +395,95 @@ export default function LiveEditor({
               (colorPlate ? ' live-editor--with-header' : '') +
               (!colorPlate && showLanguageSwitcher
                 ? ' live-editor--with-syntax-toolbar'
+                : '') +
+              (languageSwitcher && !isControlled
+                ? ' live-editor--preset-height'
                 : '')
             }
           >
             {colorPlate && (
-              <div className="live-editor__header" role="toolbar" aria-label="Code appearance and export">
+              <div
+                className="live-editor__header"
+                role="toolbar"
+                aria-label="Syntax theme"
+              >
                 <button
                   type="button"
                   onClick={toggleTheme}
-                  className="theme-mode-button"
+                  className="live-editor__theme-button"
                   aria-label={`Next syntax theme (${nextTheme.name})`}
                   title={`Theme: ${currentTheme.name}`}
                 >
-                  <span className="theme-mode-button__full">{currentTheme.name}</span>
+                  <span className="live-editor__theme-name">{currentTheme.name}</span>
+                  <span className="live-editor__swatches" aria-hidden="true">
+                    {customizableColors.map(([tokenType, tokenTypeName]) => (
+                      <span
+                        key={tokenType}
+                        className="live-editor__swatch-dot"
+                        style={{ backgroundColor: colorPlateColors[tokenTypeName] }}
+                      />
+                    ))}
+                  </span>
                 </button>
-                <div className="live-editor__swatches" aria-label="Token colors">
-                  {customizableColors.map(([tokenType, tokenTypeName]) => {
-                    const inputId = `live-editor-color__input--${tokenTypeName}`
-                    const label = tokenLabels[tokenTypeName] ?? tokenTypeName
-                    return (
-                      <label key={tokenType} className="live-editor__swatch" htmlFor={inputId} title={label}>
-                        <span
-                          className="live-editor__swatch-dot"
-                          style={{ backgroundColor: colorPlateColors[tokenTypeName] }}
-                        />
-                        <input
-                          key={`${currentTheme.id}-${tokenTypeName}`}
-                          type="color"
-                          defaultValue={colorPlateColors[tokenTypeName]}
-                          id={inputId}
-                          onChange={(e) => setColorPlateColors({
-                            ...colorPlateColors,
-                            [tokenTypeName]: e.target.value,
-                          })}
-                        />
-                      </label>
-                    )
-                  })}
-                </div>
-                <span className="live-editor__toolbar-separator" aria-hidden="true" />
                 <button
                   type="button"
                   className="live-editor__appearance-toggle"
-                  onClick={() => setIsDarkTheme((value) => !value)}
+                  onClick={toggleAppearance}
                   aria-label={isDarkTheme ? 'Use light code theme' : 'Use dark code theme'}
                   aria-pressed={isDarkTheme}
                   title={isDarkTheme ? 'Light theme' : 'Dark theme'}
                 >
                   <span aria-hidden="true" />
                 </button>
+              </div>
+            )}
+            {!colorPlate && languageControl}
+            <div
+              className="live-editor__capture-area"
+              ref={captureRef}
+              style={{ padding: capturePadding }}
+            >
+              <div className="live-editor__window" style={{ width: editorSize.width }}>
+                <div className="live-editor__window-header">
+                  <div className="live-editor__window-buttons" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                  <input
+                    className="live-editor__filename"
+                    value={captureFilename}
+                    onChange={(event) => setCaptureFilename(event.target.value)}
+                    aria-label="Screenshot filename"
+                    spellCheck={false}
+                  />
+                  <span className="live-editor__window-header-spacer" aria-hidden="true" />
+                </div>
+                <Editor
+                  ref={editorRef}
+                  className="codice editor flex-1"
+                  controls={false}
+                  value={displayCode}
+                  fontSize="0.9rem"
+                  extension={activeFileExtension}
+                  onChange={handleEditorChange}
+                />
+                {(['right', 'left'] as const).map((edge) => (
+                  <div
+                    key={edge}
+                    className={`live-editor__resize-handle live-editor__resize-handle--${edge}`}
+                    onPointerDown={(event) => startResize(edge, event)}
+                    aria-hidden="true"
+                  />
+                ))}
+              </div>
+            </div>
+            {colorPlate && (
+              <div
+                className="live-editor__footer"
+                role="toolbar"
+                aria-label="Code appearance and export"
+              >
                 <div className="live-editor__toolbar-actions">
                   <select
                     className="live-editor__padding-select"
@@ -493,47 +533,6 @@ export default function LiveEditor({
                 </div>
               </div>
             )}
-            {!colorPlate && languageControl}
-            <div
-              className="live-editor__capture-area"
-              ref={captureRef}
-              style={{ padding: capturePadding }}
-            >
-              <div className="live-editor__window" style={{ width: editorSize.width }}>
-                <div className="live-editor__window-header">
-                  <div className="live-editor__window-buttons" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                  <input
-                    className="live-editor__filename"
-                    value={captureFilename}
-                    onChange={(event) => setCaptureFilename(event.target.value)}
-                    aria-label="Screenshot filename"
-                    spellCheck={false}
-                  />
-                  <span className="live-editor__window-header-spacer" aria-hidden="true" />
-                </div>
-                <Editor
-                  ref={editorRef}
-                  className="codice editor flex-1"
-                  controls={false}
-                  value={displayCode}
-                  fontSize="0.9rem"
-                  extension={activeFileExtension}
-                  onChange={handleEditorChange}
-                />
-                {(['right', 'left'] as const).map((edge) => (
-                  <div
-                    key={edge}
-                    className={`live-editor__resize-handle live-editor__resize-handle--${edge}`}
-                    onPointerDown={(event) => startResize(edge, event)}
-                    aria-hidden="true"
-                  />
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </div>

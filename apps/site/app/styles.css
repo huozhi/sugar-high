@@ -307,36 +307,69 @@ input[type='checkbox']:checked {
 @media (max-width: 680px) {
   .showcase-stack {
     --showcase-card-width: min(88vw, 360px);
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    min-height: 0;
+    position: relative;
+    display: block;
+    min-height: calc(var(--showcase-preview-max-h) + 72px);
     margin-top: 1rem;
     padding: 28px calc(6vw - 2px) 44px;
-    overflow-x: auto;
-    overflow-y: visible;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .showcase-stack::-webkit-scrollbar {
-    display: none;
+    overflow: visible;
+    touch-action: pan-y;
   }
 
   .showcase-card--stack,
   .showcase-stack--spread .showcase-card--stack {
-    position: relative;
-    top: auto;
-    left: auto;
-    flex: 0 0 var(--showcase-card-width);
+    position: absolute;
+    top: 28px;
+    left: 50%;
     width: var(--showcase-card-width);
     max-width: var(--showcase-card-width);
     height: var(--showcase-preview-max-h);
     max-height: var(--showcase-preview-max-h);
-    transform: none;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(18px) scale(0.94);
+    transition:
+      opacity 0.34s ease,
+      transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .showcase-card--mobile-active,
+  .showcase-stack--spread .showcase-card--mobile-active {
+    z-index: 30;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(calc(-50% + var(--showcase-drag-x, 0px)));
+  }
+
+  .showcase-card--mobile-next,
+  .showcase-stack--spread .showcase-card--mobile-next {
+    z-index: 20;
+    opacity: 0.92;
+    transform: translateX(calc(-50% + 10px)) translateY(9px) scale(0.98) rotate(1.4deg);
+  }
+
+  .showcase-card--mobile-after-next,
+  .showcase-stack--spread .showcase-card--mobile-after-next {
+    z-index: 10;
+    opacity: 0.72;
+    transform: translateX(calc(-50% - 7px)) translateY(17px) scale(0.96) rotate(-1.5deg);
+  }
+
+  .showcase-card--mobile-previous,
+  .showcase-stack--spread .showcase-card--mobile-previous {
+    z-index: 40;
+    opacity: 0;
+    transform: translateX(calc(-50% - 105vw)) rotate(-8deg);
+  }
+
+  .showcase-card--mobile-previous.showcase-card--exit-right,
+  .showcase-stack--spread .showcase-card--mobile-previous.showcase-card--exit-right {
+    transform: translateX(calc(-50% + 105vw)) rotate(8deg);
+  }
+
+  .showcase-card--dragging,
+  .showcase-stack--spread .showcase-card--dragging {
+    transition: none;
   }
 
   .showcase-pagination {
@@ -362,6 +395,10 @@ input[type='checkbox']:checked {
   .showcase-pagination__dot[aria-current='true'] {
     background: #f47067;
     transform: scale(1.3);
+  }
+
+  .showcase-stack .showcase-card-hit {
+    touch-action: pan-y;
   }
 }
 
@@ -481,12 +518,14 @@ code {
 
 .live-editor::-webkit-scrollbar,
 .live-editor__header::-webkit-scrollbar,
+.live-editor__footer::-webkit-scrollbar,
 .live-editor__capture-area::-webkit-scrollbar {
   display: none;
 }
 
 .live-editor,
 .live-editor__header,
+.live-editor__footer,
 .live-editor__capture-area {
   scrollbar-width: none;
 }
@@ -541,19 +580,19 @@ code {
   outline-offset: 0;
 }
 
-.live-editor__header .live-editor__syntax-toolbar-select {
+.live-editor__footer .live-editor__syntax-toolbar-select {
   color: #68727f;
   background-color: transparent;
   border-color: transparent;
 }
 
-.live-editor__header .live-editor__syntax-toolbar {
+.live-editor__footer .live-editor__syntax-toolbar {
   display: flex;
   align-items: center;
   height: 100%;
 }
 
-.live-editor__header .live-editor__syntax-toolbar-select:hover {
+.live-editor__footer .live-editor__syntax-toolbar-select:hover {
   color: #333;
   background-color: #eceff1;
   border-color: transparent;
@@ -1081,20 +1120,22 @@ code {
   background-color: currentColor;
 }
 
-/* The editor is also the screenshot canvas: controls sit in one shared, scrollable toolbar. */
+/* The screenshot canvas sits between dedicated theme and action toolbars. */
 .live-editor-layout {
   grid-template-columns: 1fr minmax(0, var(--live-editor-pane-max)) 1fr;
   margin: 48px auto 64px;
 }
 
-.live-editor__header {
+.live-editor__header,
+.live-editor__footer {
+  display: flex;
+  align-items: center;
   justify-content: flex-start;
   gap: 6px;
   height: 38px;
-  width: 640px;
+  width: max-content;
   max-width: calc(100vw - 32px);
   flex: 0 0 auto;
-  margin-bottom: 10px;
   padding: 0 8px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -1105,13 +1146,51 @@ code {
   backdrop-filter: blur(12px);
 }
 
-.live-editor__header > .theme-mode-button {
+.live-editor__header {
+  margin-bottom: 10px;
+  padding: 3px;
+}
+
+.live-editor__footer {
+  margin-top: 10px;
+}
+
+.live-editor__theme-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: auto;
+  height: 100%;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.live-editor__theme-button:hover {
+  background: #edf0f2;
+}
+
+.live-editor__theme-button:focus-visible {
+  outline: 1px solid color-mix(in srgb, #354150 34%, transparent);
+  outline-offset: -1px;
+}
+
+.live-editor__theme-name {
   flex: 0 0 68px;
-  width: 68px;
   overflow: hidden;
+  color: #8a949e;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
   text-align: left;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.live-editor__header .live-editor__appearance-toggle {
+  margin-right: 5px;
 }
 
 .live-editor__toolbar-actions {
@@ -1119,7 +1198,7 @@ code {
   flex: 0 0 auto;
   align-items: center;
   gap: 4px;
-  margin-left: auto;
+  margin-left: 0;
 }
 
 .live-editor__padding-select {
@@ -1142,11 +1221,12 @@ code {
   background-color: #e9edf0;
 }
 
-.live-editor__header::-webkit-scrollbar {
+.live-editor__header::-webkit-scrollbar,
+.live-editor__footer::-webkit-scrollbar {
   display: none;
 }
 
-.live-editor__toolbar-actions > .copy-button,
+.live-editor__footer .copy-button,
 .live-editor__screenshot-button {
   display: inline-flex;
   flex: 0 0 auto;
@@ -1162,7 +1242,7 @@ code {
   cursor: pointer;
 }
 
-.live-editor__toolbar-actions > .copy-button:hover {
+.live-editor__footer .copy-button:hover {
   color: #354150;
   background: transparent;
 }
@@ -1178,28 +1258,10 @@ code {
 
 .live-editor__swatches {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   gap: 5px;
   min-width: 0;
-}
-
-.live-editor__swatch {
-  position: relative;
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 0;
-  height: 24px;
-  padding: 0 3px;
-  border-radius: 5px;
-  color: #7c8791;
-  font-size: 10px;
-  cursor: pointer;
-}
-
-.live-editor__swatch:hover {
-  color: #354150;
-  background: #edf0f2;
 }
 
 .live-editor__swatch-dot {
@@ -1208,22 +1270,6 @@ code {
   flex: 0 0 auto;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 50%;
-}
-
-.live-editor__swatch input[type='color'] {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
-.live-editor__toolbar-separator {
-  width: 3px;
-  height: 3px;
-  flex: 0 0 auto;
-  margin: 0 2px;
-  border-radius: 50%;
-  background: #aeb6bd;
 }
 
 .live-editor__appearance-toggle {
@@ -1238,7 +1284,7 @@ code {
   border-radius: 5px;
   background: transparent;
   cursor: pointer;
-  margin-right: 6px;
+  margin-right: 0;
 }
 
 .live-editor__appearance-toggle:hover {
@@ -1407,11 +1453,7 @@ code {
     padding-bottom: 20px;
   }
 
-  /*
-   * Stretch the flex column; min-width:0 avoids intrinsic min-width from code.
-   * Do not use left:50% + translate(-50%) here: with overflow-x on an ancestor it
-   * clips half the card. Pin with left/right:0 instead.
-   */
+  /* Stretch the flex column; min-width:0 avoids intrinsic min-width from code. */
   .showcase-section.carousel.container-showcase {
     display: flex;
     flex-direction: column;
@@ -1426,28 +1468,23 @@ code {
   .showcase-stack {
     --showcase-preview-max-h: min(320px, 52vh);
     --showcase-card-width: min(360px, calc(100vw - 48px));
-    min-height: 0;
+    min-height: calc(var(--showcase-preview-max-h) + 72px);
     padding: 28px calc(6vw - 2px) 44px;
     width: 100%;
     max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
-    overflow-x: auto;
-    overflow-y: visible;
+    overflow: visible;
+    touch-action: pan-y;
   }
 
   .showcase-card--stack {
-    left: auto;
+    left: 50%;
     right: auto;
     margin: 0;
     width: var(--showcase-card-width);
     max-width: var(--showcase-card-width);
     min-width: 0;
-    transform: none;
-  }
-
-  .showcase-stack--spread .showcase-card--stack {
-    transform: none;
   }
 
   .showcase-stack .showcase-card-lift {
@@ -1458,7 +1495,7 @@ code {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    touch-action: pan-x pan-y;
+    touch-action: pan-y;
   }
 
   .showcase-stack .showcase-card-hit::-webkit-scrollbar {
@@ -1502,11 +1539,13 @@ code {
     gap: 0;
   }
 
-  .live-editor__header {
+  .live-editor__header,
+  .live-editor__footer {
     position: sticky;
     top: 0;
     z-index: 30;
-    width: 100%;
+    width: max-content;
+    max-width: 100%;
     height: auto;
     min-height: 38px;
     padding: 6px 8px;
@@ -1517,13 +1556,17 @@ code {
     backdrop-filter: blur(10px);
   }
 
-  .live-editor__header > .theme-mode-button {
+  .live-editor__footer {
+    position: relative;
+    margin-top: 10px;
+  }
+
+  .live-editor__theme-button {
     height: 32px;
   }
 
   .live-editor__swatches {
-    flex: 1 1 150px;
-    gap: 1px;
+    gap: 5px;
     overflow-x: auto;
     scrollbar-width: none;
   }
@@ -1532,20 +1575,9 @@ code {
     display: none;
   }
 
-  .live-editor__swatch {
-    min-width: 24px;
-    height: 32px;
-    padding: 0 3px;
-    justify-content: center;
-  }
-
   .live-editor__swatch-dot {
     width: 13px;
     height: 13px;
-  }
-
-  .live-editor__toolbar-separator {
-    display: none;
   }
 
   .live-editor__appearance-toggle {
@@ -1555,10 +1587,11 @@ code {
   }
 
   .live-editor__toolbar-actions {
-    flex: 1 0 100%;
-    width: 100%;
-    margin-left: 0;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
     gap: 6px;
+    overflow-x: auto;
   }
 
   .live-editor__padding-select {
@@ -1569,14 +1602,15 @@ code {
     font-size: 12px;
   }
 
-  .live-editor__toolbar-actions > .copy-button,
+  .live-editor__footer .copy-button,
   .live-editor__screenshot-button,
-  .live-editor__header .textarea-color-toggle {
+  .live-editor__footer .textarea-color-toggle,
+  .live-editor__header .live-editor__appearance-toggle {
     width: 32px;
     height: 32px;
   }
 
-  .live-editor__header .live-editor__syntax-toolbar-select {
+  .live-editor__footer .live-editor__syntax-toolbar-select {
     height: 32px;
     max-width: 7rem;
     font-size: 12px;
@@ -1710,6 +1744,10 @@ code {
 .live-editor__capture-area .codice.editor,
 .live-editor__capture-area .codice.editor [data-codice-content] {
   background-color: var(--live-editor-window-surface);
+}
+
+.live-editor--preset-height .codice.editor [data-codice-content] {
+  min-height: var(--live-editor-preset-min-height);
 }
 
 .live-editor__capture-area .codice.editor textarea,
