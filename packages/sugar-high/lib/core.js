@@ -53,7 +53,7 @@ function tokenize(code, options) {
     if (commentType) {
       const start = i++
       while (i < code.length) {
-        if (onCommentEnd(code[i - 1], code[i], i, code) == commentType) {
+        if (onCommentEnd(code[i - 1], code[i], i, code, start) == commentType) {
           i++
           break
         }
@@ -154,7 +154,7 @@ export { generate, parse, render, SugarHigh, tokenize }
  * @property {Set<string>} [keywords]
  * @property {Set<string>} [typeKeywords]
  * @property {(curr: string, next: string, index: number, code: string) => number | boolean} [onCommentStart]
- * @property {(prev: string, curr: string, index: number, code: string) => number | boolean} [onCommentEnd]
+ * @property {(prev: string, curr: string, index: number, code: string, start: number) => number | boolean} [onCommentEnd]
  * @property {(curr: string, index: number, code: string) => number | null | undefined} [onLiteral]
  * @property {(curr: string, index: number, code: string) => number | null | undefined} [onQuote]
  * @property {boolean} [quotedKeys]

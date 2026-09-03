@@ -198,9 +198,9 @@ ${formatPlateAsCssVars(darkPlate)}
         <div className="install-banner__block">
           <h2>Languages</h2>
           <p>
-            Sugar High includes 25 languages out of the box—no extra grammars or setup required.
+            Sugar High includes 29 languages out of the box—no extra grammars or setup required.
             JavaScript and JSX work by default; pass a canonical name to highlight TypeScript,
-            Python, CSS, Rust, Go, HTML, SQL, Markdown, and the other built-ins.
+            Python, CSS, Rust, Go, Zig, Lua, HTML, SQL, Markdown, and the other built-ins.
           </p>
           <p>
             Related dialects share the same built-in implementation, including TSX, JSONC,

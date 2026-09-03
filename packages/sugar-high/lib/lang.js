@@ -2,8 +2,8 @@
 
 import {
   c, cpp, csharp, css, diff, dockerfile, go, graphql, hcl, html, java, javascript, json,
-  kotlin, markdown, nonJavaScript, php, plaintext, powershell, python, ruby, rust, shell, sql,
-  swift, toml, typescript, yaml,
+  kotlin, lua, markdown, nonJavaScript, php, plaintext, powershell, python, ruby, rust, shell, sql,
+  swift, toml, typescript, yaml, zig,
 } from './presets/configs.js'
 
 /**
@@ -45,6 +45,8 @@ const languages = [
   { id: 'dockerfile', extension: 'dockerfile', aliases: ['docker'], config: nonJavaScript(dockerfile) },
   { id: 'graphql', extension: 'graphql', aliases: ['gql'], config: nonJavaScript(graphql) },
   { id: 'hcl', extension: 'hcl', aliases: ['terraform', 'tf'], config: nonJavaScript(hcl) },
+  { id: 'zig', extension: 'zig', aliases: [], config: nonJavaScript(zig) },
+  { id: 'lua', extension: 'lua', aliases: [], config: nonJavaScript(lua) },
 ]
 
 /** @param {string} value */
