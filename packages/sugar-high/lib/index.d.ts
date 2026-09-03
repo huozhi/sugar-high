@@ -35,6 +35,8 @@ export type LanguageName =
   | 'dockerfile'
   | 'graphql'
   | 'hcl'
+  | 'zig'
+  | 'lua'
 
 export type HighlightOptions = DisplayOptions & {
   /** Canonical language name. Fence and extension aliases must be normalized first. */

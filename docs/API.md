@@ -93,6 +93,8 @@ input map to that canonical name. Canonical names themselves are always accepted
 | `dockerfile` | `.dockerfile` | `docker` |
 | `graphql` | `.graphql` | `gql` |
 | `hcl` | `.hcl` | `terraform`, `tf` |
+| `zig` | `.zig` | — |
+| `lua` | `.lua` | — |
 
 Related dialects intentionally share one canonical language. JavaScript includes JSX, TypeScript
 includes TSX, JSON includes JSONC comments, Shell includes sh/Bash/Zsh, and HCL includes Terraform.

@@ -57,6 +57,8 @@ describe('language registry', () => {
     ['gql', 'graphql'],
     ['terraform', 'hcl'],
     ['tf', 'hcl'],
+    ['zig', 'zig'],
+    ['lua', 'lua'],
     ['rb', 'ruby'],
     ['txt', 'plaintext'],
     ['text', 'plaintext'],

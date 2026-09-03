@@ -89,7 +89,13 @@ export type ParseOptions = {
   keywords?: Set<string>
   typeKeywords?: Set<string>
   onCommentStart?: (curr: string, next: string, index: number, code: string) => number | boolean
-  onCommentEnd?: (prev: string, curr: string, index: number, code: string) => number | boolean
+  onCommentEnd?: (
+    prev: string,
+    curr: string,
+    index: number,
+    code: string,
+    start: number,
+  ) => number | boolean
   onLiteral?: (curr: string, index: number, code: string) => number | null | undefined
   onQuote?: (curr: string, index: number, code: string) => number | null | undefined
   quotedKeys?: boolean

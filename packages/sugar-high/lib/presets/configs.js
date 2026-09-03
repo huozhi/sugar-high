@@ -14,6 +14,7 @@ import * as java from '../lang/java.js'
 import * as javascript from '../lang/javascript.js'
 import * as json from '../lang/json.js'
 import * as kotlin from '../lang/kotlin.js'
+import * as lua from '../lang/lua.js'
 import * as markdown from '../lang/markdown.js'
 import * as php from '../lang/php.js'
 import * as plaintext from '../lang/plaintext.js'
@@ -27,6 +28,7 @@ import * as swift from '../lang/swift.js'
 import * as toml from '../lang/toml.js'
 import * as typescript from '../lang/typescript.js'
 import * as yaml from '../lang/yaml.js'
+import * as zig from '../lang/zig.js'
 
 /**
  * Disable JavaScript-only scanner modes for a non-JavaScript language.
@@ -71,6 +73,8 @@ function createConfigs() {
     dockerfile: nonJavaScript(dockerfile),
     graphql: nonJavaScript(graphql),
     hcl: nonJavaScript(hcl),
+    zig: nonJavaScript(zig),
+    lua: nonJavaScript(lua),
   }
 }
 
@@ -83,6 +87,6 @@ function configFor(name) {
 
 export {
   c, configFor, configs, cpp, csharp, css, diff, dockerfile, go, graphql, hcl, html, java,
-  javascript, json, kotlin, markdown, nonJavaScript, php, plaintext, powershell, python, ruby,
-  rust, shell, sql, swift, toml, typescript, yaml,
+  javascript, json, kotlin, lua, markdown, nonJavaScript, php, plaintext, powershell, python, ruby,
+  rust, shell, sql, swift, toml, typescript, yaml, zig,
 }
