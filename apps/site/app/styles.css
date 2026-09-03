@@ -199,9 +199,10 @@ input[type='checkbox']:checked {
   flex: 1 1 auto;
   min-height: 0;
   max-height: 100%;
-  border-radius: 6px;
+  border-radius: 45px;
+  corner-shape: squircle;
   overflow: hidden;
-  box-shadow: -3px 8px 28px rgba(0, 0, 0, 0.22);
+  box-shadow: -3px 9px 18px #0000001a, 0 0 0 1px #00000008;
   background: var(--showcase-card-bg, transparent);
   transform: translateY(0);
   transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.24s ease;
@@ -214,7 +215,7 @@ input[type='checkbox']:checked {
 
   .showcase-card:hover .showcase-card-lift {
     transform: translateY(-18px) scale(1.02);
-    box-shadow: -3px 16px 34px rgba(0, 0, 0, 0.25);
+    box-shadow: -3px 16px 34px rgba(0, 0, 0, 0.25), 0 0 0 1px #00000008;
   }
 }
 
@@ -224,7 +225,7 @@ input[type='checkbox']:checked {
 
 .showcase-card:focus-within .showcase-card-lift {
   transform: translateY(-18px) scale(1.02);
-  box-shadow: -3px 16px 34px rgba(0, 0, 0, 0.25);
+  box-shadow: -3px 16px 34px rgba(0, 0, 0, 0.25), 0 0 0 1px #00000008;
 }
 
 .showcase-card--popped .showcase-card-hit {
