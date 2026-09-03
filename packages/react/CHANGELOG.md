@@ -1,5 +1,11 @@
 # @sugar-high/react
 
+## 2.2.1
+
+### Patch Changes
+
+- c3fe994: Keep the default editor and editable-title caret visible when their text layer is transparent.
+
 ## 2.2.0
 
 ### Minor Changes
