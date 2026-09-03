@@ -12,8 +12,14 @@ const run = (command, args, cwd = root) => execFileSync(command, args, {
   stdio: 'inherit',
 })
 
+// Package managers set npm_execpath for scripts. Reuse it so nested commands run
+// the same pnpm version.
+const runPnpm = (args, cwd = root) => process.env.npm_execpath
+  ? run(process.env.npm_execpath, args, cwd)
+  : run('pnpm', args, cwd)
+
 const pack = (directory, name) => {
-  run('pnpm', ['pack', '--pack-destination', temporary], join(root, directory))
+  runPnpm(['pack', '--pack-destination', temporary], join(root, directory))
   return join(temporary, readdirSync(temporary).find(file => file.startsWith(name) && file.endsWith('.tgz')))
 }
 
@@ -32,12 +38,14 @@ try {
       react: '^19.2.0',
       'sugar-high': `file:${sugarHigh}`,
     },
-    pnpm: {
-      overrides: {
-        '@sugar-high/remark>sugar-high': `file:${sugarHigh}`,
-      },
-    },
   }, null, 2))
+
+  writeFileSync(join(temporary, 'pnpm-workspace.yaml'), `
+packages:
+  - '.'
+overrides:
+  '@sugar-high/remark>sugar-high': ${JSON.stringify(`file:${sugarHigh}`)}
+`)
 
   writeFileSync(join(temporary, 'check.mjs'), `
 import { highlight } from 'sugar-high'
@@ -84,9 +92,9 @@ remarkSugarHigh
 remarkHighlight
 `)
 
-  run('pnpm', ['install', '--prefer-offline', '--ignore-scripts'], temporary)
+  runPnpm(['install', '--prefer-offline', '--ignore-scripts'], temporary)
   run('node', ['check.mjs'], temporary)
-  run('pnpm', [
+  runPnpm([
     '--filter', 'sugar-high', 'exec', 'tsc', '--noEmit', '--strict', '--skipLibCheck',
     '--module', 'NodeNext', '--moduleResolution', 'NodeNext', '--target', 'ES2022',
     join(temporary, 'check.ts'),
