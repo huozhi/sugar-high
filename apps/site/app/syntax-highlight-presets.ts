@@ -16,6 +16,7 @@ export const SYNTAX_PRESET_CODICE_EXTENSIONS = new Set([
   'scss',
   'sass',
   'less',
+  'md',
 ])
 
 export const SYNTAX_PRESET_SELECT_OPTIONS: readonly {
