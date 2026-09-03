@@ -10,6 +10,13 @@
 - Add a Changeset with `pnpm changeset` for user-facing package changes. Do not add one for
   internal-only work unless requested.
 
+# Pull requests
+
+- Prefix pull request titles by change type: `feat:` for features, `fix:` for patches and bug
+  fixes, and `ci:` for CI, workflow, and release-process fixes.
+- Follow the prefix with a concise imperative title, for example `ci: Fix package checks before
+  publishing`.
+
 # Architecture
 
 - Keep the default API focused on the common path. Put advanced composition in existing subpaths

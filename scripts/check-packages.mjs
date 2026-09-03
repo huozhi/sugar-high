@@ -12,6 +12,8 @@ const run = (command, args, cwd = root) => execFileSync(command, args, {
   stdio: 'inherit',
 })
 
+// Package managers set npm_execpath for scripts. Reuse it so nested commands run
+// the same pnpm version.
 const runPnpm = (args, cwd = root) => process.env.npm_execpath
   ? run(process.env.npm_execpath, args, cwd)
   : run('pnpm', args, cwd)
