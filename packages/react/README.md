@@ -215,7 +215,7 @@ The `--sh-*` variables control both the component frame and syntax tokens; see t
 | --- | --- | --- | --- |
 | `--sh-editor-text-color` | Editor | `transparent` | Textarea text color; normally transparent over highlighted code. |
 | `--sh-editor-background-color` | Editor | `transparent` | Textarea background color. |
-| `--sh-caret-color` | Both | `inherit` | Editor caret and editable title caret. |
+| `--sh-caret-color` | Both | `CanvasText` | Editor caret and editable title caret. |
 | `--sh-font-family` | Both | Editor: `Consolas, Monaco, monospace`; Code: inherited | Code, textarea, and title font family. |
 | `--sh-font-size` | Both | `inherit` | Code and textarea font size. |
 | `--sh-padding` | Both | `1rem` | Shared content and header spacing. |
