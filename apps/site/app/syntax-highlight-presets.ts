@@ -1,5 +1,6 @@
 import { lang, languages } from 'sugar-high/lang'
 import { fileExtensionForHighlight } from './github-source'
+import { LANGUAGE_EXAMPLES } from './language-examples'
 
 /**
  * Extensions Codice maps to sugar-high presets (`getPresetByExt` in codice).
@@ -49,4 +50,13 @@ export function fileExtensionFromSyntaxSelect(
   selectValue: string
 ): string | undefined {
   return lang(selectValue) === 'javascript' ? undefined : selectValue
+}
+
+export function exampleFromSyntaxSelect(selectValue: string) {
+  const language = languages.find(({ id }) => id === lang(selectValue))
+  if (!language) return undefined
+  return {
+    code: LANGUAGE_EXAMPLES[language.id],
+    filename: language.id === 'dockerfile' ? 'Dockerfile' : `example.${language.extension}`,
+  }
 }

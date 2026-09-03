@@ -15,9 +15,11 @@ import { CopyButton } from './components/copy-button'
 import { copyImageDataUrl } from './lib/copy-image'
 import {
   SYNTAX_PRESET_SELECT_OPTIONS,
+  exampleFromSyntaxSelect,
   fileExtensionFromSyntaxSelect,
   syntaxPresetSelectValue,
 } from './syntax-highlight-presets'
+import { LANGUAGE_EXAMPLES } from './language-examples'
 import {
   LIVE_EDITOR_THEME_PRESETS,
   buildCodiceThemeCopySnippet,
@@ -45,20 +47,7 @@ const tokenLabels: Record<string, string> = {
   comment: 'Comments',
 }
 
-const DEFAULT_LIVE_CODE = `\
-export default function App() {
-  return (
-    <>
-      <h1 id="title">
-        Hello
-        <span> world</span>
-      </h1>
-      <div style={styles.bar} />
-    </>
-  )
-}
-
-`
+const DEFAULT_LIVE_CODE = LANGUAGE_EXAMPLES.javascript
 
 function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onReady) {
   const [text, setText] = useState(enableTypingAnimation ? '' : targetText)
@@ -178,7 +167,7 @@ export default function LiveEditor({
   const editorRef = useRef(null)
   const captureRef = useRef<HTMLDivElement>(null)
   const [isCapturing, setIsCapturing] = useState(false)
-  const [captureFilename, setCaptureFilename] = useState('.code')
+  const [captureFilename, setCaptureFilename] = useState('example.js')
   const [capturePadding, setCapturePadding] = useState<20 | 36 | 56>(36)
   const [editorSize, setEditorSize] = useState<{ width: number }>({
     width: 640,
@@ -371,11 +360,18 @@ export default function LiveEditor({
         title="Syntax language"
         value={syntaxPresetSelectValue(activeFileExtension)}
         onChange={(e) => {
-          const nextExtension = fileExtensionFromSyntaxSelect(e.target.value)
+          const selectValue = e.target.value
+          const nextExtension = fileExtensionFromSyntaxSelect(selectValue)
           if (onFileExtensionChange) {
             onFileExtensionChange(nextExtension)
           } else {
             setLocalFileExtension(nextExtension)
+            const example = exampleFromSyntaxSelect(selectValue)
+            if (example) {
+              setAnimatedCode(example.code)
+              setCaptureFilename(example.filename)
+              if (persistEditorDraft) setDefaultLiveCode(example.code)
+            }
           }
         }}
       >
