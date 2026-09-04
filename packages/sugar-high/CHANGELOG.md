@@ -1,5 +1,16 @@
 # sugar-high
 
+## 2.3.0
+
+### Minor Changes
+
+- e04c8ba: Add built-in Zig and Lua syntax highlighting.
+
+### Patch Changes
+
+- f536136: Highlight Markdown syntax delimiters while keeping prose and fenced code contents neutral.
+- d769a01: Keep multi-line comments highlighted until their closing delimiter in C-like languages.
+
 ## 2.2.2
 
 ### Patch Changes
