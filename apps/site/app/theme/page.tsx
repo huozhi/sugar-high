@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import ThemeGuide, { type ThemeOption } from './theme-guide'
+import { ReactThemeProvider } from '../components/react-themes'
 
 export default async function ThemePage() {
   const themesDir = join(process.cwd(), 'public', 'themes')
@@ -20,7 +21,9 @@ export default async function ThemePage() {
       {themes.map(theme => (
         <link key={theme.id} rel="stylesheet" href={`/themes/${theme.file}`} />
       ))}
-      <ThemeGuide themes={themes} tailwindRecipe={tailwindRecipe} />
+      <ReactThemeProvider>
+        <ThemeGuide themes={themes} tailwindRecipe={tailwindRecipe} />
+      </ReactThemeProvider>
     </>
   )
 }

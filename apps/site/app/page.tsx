@@ -2,6 +2,7 @@ import Carousel from './carousel'
 import LiveEditor from './live-editor'
 import InstallBanner from './components/install-banner'
 import HeroAnimation from './components/code-animation'
+import Benchmarks from './components/benchmarks'
 import { SyntaxThemeProvider } from './syntax-theme-context'
 import { ProductNav } from './product-nav'
 import './product-page.css'
@@ -28,6 +29,7 @@ export default function Page() {
         <LiveEditor languageSwitcher />
         <InstallBanner />
       </SyntaxThemeProvider>
+      <Benchmarks />
     </>
   )
 }

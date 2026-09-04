@@ -9,6 +9,32 @@ returns HTML without requiring a DOM.
 
 ![Sugar High preview](https://repository-images.githubusercontent.com/453236442/9aa2144a-3a4c-4a93-a87f-92ca6a37ded6)
 
+## Benchmarks
+
+Sugar High, PrismJS, and highlight.js highlighting the same generated TypeScript files:
+
+<!-- benchmark:start -->
+Measured 2026-09-04 with Node v24.18.0, darwin arm64, Apple M4 Pro.
+
+| TypeScript | Sugar High 2.2.2 | PrismJS 1.30.0 | highlight.js 11.12.0 |
+| --- | ---: | ---: | ---: |
+| Minified (KiB) | 9.90 | 14.63 | 29.54 |
+| Gzip (KiB) | 4.35 | 5.47 | 11.12 |
+| 11 KiB | 1.78 | 1.18 | 2.11 |
+| 100 KiB | 18.02 | 15.25 | 23.05 |
+| 500 KiB | 90.98 | 96.41 | 118.39 |
+
+Median milliseconds per file; lower is better. 5 timed samples after warmup.
+Sizes are TypeScript-only browser bundles, minified with Bun; gzip uses level 9. Theme CSS is excluded.
+Loading and initialization are excluded. Each library highlights the same generated TypeScript
+into HTML using an explicit language. Grammars and HTML output differ; this is not a measure
+of highlighting quality or browser rendering speed. Results vary by machine and workload.
+<!-- benchmark:end -->
+
+Run `pnpm --filter sugar-high benchmark:large --write` to refresh this table and the
+[website comparison](https://sugar-high.vercel.app/#benchmarks) from the same measurement.
+See [benchmark methodology and options](../../docs/BENCHMARK.md).
+
 ## Install
 
 ```sh

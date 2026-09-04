@@ -215,3 +215,165 @@
     display: none;
   }
 }
+
+.react-theme-preview .react-product .product-card,
+.react-theme-preview .react-product .product-card__bar,
+.react-theme-preview .react-demo__status {
+  background: var(--demo-background);
+  color: var(--demo-muted);
+}
+
+.react-theme-preview .react-product [data-highlight] {
+  background: var(--demo-highlight);
+}
+
+.react-api-details {
+  border-top: 1px solid #dfe5e9;
+  border-bottom: 1px solid #dfe5e9;
+  padding: 16px 0;
+}
+
+.react-api-details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.react-api-details[open] > summary {
+  margin-bottom: 24px;
+}
+
+.react-demo-theme-picker,
+.react-code-demo {
+  --code-demo-height: 520px;
+  width: min(600px, 100%);
+  margin-inline: auto;
+}
+
+.react-demo-theme-picker {
+  margin-bottom: 16px;
+}
+
+.react-demo-theme-picker .react-theme-picker {
+  margin-top: 0;
+}
+
+.react-code-demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.react-code-language-list {
+  position: relative;
+  height: 26px;
+  overflow: hidden;
+}
+
+.react-code-language-list::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  top: 2px;
+  left: calc(50% - 42px);
+  width: 84px;
+  height: 24px;
+  border-radius: 5px;
+  background: rgb(120 133 146 / 10%);
+}
+
+.react-code-language-list::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  top: 0;
+  left: calc(50% - 4px);
+  width: 0;
+  height: 0;
+  border-inline: 4px solid transparent;
+  border-top: 5px solid #788592;
+}
+
+.react-code-languages {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  padding: 0 calc((100% - 84px) / 2);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+}
+
+.react-code-languages:focus-visible {
+  outline: 2px solid #596571;
+  outline-offset: -2px;
+}
+
+.react-code-demo > .product-card {
+  display: flex;
+  flex-direction: column;
+  height: var(--code-demo-height);
+}
+
+.react-code-demo .product-card__bar {
+  flex-shrink: 0;
+}
+
+.react-code-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  mask-image: linear-gradient(black calc(100% - 12px), transparent);
+}
+
+.react-code-scroll:focus-visible {
+  outline: 2px solid var(--demo-muted);
+  outline-offset: -2px;
+}
+
+.react-code-preview .sh__line--diff-add {
+  background-color: color-mix(in srgb, #2da44e 18%, transparent);
+}
+
+.react-code-preview .sh__line--diff-remove {
+  background-color: color-mix(in srgb, #cf222e 18%, transparent);
+}
+
+.react-code-preview .sh__line--diff-meta,
+.react-code-preview .sh__line--diff-hunk {
+  color: var(--demo-muted);
+}
+
+.react-code-languages::-webkit-scrollbar,
+.react-code-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.react-code-languages button {
+  flex: 0 0 84px;
+  width: 84px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #89939d;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  scroll-snap-align: center;
+}
+
+.react-code-languages button:hover,
+.react-code-languages button[aria-selected='true'] {
+  color: #354150;
+}
+
+.react-code-languages button[aria-selected='true'] {
+  font-weight: 650;
+}

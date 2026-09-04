@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Editor } from '@sugar-high/react'
 import type { LanguageName } from 'sugar-high'
 import { languages } from 'sugar-high/lang'
+import { useReactTheme } from '../components/react-themes'
 
 const initialCode = `import { useState } from 'react'
 import { Editor } from '@sugar-high/react'
@@ -25,6 +26,7 @@ export default function Page() {
 }`
 
 export function ReactDemo() {
+  const { palette } = useReactTheme()
   const [code, setCode] = useState(initialCode)
   const [language, setLanguage] = useState<LanguageName>('typescript')
   const [lineNumbers, setLineNumbers] = useState(true)
@@ -33,6 +35,7 @@ export function ReactDemo() {
     <div className="react-demo">
       <Editor
         className="react-demo__editor"
+        theme={palette}
         lang={language}
         title={null}
         controls={false}

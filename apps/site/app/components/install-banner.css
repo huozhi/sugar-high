@@ -376,3 +376,39 @@
   }
 
 }
+.install-banner__languages {
+  width: 100%;
+  max-width: 600px;
+  margin: 12px auto 0;
+}
+
+.install-banner__language-description {
+  color: var(--docs-ui-primary, #354150);
+}
+
+.install-banner__languages summary {
+  cursor: pointer;
+}
+
+.install-banner__languages table {
+  width: 100%;
+  margin-top: 8px;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.install-banner__languages th,
+.install-banner__languages td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e5e8eb;
+}
+
+.install-banner__languages tbody th {
+  font-weight: 400;
+}
+.install-banner__block .install-banner__language-toggle,
+.install-banner__block .install-banner__language-toggle:hover {
+  color: inherit;
+  text-decoration: underline;
+}

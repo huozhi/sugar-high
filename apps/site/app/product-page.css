@@ -31,6 +31,8 @@
 }
 
 .product-nav__brand {
+  display: inline-flex;
+  align-items: center;
   color: var(--product-ink);
   font-size: 20px;
   font-weight: 750;
@@ -71,7 +73,7 @@
   text-decoration: underline;
   text-decoration-color: var(--product-accent);
   text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
+  text-underline-offset: 3px;
 }
 
 .product-nav__source {

@@ -1,0 +1,146 @@
+.benchmarks {
+  max-width: 960px;
+  margin: 64px auto 80px;
+  padding: 0 20px;
+  color: #354150;
+  scroll-margin-top: 32px;
+}
+
+.benchmarks__heading {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.benchmarks__heading h2 {
+  margin: 0 0 12px;
+  font-size: clamp(26px, 5vw, 36px);
+  letter-spacing: -.045em;
+}
+
+.benchmarks [data-engine='sugar-high'] {
+  --bar-color: #f47067;
+}
+
+.benchmarks [data-engine='prismjs'] {
+  --bar-color: #bf7db6;
+}
+
+.benchmarks [data-engine='highlight.js'] {
+  --bar-color: #8d85ff;
+}
+
+.benchmarks__libraries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.benchmarks__libraries > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.benchmarks__libraries i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--bar-color);
+}
+
+.benchmarks__charts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid #e5e8eb;
+  border-radius: 12px;
+}
+
+.benchmarks__chart {
+  padding: 20px;
+}
+
+.benchmarks__chart + .benchmarks__chart {
+  border-left: 1px solid #e5e8eb;
+}
+
+.benchmarks__chart h3 {
+  margin-bottom: 18px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.benchmarks__row + .benchmarks__row {
+  margin-top: 0;
+}
+
+.benchmarks__row dd {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 65px;
+  align-items: center;
+  gap: 10px;
+}
+
+.benchmarks__value {
+  text-align: right;
+  white-space: nowrap;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  line-height: 11px;
+}
+
+.benchmarks__unit {
+  color: #64717e;
+  font-size: 10px;
+}
+
+.benchmarks__row[data-engine='sugar-high'] .benchmarks__value {
+  font-weight: 700;
+}
+
+.benchmarks__track {
+  display: block;
+  height: 5px;
+}
+
+.benchmarks__track > span {
+  display: block;
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+  background: var(--bar-color);
+}
+
+.benchmarks__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.benchmarks__caption {
+  margin: 16px 0 24px;
+  color: #64717e;
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 680px) {
+  .benchmarks {
+    margin-top: 40px;
+  }
+
+  .benchmarks__charts {
+    grid-template-columns: 1fr;
+  }
+
+  .benchmarks__chart + .benchmarks__chart {
+    border-left: 0;
+    border-top: 1px solid #e5e8eb;
+  }
+}

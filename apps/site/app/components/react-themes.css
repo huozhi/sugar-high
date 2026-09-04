@@ -1,0 +1,94 @@
+.react-theme-picker {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 32px;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 28px;
+}
+
+.react-theme-picker__swatches {
+  grid-column: 2;
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  height: 36px;
+  align-items: center;
+  padding-inline: calc((100% - 22px) / 2);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
+}
+
+.react-theme-picker__swatches::-webkit-scrollbar {
+  display: none;
+}
+
+.react-theme-picker__swatch {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  padding: 0;
+  border: 2px solid white;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: 1px solid #e1e5e8;
+  outline-offset: 2px;
+  scroll-snap-align: center;
+}
+
+.react-theme-picker__swatch[aria-pressed='true'] {
+  outline: 2px solid #596571;
+}
+
+.react-theme-picker__swatch:focus-visible {
+  outline: 2px solid #354150;
+  outline-offset: 4px;
+}
+
+.react-theme-picker__name {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #788592;
+  font-size: 12px;
+}
+
+.react-theme-names {
+  width: min(600px, 100%);
+  margin: 16px auto 0;
+  color: #788592;
+  font-size: 13px;
+}
+
+.react-theme-names summary {
+  cursor: pointer;
+}
+
+.react-theme-names p {
+  margin: 8px 0 0;
+  line-height: 1.6;
+}
+
+.react-theme-picker__mode > span {
+  width: 20px;
+  height: 20px;
+}
+
+.react-theme-picker__mode:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.react-theme-picker__mode:focus-visible {
+  outline: 2px solid #596571;
+  outline-offset: 1px;
+}
+
+
+@media (max-width: 480px) {
+  .react-theme-picker {
+    gap: 6px 10px;
+  }
+
+}

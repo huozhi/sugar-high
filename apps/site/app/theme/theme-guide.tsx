@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react'
 import { CopyButton } from '../components/copy-button'
 import { ProductNav } from '../product-nav'
 import { ProductStrike } from '../product-strike'
+import { ReactThemePicker, ThemeUsage, useReactTheme } from '../components/react-themes'
 import '../product-page.css'
 import './page.css'
 
@@ -106,13 +107,16 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
     { key: `${theme.id}:light`, label: `${theme.label} — Light`, theme, mode: 'light' as const },
     ...(theme.dark ? [{ key: `${theme.id}:dark`, label: `${theme.label} — Dark`, theme, mode: 'dark' as const }] : []),
   ]), [themes])
-  const [variantKey, setVariantKey] = useState('taffy:light')
+  const { id, dark } = useReactTheme()
+  const themeId = id.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)
+  const selectedTheme = themes.find(theme => theme.id === themeId) ?? themes[0]
+  const variantKey = `${selectedTheme.id}:${dark && selectedTheme.dark ? 'dark' : 'light'}`
   const [previewKeys, setPreviewKeys] = useState([
     'taffy:light',
     'gruvbox:dark',
     'soft-minimal:light',
   ])
-  const [randomTick, setRandomTick] = useState(0)
+  const [flips, setFlips] = useState<Record<number, { nextKey: string; phase: 'out' | 'in' }>>({})
   const selected = variants.find(variant => variant.key === variantKey) ?? variants[0]
   const cssUsage = `<Code
   className="${selected.theme.className}"
@@ -122,18 +126,13 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
 </Code>`
   const cssAgentCommand = `curl -fsSL https://sugar-high.vercel.app/themes/${selected.theme.file} -o ${selected.theme.file}`
 
-  const randomTheme = () => {
-    const choices = variants.filter(variant => variant.key !== selected.key)
-    const next = choices[Math.floor(Math.random() * choices.length)] ?? selected
-    setVariantKey(next.key)
-    setRandomTick(tick => tick + 1)
-  }
-
   const randomizePreview = (index: number) => {
-    const choices = variants.filter(variant => variant.key !== previewKeys[index])
+    if (flips[index]) return
+    const current = variants.find(variant => variant.key === previewKeys[index])
+    const choices = variants.filter(variant => variant.theme.id !== current?.theme.id)
     const next = choices[Math.floor(Math.random() * choices.length)]
     if (!next) return
-    setPreviewKeys(current => current.map((key, currentIndex) => currentIndex === index ? next.key : key))
+    setFlips(current => ({ ...current, [index]: { nextKey: next.key, phase: 'out' } }))
   }
 
   const previewContent = [
@@ -157,7 +156,7 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
         <section className="product-section">
           <div className="product-section__head">
             <h2>Comfortable by default</h2>
-            <p>Three calm light palettes adapted from the themes used by Codice.</p>
+            <p>Click a card to explore another theme.</p>
           </div>
           <div className="theme-preview-grid">
             {previewKeys.map((key, index) => {
@@ -170,6 +169,7 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
                   role="button"
                   tabIndex={0}
                   aria-label={`Randomize ${variant.label} preview`}
+                  aria-disabled={Boolean(flips[index])}
                   onClick={() => randomizePreview(index)}
                   onKeyDown={event => {
                     if (event.key === 'Enter' || event.key === ' ') {
@@ -178,12 +178,44 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
                     }
                   }}
                 >
-                  <Window title={variant.label.toLowerCase()} className={variant.theme.className} mode={variant.mode}>
-                    <Code className="theme-preview" lang={content.lang} cx={index === 0 ? undefined : emphasis}>{content.code}</Code>
-                  </Window>
+                  <div
+                    className="theme-preview-flip"
+                    data-phase={flips[index]?.phase}
+                    onAnimationEnd={event => {
+                      if (event.target !== event.currentTarget) return
+                      const flip = flips[index]
+                      if (!flip) return
+                      if (flip.phase === 'out') {
+                        setPreviewKeys(current => current.map((key, currentIndex) => currentIndex === index ? flip.nextKey : key))
+                        setFlips(current => ({ ...current, [index]: { ...flip, phase: 'in' } }))
+                      } else {
+                        setFlips(current => {
+                          const next = { ...current }
+                          delete next[index]
+                          return next
+                        })
+                      }
+                    }}
+                  >
+                    <Window title={variant.label.toLowerCase()} className={variant.theme.className} mode={variant.mode}>
+                      <Code className="theme-preview" lang={content.lang} cx={index === 0 ? undefined : emphasis}>{content.code}</Code>
+                    </Window>
+                  </div>
                 </div>
               )
             })}
+          </div>
+        </section>
+
+        <section className="product-section theme-react-section">
+          <div className="product-section__head">
+            <h2>React</h2>
+            <p>Import themes from <code>@sugar-high/react/themes</code> and pass them to <code>Code</code> or <code>Editor</code>.</p>
+          </div>
+          <div className="theme-react-demo">
+            <ReactThemePicker label="React theme" />
+            <ThemeUsage />
+            <a href="/react">Explore the React components ↗</a>
           </div>
         </section>
 
@@ -192,21 +224,7 @@ export default function ThemeGuide({ themes, tailwindRecipe }: { themes: ThemeOp
             <div>
               <h2>Plain CSS</h2>
             </div>
-            <div className="theme-switcher">
-              <select
-                aria-label="Theme"
-                value={selected.key}
-                onChange={event => setVariantKey(event.target.value)}
-              >
-                {variants.map(variant => <option key={variant.key} value={variant.key}>{variant.label}</option>)}
-              </select>
-              <button className="theme-random" type="button" onClick={randomTheme} aria-label="Choose a random theme">
-                <svg key={randomTick} viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="8" />
-                  <circle cx="12" cy="4" r="1.5" className="theme-random__dot" />
-                </svg>
-              </button>
-            </div>
+            <ReactThemePicker label="CSS theme" />
             <p className="theme-agent-catalog">
               Coding agents: fetch https://sugar-high.vercel.app/themes/index.json to discover every
               hosted theme, its CSS filename, selector class, and whether it provides a dark variant.

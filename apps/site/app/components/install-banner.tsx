@@ -10,6 +10,7 @@ import {
 import { CopyButton } from './copy-button'
 import { Code } from '@sugar-high/react'
 import { highlight } from 'sugar-high'
+import { languages } from 'sugar-high/lang'
 import './install-banner.css'
 import Link from 'next/link'
 import {
@@ -21,6 +22,38 @@ import {
   plateToShVarMap,
 } from '../live-editor-presets'
 import { SyntaxThemeContext } from '../syntax-theme-context'
+
+const languageLabels: Record<string, string> = {
+  javascript: 'JavaScript, JSX',
+  typescript: 'TypeScript, TSX',
+  css: 'CSS, SCSS',
+  python: 'Python',
+  c: 'C',
+  go: 'Go',
+  java: 'Java',
+  rust: 'Rust',
+  json: 'JSON, JSONC',
+  diff: 'Diff, patch',
+  shell: 'Shell, Bash, Zsh',
+  cpp: 'C++',
+  csharp: 'C#',
+  sql: 'SQL',
+  html: 'HTML, XML',
+  yaml: 'YAML',
+  markdown: 'Markdown, MDX',
+  plaintext: 'Plain text',
+  ruby: 'Ruby',
+  kotlin: 'Kotlin, Kotlin Script',
+  swift: 'Swift',
+  php: 'PHP',
+  toml: 'TOML',
+  powershell: 'PowerShell',
+  dockerfile: 'Dockerfile',
+  graphql: 'GraphQL',
+  hcl: 'HCL, Terraform',
+  zig: 'Zig',
+  lua: 'Lua',
+}
 
 const lineHighlightCss = `\
 .sh__line:nth-child(5),
@@ -37,6 +70,7 @@ highlight('print("hi")', { lang: 'python' }) // canonical name
 highlight('name: sugar-high', { lang: lang('yml') }) // yml → yaml`
 
 export default function InstallBanner({ children }: { children?: ReactNode }) {
+  const [languagesOpen, setLanguagesOpen] = useState(false)
   const [localBannerTheme, setLocalBannerTheme] = useState<'light' | 'dark'>('light')
   const syntaxThemeCtx = useContext(SyntaxThemeContext)
   const bannerTheme = syntaxThemeCtx?.previewMode ?? localBannerTheme
@@ -195,18 +229,23 @@ ${formatPlateAsCssVars(darkPlate)}
           <CopyButton codeSnippet={lineHighlightCss} />
         </div>
 
-        <div className="install-banner__block">
+        <div className="install-banner__block install-banner__language-description">
           <h2>Languages</h2>
           <p>
-            Sugar High includes 29 languages out of the box—no extra grammars or setup required.
-            JavaScript and JSX work by default; pass a canonical name to highlight TypeScript,
-            Python, CSS, Rust, Go, Zig, Lua, HTML, SQL, Markdown, and the other built-ins.
+            Sugar High includes <a
+              className="install-banner__language-toggle"
+              href="#all-languages"
+              aria-controls="all-languages"
+              aria-expanded={languagesOpen}
+              onClick={event => {
+                event.preventDefault()
+                setLanguagesOpen(open => !open)
+              }}
+            ><strong>{languages.length} languages</strong></a> out of the box—no extra grammars or setup required.
+            JavaScript and JSX work by default.
           </p>
           <p>
-            Related dialects share the same built-in implementation, including TSX, JSONC,
-            Bash/Zsh, and Terraform. Use <code>lang()</code> when input comes from a filename or
-            integration: it turns aliases and extensions such as <code>py</code>, <code>yml</code>,
-            and <code>gql</code> into their canonical language names.
+            Use <code>lang()</code> to resolve filenames, extensions, and aliases to a language name.
           </p>
         </div>
         <div
@@ -218,6 +257,25 @@ ${formatPlateAsCssVars(darkPlate)}
           </Code>
           <CopyButton codeSnippet={presetByTitleExample} />
         </div>
+        <details
+          id="all-languages"
+          className="install-banner__languages"
+          open={languagesOpen}
+          onToggle={event => setLanguagesOpen(event.currentTarget.open)}
+        >
+          <summary>All languages</summary>
+          <table>
+            <thead><tr><th scope="col">Value</th><th scope="col">Language &amp; relatives</th></tr></thead>
+            <tbody>
+              {languages.map(language => (
+                <tr key={language.id}>
+                  <th scope="row"><code>{language.id}</code></th>
+                  <td>{languageLabels[language.id] ?? language.id}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </details>
         <div className="install-banner__section-title">
           <h2>Solution</h2>
         </div>

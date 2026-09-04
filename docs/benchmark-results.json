@@ -1,0 +1,242 @@
+{
+  "measuredAt": "2026-09-04T19:22:24.984Z",
+  "engines": [
+    {
+      "id": "sugar-high",
+      "label": "Sugar High",
+      "version": "2.2.2"
+    },
+    {
+      "id": "prismjs",
+      "label": "PrismJS",
+      "version": "1.30.0"
+    },
+    {
+      "id": "highlight.js",
+      "label": "highlight.js",
+      "version": "11.12.0"
+    }
+  ],
+  "runtime": "v24.18.0",
+  "platform": "darwin arm64",
+  "cpu": "Apple M4 Pro",
+  "targetMiB": 4,
+  "runs": 5,
+  "results": [
+    {
+      "engine": "sugar-high",
+      "targetKiB": 10,
+      "sourceBytes": 10800,
+      "outputBytes": 276734,
+      "iterations": 410,
+      "runs": 5,
+      "milliseconds": 1.784623068292683,
+      "mibPerSecond": 5.771349031726359,
+      "spreadPercent": 22.151132412495866,
+      "retainedHeapMiB": 0.2385101318359375,
+      "checksum": 567581434
+    },
+    {
+      "engine": "prismjs",
+      "targetKiB": 10,
+      "sourceBytes": 10800,
+      "outputBytes": 83873,
+      "iterations": 410,
+      "runs": 5,
+      "milliseconds": 1.1787885170731707,
+      "mibPerSecond": 8.737515226870988,
+      "spreadPercent": 12.496301567968453,
+      "retainedHeapMiB": 0.6789093017578125,
+      "checksum": 172023523
+    },
+    {
+      "engine": "highlight.js",
+      "targetKiB": 10,
+      "sourceBytes": 10800,
+      "outputBytes": 45679,
+      "iterations": 410,
+      "runs": 5,
+      "milliseconds": 2.110474695121951,
+      "mibPerSecond": 4.880268235858827,
+      "spreadPercent": 3.281402256077063,
+      "retainedHeapMiB": 0,
+      "checksum": 93687629
+    },
+    {
+      "engine": "sugar-high",
+      "targetKiB": 100,
+      "sourceBytes": 102496,
+      "outputBytes": 2601924,
+      "iterations": 41,
+      "runs": 5,
+      "milliseconds": 18.02487092682927,
+      "mibPerSecond": 5.422940509875245,
+      "spreadPercent": 12.998916046032017,
+      "retainedHeapMiB": 2.39337158203125,
+      "checksum": 535996344
+    },
+    {
+      "engine": "prismjs",
+      "targetKiB": 100,
+      "sourceBytes": 102496,
+      "outputBytes": 791547,
+      "iterations": 41,
+      "runs": 5,
+      "milliseconds": 15.250603658536587,
+      "mibPerSecond": 6.409438270311371,
+      "spreadPercent": 3.786512229712158,
+      "retainedHeapMiB": 6.722358703613281,
+      "checksum": 163058682
+    },
+    {
+      "engine": "highlight.js",
+      "targetKiB": 100,
+      "sourceBytes": 102496,
+      "outputBytes": 429911,
+      "iterations": 41,
+      "runs": 5,
+      "milliseconds": 23.054494926829268,
+      "mibPerSecond": 4.239858780017023,
+      "spreadPercent": 3.2330186951775484,
+      "retainedHeapMiB": 2.4327850341796875,
+      "checksum": 88561666
+    },
+    {
+      "engine": "sugar-high",
+      "targetKiB": 500,
+      "sourceBytes": 512458,
+      "outputBytes": 12953124,
+      "iterations": 9,
+      "runs": 5,
+      "milliseconds": 90.98263888888889,
+      "mibPerSecond": 5.371552625921889,
+      "spreadPercent": 6.739734433601387,
+      "retainedHeapMiB": 12.353294372558594,
+      "checksum": 595843704
+    },
+    {
+      "engine": "prismjs",
+      "targetKiB": 500,
+      "sourceBytes": 512458,
+      "outputBytes": 3943215,
+      "iterations": 9,
+      "runs": 5,
+      "milliseconds": 96.4139491111111,
+      "mibPerSecond": 5.068955657792803,
+      "spreadPercent": 1.6268983449068157,
+      "retainedHeapMiB": 33.44206237792969,
+      "checksum": 181387890
+    },
+    {
+      "engine": "highlight.js",
+      "targetKiB": 500,
+      "sourceBytes": 512458,
+      "outputBytes": 2141945,
+      "iterations": 9,
+      "runs": 5,
+      "milliseconds": 118.39404633333334,
+      "mibPerSecond": 4.127893656585987,
+      "spreadPercent": 2.4597586528662747,
+      "retainedHeapMiB": 12.139480590820312,
+      "checksum": 98529470
+    }
+  ],
+  "phases": [
+    {
+      "engine": "sugar-high-parse",
+      "targetKiB": 10,
+      "sourceBytes": 10800,
+      "iterations": 410,
+      "runs": 5,
+      "milliseconds": 1.2168709341463415,
+      "mibPerSecond": 8.464071519970133,
+      "spreadPercent": 14.995310690757101,
+      "retainedHeapMiB": 0.27082061767578125,
+      "checksum": 892185
+    },
+    {
+      "engine": "sugar-high-render",
+      "targetKiB": 10,
+      "sourceBytes": 10800,
+      "outputBytes": 276734,
+      "iterations": 410,
+      "runs": 5,
+      "milliseconds": 0.37874644390243906,
+      "mibPerSecond": 27.194136824267016,
+      "spreadPercent": 11.71461746919332,
+      "retainedHeapMiB": 0.2649688720703125,
+      "checksum": 567581434
+    },
+    {
+      "engine": "sugar-high-parse",
+      "targetKiB": 100,
+      "sourceBytes": 102496,
+      "iterations": 41,
+      "runs": 5,
+      "milliseconds": 14.206686999999999,
+      "mibPerSecond": 6.880407989165596,
+      "spreadPercent": 10.10403419024619,
+      "retainedHeapMiB": 2.5736541748046875,
+      "checksum": 846042
+    },
+    {
+      "engine": "sugar-high-render",
+      "targetKiB": 100,
+      "sourceBytes": 102496,
+      "outputBytes": 2601924,
+      "iterations": 41,
+      "runs": 5,
+      "milliseconds": 3.6290000000000004,
+      "mibPerSecond": 26.935189510712316,
+      "spreadPercent": 8.9842483598985,
+      "retainedHeapMiB": 2.4778518676757812,
+      "checksum": 535996344
+    },
+    {
+      "engine": "sugar-high-parse",
+      "targetKiB": 500,
+      "sourceBytes": 512458,
+      "iterations": 9,
+      "runs": 5,
+      "milliseconds": 67.08393977777777,
+      "mibPerSecond": 7.285171897414511,
+      "spreadPercent": 3.58864115455937,
+      "retainedHeapMiB": 13.028556823730469,
+      "checksum": 940746
+    },
+    {
+      "engine": "sugar-high-render",
+      "targetKiB": 500,
+      "sourceBytes": 512458,
+      "outputBytes": 12953124,
+      "iterations": 9,
+      "runs": 5,
+      "milliseconds": 20.71035188888889,
+      "mibPerSecond": 23.597765767519935,
+      "spreadPercent": 9.246018919917665,
+      "retainedHeapMiB": 12.362457275390625,
+      "checksum": 595843704
+    }
+  ],
+  "bundles": {
+    "bundler": "Bun 1.4.0",
+    "language": "typescript",
+    "results": [
+      {
+        "engine": "sugar-high",
+        "minified": 10133,
+        "gzip": 4452
+      },
+      {
+        "engine": "prismjs",
+        "minified": 14985,
+        "gzip": 5603
+      },
+      {
+        "engine": "highlight.js",
+        "minified": 30253,
+        "gzip": 11389
+      }
+    ]
+  }
+}

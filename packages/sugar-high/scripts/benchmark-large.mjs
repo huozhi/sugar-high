@@ -1,8 +1,9 @@
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { cpus, tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { gzipSync } from 'node:zlib'
 
 const script = fileURLToPath(import.meta.url)
 const sugarHighVersion = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version
@@ -212,7 +213,45 @@ function installComparisons() {
   }
 }
 
-function runBenchmarks(comparisonDirectory) {
+async function measureBundles(directory) {
+  const sugar = fileURLToPath(new URL('../lib/', import.meta.url))
+  const entries = {
+    'sugar-high': `
+      import { parse, render } from ${JSON.stringify(join(sugar, 'core.js'))}
+      import * as typescript from ${JSON.stringify(join(sugar, 'lang/typescript.js'))}
+      export const highlight = source => render(parse(source, typescript))
+    `,
+    'prismjs': `
+      import Prism from 'prismjs/components/prism-core.js'
+      import 'prismjs/components/prism-clike.js'
+      import 'prismjs/components/prism-javascript.js'
+      import 'prismjs/components/prism-typescript.js'
+      export const highlight = source => Prism.highlight(source, Prism.languages.typescript, 'typescript')
+    `,
+    'highlight.js': `
+      import hljs from 'highlight.js/lib/core'
+      import typescript from 'highlight.js/lib/languages/typescript'
+      hljs.registerLanguage('typescript', typescript)
+      export const highlight = source => hljs.highlight(source, { language: 'typescript', ignoreIllegals: true }).value
+    `,
+  }
+  const bun = process.env.BUN_BIN || 'bun'
+  const bundles = []
+  for (const engine of engines) {
+    const entry = join(directory, `${engine.id}-entry.js`)
+    const output = join(directory, `${engine.id}-bundle.mjs`)
+    writeFileSync(entry, entries[engine.id])
+    execFileSync(bun, ['build', entry, '--bundle', '--minify', '--target=browser', `--outfile=${output}`], { stdio: 'pipe' })
+    const bundled = readFileSync(output)
+    const { highlight } = await import(pathToFileURL(output).href)
+    if (!highlight(sourceBlock(0)).includes('<span')) throw new Error(`${engine.id} bundle did not highlight TypeScript`)
+    bundles.push({ engine: engine.id, minified: bundled.byteLength, gzip: gzipSync(bundled, { level: 9 }).byteLength })
+  }
+  return { bundler: `Bun ${execFileSync(bun, ['--version'], { encoding: 'utf8' }).trim()}`, language: 'typescript', results: bundles }
+}
+
+async function runBenchmarks(comparisonDirectory) {
+  const bundles = await measureBundles(comparisonDirectory)
   const sizes = (process.env.BENCH_SIZES_KIB || '10,100,500')
     .split(',')
     .map(value => positiveNumber(value.trim(), 0))
@@ -296,16 +335,54 @@ function runBenchmarks(comparisonDirectory) {
     }))
   })
 
+  const snapshot = {
+    measuredAt: new Date().toISOString(),
+    engines,
+    runtime: process.version,
+    platform: `${process.platform} ${process.arch}`,
+    cpu: cpus()[0]?.model,
+    targetMiB,
+    runs,
+    results,
+    phases: phaseResults,
+    bundles,
+  }
+
+  if (process.argv.includes('--write')) {
+    const readmeUrl = new URL('../README.md', import.meta.url)
+    const readme = readFileSync(readmeUrl, 'utf8')
+    const marker = /<!-- benchmark:start -->[\s\S]*?<!-- benchmark:end -->/
+    if (!marker.test(readme)) throw new Error('README benchmark markers are missing')
+    const rows = sizes.map(size => {
+      const matching = results.filter(result => result.targetKiB === size)
+      return `| ${formatSize(matching[0].sourceBytes)} | ${engines.map(engine => matching.find(result => result.engine === engine.id).milliseconds.toFixed(2)).join(' | ')} |`
+    })
+    const bundleRows = ['minified', 'gzip'].map(metric =>
+      `| ${metric === 'gzip' ? 'Gzip' : 'Minified'} (KiB) | ${engines.map(engine => (bundles.results.find(result => result.engine === engine.id)[metric] / 1024).toFixed(2)).join(' | ')} |`
+    )
+    const markdown = [
+      '<!-- benchmark:start -->',
+      `Measured ${snapshot.measuredAt.slice(0, 10)} with Node ${snapshot.runtime}, ${snapshot.platform}, ${snapshot.cpu}.`,
+      '',
+      `| TypeScript | ${engines.map(engine => `${engine.label} ${engine.version}`).join(' | ')} |`,
+      '| --- | ---: | ---: | ---: |',
+      ...bundleRows,
+      ...rows,
+      '',
+      `Median milliseconds per file; lower is better. ${runs} timed samples after warmup.`,
+      'Sizes are TypeScript-only browser bundles, minified with Bun; gzip uses level 9. Theme CSS is excluded.',
+      'Loading and initialization are excluded. Each library highlights the same generated TypeScript',
+      'into HTML using an explicit language. Grammars and HTML output differ; this is not a measure',
+      'of highlighting quality or browser rendering speed. Results vary by machine and workload.',
+      '<!-- benchmark:end -->',
+    ].join('\n')
+    writeFileSync(new URL('../../../docs/benchmark-results.json', import.meta.url), JSON.stringify(snapshot, null, 2) + '\n')
+    writeFileSync(readmeUrl, readme.replace(marker, () => markdown))
+    process.stderr.write('Updated docs/benchmark-results.json and packages/sugar-high/README.md\n')
+  }
+
   if (process.argv.includes('--json')) {
-    console.log(JSON.stringify({
-      runtime: process.version,
-      platform: `${process.platform} ${process.arch}`,
-      cpu: cpus()[0]?.model,
-      targetMiB,
-      runs,
-      results,
-      phases: phaseResults,
-    }, null, 2))
+    console.log(JSON.stringify(snapshot, null, 2))
     return
   }
 
@@ -313,6 +390,12 @@ function runBenchmarks(comparisonDirectory) {
   console.log(`${process.version} · ${process.platform} ${process.arch} · ${cpus()[0]?.model || 'unknown CPU'}`)
   console.log(`${runs} timed runs per row; median reported; about ${targetMiB} MiB processed per run\n`)
   console.table(report)
+  console.log(`\nTypeScript-only browser bundles (${bundles.bundler})\n`)
+  console.table(bundles.results.map(result => ({
+    library: result.engine,
+    minified: `${(result.minified / 1024).toFixed(2)} KiB`,
+    gzip: `${(result.gzip / 1024).toFixed(2)} KiB`,
+  })))
   console.log('\nSugar High phases\n')
   console.table(phaseReport)
   console.log('\nPhase timings are measured independently, so their percentages need not sum to exactly 100%.')
@@ -320,14 +403,14 @@ function runBenchmarks(comparisonDirectory) {
   console.log('\nThe libraries use different grammars and emit different HTML, so this measures public API cost rather than feature equivalence.')
 }
 
-function runSuite() {
+async function runSuite() {
   const comparisonDirectory = installComparisons()
   try {
-    runBenchmarks(comparisonDirectory)
+    await runBenchmarks(comparisonDirectory)
   } finally {
     rmSync(comparisonDirectory, { recursive: true, force: true })
   }
 }
 
 if (process.argv[2] === '--worker') await runWorker()
-else runSuite()
+else await runSuite()
