@@ -412,3 +412,21 @@
   color: inherit;
   text-decoration: underline;
 }
+.install-banner__mode-heading button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  opacity: 0.4;
+  cursor: pointer;
+  transition: opacity 0.16s ease, color 0.16s ease;
+}
+
+.install-banner__mode-heading button[aria-pressed='true'] {
+  opacity: 1;
+}
+
+.install-banner__mode-heading span {
+  opacity: 0.4;
+}

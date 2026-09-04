@@ -308,17 +308,16 @@
 }
 
 .theme-agent__command {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  position: relative;
   min-width: 0;
   width: 100%;
-  padding: 14px 16px;
   background: #f6f6f6;
 }
 
 .theme-agent__command code {
+  display: block;
+  min-width: 0;
+  padding: 14px 48px 14px 16px;
   overflow-x: auto;
   color: #354150;
   font-size: 13px;
@@ -327,7 +326,9 @@
 }
 
 .theme-agent__command .copy-button {
-  flex: 0 0 auto;
+  position: absolute;
+  top: 14px;
+  right: 16px;
   color: #8a949d;
 }
 

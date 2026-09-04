@@ -155,7 +155,11 @@ ${formatPlateAsCssVars(darkPlate)}
           <h2>Basics</h2>
         </div>
         <div className="install-banner__block">
-          <h2>Light &amp; dark</h2>
+          <h2 className="install-banner__mode-heading">
+            <button type="button" aria-pressed={bannerTheme === 'light'} onClick={() => setBannerTheme('light')}>Light</button>
+            <span aria-hidden="true"> &amp; </span>
+            <button type="button" aria-pressed={bannerTheme === 'dark'} onClick={() => setBannerTheme('dark')}>Dark</button>
+          </h2>
           <p>
             Match light and dark token palettes for your theme
           </p>
@@ -280,16 +284,17 @@ ${formatPlateAsCssVars(darkPlate)}
           <h2>Solution</h2>
         </div>
         <div className="install-banner__block install-banner__solution-item">
+          <h2>React Components</h2>
+          <p>
+            <Link href="/react"><code>@sugar-high/react</code></Link> provides {`<Editor /> & <Code />`} to present or edit highlighted code,
+            with built-in themes and custom token colors.
+          </p>
+        </div>
+        <div className="install-banner__block install-banner__solution-item">
           <h2>Themes</h2>
           <p>
             Set token colors with scoped CSS variables, then use <code>cx</code> for emphasis.
             Explore the copyable <Link href="/theme">CSS and Tailwind theme guide</Link>.
-          </p>
-        </div>
-        <div className="install-banner__block install-banner__solution-item">
-          <h2>React Components</h2>
-          <p>
-            <Link href="/react"><code>@sugar-high/react</code></Link> provides {`<Editor /> & <Code />`} to present or edit highlighted code.
           </p>
         </div>
         {children}
