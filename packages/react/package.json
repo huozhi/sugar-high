@@ -34,7 +34,8 @@
     "build": "bunchee",
     "benchmark": "node scripts/benchmark.mjs",
     "test": "vitest --run",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "test:browser": "vitest run --config vitest.browser.config.ts"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@types/react": "^19.2.0",
     "bunchee": "^7.0.1",
+    "playwright": "1.60.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "sugar-high": "workspace:*",

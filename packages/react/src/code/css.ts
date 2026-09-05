@@ -6,6 +6,8 @@ const FL = `[data-sh-line-numbers="false"]`
 const BASE_CSS = `\
 ${C} {
   padding: calc(var(--sh-padding) / 2) 0;
+  font-size: var(--sh-font-size);
+  line-height: 1.5;
 }
 ${C} [data-sh-code-content] {
   padding: calc(var(--sh-padding) * 0.25) 0;
@@ -25,10 +27,19 @@ ${C}[data-sh-wrap-long-lines="false"] .sh__line {
 ${C} code {
   display: block;
   border: none;
+  box-sizing: border-box;
+  width: 100%;
+  padding-right: calc(var(--sh-padding) * 0.5);
+  font-family: var(--sh-font-family, inherit);
+  font-size: inherit;
+  line-height: inherit;
+  line-break: anywhere;
+  overflow-wrap: break-word;
 }
 ${C} .sh__line {
   display: inline-block;
   width: 100%;
+  min-height: 1lh;
 }
 ${C} .sh__line[data-highlight] {
   background-color: var(--sh-line-highlight-color);
@@ -55,6 +66,7 @@ ${H} [data-sh-title] {
   caret-color: var(--sh-caret-color, CanvasText);
   color: var(--sh-title-color);
   font-family: var(--sh-font-family);
+  font-size: inherit;
 }
 ${H} [data-sh-controls] {
   display: inline-flex;

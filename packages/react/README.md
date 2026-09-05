@@ -45,6 +45,8 @@ import { Code } from '@sugar-high/react'
 
 For excerpts from larger files, set the first displayed line number. Long lines wrap by default;
 disable wrapping to use horizontal scrolling instead. Both options also work with `Editor`.
+At the same font and width, `Code` and `Editor` use the same wrapping rules. Empty lines retain
+a full line height. `fontSize` applies to source text and filename headers in both components.
 
 ```tsx
 <Code lineNumbers startingLineNumber={40} wrapLongLines={false}>

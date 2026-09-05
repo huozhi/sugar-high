@@ -90,6 +90,7 @@ describe('Code', () => {
         flex-direction: column;
         justify-content: stretch;
         scrollbar-width: none;
+        font-size: var(--sh-font-size);
       }
       [data-sh-editor] textarea:not(:placeholder-shown) {
         padding: calc(var(--sh-padding) * 0.75) calc(var(--sh-padding) * 0.5);
@@ -111,7 +112,6 @@ describe('Code', () => {
         display: inline-block;
         width: 100%;
         margin-left: calc(var(--sh-line-number-width) - 2.5rem);
-        padding-right: calc(var(--sh-padding) * 0.5);
       }
       [data-sh-editor] textarea::-webkit-scrollbar,
       [data-sh-editor] textarea:focus::-webkit-scrollbar,
@@ -159,6 +159,7 @@ describe('Code', () => {
         caret-color: var(--sh-caret-color, CanvasText);
         color: var(--sh-title-color);
         font-family: var(--sh-font-family);
+        font-size: inherit;
       }
       [data-sh-header] [data-sh-controls] {
         display: inline-flex;
@@ -181,6 +182,8 @@ describe('Code', () => {
       }
       [data-sh-code] {
         padding: calc(var(--sh-padding) / 2) 0;
+        font-size: var(--sh-font-size);
+        line-height: 1.5;
       }
       [data-sh-code] [data-sh-code-content] {
         padding: calc(var(--sh-padding) * 0.25) 0;
@@ -200,10 +203,19 @@ describe('Code', () => {
       [data-sh-code] code {
         display: block;
         border: none;
+        box-sizing: border-box;
+        width: 100%;
+        padding-right: calc(var(--sh-padding) * 0.5);
+        font-family: var(--sh-font-family, inherit);
+        font-size: inherit;
+        line-height: inherit;
+        line-break: anywhere;
+        overflow-wrap: break-word;
       }
       [data-sh-code] .sh__line {
         display: inline-block;
         width: 100%;
+        min-height: 1lh;
       }
       [data-sh-code] .sh__line[data-highlight] {
         background-color: var(--sh-line-highlight-color);
@@ -249,6 +261,7 @@ describe('Code', () => {
         flex-direction: column;
         justify-content: stretch;
         scrollbar-width: none;
+        font-size: var(--sh-font-size);
       }
       [data-sh-editor] textarea:not(:placeholder-shown) {
         padding: calc(var(--sh-padding) * 0.75) calc(var(--sh-padding) * 0.5);
@@ -270,7 +283,6 @@ describe('Code', () => {
         display: inline-block;
         width: 100%;
         margin-left: calc(var(--sh-line-number-width) - 2.5rem);
-        padding-right: calc(var(--sh-padding) * 0.5);
       }
       [data-sh-editor] textarea::-webkit-scrollbar,
       [data-sh-editor] textarea:focus::-webkit-scrollbar,
@@ -318,6 +330,7 @@ describe('Code', () => {
         caret-color: var(--sh-caret-color, CanvasText);
         color: var(--sh-title-color);
         font-family: var(--sh-font-family);
+        font-size: inherit;
       }
       [data-sh-header] [data-sh-controls] {
         display: inline-flex;
@@ -340,6 +353,8 @@ describe('Code', () => {
       }
       [data-sh-code] {
         padding: calc(var(--sh-padding) / 2) 0;
+        font-size: var(--sh-font-size);
+        line-height: 1.5;
       }
       [data-sh-code] [data-sh-code-content] {
         padding: calc(var(--sh-padding) * 0.25) 0;
@@ -359,10 +374,19 @@ describe('Code', () => {
       [data-sh-code] code {
         display: block;
         border: none;
+        box-sizing: border-box;
+        width: 100%;
+        padding-right: calc(var(--sh-padding) * 0.5);
+        font-family: var(--sh-font-family, inherit);
+        font-size: inherit;
+        line-height: inherit;
+        line-break: anywhere;
+        overflow-wrap: break-word;
       }
       [data-sh-code] .sh__line {
         display: inline-block;
         width: 100%;
+        min-height: 1lh;
       }
       [data-sh-code] .sh__line[data-highlight] {
         background-color: var(--sh-line-highlight-color);
@@ -408,6 +432,7 @@ describe('Code', () => {
         flex-direction: column;
         justify-content: stretch;
         scrollbar-width: none;
+        font-size: var(--sh-font-size);
       }
       [data-sh-editor] textarea:not(:placeholder-shown) {
         padding: calc(var(--sh-padding) * 0.75) calc(var(--sh-padding) * 0.5);
@@ -429,7 +454,6 @@ describe('Code', () => {
         display: inline-block;
         width: 100%;
         margin-left: calc(var(--sh-line-number-width) - 2.5rem);
-        padding-right: calc(var(--sh-padding) * 0.5);
       }
       [data-sh-editor] textarea::-webkit-scrollbar,
       [data-sh-editor] textarea:focus::-webkit-scrollbar,
@@ -460,6 +484,8 @@ describe('Code', () => {
       }
       [data-sh-code] {
         padding: calc(var(--sh-padding) / 2) 0;
+        font-size: var(--sh-font-size);
+        line-height: 1.5;
       }
       [data-sh-code] [data-sh-code-content] {
         padding: calc(var(--sh-padding) * 0.25) 0;
@@ -479,10 +505,19 @@ describe('Code', () => {
       [data-sh-code] code {
         display: block;
         border: none;
+        box-sizing: border-box;
+        width: 100%;
+        padding-right: calc(var(--sh-padding) * 0.5);
+        font-family: var(--sh-font-family, inherit);
+        font-size: inherit;
+        line-height: inherit;
+        line-break: anywhere;
+        overflow-wrap: break-word;
       }
       [data-sh-code] .sh__line {
         display: inline-block;
         width: 100%;
+        min-height: 1lh;
       }
       [data-sh-code] .sh__line[data-highlight] {
         background-color: var(--sh-line-highlight-color);
