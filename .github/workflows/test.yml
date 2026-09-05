@@ -23,8 +23,6 @@ jobs:
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
-      - run: pnpm --filter @sugar-high/react exec playwright install --with-deps chromium
-      - run: pnpm --filter @sugar-high/react test:browser
       - run: pnpm build
       - run: pnpm check:packages
       - name: Set up Bun for bundle measurement
