@@ -13,10 +13,10 @@ export type FileTreeProps = {
 } & Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onChange'>
 
 const css = `[data-sh-file-tree]{padding:8px;overflow:auto;font-family:var(--sh-font-family,ui-monospace,monospace);font-size:var(--sh-font-size,13px)}
-[data-sh-file-tree] [role=treeitem]{display:flex;align-items:center;gap:6px;min-height:30px;padding-right:8px;border-radius:4px;cursor:pointer;white-space:nowrap;outline:none}
-[data-sh-file-tree] [role=treeitem]:hover{background:color-mix(in srgb,currentColor 6%,transparent)}
-[data-sh-file-tree] [aria-selected=true]{background:var(--sh-line-highlight-color,color-mix(in srgb,currentColor 10%,transparent))}
-[data-sh-file-tree] [role=treeitem]:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
+[data-sh-file-tree] [role=treeitem]{display:flex;align-items:center;gap:6px;min-height:30px;padding-right:8px;border-radius:4px;cursor:pointer;white-space:nowrap;outline:none;user-select:none}
+[data-sh-file-tree] [role=treeitem]:hover{background:color-mix(in srgb,#888 7%,transparent)}
+[data-sh-file-tree] [aria-selected=true]{background:color-mix(in srgb,#888 13%,transparent)}
+[data-sh-file-tree] [role=treeitem]:focus-visible{outline:1px solid color-mix(in srgb,currentColor 45%,transparent);outline-offset:-1px}
 [data-sh-file-tree] svg{width:16px;height:16px;flex:none}
 [data-sh-file-tree] [data-sh-chevron]{width:10px}`
 

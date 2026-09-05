@@ -1,5 +1,6 @@
 import { ReactThemeProvider, ReactThemePicker, ThemeUsage, ThemeNames } from '../components/react-themes'
 import { ReactDemo } from './react-demo'
+import { FileTreeDemo } from './file-tree-demo'
 import { CodeDemo } from './code-demo'
 import { ProductNav } from '../product-nav'
 import { ProductStrike } from '../product-strike'
@@ -90,17 +91,52 @@ export default function ReactPage() {
 
           <section className="product-section">
             <div className="product-section__head">
-              <h2>{'<FileTree /> + <Editor />'}</h2>
-              <p>Browse files and edit their source, or switch to a read-only code block.</p>
+              <h2>{'<Editor />'}</h2>
+              <p>A controlled, highlighted editor with optional line numbers.</p>
             </div>
             <div className="react-demo-theme-picker"><ReactThemePicker label="Editor theme" /></div>
-            <Window title="Files"><ReactDemo /></Window>
+            <Window title="editor-example.tsx"><ReactDemo /></Window>
+          </section>
+
+          <section className="product-section">
+            <div className="product-section__head">
+              <h2>{'<FileTree />'}</h2>
+              <p>Compose with Editor to edit files, or Code for read-only viewing.</p>
+            </div>
+            <div className="react-demo-theme-picker"><ReactThemePicker label="FileTree theme" /></div>
+            <FileTreeDemo />
           </section>
 
           <details className="product-section react-api react-api-details">
             <summary>API details</summary>
             <div className="product-section__head">
-              <p>Props at a glance. Both components also accept standard div attributes.</p>
+              <p>Props at a glance. All three components also accept standard div attributes.</p>
+            </div>
+            <div className="react-api__component">
+              <h3>{'<Code />'}</h3>
+              <div className="react-api__table-wrap">
+                <table>
+                  <thead><tr><th>Prop</th><th>Type / default</th><th>Purpose</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>children</code></td><td><code>string · required</code></td><td>Source or generated markup to render.</td></tr>
+                    <tr><td><code>lang</code></td><td><code>LanguageName</code></td><td>Canonical language; overrides the title.</td></tr>
+                    <tr><td><code>theme</code></td><td><code>Theme</code></td><td>JavaScript token and component colors.</td></tr>
+                    <tr><td><code>title</code></td><td><code>string</code></td><td>Filename shown in the header and used as a language hint.</td></tr>
+                    <tr><td><code>extension</code></td><td><code>string</code></td><td>Legacy language hint when no lang is set.</td></tr>
+                    <tr><td><code>controls</code></td><td><code>boolean · false</code></td><td>Shows header controls.</td></tr>
+                    <tr><td><code>lineNumbers</code></td><td><code>boolean · false</code></td><td>Shows one-based line numbers.</td></tr>
+                    <tr><td><code>highlightLines</code></td><td><code>(number | [number, number])[]</code></td><td>Highlights lines and inclusive ranges.</td></tr>
+                    <tr><td><code>cx</code></td><td><code>HighlightOptions['cx']</code></td><td>Maps token types to classes.</td></tr>
+                    <tr><td><code>mark</code></td><td><code>HighlightOptions['mark']</code></td><td>Mutates generated token properties.</td></tr>
+                    <tr><td><code>markLine</code></td><td><code>HighlightOptions['markLine']</code></td><td>Mutates generated line properties.</td></tr>
+                    <tr><td><code>preformatted</code></td><td><code>boolean · true</code></td><td>Uses a pre and code wrapper.</td></tr>
+                    <tr><td><code>asMarkup</code></td><td><code>boolean · false</code></td><td>Treats children as highlighted HTML.</td></tr>
+                    <tr><td><code>lineNumbersWidth</code></td><td><code>string</code></td><td>Sets the line-number gutter width.</td></tr>
+                    <tr><td><code>padding</code></td><td><code>string</code></td><td>Sets code content padding.</td></tr>
+                    <tr><td><code>fontSize</code></td><td><code>string | number</code></td><td>Sets the code font size.</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div className="react-api__component">
               <h3>{'<Editor />'}</h3>
@@ -130,30 +166,20 @@ export default function ReactPage() {
               </div>
             </div>
             <div className="react-api__component">
-              <h3>{'<Code />'}</h3>
+              <h3>{'<FileTree />'}</h3>
               <div className="react-api__table-wrap">
                 <table>
                   <thead><tr><th>Prop</th><th>Type / default</th><th>Purpose</th></tr></thead>
                   <tbody>
-                    <tr><td><code>children</code></td><td><code>string · required</code></td><td>Source or generated markup to render.</td></tr>
-                    <tr><td><code>lang</code></td><td><code>LanguageName</code></td><td>Canonical language; overrides the title.</td></tr>
-                    <tr><td><code>theme</code></td><td><code>Theme</code></td><td>JavaScript token and component colors.</td></tr>
-                    <tr><td><code>title</code></td><td><code>string</code></td><td>Filename shown in the header and used as a language hint.</td></tr>
-                    <tr><td><code>extension</code></td><td><code>string</code></td><td>Legacy language hint when no lang is set.</td></tr>
-                    <tr><td><code>controls</code></td><td><code>boolean · false</code></td><td>Shows header controls.</td></tr>
-                    <tr><td><code>lineNumbers</code></td><td><code>boolean · false</code></td><td>Shows one-based line numbers.</td></tr>
-                    <tr><td><code>highlightLines</code></td><td><code>(number | [number, number])[]</code></td><td>Highlights lines and inclusive ranges.</td></tr>
-                    <tr><td><code>cx</code></td><td><code>HighlightOptions['cx']</code></td><td>Maps token types to classes.</td></tr>
-                    <tr><td><code>mark</code></td><td><code>HighlightOptions['mark']</code></td><td>Mutates generated token properties.</td></tr>
-                    <tr><td><code>markLine</code></td><td><code>HighlightOptions['markLine']</code></td><td>Mutates generated line properties.</td></tr>
-                    <tr><td><code>preformatted</code></td><td><code>boolean · true</code></td><td>Uses a pre and code wrapper.</td></tr>
-                    <tr><td><code>asMarkup</code></td><td><code>boolean · false</code></td><td>Treats children as highlighted HTML.</td></tr>
-                    <tr><td><code>lineNumbersWidth</code></td><td><code>string</code></td><td>Sets the line-number gutter width.</td></tr>
-                    <tr><td><code>padding</code></td><td><code>string</code></td><td>Sets code content padding.</td></tr>
-                    <tr><td><code>fontSize</code></td><td><code>string | number</code></td><td>Sets the code font size.</td></tr>
+                    <tr><td><code>paths</code></td><td><code>readonly string[] · required</code></td><td>Relative file paths. Folders are inferred and initially expanded.</td></tr>
+                    <tr><td><code>activeFile</code></td><td><code>string | null · required</code></td><td>Selected file path, or null for no selection.</td></tr>
+                    <tr><td><code>onActiveFileChange</code></td><td><code>(path: string) =&gt; void · required</code></td><td>Runs when a file is selected. Use the path to update Editor or Code.</td></tr>
+                    <tr><td><code>theme</code></td><td><code>Theme · optional</code></td><td>Pass the same theme as the adjacent Editor or Code.</td></tr>
+                    <tr><td><code>aria-label</code></td><td><code>string · 'Files'</code></td><td>Accessible name for the tree.</td></tr>
                   </tbody>
                 </table>
               </div>
+              <p>The tree manages folder expansion and keyboard focus. Your component owns the files and selected path.</p>
             </div>
             <div className="react-api__component">
               <h3>CSS variables</h3>
