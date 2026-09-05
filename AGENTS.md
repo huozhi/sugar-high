@@ -5,6 +5,10 @@
 - Always use the running development server at `http://localhost:3000` to verify site changes; do
   not run a production build for verification.
 - Use pnpm. Run `pnpm test`, `pnpm build`, and `git diff --check` before submitting changes.
+- For React layout changes, build the React package and optionally run
+  `pnpm --filter @sugar-high/react test:browser`. This uses an existing `agent-browser` installation
+  to verify the built components without a site server. It skips successfully when the CLI is
+  absent; do not install browser tooling just to run it. It is not part of the default tests or CI.
 - Keep internal package dependencies on `workspace:^` (or `workspace:*` for private apps); pnpm
   rewrites them to normal semver ranges when publishing.
 - Add a Changeset with `pnpm changeset` for user-facing package changes. Do not add one for

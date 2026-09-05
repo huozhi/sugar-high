@@ -12,6 +12,7 @@ ${R} {
   flex-direction: column;
   justify-content: stretch;
   scrollbar-width: none;
+  font-size: var(--sh-font-size);
 }
 ${R} textarea:not(:placeholder-shown) {
   padding: calc(var(--sh-padding) * 0.75) calc(var(--sh-padding) * 0.5);
@@ -33,7 +34,6 @@ ${R} code {
   display: inline-block;
   width: 100%;
   margin-left: calc(var(--sh-line-number-width) - 2.5rem);
-  padding-right: calc(var(--sh-padding) * 0.5);
 }
 ${R} textarea::-webkit-scrollbar,
 ${R} textarea:focus::-webkit-scrollbar,
