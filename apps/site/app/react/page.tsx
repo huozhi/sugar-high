@@ -90,11 +90,11 @@ export default function ReactPage() {
 
           <section className="product-section">
             <div className="product-section__head">
-              <h2>{'<Editor />'}</h2>
-              <p>A controlled, highlighted editor with optional line numbers.</p>
+              <h2>{'<FileTree /> + <Editor />'}</h2>
+              <p>Browse files and edit their source, or switch to a read-only code block.</p>
             </div>
             <div className="react-demo-theme-picker"><ReactThemePicker label="Editor theme" /></div>
-            <Window title="editor-example.tsx"><ReactDemo /></Window>
+            <Window title="Files"><ReactDemo /></Window>
           </section>
 
           <details className="product-section react-api react-api-details">

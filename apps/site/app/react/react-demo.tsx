@@ -1,70 +1,61 @@
 'use client'
 
 import { useState } from 'react'
-import { Editor } from '@sugar-high/react'
-import type { LanguageName } from 'sugar-high'
-import { languages } from 'sugar-high/lang'
+import { Code, Editor, FileTree } from '@sugar-high/react'
 import { useReactTheme } from '../components/react-themes'
 
-const initialCode = `import { useState } from 'react'
-import { Editor } from '@sugar-high/react'
+const initialFiles: Record<string, string> = {
+  'src/index.tsx': `import { Button } from './components/button'
+import './styles.css'
 
-const defaultText = 'console.log("hello world")'
+export default function App() {
+  return <Button>Say hello</Button>
+}`,
+  'src/components/button.tsx': `import type { ReactNode } from 'react'
 
-export default function Page() {
-  const [code, setCode] = useState(defaultText)
-  const [title, setTitle] = useState('index.js')
-
-  return (
-    <Editor
-      value={code}
-      title={title}
-      onChange={(text) => setCode(text)}
-      onChangeTitle={(title) => setTitle(title)}
-    />
-  )
-}`
+export function Button({ children }: { children: ReactNode }) {
+  return <button onClick={() => alert('Hello!')}>{children}</button>
+}`,
+  'src/styles.css': `button {
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+}`,
+  'package.json': `{
+  "name": "hello-world",
+  "private": true
+}`,
+}
 
 export function ReactDemo() {
   const { palette } = useReactTheme()
-  const [code, setCode] = useState(initialCode)
-  const [language, setLanguage] = useState<LanguageName>('typescript')
+  const [files, setFiles] = useState(initialFiles)
+  const [activeFile, setActiveFile] = useState('src/index.tsx')
+  const [readOnly, setReadOnly] = useState(false)
   const [lineNumbers, setLineNumbers] = useState(true)
+  const code = files[activeFile]
 
   return (
     <div className="react-demo">
-      <Editor
-        className="react-demo__editor"
-        theme={palette}
-        lang={language}
-        title={null}
-        controls={false}
-        value={code}
-        lineNumbers={lineNumbers}
-        onChange={setCode}
-      />
+      <div className="react-demo__files">
+        <FileTree paths={Object.keys(files)} activeFile={activeFile}
+          onActiveFileChange={setActiveFile} theme={palette} />
+        <div className="react-demo__document">
+          {readOnly ? (
+            <Code title={activeFile} theme={palette} lineNumbers={lineNumbers}>{code}</Code>
+          ) : (
+            <Editor className="react-demo__editor" title={activeFile}
+              theme={palette} controls={false} value={code} lineNumbers={lineNumbers}
+              textareaProps={{ 'aria-label': `Edit ${activeFile}` }}
+              onChange={text => setFiles(current => ({ ...current, [activeFile]: text }))} />
+          )}
+        </div>
+      </div>
       <div className="react-demo__status">
         <div className="react-demo__settings">
-          <label>
-            <span className="sr-only">Language</span>
-            <select
-              aria-label="Language"
-              value={language}
-              onChange={(event) => setLanguage(event.target.value as LanguageName)}
-            >
-              {languages.map(({ id }) => (
-                <option key={id} value={id}>{id}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={lineNumbers}
-              onChange={(event) => setLineNumbers(event.target.checked)}
-            />
-            line numbers
-          </label>
+          <label><input type="checkbox" checked={readOnly} onChange={event => setReadOnly(event.target.checked)} />read only</label>
+          <label><input type="checkbox" checked={lineNumbers} onChange={event => setLineNumbers(event.target.checked)} />line numbers</label>
         </div>
         <span>{code.split('\n').length} lines · {code.length} characters</span>
       </div>
