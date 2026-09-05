@@ -194,7 +194,6 @@
 
 .react-product .sh__line {
   display: block;
-  min-height: 1lh;
 }
 
 .react-product [data-highlight] {
@@ -395,10 +394,7 @@
   font-size: 13px;
   line-height: 22px;
   letter-spacing: normal;
-  line-break: anywhere;
-  overflow-wrap: break-word;
 }
-.filetree-demo__source code { padding-right: 8px; }
 
 .react-product .product-section > .filetree-demo { width: min(800px, 100%); }
 
