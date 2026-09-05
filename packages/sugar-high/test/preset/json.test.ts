@@ -5,6 +5,34 @@ import * as javascript from '../../lib/lang/javascript.js'
 import { getTokensAsString } from '../testing-utils'
 
 describe('tokenize - json preset', () => {
+  it('keeps decimal values together in the reported JSON example', () => {
+    const input = `// jar.json
+{
+  "title": "devjar",
+  "command": "npx devjar dev",
+  "color": "#8aa9cf",
+  "speed": 0.35,
+  "glass": 0.07
+}`
+    const tokens = tokenize(input, json)
+    const actual = getTokensAsString(tokens)
+    expect(tokens.map(([, value]) => value).join('')).toBe(input)
+    expect(actual.filter((token) => token.endsWith('=> class'))).toEqual([
+      '0.35 => class',
+      '0.07 => class',
+    ])
+    expect(actual).toContain('"speed" => property')
+    expect(actual).toContain('"#8aa9cf" => string')
+    expect(actual).toContain('// jar.json => comment')
+  })
+
+  it('preserves signs, integers, strings, and member access around decimals', () => {
+    expect(getTokensAsString(tokenize('-0.35 42 "0.07" item.value 0xff', json))).toEqual([
+      '- => sign', '0.35 => class', '42 => class', '"0.07" => string',
+      'item => identifier', '. => sign', 'value => property', '0xff => class',
+    ])
+  })
+
   it('supports JSONC comments in the canonical JSON preset', () => {
     const actual = getTokensAsString(tokenize('{\n  // note\n  "ok": true /* enabled */\n}', json))
     expect(actual).toContain('// note => comment')
