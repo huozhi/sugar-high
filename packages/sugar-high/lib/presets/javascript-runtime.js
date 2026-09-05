@@ -283,6 +283,7 @@ function tokenize(code, options) {
   /** @type {0 | 1 | 2} 0 = none; 1 = inside `<open`; 2 = inside `</close` */
   let __jsxTag = 0
   let __jsxExpr = false
+  let __jsxTagExpr = 0
 
   /** Nested `<open>…</open>` depth (content between tags, including nested elements). */
   let __jsxStack = 0
@@ -323,6 +324,8 @@ function tokenize(code, options) {
         // classify jsx open tag
         if ((lastToken === '<' || lastToken === '</'))
           return T_ENTITY
+        if (!__jsxTagExpr && /^\s+$/.test(tokens[tokens.length - 1]?.[1] || ''))
+          return T_PROPERTY
       }
     }
     // Then determine if they're jsx literals
@@ -343,7 +346,7 @@ function tokenize(code, options) {
     } else if (token.split('').every(isSign)) {
       return T_SIGN
     } else if (isCls(token)) {
-      return inJsxTag() ? T_IDENTIFIER : T_CLS_NUMBER
+      return inJsxTag() && !__jsxTagExpr ? T_IDENTIFIER : T_CLS_NUMBER
     } else {
       if (isIdentifier(token)) {
         const isLastPropDot = last[1] === '.' && isIdentifier(beforeLast[1])
@@ -371,6 +374,10 @@ function tokenize(code, options) {
       if (type !== T_SPACE && type !== T_BREAK) {
         beforeLast = last
         last = pair
+      }
+      if (inJsxTag() && type === T_SIGN) {
+        if (current === '{') __jsxTagExpr++
+        if (current === '}') __jsxTagExpr--
       }
       tokens.push(pair)
     }

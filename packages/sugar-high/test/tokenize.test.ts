@@ -6,6 +6,45 @@ import { getTokensAsString } from './testing-utils'
 const tokenize = (code, options = {}) =>
   core.tokenize(code, { ...javascript, ...options })
 
+describe('tokenize - JSX boolean props', () => {
+  it('classifies the reported props without changing expression tokens', () => {
+    const input = `<Code
+  title="example.js"
+  lang="javascript"
+  theme={taffy}
+  controls
+  lineNumbers
+  highlightLines={[1, [5, 6]]}
+>`
+    const tokens = tokenize(input)
+    const actual = getTokensAsString(tokens)
+    expect(tokens.map(([, value]) => value).join('')).toBe(input)
+    expect(actual.filter((token) => token.endsWith('=> property'))).toEqual([
+      'title => property', 'lang => property', 'theme => property',
+      'controls => property', 'lineNumbers => property', 'highlightLines => property',
+    ])
+    expect(actual).toContain('Code => entity')
+    expect(actual).toContain('taffy => identifier')
+    expect(actual.filter((token) => token.endsWith('=> class'))).toEqual([
+      '1 => class', '5 => class', '6 => class',
+    ])
+  })
+
+  it.each(['<input disabled/>', '<input disabled>', '<input disabled />'])('%s', (input) => {
+    expect(getTokensAsString(tokenize(input))).toContain('disabled => property')
+  })
+
+  it('keeps nested expression identifiers and member tag names distinct from props', () => {
+    const actual = getTokensAsString(tokenize(
+      '<UI.Button options={{ value: active }} disabled>{label}</UI.Button>'
+    ))
+    expect(actual).toContain('active => identifier')
+    expect(actual).toContain('disabled => property')
+    expect(actual).not.toContain('Button => property')
+    expect(actual).toContain('label => identifier')
+  })
+})
+
 describe('tokenize - typeKeywords', () => {
   it('classifies typeKeywords as class before keywords', () => {
     const input = 'int x'

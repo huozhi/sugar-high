@@ -465,7 +465,7 @@ describe('jsx', () => {
         "= => sign",
         "> => sign",
         " => space",
-        "1 => identifier",
+        "1 => class",
         ") => sign",
         "} => sign",
         " => space",
