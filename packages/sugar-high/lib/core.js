@@ -110,6 +110,10 @@ function tokenize(code, options) {
     if (isWord(curr)) {
       const start = i++
       while (i < code.length && isWord(code[i])) i++
+      if (/^\d/.test(curr) && code[i] === '.' && /\d/.test(code[i + 1] || '')) {
+        i++
+        while (i < code.length && isWord(code[i])) i++
+      }
       const value = code.slice(start, i)
       const normalized = normalize(value)
       const type = typeKeywords.has(normalized)
