@@ -1,5 +1,12 @@
 # sugar-high
 
+## 2.3.1
+
+### Patch Changes
+
+- 2c473a2: Classify JSX boolean props as properties and preserve numeric types in prop expressions.
+- a3e6b2f: Keep decimal numbers together when highlighting JSON and other core languages.
+
 ## 2.3.0
 
 ### Minor Changes
