@@ -1,5 +1,11 @@
 # @sugar-high/react
 
+## 2.2.2
+
+### Patch Changes
+
+- 0fd8503: Keep empty code lines full-height, match Code and Editor wrapping at the same width, and apply fontSize consistently to source text and filename headers.
+
 ## 2.2.1
 
 ### Patch Changes
