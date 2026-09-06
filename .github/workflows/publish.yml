@@ -32,13 +32,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Create or update release PR
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          version: pnpm run version
-          title: Release packages
-          commit: Release packages
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+          version-script: pnpm run version
+          pr-title: 'ci: release packages'
+          commit-message: 'ci: release packages'
 
   publish:
     if: github.event_name == 'workflow_dispatch'
@@ -66,9 +64,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Publish packages and create GitHub releases
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          publish: pnpm release
-          createGithubReleases: true
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+          publish-script: pnpm release
+          create-github-releases: true
