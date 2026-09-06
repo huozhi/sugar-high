@@ -13,8 +13,8 @@ if (!missingBrowser && (detected.error || detected.status !== 0)) {
 // Use the built package, so verification also exercises its emitted styles.
 const { createElement: h } = await import('react')
 const { renderToString } = await import('react-dom/server')
-let Code, Editor
-const session = `sugar-layout-${process.pid}`
+let Code, Editor, FileTree
+let session = `sugar-layout-${process.pid}`
 const source = "import { Button } from './components/button'\n\nexport default Button\n"
 
 function browser(args, input) {
@@ -41,12 +41,133 @@ function read(fn) {
   return browser(['eval', '--stdin'], `(${fn.toString()})()`).result
 }
 
+function renderTree(props = {}, style = { width: 180 }, css = '') {
+  const html = renderToString(h('div', { style }, h(FileTree, {
+    paths: ['src/components/deeply/nested/a-very-long-component-filename.tsx', 'readme.md'],
+    activeFile: 'src/components/deeply/nested/a-very-long-component-filename.tsx',
+    onActiveFileChange() {},
+    ...props,
+  })))
+  browser(['eval', '--stdin'], `document.open(); document.write(${JSON.stringify('<!doctype html>' + html + `<style>${css}</style>`)}); document.close();`)
+}
+
 test('built React components preserve layout', { skip: missingBrowser && 'agent-browser is not installed' }, async t => {
   const components = await import('../dist/index.js')
   Code = components.Code
   Editor = components.Editor
+  FileTree = components.FileTree
   try {
     browser(['open', 'about:blank'], undefined)
+    await t.test('file tree rows cover overflowing names and share a full-width hit area', () => {
+      renderTree()
+      const layout = read(() => {
+        const tree = document.querySelector('[data-sh-file-tree]')
+        const rows = [...tree.querySelectorAll('[role=treeitem]')]
+        tree.scrollLeft = tree.scrollWidth
+        return {
+          scrolled: tree.scrollLeft > 0,
+          rows: rows.map(row => {
+            const rect = row.getBoundingClientRect()
+            const label = row.querySelector('span').getBoundingClientRect()
+            return {
+              width: rect.width,
+              containsLabel: rect.right >= label.right,
+              hit: document.elementFromPoint(rect.right - 4, rect.y + rect.height / 2)?.closest('[role=treeitem]') === row,
+            }
+          }),
+        }
+      })
+      assert(layout.scrolled)
+      assert(layout.rows.every(row => row.containsLabel && row.hit), JSON.stringify(layout))
+      assert(layout.rows.every(row => row.width === layout.rows[0].width))
+    })
+    await t.test('hover preserves file tree selection', () => {
+      renderTree({ paths: ['a.ts', 'b.ts'], activeFile: 'a.ts' })
+      browser(['hover', 'body'])
+      const selected = () => getComputedStyle(document.querySelector('[aria-selected=true]')).backgroundColor
+      const background = read(selected)
+      browser(['hover', '[aria-selected=true]'])
+      assert.equal(read(selected), background)
+      browser(['hover', '[aria-label="b.ts"]'])
+      assert.notEqual(read(() => getComputedStyle(document.querySelector('[aria-label="b.ts"]')).backgroundColor), background)
+    })
+
+    await t.test('file trees fit constrained panels with enlarged text', () => {
+      for (const display of ['flex', 'grid']) {
+        for (const zoom of [1, 2]) {
+          renderTree({ style: { width: '100%', height: '100%', fontSize: 26, fontFamily: 'serif' } },
+            { display, width: 120, height: 100, zoom })
+          const layout = read(() => {
+            const tree = document.querySelector('[data-sh-file-tree]')
+            const bounds = tree.getBoundingClientRect()
+            const panel = tree.parentElement.getBoundingClientRect()
+            return {
+              contained: bounds.right <= panel.right && bounds.bottom <= panel.bottom,
+              scrolls: tree.scrollWidth > tree.clientWidth && tree.scrollHeight > tree.clientHeight,
+              rows: [...tree.querySelectorAll('[role=treeitem]')].map(row => {
+                const bounds = row.getBoundingClientRect()
+                const label = row.querySelector('span').getBoundingClientRect()
+                const icons = [...row.querySelectorAll('svg')].map(icon => icon.getBoundingClientRect())
+                return label.top >= bounds.top && label.bottom <= bounds.bottom && icons.every(icon =>
+                  Math.abs((icon.top + icon.bottom) / 2 - (bounds.top + bounds.bottom) / 2) < 0.5)
+              }),
+            }
+          })
+          assert(layout.contained && layout.scrolls && layout.rows.every(Boolean), JSON.stringify({ display, zoom, layout }))
+        }
+      }
+    })
+
+    await t.test('file tree labels preserve Unicode names and follow tree indentation in either direction', () => {
+      const names = ['.env', 'two words.ts', '🧪.tsx', '组件.tsx', 'مرحبا.ts', 'שלום-test.ts']
+      for (const dir of ['ltr', 'rtl']) {
+        renderTree({ paths: names.map(name => `src/${name}`), dir }, { width: 600 })
+        const labels = read(() => [...document.querySelectorAll('[role=treeitem]')].map(row => {
+          const label = row.querySelector('span')
+          const icon = row.querySelector('svg').getBoundingClientRect()
+          return {
+            name: label.textContent,
+            direction: getComputedStyle(label).direction,
+            indent: getComputedStyle(row).paddingInlineStart,
+            x: icon.x,
+          }
+        }))
+        assert.deepEqual(labels.slice(1).map(label => label.name).sort(), [...names].sort())
+        for (const label of labels.slice(1)) {
+          assert.equal(label.indent, '22px')
+          assert.equal(label.x - labels[0].x, dir === 'rtl' ? -16 : 16)
+          assert.equal(label.direction, /^[\u0590-\u06ff]/u.test(label.name) ? 'rtl' : 'ltr')
+        }
+      }
+    })
+
+    await t.test('file tree selection and focus remain visible on light and dark themes', () => {
+      for (const theme of [
+        { background: '#ffffff', foreground: '#222222' },
+        { background: '#111111', foreground: '#eeeeee' },
+      ]) {
+        renderTree({ paths: ['a.ts', 'b.ts'], activeFile: 'a.ts', theme })
+        browser(['press', 'Tab'])
+        const colors = read(() => {
+          const tree = document.querySelector('[data-sh-file-tree]')
+          const selected = tree.querySelector('[aria-selected=true]')
+          const style = getComputedStyle(selected)
+          return {
+            focused: selected.matches(':focus-visible'),
+            foreground: style.color,
+            outline: style.outlineColor,
+            outlineStyle: style.outlineStyle,
+            background: style.backgroundColor,
+            plain: getComputedStyle(tree.querySelector('[aria-selected=false]')).backgroundColor,
+          }
+        })
+        assert(colors.focused)
+        assert.equal(colors.outlineStyle, 'solid')
+        assert.equal(colors.outline, colors.foreground)
+        assert.notEqual(colors.background, colors.plain)
+      }
+    })
+
     await t.test('React page editor stays aligned regardless of stylesheet order', () => {
       const siteCss = ['global.css', 'styles.css', 'react/page.css']
         .map(file => readFileSync(new URL(`../../../apps/site/app/${file}`, import.meta.url), 'utf8'))
@@ -199,6 +320,37 @@ test('built React components preserve layout', { skip: missingBrowser && 'agent-
         overflow: element.scrollWidth > element.clientWidth,
       })))
       assert.deepEqual(frames, [{ whiteSpace: 'pre', overflow: true }, { whiteSpace: 'pre', overflow: true }])
+    })
+    await t.test('forced colors retain file tree selection and keyboard focus', () => {
+      browser(['close'])
+      session += '-forced'
+      browser(['--args', '--force-high-contrast', 'open', 'about:blank'])
+      renderTree({ paths: ['a.ts', 'b.ts'], activeFile: 'a.ts' })
+      browser(['press', 'Tab'])
+      const colors = read(() => {
+        const selected = document.querySelector('[aria-selected=true]')
+        const style = getComputedStyle(selected)
+        const probe = document.createElement('div')
+        probe.style.cssText = 'forced-color-adjust:none;background:Highlight;color:HighlightText'
+        document.body.append(probe)
+        const system = getComputedStyle(probe)
+        return {
+          forced: matchMedia('(forced-colors: active)').matches,
+          focused: selected.matches(':focus-visible'),
+          background: style.backgroundColor,
+          foreground: style.color,
+          outline: style.outlineColor,
+          outlineStyle: style.outlineStyle,
+          systemBackground: system.backgroundColor,
+          systemForeground: system.color,
+        }
+      })
+      assert(colors.forced && colors.focused)
+      assert.equal(colors.background, colors.systemBackground)
+      assert.equal(colors.foreground, colors.systemForeground)
+      assert.notEqual(colors.background, colors.foreground)
+      assert.equal(colors.outline, colors.foreground)
+      assert.equal(colors.outlineStyle, 'solid')
     })
   } finally {
     browser(['close'], undefined)
