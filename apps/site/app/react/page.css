@@ -192,10 +192,6 @@
   vertical-align: baseline;
 }
 
-.react-product .sh__line {
-  display: block;
-}
-
 .react-product [data-highlight] {
   background: #dff1ff;
 }
