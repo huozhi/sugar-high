@@ -13,7 +13,7 @@ if (!missingBrowser && (detected.error || detected.status !== 0)) {
 // Use the built package, so verification also exercises its emitted styles.
 const { createElement: h } = await import('react')
 const { renderToString } = await import('react-dom/server')
-let Code, Editor
+let Code, Editor, FileTree
 const session = `sugar-layout-${process.pid}`
 const source = "import { Button } from './components/button'\n\nexport default Button\n"
 
@@ -41,12 +41,46 @@ function read(fn) {
   return browser(['eval', '--stdin'], `(${fn.toString()})()`).result
 }
 
+function renderTree(props = {}, style = { width: 180 }, css = '') {
+  const html = renderToString(h('div', { style }, h(FileTree, {
+    paths: ['src/components/deeply/nested/a-very-long-component-filename.tsx', 'readme.md'],
+    activeFile: 'src/components/deeply/nested/a-very-long-component-filename.tsx',
+    onActiveFileChange() {},
+    ...props,
+  })))
+  browser(['eval', '--stdin'], `document.open(); document.write(${JSON.stringify('<!doctype html>' + html + `<style>${css}</style>`)}); document.close();`)
+}
+
 test('built React components preserve layout', { skip: missingBrowser && 'agent-browser is not installed' }, async t => {
   const components = await import('../dist/index.js')
   Code = components.Code
   Editor = components.Editor
+  FileTree = components.FileTree
   try {
     browser(['open', 'about:blank'], undefined)
+    await t.test('file tree rows cover overflowing names and share a full-width hit area', () => {
+      renderTree()
+      const layout = read(() => {
+        const tree = document.querySelector('[data-sh-file-tree]')
+        const rows = [...tree.querySelectorAll('[role=treeitem]')]
+        tree.scrollLeft = tree.scrollWidth
+        return {
+          scrolled: tree.scrollLeft > 0,
+          rows: rows.map(row => {
+            const rect = row.getBoundingClientRect()
+            const label = row.querySelector('span').getBoundingClientRect()
+            return {
+              width: rect.width,
+              containsLabel: rect.right >= label.right,
+              hit: document.elementFromPoint(rect.right - 4, rect.y + rect.height / 2)?.closest('[role=treeitem]') === row,
+            }
+          }),
+        }
+      })
+      assert(layout.scrolled)
+      assert(layout.rows.every(row => row.containsLabel && row.hit), JSON.stringify(layout))
+      assert(layout.rows.every(row => row.width === layout.rows[0].width))
+    })
     await t.test('React page editor stays aligned regardless of stylesheet order', () => {
       const siteCss = ['global.css', 'styles.css', 'react/page.css']
         .map(file => readFileSync(new URL(`../../../apps/site/app/${file}`, import.meta.url), 'utf8'))
