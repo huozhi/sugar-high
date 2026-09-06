@@ -192,7 +192,7 @@
   vertical-align: baseline;
 }
 
-.react-product .sh__line {
+.react-product [data-sh-code] .sh__line {
   display: block;
 }
 

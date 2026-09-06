@@ -221,7 +221,7 @@ describe('Code', () => {
         overflow-wrap: break-word;
       }
       [data-sh-code] .sh__line {
-        display: block;
+        display: inline-block;
         width: 100%;
         min-height: 1lh;
       }
@@ -400,7 +400,7 @@ describe('Code', () => {
         overflow-wrap: break-word;
       }
       [data-sh-code] .sh__line {
-        display: block;
+        display: inline-block;
         width: 100%;
         min-height: 1lh;
       }
@@ -539,7 +539,7 @@ describe('Code', () => {
         overflow-wrap: break-word;
       }
       [data-sh-code] .sh__line {
-        display: block;
+        display: inline-block;
         width: 100%;
         min-height: 1lh;
       }

@@ -37,7 +37,7 @@ ${C} code {
   overflow-wrap: break-word;
 }
 ${C} .sh__line {
-  display: block;
+  display: inline-block;
   width: 100%;
   min-height: 1lh;
 }
