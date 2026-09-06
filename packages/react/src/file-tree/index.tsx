@@ -14,12 +14,13 @@ export type FileTreeProps = {
 
 const css = `[data-sh-file-tree]{display:grid;grid-template-columns:minmax(max-content,1fr);grid-auto-rows:max-content;align-content:start;min-width:0;min-height:0;box-sizing:border-box;line-height:1.5;padding:8px;overflow:auto;font-family:var(--sh-font-family,ui-monospace,monospace);font-size:var(--sh-font-size,13px)}
 [data-sh-file-tree] [role=treeitem]{display:flex;align-items:center;gap:6px;min-height:30px;padding-inline-end:8px;border-radius:4px;cursor:pointer;white-space:nowrap;outline:none;user-select:none}
-[data-sh-file-tree] [role=treeitem]:not([aria-selected=true]):hover{background:color-mix(in srgb,#888 7%,transparent)}
-[data-sh-file-tree] [aria-selected=true]{background:color-mix(in srgb,#888 13%,transparent)}
-[data-sh-file-tree] [role=treeitem]:focus-visible{outline:1px solid color-mix(in srgb,currentColor 45%,transparent);outline-offset:-1px}
+[data-sh-file-tree] [role=treeitem]:not([aria-selected=true]):hover{background:color-mix(in srgb,currentColor 7%,transparent)}
+[data-sh-file-tree] [aria-selected=true]{background:color-mix(in srgb,currentColor 13%,transparent)}
+[data-sh-file-tree] [role=treeitem]:focus-visible{outline:1px solid currentColor;outline-offset:-1px}
 [data-sh-file-tree] svg{width:16px;height:16px;flex:none}
 [data-sh-file-tree] [data-sh-chevron]{width:10px}
-[data-sh-file-tree] [data-sh-chevron]:dir(rtl){transform:scaleX(-1)}`
+[data-sh-file-tree] [data-sh-chevron]:dir(rtl){transform:scaleX(-1)}
+@media(forced-colors:active){[data-sh-file-tree] [aria-selected=true]{forced-color-adjust:none;background:Highlight;color:HighlightText}}`
 
 export function FileTree({ paths, activeFile, onActiveFileChange, theme, style, ...props }: FileTreeProps) {
   const items = useMemo(() => treeItems(paths), [paths])

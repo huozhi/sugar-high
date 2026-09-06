@@ -14,7 +14,7 @@ if (!missingBrowser && (detected.error || detected.status !== 0)) {
 const { createElement: h } = await import('react')
 const { renderToString } = await import('react-dom/server')
 let Code, Editor, FileTree
-const session = `sugar-layout-${process.pid}`
+let session = `sugar-layout-${process.pid}`
 const source = "import { Button } from './components/button'\n\nexport default Button\n"
 
 function browser(args, input) {
@@ -138,6 +138,33 @@ test('built React components preserve layout', { skip: missingBrowser && 'agent-
           assert.equal(label.x - labels[0].x, dir === 'rtl' ? -16 : 16)
           assert.equal(label.direction, /^[\u0590-\u06ff]/u.test(label.name) ? 'rtl' : 'ltr')
         }
+      }
+    })
+
+    await t.test('file tree selection and focus remain visible on light and dark themes', () => {
+      for (const theme of [
+        { background: '#ffffff', foreground: '#222222' },
+        { background: '#111111', foreground: '#eeeeee' },
+      ]) {
+        renderTree({ paths: ['a.ts', 'b.ts'], activeFile: 'a.ts', theme })
+        browser(['press', 'Tab'])
+        const colors = read(() => {
+          const tree = document.querySelector('[data-sh-file-tree]')
+          const selected = tree.querySelector('[aria-selected=true]')
+          const style = getComputedStyle(selected)
+          return {
+            focused: selected.matches(':focus-visible'),
+            foreground: style.color,
+            outline: style.outlineColor,
+            outlineStyle: style.outlineStyle,
+            background: style.backgroundColor,
+            plain: getComputedStyle(tree.querySelector('[aria-selected=false]')).backgroundColor,
+          }
+        })
+        assert(colors.focused)
+        assert.equal(colors.outlineStyle, 'solid')
+        assert.equal(colors.outline, colors.foreground)
+        assert.notEqual(colors.background, colors.plain)
       }
     })
 
@@ -293,6 +320,37 @@ test('built React components preserve layout', { skip: missingBrowser && 'agent-
         overflow: element.scrollWidth > element.clientWidth,
       })))
       assert.deepEqual(frames, [{ whiteSpace: 'pre', overflow: true }, { whiteSpace: 'pre', overflow: true }])
+    })
+    await t.test('forced colors retain file tree selection and keyboard focus', () => {
+      browser(['close'])
+      session += '-forced'
+      browser(['--args', '--force-high-contrast', 'open', 'about:blank'])
+      renderTree({ paths: ['a.ts', 'b.ts'], activeFile: 'a.ts' })
+      browser(['press', 'Tab'])
+      const colors = read(() => {
+        const selected = document.querySelector('[aria-selected=true]')
+        const style = getComputedStyle(selected)
+        const probe = document.createElement('div')
+        probe.style.cssText = 'forced-color-adjust:none;background:Highlight;color:HighlightText'
+        document.body.append(probe)
+        const system = getComputedStyle(probe)
+        return {
+          forced: matchMedia('(forced-colors: active)').matches,
+          focused: selected.matches(':focus-visible'),
+          background: style.backgroundColor,
+          foreground: style.color,
+          outline: style.outlineColor,
+          outlineStyle: style.outlineStyle,
+          systemBackground: system.backgroundColor,
+          systemForeground: system.color,
+        }
+      })
+      assert(colors.forced && colors.focused)
+      assert.equal(colors.background, colors.systemBackground)
+      assert.equal(colors.foreground, colors.systemForeground)
+      assert.notEqual(colors.background, colors.foreground)
+      assert.equal(colors.outline, colors.foreground)
+      assert.equal(colors.outlineStyle, 'solid')
     })
   } finally {
     browser(['close'], undefined)
