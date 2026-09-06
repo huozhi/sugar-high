@@ -31,7 +31,7 @@ function render(style, codeProps, editorProps, css) {
     h(Editor, { fontFamily: 'monospace', value: source, ...editorProps }),
   ))
   browser(['eval', '--stdin'], `(() => {
-    document.open(); document.write(${JSON.stringify(html)}); document.close();
+    document.open(); document.write(${JSON.stringify('<!doctype html>' + html)}); document.close();
     const style = document.createElement('style'); style.textContent = ${JSON.stringify(css)}; document.head.append(style);
   })()`)
 }
@@ -77,17 +77,22 @@ test('built React components preserve layout', { skip: missingBrowser && 'agent-
 
     await t.test('empty lines and wrapped text retain matching geometry', () => {
       for (const lineNumbers of [true, false]) {
-        render({ fontFamily: 'monospace', fontSize: 13, lineHeight: '22px' },
-          { lineNumbers }, { lineNumbers },
-          '.sh__line { display: block; min-height: 1em } [data-sh-code-line-number] { position: absolute }')
+        render({ fontFamily: 'Consolas, Monaco, monospace', fontSize: 15, lineHeight: '22.5px' },
+          { lineNumbers }, { lineNumbers, fontFamily: 'Consolas, Monaco, monospace' },
+          '* { box-sizing: border-box } .sh__line { min-height: 1em } [data-sh-code-line-number] { position: absolute }')
         const rows = read(() => [...document.querySelectorAll('code')].map(block =>
           [...block.querySelectorAll('.sh__line')].map(element => ({
+            top: element.getBoundingClientRect().top,
             height: element.getBoundingClientRect().height,
             lineHeight: parseFloat(getComputedStyle(element).lineHeight),
           }))))
         for (const block of rows) {
           assert(block.length >= 3)
           assert(block.every(row => row.height >= row.lineHeight), `Empty rows must retain line height (lineNumbers=${lineNumbers})`)
+          for (let index = 1; index < block.length; index++) {
+            assert.equal(block[index].top, block[index - 1].top + block[index - 1].height,
+              `Blank lines must not add baseline gaps (lineNumbers=${lineNumbers}, line=${index + 1})`)
+          }
         }
 
         for (const width of [240, 390, 600]) {
@@ -116,7 +121,7 @@ test('built React components preserve layout', { skip: missingBrowser && 'agent-
           const overlayPositions = read(() => {
             // Site styles can load after component styles in a deployed page.
             const siteStyle = document.createElement('style')
-            siteStyle.textContent = '[data-codice-code] code { font-family: serif; font-size: 12px; line-height: 2; letter-spacing: 1px }'
+            siteStyle.textContent = '[data-codice-code] code { font-family: serif; font-size: 12px; line-height: 2; letter-spacing: 1px } [data-sh-code-line-number] { position: absolute }'
             document.head.append(siteStyle)
             const editor = document.querySelector('[data-sh-editor]')
             const textarea = editor.querySelector('textarea')
