@@ -7,6 +7,27 @@ on:
   pull_request:
 
 jobs:
+  react-layout:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @sugar-high/react build
+      - name: Install browser tooling
+        run: |
+          pnpm add --global agent-browser@0.36.0
+          agent-browser install --with-deps
+      - run: pnpm --filter @sugar-high/react test:browser
+
   test:
     runs-on: ubuntu-latest
     permissions:

@@ -35,7 +35,7 @@
     "benchmark": "node scripts/benchmark.mjs",
     "test": "vitest --run",
     "prepublishOnly": "pnpm build",
-    "test:browser": "node scripts/test-layout.mjs"
+    "test:browser": "node --test scripts/test-layout.mjs"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

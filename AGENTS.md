@@ -8,7 +8,9 @@
 - For React layout changes, build the React package and optionally run
   `pnpm --filter @sugar-high/react test:browser`. This uses an existing `agent-browser` installation
   to verify the built components without a site server. It skips successfully when the CLI is
-  absent; do not install browser tooling just to run it. It is not part of the default tests or CI.
+  absent locally; do not install browser tooling just to run it locally. CI installs a pinned CLI
+  and runs it in the separate `react-layout` job on pushes to `main` (including merged PRs).
+  It is not part of PR checks or the default unit tests.
 - Keep internal package dependencies on `workspace:^` (or `workspace:*` for private apps); pnpm
   rewrites them to normal semver ranges when publishing.
 - Add a Changeset with `pnpm changeset` for user-facing package changes. Do not add one for
