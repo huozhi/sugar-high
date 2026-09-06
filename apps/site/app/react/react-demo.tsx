@@ -46,7 +46,6 @@ export function ReactDemo() {
       <div className="react-demo__status">
         <div className="react-demo__settings">
           <label>
-            <span className="sr-only">Language</span>
             <select
               aria-label="Language"
               value={language}

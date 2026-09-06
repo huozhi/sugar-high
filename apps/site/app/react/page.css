@@ -373,3 +373,32 @@
 .react-code-languages button[aria-selected='true'] {
   font-weight: 650;
 }
+
+.react-demo__files { display: grid; grid-template-columns: minmax(150px, 210px) minmax(0, 1fr); }
+.react-demo__files [data-sh-file-tree] { border-right: 1px solid color-mix(in srgb, #888 20%, transparent); }
+.react-demo__document { min-width: 0; }
+.filetree-demo__source { min-height: 260px; font-family: ui-monospace, monospace; font-size: 13px; }
+@media (max-width: 600px) {
+  .react-demo__files { grid-template-columns: minmax(0, 1fr); }
+  .react-demo__files [data-sh-file-tree] { max-height: 180px; border-right: 0; border-bottom: 1px solid color-mix(in srgb, #888 20%, transparent); }
+}
+
+.react-product [data-sh] pre,
+.react-product [data-sh] code,
+.react-product [data-sh] textarea {
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 22px;
+  letter-spacing: normal;
+}
+
+.react-product .product-section > .filetree-demo { width: min(800px, 100%); }
+
+.react-product .product-card__bar { height: 28px; font: 13px/20px ui-monospace, monospace; }
+.react-product .product-card__title { line-height: 20px; }
+.filetree-demo [data-sh-file-tree] { padding-block: 12px; }
+.filetree-demo [data-sh-file-tree] [role="treeitem"] { min-height: 22px; line-height: 22px; }
+
+.react-product [data-sh="code"],
+.react-product [data-sh="editor"] { font: 13px/22px ui-monospace, monospace; }
+.react-product [data-sh-header] [data-sh-title] { font: 13px/20px ui-monospace, monospace; }

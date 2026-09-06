@@ -33,6 +33,47 @@ string and underlying textarea attributes with `indent` and `textareaProps`:
 />
 ```
 
+## FileTree
+
+Compose file navigation with `Editor` or `Code`. The parent owns the files and selected path;
+the tree owns folder expansion and keyboard focus.
+
+```tsx
+import { useState } from 'react'
+import { Editor, FileTree } from '@sugar-high/react'
+
+export function FilesExample() {
+  const [files, setFiles] = useState<Record<string, string>>({
+    'src/index.ts': 'export const greeting = "Hello"',
+    'src/styles.css': 'body { margin: 0; }',
+  })
+  const [activeFile, setActiveFile] = useState('src/index.ts')
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '180px minmax(0, 1fr)' }}>
+      <FileTree paths={Object.keys(files)} activeFile={activeFile} onActiveFileChange={setActiveFile} />
+      <Editor title={activeFile} value={files[activeFile]}
+        onChange={code => setFiles(current => ({ ...current, [activeFile]: code }))} />
+    </div>
+  )
+}
+```
+
+Replace `Editor` with `<Code title={activeFile}>{files[activeFile]}</Code>` for read-only viewing.
+Pass the same `theme` to the tree and document for matching colors. Layout is ordinary CSS.
+
+`paths`, `activeFile` (`string | null`), and `onActiveFileChange(path)` are required.
+Paths are relative, slash-separated file names; folders are inferred and initially expanded.
+Duplicates are removed. Empty paths, leading/trailing slashes, empty segments, and `.` / `..`
+segments are ignored. Callbacks preserve the supplied file path. Folders sort before files.
+If files are removed, the parent should update its selection; the tree does not select another file automatically.
+
+Arrow keys navigate and expand/collapse folders; Home/End move to the first/last visible item.
+Enter or Space selects a file or toggles a folder. Typing a name moves focus to a matching item.
+`FileTree` accepts standard div attributes, an accessible label (default “Files”), and `theme`.
+Style it through `data-sh-file-tree` and the existing `--sh-*` theme variables.
+Document cursor, scroll, and undo history are not managed by the tree.
+
 ## Code
 
 ```tsx
