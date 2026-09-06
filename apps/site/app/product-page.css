@@ -21,7 +21,7 @@
   position: relative;
   left: 50%;
   width: calc(100vw - 64px);
-  min-height: 34px;
+  min-height: 36px;
   margin-bottom: 72px;
   transform: translateX(-50%);
 }
