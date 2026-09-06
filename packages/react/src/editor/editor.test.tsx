@@ -91,18 +91,26 @@ describe('Code', () => {
         justify-content: stretch;
         scrollbar-width: none;
         font-size: var(--sh-font-size);
+        line-height: 1.5;
+        letter-spacing: 0;
       }
       [data-sh-editor] textarea:not(:placeholder-shown) {
         padding: calc(var(--sh-padding) * 0.75) calc(var(--sh-padding) * 0.5);
       }
-      [data-sh-editor] code,
+      [data-sh-editor] [data-sh-code],
+      [data-sh-editor] pre,
+      [data-sh-editor] [data-sh-code] code,
+      [data-sh-editor] textarea {
+        font-size: inherit;
+        line-height: inherit;
+        letter-spacing: inherit;
+      }
+      [data-sh-editor] [data-sh-code] code,
       [data-sh-editor] textarea {
         font-family: var(--sh-font-family);
         line-break: anywhere;
         overflow-wrap: break-word;
         scrollbar-width: none;
-        line-height: 1.5;
-        font-size: var(--sh-font-size);
         caret-color: var(--sh-caret-color, CanvasText);
         border: none;
         outline: none;
@@ -262,18 +270,26 @@ describe('Code', () => {
         justify-content: stretch;
         scrollbar-width: none;
         font-size: var(--sh-font-size);
+        line-height: 1.5;
+        letter-spacing: 0;
       }
       [data-sh-editor] textarea:not(:placeholder-shown) {
         padding: calc(var(--sh-padding) * 0.75) calc(var(--sh-padding) * 0.5);
       }
-      [data-sh-editor] code,
+      [data-sh-editor] [data-sh-code],
+      [data-sh-editor] pre,
+      [data-sh-editor] [data-sh-code] code,
+      [data-sh-editor] textarea {
+        font-size: inherit;
+        line-height: inherit;
+        letter-spacing: inherit;
+      }
+      [data-sh-editor] [data-sh-code] code,
       [data-sh-editor] textarea {
         font-family: var(--sh-font-family);
         line-break: anywhere;
         overflow-wrap: break-word;
         scrollbar-width: none;
-        line-height: 1.5;
-        font-size: var(--sh-font-size);
         caret-color: var(--sh-caret-color, CanvasText);
         border: none;
         outline: none;
@@ -433,18 +449,26 @@ describe('Code', () => {
         justify-content: stretch;
         scrollbar-width: none;
         font-size: var(--sh-font-size);
+        line-height: 1.5;
+        letter-spacing: 0;
       }
       [data-sh-editor] textarea:not(:placeholder-shown) {
         padding: calc(var(--sh-padding) * 0.75) calc(var(--sh-padding) * 0.5);
       }
-      [data-sh-editor] code,
+      [data-sh-editor] [data-sh-code],
+      [data-sh-editor] pre,
+      [data-sh-editor] [data-sh-code] code,
+      [data-sh-editor] textarea {
+        font-size: inherit;
+        line-height: inherit;
+        letter-spacing: inherit;
+      }
+      [data-sh-editor] [data-sh-code] code,
       [data-sh-editor] textarea {
         font-family: var(--sh-font-family);
         line-break: anywhere;
         overflow-wrap: break-word;
         scrollbar-width: none;
-        line-height: 1.5;
-        font-size: var(--sh-font-size);
         caret-color: var(--sh-caret-color, CanvasText);
         border: none;
         outline: none;

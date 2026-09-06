@@ -48,6 +48,23 @@ disable wrapping to use horizontal scrolling instead. Both options also work wit
 At the same font and width, `Code` and `Editor` use the same wrapping rules. Empty lines retain
 a full line height. `fontSize` applies to source text and filename headers in both components.
 
+Set editor typography once on the root; the textarea and highlighted code inherit it together:
+
+```jsx
+<Editor value={code} onChange={setCode} style={{ fontSize: 14, lineHeight: 1.6 }} />
+```
+
+You can also set these styles through `className`, or use the existing `fontSize` and
+`fontFamily` props. The default editor line height is `1.5`.
+
+The browser layout suite runs with `pnpm --filter @sugar-high/react test:browser` after
+building the package. It uses Node's test runner and an installed `agent-browser` CLI,
+without a site server. It checks typography, blank lines, wrapping, horizontal overflow,
+and highlighted character positions against a plain-text mirror of the textarea at
+multiple widths. CI installs a pinned CLI and runs the suite in a separate job on
+pushes to `main`, including merged PRs. PR checks skip this job; locally the suite
+skips if the CLI is absent.
+
 ```tsx
 <Code lineNumbers startingLineNumber={40} wrapLongLines={false}>
   {source}

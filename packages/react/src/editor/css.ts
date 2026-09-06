@@ -13,18 +13,26 @@ ${R} {
   justify-content: stretch;
   scrollbar-width: none;
   font-size: var(--sh-font-size);
+  line-height: 1.5;
+  letter-spacing: 0;
 }
 ${R} textarea:not(:placeholder-shown) {
   padding: calc(var(--sh-padding) * 0.75) calc(var(--sh-padding) * 0.5);
 }
-${R} code,
+${R} [data-sh-code],
+${R} pre,
+${R} [data-sh-code] code,
+${R} textarea {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+${R} [data-sh-code] code,
 ${R} textarea {
   font-family: var(--sh-font-family);
   line-break: anywhere;
   overflow-wrap: break-word;
   scrollbar-width: none;
-  line-height: 1.5;
-  font-size: var(--sh-font-size);
   caret-color: var(--sh-caret-color, CanvasText);
   border: none;
   outline: none;
