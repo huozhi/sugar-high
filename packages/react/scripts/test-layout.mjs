@@ -92,6 +92,32 @@ test('built React components preserve layout', { skip: missingBrowser && 'agent-
       assert.notEqual(read(() => getComputedStyle(document.querySelector('[aria-label="b.ts"]')).backgroundColor), background)
     })
 
+    await t.test('file trees fit constrained panels with enlarged text', () => {
+      for (const display of ['flex', 'grid']) {
+        for (const zoom of [1, 2]) {
+          renderTree({ style: { width: '100%', height: '100%', fontSize: 26, fontFamily: 'serif' } },
+            { display, width: 120, height: 100, zoom })
+          const layout = read(() => {
+            const tree = document.querySelector('[data-sh-file-tree]')
+            const bounds = tree.getBoundingClientRect()
+            const panel = tree.parentElement.getBoundingClientRect()
+            return {
+              contained: bounds.right <= panel.right && bounds.bottom <= panel.bottom,
+              scrolls: tree.scrollWidth > tree.clientWidth && tree.scrollHeight > tree.clientHeight,
+              rows: [...tree.querySelectorAll('[role=treeitem]')].map(row => {
+                const bounds = row.getBoundingClientRect()
+                const label = row.querySelector('span').getBoundingClientRect()
+                const icons = [...row.querySelectorAll('svg')].map(icon => icon.getBoundingClientRect())
+                return label.top >= bounds.top && label.bottom <= bounds.bottom && icons.every(icon =>
+                  Math.abs((icon.top + icon.bottom) / 2 - (bounds.top + bounds.bottom) / 2) < 0.5)
+              }),
+            }
+          })
+          assert(layout.contained && layout.scrolls && layout.rows.every(Boolean), JSON.stringify({ display, zoom, layout }))
+        }
+      }
+    })
+
     await t.test('React page editor stays aligned regardless of stylesheet order', () => {
       const siteCss = ['global.css', 'styles.css', 'react/page.css']
         .map(file => readFileSync(new URL(`../../../apps/site/app/${file}`, import.meta.url), 'utf8'))

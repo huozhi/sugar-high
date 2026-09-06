@@ -12,7 +12,7 @@ export type FileTreeProps = {
   theme?: Theme
 } & Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onChange'>
 
-const css = `[data-sh-file-tree]{display:grid;grid-template-columns:minmax(max-content,1fr);align-content:start;padding:8px;overflow:auto;font-family:var(--sh-font-family,ui-monospace,monospace);font-size:var(--sh-font-size,13px)}
+const css = `[data-sh-file-tree]{display:grid;grid-template-columns:minmax(max-content,1fr);grid-auto-rows:max-content;align-content:start;min-width:0;min-height:0;box-sizing:border-box;line-height:1.5;padding:8px;overflow:auto;font-family:var(--sh-font-family,ui-monospace,monospace);font-size:var(--sh-font-size,13px)}
 [data-sh-file-tree] [role=treeitem]{display:flex;align-items:center;gap:6px;min-height:30px;padding-right:8px;border-radius:4px;cursor:pointer;white-space:nowrap;outline:none;user-select:none}
 [data-sh-file-tree] [role=treeitem]:not([aria-selected=true]):hover{background:color-mix(in srgb,#888 7%,transparent)}
 [data-sh-file-tree] [aria-selected=true]{background:color-mix(in srgb,#888 13%,transparent)}
