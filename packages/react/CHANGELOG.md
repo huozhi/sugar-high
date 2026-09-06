@@ -1,5 +1,24 @@
 # @sugar-high/react
 
+## 2.3.0
+
+### Minor Changes
+
+- bed24dc: Add a themed FileTree with controlled file selection, folder expansion, and keyboard navigation that composes with Editor or Code.
+- 6c43b5c: Render highlighted lines in Code and Editor as blocks to prevent extra baseline spacing after blank lines and keep editor selection aligned. Custom styles relying on inline-block line alignment should be reviewed.
+
+### Patch Changes
+
+- bda310f: Keep file tree row backgrounds, focus outlines, and click targets aligned with long filenames and deeply nested paths when scrolling horizontally.
+  
+  Preserve the selected file's background while hovering.
+  
+  Keep the tree contained in narrow or short panels and give larger filename text a consistent line height.
+  
+  Isolate filename text direction and mirror indentation and disclosure arrows in right-to-left trees.
+  
+  Use the theme foreground for selection and focus contrast, and system selection colors in forced-color mode.
+
 ## 2.2.3
 
 ### Patch Changes
