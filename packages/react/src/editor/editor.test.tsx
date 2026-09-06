@@ -99,13 +99,13 @@ describe('Code', () => {
       }
       [data-sh-editor] [data-sh-code],
       [data-sh-editor] pre,
-      [data-sh-editor] code,
+      [data-sh-editor] [data-sh-code] code,
       [data-sh-editor] textarea {
         font-size: inherit;
         line-height: inherit;
         letter-spacing: inherit;
       }
-      [data-sh-editor] code,
+      [data-sh-editor] [data-sh-code] code,
       [data-sh-editor] textarea {
         font-family: var(--sh-font-family);
         line-break: anywhere;
@@ -278,13 +278,13 @@ describe('Code', () => {
       }
       [data-sh-editor] [data-sh-code],
       [data-sh-editor] pre,
-      [data-sh-editor] code,
+      [data-sh-editor] [data-sh-code] code,
       [data-sh-editor] textarea {
         font-size: inherit;
         line-height: inherit;
         letter-spacing: inherit;
       }
-      [data-sh-editor] code,
+      [data-sh-editor] [data-sh-code] code,
       [data-sh-editor] textarea {
         font-family: var(--sh-font-family);
         line-break: anywhere;
@@ -457,13 +457,13 @@ describe('Code', () => {
       }
       [data-sh-editor] [data-sh-code],
       [data-sh-editor] pre,
-      [data-sh-editor] code,
+      [data-sh-editor] [data-sh-code] code,
       [data-sh-editor] textarea {
         font-size: inherit;
         line-height: inherit;
         letter-spacing: inherit;
       }
-      [data-sh-editor] code,
+      [data-sh-editor] [data-sh-code] code,
       [data-sh-editor] textarea {
         font-family: var(--sh-font-family);
         line-break: anywhere;

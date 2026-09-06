@@ -114,6 +114,10 @@ test('built React components preserve layout', { skip: missingBrowser && 'agent-
           assert.deepEqual(positions[0], positions[1], `Wrapping must match at width=${width}, lineNumbers=${lineNumbers}`)
 
           const overlayPositions = read(() => {
+            // Site styles can load after component styles in a deployed page.
+            const siteStyle = document.createElement('style')
+            siteStyle.textContent = '[data-codice-code] code { font-family: serif; font-size: 12px; line-height: 2; letter-spacing: 1px }'
+            document.head.append(siteStyle)
             const editor = document.querySelector('[data-sh-editor]')
             const textarea = editor.querySelector('textarea')
             // Textarea text has no DOM ranges. Mirror its computed styles in a plain

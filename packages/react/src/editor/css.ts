@@ -21,13 +21,13 @@ ${R} textarea:not(:placeholder-shown) {
 }
 ${R} [data-sh-code],
 ${R} pre,
-${R} code,
+${R} [data-sh-code] code,
 ${R} textarea {
   font-size: inherit;
   line-height: inherit;
   letter-spacing: inherit;
 }
-${R} code,
+${R} [data-sh-code] code,
 ${R} textarea {
   font-family: var(--sh-font-family);
   line-break: anywhere;
