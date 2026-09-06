@@ -81,6 +81,17 @@ test('built React components preserve layout', { skip: missingBrowser && 'agent-
       assert(layout.rows.every(row => row.containsLabel && row.hit), JSON.stringify(layout))
       assert(layout.rows.every(row => row.width === layout.rows[0].width))
     })
+    await t.test('hover preserves file tree selection', () => {
+      renderTree({ paths: ['a.ts', 'b.ts'], activeFile: 'a.ts' })
+      browser(['hover', 'body'])
+      const selected = () => getComputedStyle(document.querySelector('[aria-selected=true]')).backgroundColor
+      const background = read(selected)
+      browser(['hover', '[aria-selected=true]'])
+      assert.equal(read(selected), background)
+      browser(['hover', '[aria-label="b.ts"]'])
+      assert.notEqual(read(() => getComputedStyle(document.querySelector('[aria-label="b.ts"]')).backgroundColor), background)
+    })
+
     await t.test('React page editor stays aligned regardless of stylesheet order', () => {
       const siteCss = ['global.css', 'styles.css', 'react/page.css']
         .map(file => readFileSync(new URL(`../../../apps/site/app/${file}`, import.meta.url), 'utf8'))
