@@ -4,6 +4,9 @@
   (`@sugar-high/remark`). Apps live in `apps/`.
 - Always use the running development server at `http://localhost:3000` to verify site changes; do
   not run a production build for verification.
+- For website-only changes, implement and verify locally, then share the local preview for user
+  review. Do not create or update a PR or push these changes until the user chooses whether to
+  use a PR or push directly to `main`.
 - Use pnpm. Run `pnpm test`, `pnpm build`, and `git diff --check` before submitting changes.
 - For React layout changes, build the React package and optionally run
   `pnpm --filter @sugar-high/react test:browser`. This uses an existing `agent-browser` installation
