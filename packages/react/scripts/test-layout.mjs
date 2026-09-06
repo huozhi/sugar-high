@@ -118,6 +118,29 @@ test('built React components preserve layout', { skip: missingBrowser && 'agent-
       }
     })
 
+    await t.test('file tree labels preserve Unicode names and follow tree indentation in either direction', () => {
+      const names = ['.env', 'two words.ts', '🧪.tsx', '组件.tsx', 'مرحبا.ts', 'שלום-test.ts']
+      for (const dir of ['ltr', 'rtl']) {
+        renderTree({ paths: names.map(name => `src/${name}`), dir }, { width: 600 })
+        const labels = read(() => [...document.querySelectorAll('[role=treeitem]')].map(row => {
+          const label = row.querySelector('span')
+          const icon = row.querySelector('svg').getBoundingClientRect()
+          return {
+            name: label.textContent,
+            direction: getComputedStyle(label).direction,
+            indent: getComputedStyle(row).paddingInlineStart,
+            x: icon.x,
+          }
+        }))
+        assert.deepEqual(labels.slice(1).map(label => label.name).sort(), [...names].sort())
+        for (const label of labels.slice(1)) {
+          assert.equal(label.indent, '22px')
+          assert.equal(label.x - labels[0].x, dir === 'rtl' ? -16 : 16)
+          assert.equal(label.direction, /^[\u0590-\u06ff]/u.test(label.name) ? 'rtl' : 'ltr')
+        }
+      }
+    })
+
     await t.test('React page editor stays aligned regardless of stylesheet order', () => {
       const siteCss = ['global.css', 'styles.css', 'react/page.css']
         .map(file => readFileSync(new URL(`../../../apps/site/app/${file}`, import.meta.url), 'utf8'))

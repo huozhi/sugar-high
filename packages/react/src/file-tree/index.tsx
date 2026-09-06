@@ -13,12 +13,13 @@ export type FileTreeProps = {
 } & Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onChange'>
 
 const css = `[data-sh-file-tree]{display:grid;grid-template-columns:minmax(max-content,1fr);grid-auto-rows:max-content;align-content:start;min-width:0;min-height:0;box-sizing:border-box;line-height:1.5;padding:8px;overflow:auto;font-family:var(--sh-font-family,ui-monospace,monospace);font-size:var(--sh-font-size,13px)}
-[data-sh-file-tree] [role=treeitem]{display:flex;align-items:center;gap:6px;min-height:30px;padding-right:8px;border-radius:4px;cursor:pointer;white-space:nowrap;outline:none;user-select:none}
+[data-sh-file-tree] [role=treeitem]{display:flex;align-items:center;gap:6px;min-height:30px;padding-inline-end:8px;border-radius:4px;cursor:pointer;white-space:nowrap;outline:none;user-select:none}
 [data-sh-file-tree] [role=treeitem]:not([aria-selected=true]):hover{background:color-mix(in srgb,#888 7%,transparent)}
 [data-sh-file-tree] [aria-selected=true]{background:color-mix(in srgb,#888 13%,transparent)}
 [data-sh-file-tree] [role=treeitem]:focus-visible{outline:1px solid color-mix(in srgb,currentColor 45%,transparent);outline-offset:-1px}
 [data-sh-file-tree] svg{width:16px;height:16px;flex:none}
-[data-sh-file-tree] [data-sh-chevron]{width:10px}`
+[data-sh-file-tree] [data-sh-chevron]{width:10px}
+[data-sh-file-tree] [data-sh-chevron]:dir(rtl){transform:scaleX(-1)}`
 
 export function FileTree({ paths, activeFile, onActiveFileChange, theme, style, ...props }: FileTreeProps) {
   const items = useMemo(() => treeItems(paths), [paths])
@@ -63,7 +64,7 @@ export function FileTree({ paths, activeFile, onActiveFileChange, theme, style, 
             aria-expanded={item.directory ? expanded : undefined}
             aria-selected={!item.directory && item.path === activeFile}
             tabIndex={current === item ? 0 : -1}
-            style={{ paddingLeft: 6 + item.depth * 16 }}
+            style={{ paddingInlineStart: 6 + item.depth * 16 }}
             ref={node => { if (node) refs.current.set(item.path, node); else refs.current.delete(item.path) }}
             onFocus={() => setFocused(item.path)}
             onClick={() => { focus(item); activate(item) }}
@@ -96,7 +97,7 @@ export function FileTree({ paths, activeFile, onActiveFileChange, theme, style, 
             <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinejoin="round">
               <path d={item.directory ? 'M2 4h4l2 2h6v7H2Z' : 'M4 2h5l3 3v9H4Z M9 2v4h3'} />
             </svg>
-            <span>{item.name}</span>
+            <span dir="auto">{item.name}</span>
           </div>
         )
       })}
