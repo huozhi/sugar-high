@@ -24,9 +24,10 @@
 - Use Conventional Commits for commit and pull request titles. Start the subject after the type
   prefix with a lowercase letter, for example `fix: preserve multiline comments`, not
   `fix: Preserve multiline comments`.
-- Prefix pull request titles by change type: `feat:` for features, `fix:` for patches and bug
-  fixes, and `ci:` for CI, workflow, and release-process fixes.
-- Follow the prefix with a concise imperative title, for example `ci: Fix package checks before
+- Prefix commit and pull request titles by change type: `feat:` for features, `fix:` for patches
+  and bug fixes, `web:` for website-only fixes, `docs:` for documentation-only changes, and
+  `ci:` for CI, workflow, and release-process changes.
+- Follow the prefix with a concise imperative title, for example `ci: fix package checks before
   publishing`.
 
 # Architecture
