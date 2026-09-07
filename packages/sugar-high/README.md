@@ -41,6 +41,14 @@ See [benchmark methodology and options](../../docs/BENCHMARK.md).
 npm install sugar-high
 ```
 
+## Agent skill
+
+Install Sugar High guidance for an AI coding agent with the Skills CLI:
+
+```sh
+npx skills add huozhi/sugar-high --skill sugar-high
+```
+
 ## Highlight code
 
 ```js
