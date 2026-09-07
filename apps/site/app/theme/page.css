@@ -139,6 +139,7 @@
 
 .theme-preview[data-codice-code],
 .theme-result[data-codice-code] {
+  font-size: var(--docs-code-font-size);
   background: var(--theme-surface, #f6f6f6);
   color: var(--sh-identifier);
 }
@@ -300,6 +301,15 @@
   min-height: 0;
 }
 
+.theme-product .theme-result,
+.theme-product .theme-result pre,
+.theme-product .theme-result code,
+.theme-product .react-style-example,
+.theme-product .react-style-example pre,
+.theme-product .react-style-example code {
+  font-size: var(--docs-code-font-size);
+}
+
 .theme-agent {
   position: relative;
   width: min(600px, 100%);
@@ -320,7 +330,7 @@
   padding: 14px 48px 14px 16px;
   overflow-x: auto;
   color: #354150;
-  font-size: 13px;
+  font-size: var(--docs-code-font-size);
   line-height: 1.55;
   white-space: nowrap;
 }

@@ -387,7 +387,7 @@
 .react-product [data-sh] code,
 .react-product [data-sh] textarea {
   font-family: ui-monospace, monospace;
-  font-size: 13px;
+  font-size: var(--docs-code-font-size);
   line-height: 22px;
   letter-spacing: normal;
 }
@@ -400,5 +400,5 @@
 .filetree-demo [data-sh-file-tree] [role="treeitem"] { min-height: 22px; line-height: 22px; }
 
 .react-product [data-sh="code"],
-.react-product [data-sh="editor"] { font: 13px/22px ui-monospace, monospace; }
+.react-product [data-sh="editor"] { font: var(--docs-code-font-size)/22px ui-monospace, monospace; }
 .react-product [data-sh-header] [data-sh-title] { font: 13px/20px ui-monospace, monospace; }

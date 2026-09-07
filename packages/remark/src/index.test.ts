@@ -39,4 +39,15 @@ describe('@sugar-high/remark', () => {
     expect(mark).toHaveBeenCalled()
     expect(markLine).toHaveBeenCalled()
   })
+
+  it('serializes generated line styles for HTML output', () => {
+    const output = highlight({
+      markLine(line) {
+        line.style.backgroundColor = '#fff8c5'
+      },
+    })(tree())
+    const line = output.children[0].children[0].children[0]
+
+    expect(line.properties.style).toBe('background-color:#fff8c5;')
+  })
 })

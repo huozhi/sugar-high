@@ -283,6 +283,13 @@
   display: block;
 }
 
+/* Set the text containers too: pre/code defaults can change the inherited size. */
+.product-page .product-code,
+.product-page .product-code pre,
+.product-page .product-code code {
+  font-size: var(--docs-code-font-size);
+}
+
 @media (max-width: 680px) {
   .product-nav__brand img {
     transform: translateY(2px);
