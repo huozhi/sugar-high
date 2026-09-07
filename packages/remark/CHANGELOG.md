@@ -1,5 +1,11 @@
 # @sugar-high/remark
 
+## 1.0.1
+
+### Patch Changes
+
+- 43771a4: fix inline style of remark plugin rendered lines
+
 ## 1.0.0
 
 ### Major Changes
