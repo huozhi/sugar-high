@@ -9,7 +9,6 @@ import {
 } from 'react'
 import { CopyButton } from './copy-button'
 import { Code } from '@sugar-high/react'
-import { highlight } from 'sugar-high'
 import { languages } from 'sugar-high/lang'
 import './install-banner.css'
 import Link from 'next/link'
@@ -69,6 +68,8 @@ highlight('const ready = true') // JavaScript is the default
 highlight('print("hi")', { lang: 'python' }) // canonical name
 highlight('name: sugar-high', { lang: lang('yml') }) // yml → yaml`
 
+const agentSkillCommand = 'npx skills add huozhi/sugar-high --skill sugar-high'
+
 export default function InstallBanner({ children }: { children?: ReactNode }) {
   const [languagesOpen, setLanguagesOpen] = useState(false)
   const [localBannerTheme, setLocalBannerTheme] = useState<'light' | 'dark'>('light')
@@ -114,28 +115,6 @@ ${formatPlateAsCssVars(darkPlate)}
     setLocalBannerTheme(theme)
     syntaxThemeCtx?.setPreviewMode(theme)
   }
-
-  const presetByTitleMarkup = useMemo(
-    () =>
-      highlight(presetByTitleExample, {
-        markLine: (line) => {
-          if (line.index === 1) line.className += ' sh__line--highlighted'
-        },
-      }),
-    []
-  )
-
-  const lineHighlightMarkup = useMemo(
-    () =>
-      highlight(lineHighlightCss, {
-        markLine: (line) => {
-          if (line.index === 0 || line.index === 1) {
-            line.className += ' sh__line--highlighted'
-          }
-        },
-      }),
-    []
-  )
 
   return (
     <div
@@ -227,8 +206,10 @@ ${formatPlateAsCssVars(darkPlate)}
           className="install-banner__code"
           style={codeShVars as CSSProperties}
         >
-          <Code title='line-highlight.css' asMarkup preformatted>
-            {lineHighlightMarkup}
+          <Code title='line-highlight.css' lang="css" markLine={line => {
+            if (line.index < 2) line.className += ' sh__line--highlighted'
+          }}>
+            {lineHighlightCss}
           </Code>
           <CopyButton codeSnippet={lineHighlightCss} />
         </div>
@@ -256,8 +237,10 @@ ${formatPlateAsCssVars(darkPlate)}
           className="install-banner__code"
           style={codeShVars as CSSProperties}
         >
-          <Code title="presets.js" asMarkup preformatted>
-            {presetByTitleMarkup}
+          <Code title="presets.js" markLine={line => {
+            if (line.index === 1) line.className += ' sh__line--highlighted'
+          }}>
+            {presetByTitleExample}
           </Code>
           <CopyButton codeSnippet={presetByTitleExample} />
         </div>
@@ -296,6 +279,17 @@ ${formatPlateAsCssVars(darkPlate)}
             Set token colors with scoped CSS variables, then use <code>cx</code> for emphasis.
             Explore the copyable <Link href="/theme">CSS and Tailwind theme guide</Link>.
           </p>
+        </div>
+        <div className="install-banner__block install-banner__solution-item">
+          <h2>Agent skill</h2>
+          <p>
+            Give an AI coding agent Sugar High’s React, Remark, language, and customization API
+            guidance with the Skills CLI.
+          </p>
+        </div>
+        <div className="install-banner__code" style={codeShVars as CSSProperties}>
+          <Code title="agent-skill.sh" lang="shell">{agentSkillCommand}</Code>
+          <CopyButton codeSnippet={agentSkillCommand} aria-label="Copy agent skill installation command" />
         </div>
         {children}
         <div className="install-banner__block install-banner__solution-item">

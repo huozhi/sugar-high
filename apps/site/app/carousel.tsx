@@ -10,7 +10,6 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from 'react'
 import { Code } from '@sugar-high/react'
-import { highlight } from 'sugar-high'
 import {
   LIVE_EDITOR_THEME_PRESETS,
   plateToThemedDocsVars,
@@ -149,7 +148,6 @@ function CodeFrame(
   }) {
   const typedCode = useTypedCode(code, typing, index * 90)
   const isDiff = title.endsWith('.diff')
-  const codeContent = isDiff ? highlight(typedCode, { lang: 'diff' }) : typedCode
 
   return (
     <div className="code-frame" id={`code-frame-${index}`}>
@@ -168,10 +166,9 @@ function CodeFrame(
         data-disabled="true"
         data-typing={typedCode.length < code.length}
         aria-busy={typedCode.length < code.length}
-        asMarkup={isDiff}
         preformatted={isDiff}
       >
-        {codeContent}
+        {typedCode}
       </Code>
     </div>
   )

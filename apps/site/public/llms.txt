@@ -15,3 +15,12 @@ Agent workflow:
 
 JavaScript is the default language. Language names, aliases, and file extensions supported by
 Sugar High are accepted. Invalid values fall back to JavaScript, light mode, and a width of 640px.
+
+## Sugar High agent skill
+
+Install Sugar High API guidance for a coding agent with the Skills CLI:
+
+`npx skills add huozhi/sugar-high --skill sugar-high`
+
+The skill includes the core highlighter plus the `@sugar-high/react` and `@sugar-high/remark`
+APIs. Its source is `skills/sugar-high/SKILL.md` in the Sugar High repository.
