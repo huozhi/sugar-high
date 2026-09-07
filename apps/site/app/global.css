@@ -43,7 +43,7 @@ h6 {
 /** Styles */
 :root {
   /* Single size for Codice / highlighted snippets (matches body text scale) */
-  --docs-code-font-size: 15px;
+  --docs-code-font-size: 14px;
 }
 
 body {

@@ -47,10 +47,10 @@ export function FileTreeDemo() {
         <div className="react-demo__document" style={{ background: palette.background, color: palette.foreground }}>
           {readOnly ? (
             <Code className="filetree-demo__source" extension={activeFile.split('.').pop()}
-              controls={false} fontSize={13} theme={palette} lineNumbers={lineNumbers}>{code}</Code>
+              controls={false} fontSize="var(--docs-code-font-size)" theme={palette} lineNumbers={lineNumbers}>{code}</Code>
           ) : (
             <Editor className="filetree-demo__source" title={null} extension={activeFile.split('.').pop()}
-              theme={palette} fontSize={13} fontFamily="ui-monospace, monospace" controls={false} value={code} lineNumbers={lineNumbers}
+              theme={palette} fontSize="var(--docs-code-font-size)" fontFamily="ui-monospace, monospace" controls={false} value={code} lineNumbers={lineNumbers}
               textareaProps={{ 'aria-label': `Edit ${activeFile}` }}
               onChange={text => setFiles(current => ({ ...current, [activeFile]: text }))} />
           )}

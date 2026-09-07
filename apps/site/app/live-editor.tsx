@@ -464,7 +464,7 @@ export default function LiveEditor({
                   className="codice editor flex-1"
                   controls={false}
                   value={displayCode}
-                  fontSize="0.9rem"
+                  fontSize="var(--docs-code-font-size)"
                   extension={activeFileExtension}
                   onChange={handleEditorChange}
                 />

@@ -38,6 +38,12 @@
   white-space: pre-wrap;
 }
 
+.remark-source pre,
+.remark-preview pre,
+.remark-preview pre code {
+  font-size: var(--docs-code-font-size);
+}
+
 .remark-preview h1 {
   margin: 0 0 14px;
   color: #354150;
@@ -65,6 +71,14 @@
 
 .remark-product .product-code[data-codice-code] {
   border-radius: 0;
+}
+
+.remark-product .remark-highlighted code { padding: 0; }
+
+.remark-product .remark-highlighted .sh__line {
+  box-sizing: border-box;
+  width: 100%;
+  padding-inline: var(--sh-padding);
 }
 
 .remark-product .product-card .product-code [data-codice-header] {

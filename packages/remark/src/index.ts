@@ -43,6 +43,14 @@ const h = (type, attrs, children) => {
   }
 }
 
+function styleString(style: Record<string, unknown>) {
+  const entries = Object.entries(style)
+  if (!entries.length) return undefined
+  return entries
+    .map(([key, value]) => `${key.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`)}:${value};`)
+    .join('')
+}
+
 export type RemarkSugarHighOptions = {
   cx?: HighlightOptions['cx']
   mark?: HighlightOptions['mark']
@@ -92,19 +100,16 @@ const highlight = ({ cx, mark, markLine }: RemarkSugarHighOptions = {}) => (tree
 
     for (let i = 0; i < childrenLines.length; i++) {
       const line = childrenLines[i]
-      
+      const lineStyle = styleString(line.properties.style as Record<string, unknown>)
+      if (lineStyle) line.properties.style = lineStyle
+      else delete line.properties.style
+
       for (let j = 0; j < line.children.length; j++) {
         const token = line.children[j]
-        // normalize token's style object to string
         if (token.properties && typeof token.properties.style === 'object') {
-          let styleString = ''
-          for (const [key, value] of Object.entries(token.properties.style)) {
-            const property = key.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`)
-            styleString += `${property}:${value};`
-          }
-          if (styleString) {
-            token.properties.style = styleString
-          }
+          const tokenStyle = styleString(token.properties.style as Record<string, unknown>)
+          if (tokenStyle) token.properties.style = tokenStyle
+          else delete token.properties.style
         }
       }
 

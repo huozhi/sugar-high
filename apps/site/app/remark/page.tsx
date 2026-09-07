@@ -60,11 +60,7 @@ async function MarkdownPreview() {
 
 async function CodeExample({ filename, code }: { filename: string; code: string }) {
   const html = await renderMarkdown(code)
-  return (
-    <Code className="product-code" title={filename} preformatted={false} asMarkup>
-      {html}
-    </Code>
-  )
+  return <div className="product-code remark-highlighted" dangerouslySetInnerHTML={{ __html: html }} />
 }
 
 export default function RemarkPage() {
