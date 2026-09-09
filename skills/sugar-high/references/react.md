@@ -140,7 +140,7 @@ Use the experimental GPU entry for language-agnostic, asynchronous highlighting 
 blocks and editors:
 
 ```sh
-npm install @sugar-high/react react gpu-lexer@0.0.2
+npm install @sugar-high/react react gpu-lexer
 ```
 
 ```tsx

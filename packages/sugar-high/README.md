@@ -66,7 +66,7 @@ unavailable; importing any other Sugar High entry does not load the GPU model.
 Install the experimental lexer separately when using this entry:
 
 ```sh
-npm install sugar-high gpu-lexer@0.0.2
+npm install sugar-high gpu-lexer
 ```
 
 ```js

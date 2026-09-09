@@ -118,7 +118,7 @@ Import the opt-in client components from `@sugar-high/react/gpu` for large code 
 They use `gpu-lexer` asynchronously and do not load the GPU model from the default React entry.
 
 ```sh
-npm install @sugar-high/react react gpu-lexer@0.0.2
+npm install @sugar-high/react react gpu-lexer
 ```
 
 ```tsx
