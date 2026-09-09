@@ -35,6 +35,7 @@ try {
       '@sugar-high/react': `file:${react}`,
       '@sugar-high/remark': `file:${remark}`,
       '@types/react': '^19.2.0',
+      'gpu-lexer': '0.0.2',
       react: '^19.2.0',
       'sugar-high': `file:${sugarHigh}`,
     },

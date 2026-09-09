@@ -117,6 +117,10 @@ skips if the CLI is absent.
 Import the opt-in client components from `@sugar-high/react/gpu` for large code blocks or editors.
 They use `gpu-lexer` asynchronously and do not load the GPU model from the default React entry.
 
+```sh
+npm install @sugar-high/react react gpu-lexer@0.0.2
+```
+
 ```tsx
 'use client'
 

@@ -38,7 +38,8 @@ const html = render(parsed, {
 ### Experimental: `sugar-high/gpu`
 
 The GPU entry exports asynchronous `parse(code)` and `highlight(code, options?)` functions backed
-by `gpu-lexer`. It is language-agnostic and requires WebGPU in the current environment.
+by the optional peer dependency `gpu-lexer@0.0.2`. Install the lexer separately when using this
+entry. It is language-agnostic and requires WebGPU in the current environment.
 
 ```js
 import { highlight, parse } from 'sugar-high/gpu'

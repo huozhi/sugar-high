@@ -63,6 +63,12 @@ Use the opt-in `sugar-high/gpu` entry for asynchronous, language-agnostic highli
 [`gpu-lexer`](https://gpu-lexer.vercel.app). It requires WebGPU and rejects when WebGPU is
 unavailable; importing any other Sugar High entry does not load the GPU model.
 
+Install the experimental lexer separately when using this entry:
+
+```sh
+npm install sugar-high gpu-lexer@0.0.2
+```
+
 ```js
 import { highlight, parse } from 'sugar-high/gpu'
 
