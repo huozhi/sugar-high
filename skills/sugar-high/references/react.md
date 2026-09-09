@@ -134,6 +134,28 @@ the caller needs.
 />
 ```
 
+## `@sugar-high/react/gpu`
+
+Use the experimental GPU entry for language-agnostic, asynchronous highlighting in large code
+blocks and editors:
+
+```sh
+npm install @sugar-high/react react gpu-lexer
+```
+
+```tsx
+import { Code, Editor } from '@sugar-high/react/gpu'
+
+<Code lineNumbers>{largeSource}</Code>
+<Editor value={source} onChange={setSource} />
+```
+
+These are client components. They show synchronized plain text while WebGPU initializes and keep
+it as a readable fallback when WebGPU is unavailable. The nested code view exposes
+`data-sh-gpu="pending"`, `"ready"`, or `"unavailable"`. `lang` and `extension` are accepted for
+compatibility but do not affect the language-agnostic model. Importing the default or core React
+entry does not load the GPU model.
+
 ## Themes
 
 Pass `theme?: Theme` to `Code`, `Editor`, or `FileTree`. A `ThemePalette` requires `background`

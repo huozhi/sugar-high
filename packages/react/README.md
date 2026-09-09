@@ -112,6 +112,30 @@ skips if the CLI is absent.
 </Code>
 ```
 
+### Experimental WebGPU highlighting
+
+Import the opt-in client components from `@sugar-high/react/gpu` for large code blocks or editors.
+They use `gpu-lexer` asynchronously and do not load the GPU model from the default React entry.
+
+```sh
+npm install @sugar-high/react react gpu-lexer
+```
+
+```tsx
+'use client'
+
+import { Code, Editor } from '@sugar-high/react/gpu'
+
+<Code lineNumbers>{largeSource}</Code>
+<Editor value={source} onChange={setSource} />
+```
+
+The components render synchronized plain text while the GPU initializes. Their nested code view
+sets `data-sh-gpu` to `pending`, `ready`, or `unavailable`; when WebGPU is unavailable, the plain
+text remains readable and editable. GPU highlighting is language-agnostic, so `lang` and
+`extension` are accepted only for compatibility and do not affect inference. All other Code and
+Editor layout, theme, line-number, and display-hook props continue to work.
+
 `lang` takes a canonical Sugar High language name. When omitted, `title` or the legacy
 `extension` prop is resolved through Sugar High's language aliases.
 

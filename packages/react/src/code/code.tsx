@@ -1,4 +1,10 @@
-import { parse, generate, type DisplayOptions, type ParseOptions } from 'sugar-high/core'
+import {
+  parse,
+  generate,
+  type DisplayOptions,
+  type ParsedCode,
+  type ParseOptions,
+} from 'sugar-high/core'
 import { css, HEADER_CSS } from './css'
 import { fontSizeCss, ScopedStyle } from '../style'
 import { themeStyle, type Theme } from '../theme'
@@ -93,7 +99,7 @@ function TitleInput({
   title,
   onChange,
 }: {
-  title?: string
+  title?: string | null
   onChange?: (title: string) => void
 }) {
   return (
@@ -182,8 +188,13 @@ export type CodeProps = {
   theme?: Theme
 } & React.HTMLAttributes<HTMLDivElement>
 
-export function Code({
+export type CodeViewProps = Omit<CodeProps, 'lang'> & {
+  parsed: ParsedCode | null
+}
+
+export function CodeView({
   children: code,
+  parsed,
   title,
   controls,
   fontSize,
@@ -195,20 +206,18 @@ export function Code({
   wrapLongLines = true,
   padding,
   asMarkup = false,
-  lang,
   cx,
   mark,
   markLine,
   theme,
   style,
   ...props
-}: CodeProps) {
+}: CodeViewProps) {
   const resolvedLineNumbersWidth = getLineNumbersWidth(
     code,
     lineNumbersWidth,
     startingLineNumber
   )
-  const parsed = asMarkup ? null : parse(code, lang)
   const lineElements = asMarkup
     ? code
     : generateHighlightedLines(
@@ -246,5 +255,17 @@ export function Code({
         {lineElements}
       </CodeFrame>
     </div>
+  )
+}
+
+export function Code({ children, lang, asMarkup = false, ...props }: CodeProps) {
+  return (
+    <CodeView
+      {...props}
+      asMarkup={asMarkup}
+      parsed={asMarkup ? null : parse(children, lang)}
+    >
+      {children}
+    </CodeView>
   )
 }

@@ -35,6 +35,26 @@ const html = render(parsed, {
 })
 ```
 
+### Experimental: `sugar-high/gpu`
+
+The GPU entry exports asynchronous `parse(code)` and `highlight(code, options?)` functions backed
+by the optional peer dependency `gpu-lexer@0.0.2`. Install the lexer separately when using this
+entry. It is language-agnostic and requires WebGPU in the current environment.
+
+```js
+import { highlight, parse } from 'sugar-high/gpu'
+
+const parsed = await parse(source)
+const html = await highlight(source, {
+  cx: { keyword: 'font-bold' },
+})
+```
+
+GPU labels are mapped onto the existing Sugar High token types so the structured result, HTML,
+themes, and display hooks remain compatible. The model is experimental and probabilistic;
+`parse()` and `highlight()` reject if WebGPU initialization or execution fails. Other entry points
+do not import the GPU implementation.
+
 ### Advanced: `sugar-high/lang`
 
 `lang(input)` normalizes a canonical name, filename extension, or common fence alias to the

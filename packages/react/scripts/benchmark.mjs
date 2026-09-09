@@ -27,6 +27,8 @@ try {
     measure('file-tree', `import { FileTree } from '@sugar-high/react'; export { FileTree }`),
     measure('editor', `import { Editor } from '@sugar-high/react'; export { Editor }`),
     measure('editor-tree', `import { Editor, FileTree } from '@sugar-high/react'; export { Editor, FileTree }`),
+    measure('gpu-code', `import { Code } from '@sugar-high/react/gpu'; export { Code }`),
+    measure('gpu-editor', `import { Editor } from '@sugar-high/react/gpu'; export { Editor }`),
     measure('react', `
       import { createElement } from 'react'
       import { Code } from '@sugar-high/react'

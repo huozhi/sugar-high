@@ -2,6 +2,7 @@ import { ReactThemeProvider, ReactThemePicker, ThemeUsage, ThemeNames } from '..
 import { ReactDemo } from './react-demo'
 import { FileTreeDemo } from './file-tree-demo'
 import { CodeDemo } from './code-demo'
+import { GpuDemo } from './gpu-demo'
 import { ProductNav } from '../product-nav'
 import { ProductStrike } from '../product-strike'
 import '../product-page.css'
@@ -66,7 +67,7 @@ export default function ReactPage() {
 
           <header className="product-hero">
             <h1>Editor & Code<ProductStrike /></h1>
-            <div className="product-install"><code>npm install @sugar-high/react sugar-high</code></div>
+            <div className="product-install"><code>npm install @sugar-high/react react</code></div>
           </header>
 
 
@@ -211,6 +212,15 @@ export default function ReactPage() {
               Read the full React API on GitHub ↗
             </a>
           </details>
+
+          <section className="product-section">
+            <div className="product-section__head">
+              <h2>WebGPU <small>experimental</small></h2>
+              <p>Language-agnostic highlighting for large code blocks and editors.</p>
+            </div>
+            <div className="react-demo-theme-picker"><ReactThemePicker label="GPU editor theme" /></div>
+            <Window title="gpu-editor.tsx"><GpuDemo /></Window>
+          </section>
 
         </div>
       </div>

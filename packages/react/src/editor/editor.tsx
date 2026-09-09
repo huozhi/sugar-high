@@ -82,7 +82,51 @@ export function indentCode(
   }
 }
 
-export const Editor = forwardRef(function Editor(
+export type EditorProps = {
+  title?: string | null
+  value?: string
+  defaultValue?: string
+  controls?: boolean
+  lineNumbers?: boolean
+  lineNumbersWidth?: string
+  startingLineNumber?: number
+  wrapLongLines?: boolean
+  padding?: string
+  extension?: string
+  lang?: LanguageName
+  cx?: HighlightOptions['cx']
+  mark?: HighlightOptions['mark']
+  onChangeTitle?: (title: string) => void
+  onChange?: (code: string) => void
+  textareaRef?: React.Ref<HTMLTextAreaElement>
+  textareaProps?: TextareaProps
+  indent?: string
+  theme?: Theme
+  fontSize?: string | number
+  fontFamily?: string
+} & Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>
+
+type EditorCodeProps = Pick<
+  React.ComponentProps<typeof Code>,
+  | 'children'
+  | 'title'
+  | 'extension'
+  | 'lang'
+  | 'cx'
+  | 'mark'
+  | 'controls'
+  | 'lineNumbers'
+  | 'lineNumbersWidth'
+  | 'startingLineNumber'
+  | 'wrapLongLines'
+  | 'padding'
+>
+
+type EditorInternalProps = EditorProps & {
+  codeComponent?: React.ComponentType<EditorCodeProps>
+}
+
+const EditorImpl = forwardRef<HTMLDivElement, EditorInternalProps>(function Editor(
   {
     title,
     value,
@@ -105,32 +149,10 @@ export const Editor = forwardRef(function Editor(
     textareaProps,
     indent = '  ',
     theme,
+    codeComponent: CodeComponent = Code,
     style,
     ...props
-  }: {
-    title?: string | null
-    value?: string
-    defaultValue?: string
-    controls?: boolean
-    lineNumbers?: boolean
-    lineNumbersWidth?: string
-    startingLineNumber?: number
-    wrapLongLines?: boolean
-    padding?: string
-    extension?: string
-    lang?: LanguageName
-    cx?: HighlightOptions['cx']
-    mark?: HighlightOptions['mark']
-    onChangeTitle?: (title: string) => void
-    onChange?: (code: string) => void
-    textareaRef?: React.Ref<HTMLTextAreaElement>
-    textareaProps?: TextareaProps
-    indent?: string
-    theme?: Theme
-  } & {
-    fontSize?: string | number
-    fontFamily?: string
-  } & Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'>,
+  }: EditorInternalProps,
   ref: React.Ref<HTMLDivElement>
 ) {
   const [uncontrolledCode, setUncontrolledCode] = useState(defaultValue)
@@ -221,7 +243,7 @@ export const Editor = forwardRef(function Editor(
       <CodeHeader title={title} controls={controls} onChangeTitle={onChangeTitle} />
       <div data-codice-content data-sh-content>
         {/* hide controls component inside Code to keep content matched with textarea */}
-        <Code
+        <CodeComponent
           title={null}
           extension={extension || getExtension(title)}
           lang={lang}
@@ -237,7 +259,7 @@ export const Editor = forwardRef(function Editor(
           // It will control both the textarea and code font size.
         >
           {code}
-        </Code>
+        </CodeComponent>
         <textarea
           {...textareaProps}
           ref={setTextareaRef}
@@ -265,3 +287,13 @@ export const Editor = forwardRef(function Editor(
     </div>
   )
 })
+
+export function createEditor(CodeComponent: React.ComponentType<EditorCodeProps>) {
+  return forwardRef<HTMLDivElement, EditorProps>(function ConfiguredEditor(props, ref) {
+    return <EditorImpl {...props} codeComponent={CodeComponent} ref={ref} />
+  })
+}
+
+export const Editor: React.ForwardRefExoticComponent<
+  EditorProps & React.RefAttributes<HTMLDivElement>
+> = EditorImpl

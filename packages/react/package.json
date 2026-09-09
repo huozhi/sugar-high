@@ -19,6 +19,10 @@
       "types": "./dist/core.d.ts",
       "default": "./dist/core.mjs"
     },
+    "./gpu": {
+      "types": "./dist/gpu.d.ts",
+      "default": "./dist/gpu.mjs"
+    },
     "./themes": {
       "types": "./dist/themes.d.ts",
       "default": "./dist/themes.mjs"
