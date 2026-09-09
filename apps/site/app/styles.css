@@ -131,6 +131,42 @@ input[type='checkbox']:checked {
   color: #808c97;
 }
 
+.gpu-callout {
+  --product-ink: #354150;
+  --product-muted: #788592;
+  --product-soft: #f5f8fa;
+  width: min(600px, calc(100% - 24px));
+  margin: 72px auto 0;
+  padding: 22px 0 8px;
+  border-top: 1px solid #dfe5e9;
+  color: #354150;
+}
+
+.gpu-callout h2 {
+  margin: 0 0 4px;
+  font-size: 1.35rem;
+  letter-spacing: -0.025em;
+}
+
+.gpu-callout p {
+  margin: 0;
+  color: var(--product-muted);
+  line-height: 1.7;
+}
+
+.gpu-callout code {
+  color: #354150;
+}
+
+.gpu-callout__install {
+  min-height: 38px;
+  margin-top: 16px;
+}
+
+.gpu-callout__code {
+  margin-top: 20px;
+}
+
 .code-frame {
   position: relative;
 }

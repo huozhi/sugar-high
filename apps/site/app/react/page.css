@@ -254,6 +254,11 @@
   margin-top: 0;
 }
 
+.react-gpu-install {
+  min-height: 38px;
+  margin-top: 16px;
+}
+
 .react-code-demo {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

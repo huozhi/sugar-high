@@ -213,10 +213,13 @@ export default function ReactPage() {
             </a>
           </details>
 
-          <section className="product-section">
+          <section className="product-section" id="webgpu">
             <div className="product-section__head">
               <h2>WebGPU <small>experimental</small></h2>
               <p>Language-agnostic highlighting for large code blocks and editors.</p>
+              <div className="product-install react-gpu-install">
+                <code>npm install @sugar-high/react react gpu-lexer</code>
+              </div>
             </div>
             <div className="react-demo-theme-picker"><ReactThemePicker label="GPU editor theme" /></div>
             <Window title="gpu-editor.tsx"><GpuDemo /></Window>

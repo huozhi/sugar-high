@@ -51,6 +51,28 @@ For React components, props, server compatibility, and styling hooks, read
 [the React API reference](references/react.md). For Remark plugin configuration, fence metadata,
 and generated markup, read [the Remark API reference](references/remark.md).
 
+## Experimental WebGPU highlighting
+
+Install `gpu-lexer` alongside Sugar High when using the opt-in GPU entry:
+
+```sh
+npm install sugar-high gpu-lexer
+```
+
+Both GPU APIs are asynchronous:
+
+```ts
+import { highlight, parse } from 'sugar-high/gpu'
+
+const parsed = await parse(source)
+const html = await highlight(source)
+```
+
+Use this entry for language-agnostic highlighting when the browser has WebGPU. It rejects when
+WebGPU is unavailable, and the model infers syntax without a `lang` option. Importing the standard
+`sugar-high` entry does not load the GPU model. For client-side React components, import `Code` or
+`Editor` from `@sugar-high/react/gpu` and install `gpu-lexer` separately.
+
 ## Customize display
 
 Use `cx` to add classes by token category. Use `mark(token)` for conditional classes, inline
