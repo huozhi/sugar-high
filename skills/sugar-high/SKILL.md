@@ -36,8 +36,10 @@ Do not call `lang()` when the caller already has a canonical name. The highlight
 ## Choose the entry point
 
 - Use `sugar-high` for the standard, one-step highlighter with all built-in languages.
+- Use `sugar-high/gpu` for experimental asynchronous, language-agnostic WebGPU highlighting.
 - Use `@sugar-high/react` for React `<Code>` blocks, the textarea-overlay `<Editor>`, or a
   navigable `<FileTree>`.
+- Use `@sugar-high/react/gpu` for opt-in client-side GPU `Code` and `Editor` components.
 - Use `@sugar-high/remark` to highlight fenced Markdown code blocks.
 - Use `sugar-high/core` only when the caller needs to compose parsing and rendering or selectively
   imports language configurations for bundle size.

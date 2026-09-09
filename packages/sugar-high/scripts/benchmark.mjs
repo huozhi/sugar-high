@@ -72,11 +72,16 @@ function measureSizes(directory, prefix) {
     'export const run = code => render(parse(code, javascript))',
   ].join('\n'))
 
-  return {
+  const sizes = {
     'sugar-high': measureBundle(join(directory, 'lib/index.js'), join(benchmarkDir, `${prefix}-builtin.js`)),
     'sugar-high/core': measureBundle(join(directory, 'lib/core.js'), join(benchmarkDir, `${prefix}-core.js`)),
     'core + javascript': measureBundle(javascriptEntry, join(benchmarkDir, `${prefix}-javascript.js`)),
   }
+  const gpuEntry = join(directory, 'lib/gpu.js')
+  if (existsSync(gpuEntry)) {
+    sizes['sugar-high/gpu'] = measureBundle(gpuEntry, join(benchmarkDir, `${prefix}-gpu.js`))
+  }
+  return sizes
 }
 
 function formatDelta(current, previous) {

@@ -44,14 +44,17 @@ try {
 packages:
   - '.'
 overrides:
+  '@sugar-high/react>sugar-high': ${JSON.stringify(`file:${sugarHigh}`)}
   '@sugar-high/remark>sugar-high': ${JSON.stringify(`file:${sugarHigh}`)}
 `)
 
   writeFileSync(join(temporary, 'check.mjs'), `
 import { highlight } from 'sugar-high'
 import { generate, parse, render, tokenize, SugarHigh } from 'sugar-high/core'
+import { highlight as gpuHighlight, parse as gpuParse } from 'sugar-high/gpu'
 import { lang, languages } from 'sugar-high/lang'
 import { Code, Editor } from '@sugar-high/react'
+import { Code as GpuCode, Editor as GpuEditor } from '@sugar-high/react/gpu'
 import { taffy, vercel } from '@sugar-high/react/themes'
 import remarkSugarHigh, { highlight as remarkHighlight } from '@sugar-high/remark'
 
@@ -61,6 +64,7 @@ if (generate(parse('value'))[0].children[0].tokenType !== 'identifier') throw ne
 if (!tokenize('value').length || !SugarHigh.TokenMap.size) throw new Error('low-level core')
 if (lang('py') !== 'python' || !languages.length) throw new Error('language exports')
 if (!Editor || !Code || remarkSugarHigh !== remarkHighlight) throw new Error('integration exports')
+if (!gpuHighlight || !gpuParse || !GpuCode || !GpuEditor) throw new Error('GPU exports')
 if (taffy.dark.background !== '#25272d') throw new Error('React theme exports')
 if (vercel.light.keyword !== '#c41562') throw new Error('Vercel theme export')
 `)
@@ -68,8 +72,10 @@ if (vercel.light.keyword !== '#c41562') throw new Error('Vercel theme export')
   writeFileSync(join(temporary, 'check.ts'), `
 import { highlight, type HighlightOptions, type LanguageName } from 'sugar-high'
 import { generate, parse, render, tokenize, SugarHigh } from 'sugar-high/core'
+import { highlight as gpuHighlight, parse as gpuParse } from 'sugar-high/gpu'
 import { lang, languages } from 'sugar-high/lang'
 import { Code, Editor, type Theme } from '@sugar-high/react'
+import { Code as GpuCode, Editor as GpuEditor, type GpuStatus } from '@sugar-high/react/gpu'
 import { taffy, vercel } from '@sugar-high/react/themes'
 import remarkSugarHigh, { highlight as remarkHighlight } from '@sugar-high/remark'
 
@@ -84,6 +90,12 @@ lang('tsx')
 languages.length
 Editor
 Code
+gpuHighlight
+gpuParse
+GpuCode
+GpuEditor
+const gpuStatus: GpuStatus = 'ready'
+gpuStatus
 const customTheme: Theme = { background: '#fff', foreground: '#111', keyword: '#f00' }
 customTheme
 taffy
