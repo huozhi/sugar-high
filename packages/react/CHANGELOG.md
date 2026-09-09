@@ -1,5 +1,11 @@
 # @sugar-high/react
 
+## 2.3.1
+
+### Patch Changes
+
+- a72f0c2: Install Sugar High as a runtime dependency of the React package instead of requiring applications to declare it as a peer dependency. Document the simplified React and Remark installation commands.
+
 ## 2.3.0
 
 ### Minor Changes
