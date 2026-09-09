@@ -5,7 +5,7 @@ Remark plugin for the [Sugar High](https://sugar-high.vercel.app) syntax highlig
 ## Install
 
 ```sh
-npm install @sugar-high/remark sugar-high
+npm install @sugar-high/remark
 ```
 
 ## Usage

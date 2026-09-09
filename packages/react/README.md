@@ -5,7 +5,7 @@ Lightweight React code blocks and editors powered by Sugar High.
 ## Install
 
 ```sh
-npm install @sugar-high/react sugar-high react
+npm install @sugar-high/react react
 ```
 
 ## Editor
