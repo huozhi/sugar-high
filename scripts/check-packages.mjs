@@ -76,7 +76,7 @@ import { generate, parse, render, tokenize, SugarHigh } from 'sugar-high/core'
 import { highlight as gpuHighlight, parse as gpuParse } from 'sugar-high/gpu'
 import { lang, languages } from 'sugar-high/lang'
 import { Code, Editor, type Theme } from '@sugar-high/react'
-import { Code as GpuCode, Editor as GpuEditor, type GpuStatus } from '@sugar-high/react/gpu'
+import { Code as GpuCode, Editor as GpuEditor } from '@sugar-high/react/gpu'
 import { taffy, vercel } from '@sugar-high/react/themes'
 import remarkSugarHigh, { highlight as remarkHighlight } from '@sugar-high/remark'
 
@@ -95,8 +95,6 @@ gpuHighlight
 gpuParse
 GpuCode
 GpuEditor
-const gpuStatus: GpuStatus = 'ready'
-gpuStatus
 const customTheme: Theme = { background: '#fff', foreground: '#111', keyword: '#f00' }
 customTheme
 taffy

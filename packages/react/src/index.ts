@@ -1,5 +1,5 @@
 export { Editor, type EditorProps } from './editor'
-export { Code } from './code'
+export { Code, type CodeProps } from './code'
 export type { Theme, ThemePalette } from './theme'
 export { FileTree } from './file-tree'
 export type { FileTreeProps } from './file-tree'
