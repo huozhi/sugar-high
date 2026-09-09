@@ -1,9 +1,9 @@
 # `@sugar-high/react` API
 
-Install it with its peer dependencies:
+Install it with React:
 
 ```sh
-npm install @sugar-high/react sugar-high react
+npm install @sugar-high/react react
 ```
 
 The default entry point is client-oriented and includes Sugar High's complete language registry.

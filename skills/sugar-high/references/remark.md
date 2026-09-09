@@ -1,9 +1,9 @@
 # `@sugar-high/remark` API
 
-Install the plugin with Sugar High and add it to a Remark processor:
+Install the plugin and add it to a Remark processor:
 
 ```sh
-npm install @sugar-high/remark sugar-high
+npm install @sugar-high/remark
 ```
 
 ```js

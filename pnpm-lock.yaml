@@ -194,6 +194,10 @@ importers:
         version: 6.0.2
 
   packages/react:
+    dependencies:
+      sugar-high:
+        specifier: workspace:^
+        version: link:../sugar-high
     devDependencies:
       '@types/react':
         specifier: ^19.2.0
@@ -207,9 +211,6 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.0(react@19.2.0)
-      sugar-high:
-        specifier: workspace:*
-        version: link:../sugar-high
       typescript:
         specifier: ^6.0.2
         version: 6.0.2

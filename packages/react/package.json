@@ -37,16 +37,17 @@
     "prepublishOnly": "pnpm build",
     "test:browser": "node --test scripts/test-layout.mjs"
   },
-  "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0",
+  "dependencies": {
     "sugar-high": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.0",
     "bunchee": "^7.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "sugar-high": "workspace:*",
     "typescript": "^6.0.2",
     "vitest": "^3.2.4"
   },
