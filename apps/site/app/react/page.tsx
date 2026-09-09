@@ -101,15 +101,6 @@ export default function ReactPage() {
 
           <section className="product-section">
             <div className="product-section__head">
-              <h2>WebGPU <small>experimental</small></h2>
-              <p>Language-agnostic highlighting for large code blocks and editors.</p>
-            </div>
-            <div className="react-demo-theme-picker"><ReactThemePicker label="GPU editor theme" /></div>
-            <Window title="gpu-editor.tsx"><GpuDemo /></Window>
-          </section>
-
-          <section className="product-section">
-            <div className="product-section__head">
               <h2>{'<FileTree />'}</h2>
               <p>Compose with Editor to edit files, or Code for read-only viewing.</p>
             </div>
@@ -221,6 +212,15 @@ export default function ReactPage() {
               Read the full React API on GitHub ↗
             </a>
           </details>
+
+          <section className="product-section">
+            <div className="product-section__head">
+              <h2>WebGPU <small>experimental</small></h2>
+              <p>Language-agnostic highlighting for large code blocks and editors.</p>
+            </div>
+            <div className="react-demo-theme-picker"><ReactThemePicker label="GPU editor theme" /></div>
+            <Window title="gpu-editor.tsx"><GpuDemo /></Window>
+          </section>
 
         </div>
       </div>
