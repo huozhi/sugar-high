@@ -45,6 +45,40 @@ describe('tokenize - JSX boolean props', () => {
   })
 })
 
+describe('tokenize - nested JSX child expressions', () => {
+  it.each([
+    ['<div>{{ value: item }.value}</div>', '.value => jsxliterals'],
+    ['<div>{items.map(item => ({ id: item.id }))}</div>', ')) => jsxliterals'],
+  ])('keeps nested braces inside JavaScript for %s', (input, staleToken) => {
+    const tokens = tokenize(input)
+    const actual = getTokensAsString(tokens)
+
+    expect(tokens.map(([, value]) => value).join('')).toBe(input)
+    expect(actual).not.toContain(staleToken)
+    expect(actual).toContain('item => identifier')
+  })
+
+  it('keeps JSX attribute classification after nested attribute objects', () => {
+    const actual = getTokensAsString(tokenize(
+      '<Widget config={{ nested: { value } }} disabled />'
+    ))
+
+    expect(actual).toContain('value => identifier')
+    expect(actual).toContain('disabled => property')
+  })
+
+  it('tracks template interpolation separately from the JSX expression', () => {
+    const input = '<div>{`hello ${user.name}`.toUpperCase()}</div>'
+    const tokens = tokenize(input)
+    const actual = getTokensAsString(tokens)
+
+    expect(tokens.map(([, value]) => value).join('')).toBe(input)
+    expect(actual).toContain('user => identifier')
+    expect(actual).toContain('toUpperCase => identifier')
+    expect(actual.some(token => token.endsWith('=> jsxliterals'))).toBe(false)
+  })
+})
+
 describe('tokenize - typeKeywords', () => {
   it('classifies typeKeywords as class before keywords', () => {
     const input = 'int x'

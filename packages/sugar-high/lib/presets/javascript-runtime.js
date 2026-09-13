@@ -275,17 +275,17 @@ function tokenize(code, options) {
   let __jsxEnter = false
   /** @type {0 | 1 | 2} 0 = none; 1 = inside `<open`; 2 = inside `</close` */
   let __jsxTag = 0
-  let __jsxExpr = false
+  let __jsxExprDepth = 0
   let __jsxTagExpr = 0
 
   /** Nested `<open>…</open>` depth (content between tags, including nested elements). */
   let __jsxStack = 0
 
-  const __jsxChild = () => __jsxEnter && !__jsxExpr && !__jsxTag
+  const __jsxChild = () => __jsxEnter && !__jsxExprDepth && !__jsxTag
   // < __content__ >
-  const inJsxTag = () => __jsxTag && !__jsxChild()
+  const inJsxTag = () => __jsxTag
   // {'__content__'}
-  const inJsxLiterals = () => !__jsxTag && __jsxChild() && !__jsxExpr && __jsxStack > 0
+  const inJsxLiterals = () => __jsxChild() && __jsxStack
 
   /** @type {string | null} */
   let __strQuote = null
@@ -457,7 +457,7 @@ function tokenize(code, options) {
       if (curr === '{') {
         append()
         append(T_SIGN, curr)
-        __jsxExpr = true
+        __jsxExprDepth = 1
         continue
       }
     }
@@ -712,11 +712,11 @@ function tokenize(code, options) {
         append()
       }
     } else {
-      if (__jsxExpr && curr === '}') {
+      if (__jsxExprDepth && curr === '}') {
         append()
         current = curr
         append()
-        __jsxExpr = false
+        __jsxExprDepth--
       } else if (
         // it's jsx literals and is not a jsx bracket
         (isJsxLiterals && !JSXBrackets.has(curr)) ||
@@ -743,6 +743,7 @@ function tokenize(code, options) {
         }
         else if (JSXBrackets.has(curr)) append()
       }
+      if (__jsxExprDepth && curr === '{') __jsxExprDepth++
     }
   }
 
