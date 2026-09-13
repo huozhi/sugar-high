@@ -83,7 +83,9 @@ function tokenize(code, options) {
       const quote = curr
       const start = i++
       while (i < code.length) {
-        if (code[i] === quote && code[i - 1] !== '\\') {
+        if (code[i] === '\\') {
+          i++
+        } else if (code[i] === quote) {
           i++
           break
         }

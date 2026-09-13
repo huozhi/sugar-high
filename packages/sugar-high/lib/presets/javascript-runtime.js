@@ -390,6 +390,13 @@ function tokenize(code, options) {
     const p_c = prev + curr // previous and current
     const c_n = curr + next // current and next
 
+    // Consume escapes before interpreting string or template delimiters.
+    if (curr === '\\' && inStringContent()) {
+      current += code.slice(i, i + 2)
+      i++
+      continue
+    }
+
     // onQuote(curr, i, code): length from i; end = i + len (capped).
     if (
       typeof mergedOptions.onQuote === 'function' &&
@@ -419,14 +426,12 @@ function tokenize(code, options) {
     if (isSingleQuotes(curr) && !inJsxLiterals() && !inStrTemplateLiterals()) {
       append()
       let isStringClose = false
-      if (prev !== `\\`) {
-        if (__strQuote && curr === __strQuote) {
-          __strQuote = null
-          isStringClose = true
-        } else if (!__strQuote) {
-          __strQuote = curr
-          __strTokenStart = tokens.length
-        }
+      if (__strQuote && curr === __strQuote) {
+        __strQuote = null
+        isStringClose = true
+      } else if (!__strQuote) {
+        __strQuote = curr
+        __strTokenStart = tokens.length
       }
 
       append(T_STRING, curr)
@@ -438,25 +443,14 @@ function tokenize(code, options) {
       continue
     }
 
-    if (!inStrTemplateLiterals()) {
-      if (prev !== '\\n' && isTemplateQuote(curr)) {
-        append()
-        append(T_STRING, curr)
-        __strTemplateQuoteStack++
-        continue
-      }
+    if (isTemplateQuote(curr)) {
+      append()
+      __strTemplateQuoteStack += inStrTemplateLiterals() ? -1 : 1
+      append(T_STRING, curr)
+      continue
     }
 
     if (inStrTemplateLiterals()) {
-      if (prev !== '\\n' && isTemplateQuote(curr)) {
-        if (__strTemplateQuoteStack > 0) {
-          append()
-          __strTemplateQuoteStack--
-          append(T_STRING, curr)
-          continue
-        }
-      }
-
       if (c_n === '${') {
         __strTemplateExprStack++
         append(T_STRING)
@@ -656,25 +650,25 @@ function tokenize(code, options) {
       __regexQuoteStart = true
       const start = i++
 
-      // end of line of end of file
-      const isEof = () => i >= code.length
-      const isEol = () => isEof() || code[i] === '\n'
-
       let foundClose = false
 
       // `/` is literal inside regex character classes, e.g. `[/]`.
       let inCharClass = false
 
       // traverse to find closing regex slash
-      for (; !isEol(); i++) {
+      for (; i < code.length && code[i] !== '\n'; i++) {
         const ch = code[i]
-        const escaped = code[i - 1] === '\\'
-        if (!escaped && ch === '[') inCharClass = true
-        if (!escaped && ch === ']') inCharClass = false
-        if (ch === '/' && !inCharClass && !escaped) {
+        if (ch === '\\') {
+          if (code[i + 1] === '\n') break
+          i++
+          continue
+        }
+        if (ch === '[') inCharClass = true
+        if (ch === ']') inCharClass = false
+        if (ch === '/' && !inCharClass) {
           foundClose = true
           // end of regex, append regex flags
-          while (start !== i && /^[a-z]$/.test(code[i + 1]) && !isEol()) {
+          while (/^[a-z]$/.test(code[i + 1])) {
             i++
           }
           break
