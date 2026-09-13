@@ -390,13 +390,6 @@ function tokenize(code, options) {
     const p_c = prev + curr // previous and current
     const c_n = curr + next // current and next
 
-    // Consume escapes before interpreting string or template delimiters.
-    if (curr === '\\' && inStringContent()) {
-      current += code.slice(i, i + 2)
-      i++
-      continue
-    }
-
     // onQuote(curr, i, code): length from i; end = i + len (capped).
     if (
       typeof mergedOptions.onQuote === 'function' &&
@@ -628,6 +621,8 @@ function tokenize(code, options) {
     // string quotation
     if (isQuotationChar || isStringTemplateLiterals || isSingleQuotes(__strQuote)) {
       current += curr
+      // Consume the escaped character before the next delimiter check.
+      if (curr === '\\') current += code[++i] || ''
     } else if (isRegexChar) {
       append()
       const [lastType, lastToken] = last
