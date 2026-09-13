@@ -168,18 +168,11 @@ function isSign(ch) {
 }
 
 function isWord(chr) {
-  return /^[\w_]+$/.test(chr) || hasUnicode(chr)
+  return /^[\w$\u0080-\uffff]+$/.test(chr || '')
 }
 
 function isCls(str) {
-  const chr0 = str[0]
-  return isWord(chr0) &&
-    chr0 === chr0.toUpperCase() ||
-    str === 'null'
-}
-
-function hasUnicode(s) {
-  return /[^\u0000-\u007f]/.test(s);
+  return /^[0-9A-Z\p{Lu}]/u.test(str) || str === 'null'
 }
 
 function isAlpha(chr) {
@@ -187,11 +180,11 @@ function isAlpha(chr) {
 }
 
 function isIdentifierChar(chr) {
-  return isAlpha(chr) || hasUnicode(chr)
+  return /^[$_A-Za-z\u0080-\uffff]$/.test(chr || '')
 }
 
 function isIdentifier(str) {
-  return isIdentifierChar(str[0]) && (str.length === 1 || isWord(str.slice(1)))
+  return isIdentifierChar(str[0]) && isWord(str)
 }
 
 function isStrTemplateChr(chr) {

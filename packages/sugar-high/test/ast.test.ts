@@ -82,7 +82,7 @@ describe('calculation expression', () => {
     expect(getTokensAsString(tokenize(code))).toMatchInlineSnapshot(`
       [
         "const => keyword",
-        "_iu => class",
+        "_iu => identifier",
         "= => sign",
         "( => sign",
         "19 => class",

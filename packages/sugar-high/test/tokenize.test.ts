@@ -180,7 +180,7 @@ describe('tokenize - wrapped typescript generic arrow callback', () => {
         "< => sign",
         "T => class",
         ", => sign",
-        "_ => class",
+        "_ => identifier",
         "> => sign",
         "( => sign",
         "x => identifier",
@@ -195,5 +195,29 @@ describe('tokenize - wrapped typescript generic arrow callback', () => {
         ") => sign",
       ]
     `)
+  })
+})
+
+describe('tokenize - identifier characters', () => {
+  it.each(['$foo', '_foo', 'foo$bar', 'café', '变量', '𐐨name', 'e\u0301', 'a\u200cb'])('recognizes %s as an identifier', (name) => {
+    const input = `const ${name} = 1; ${name}.value`
+    const tokens = tokenize(input)
+    expect(tokens.map(([, value]) => value).join('')).toBe(input)
+    const actual = getTokensAsString(tokens)
+    expect(actual.filter(value => value === `${name} => identifier`)).toHaveLength(2)
+    expect(actual).toContain('value => property')
+  })
+
+  it('keeps uppercase names, numbers, and null in the class category', () => {
+    expect(getTokensAsString(tokenize('Widget Éclair 123 null'))).toEqual([
+      'Widget => class', 'Éclair => class', '123 => class', 'null => class',
+    ])
+  })
+
+  it('recognizes prefixed JSX attributes', () => {
+    const actual = getTokensAsString(tokenize('<Widget $value={_value} _flag />'))
+    expect(actual).toContain('$value => property')
+    expect(actual).toContain('_value => identifier')
+    expect(actual).toContain('_flag => property')
   })
 })
