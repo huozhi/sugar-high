@@ -29,6 +29,11 @@
   `ci:` for CI, workflow, and release-process changes.
 - Follow the prefix with a concise imperative title, for example `ci: fix package checks before
   publishing`.
+- Write pull request descriptions for a reviewer who has not seen the issue. Lead with the
+  user-visible problem and resulting behavior, use a concrete before/after example when helpful,
+  and keep implementation details brief. Omit validation sections; CI already reports checks.
+- Include benchmark results when required, but keep setup details and internal workflow notes out
+  of the main narrative unless they affect how a reviewer should assess the change.
 
 # Architecture
 
