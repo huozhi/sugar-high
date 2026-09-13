@@ -1,5 +1,13 @@
 # sugar-high
 
+## 2.4.1
+
+### Patch Changes
+
+- f0cd617: Fix JavaScript identifier classification for dollar signs, underscores, and Unicode names.
+- cb88c76: Fix escaped string, template, and regex delimiters by consuming backslash pairs.
+- 9ae31c7: Keep nested object literals and callback bodies inside JSX child expressions highlighted as JavaScript.
+
 ## 2.4.0
 
 ### Minor Changes
