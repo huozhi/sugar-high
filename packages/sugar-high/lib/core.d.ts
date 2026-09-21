@@ -112,6 +112,20 @@ export type ParseOptions = {
 export function parse(code: string, options?: ParseOptions): ParsedCode
 export function render(parsed: ParsedCode, options?: DisplayOptions): string
 
+
+/**
+ * Copy a `ParseOptions` config and union extra keywords and typeKeywords into it.
+ * The base config is never mutated; a new config object is returned.
+ */
+export function extendConfig(
+  base: ParseOptions,
+  overrides?: {
+    keywords?: Iterable<string>
+    typeKeywords?: Iterable<string>
+  }
+): ParseOptions
+
+
 /** Low-level token API used by language presets and integrations. */
 export function tokenize(code: string, options?: ParseOptions): Array<[number, string]>
 /** Build renderable line nodes for HTML, React, and syntax-tree integrations. */
@@ -121,3 +135,26 @@ export const SugarHigh: {
   TokenTypes: { [key: number]: string }
   TokenMap: Map<string, number>
 }
+
+/**
+ * Copy a ParseOptions config and union extra keywords and typeKeywords into it.
+ * The base config is never mutated — a new config object is always returned.
+ * Pass the result directly to parse() or 	okenize().
+ *
+ * @example
+ * import { parse, render, extendConfig } from 'sugar-high/core'
+ * import * as c from 'sugar-high/lang/c'
+ *
+ * const glsl = extendConfig(c, {
+ *   keywords: ['uniform', 'attribute', 'varying'],
+ *   typeKeywords: ['vec2', 'vec3', 'vec4', 'mat4', 'sampler2D'],
+ * })
+ * const html = render(parse(shaderCode, glsl))
+ */
+export function extendConfig(
+  base: ParseOptions,
+  overrides?: {
+    keywords?: Iterable<string>
+    typeKeywords?: Iterable<string>
+  }
+): ParseOptions

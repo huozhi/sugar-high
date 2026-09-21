@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { highlight } from 'sugar-high'
-import { generate, parse, render, tokenize, type DisplayOptions } from 'sugar-high/core'
+import { generate, parse, render, tokenize, extendConfig, type DisplayOptions, SugarHigh } from 'sugar-high/core'
 import * as javascript from '../lib/lang/javascript.js'
 import * as python from '../lib/lang/python.js'
 import * as typescript from '../lib/lang/typescript.js'
+import * as c from '../lib/lang/c.js'
+import * as cpp from '../lib/lang/cpp.js'
 
 const entities: Record<string, string> = {
   '&': '&amp;',
@@ -56,7 +58,7 @@ describe('composable core export', () => {
     )
   })
 
-  it('keeps parser configuration exclusive to core', () => {
+  it('keeps parser configuration exclusive to core — highlight() does not forward parse options', () => {
     const html = highlight('custom', {
       keywords: new Set(['custom']),
     } as any)
@@ -158,5 +160,91 @@ describe('composable core export', () => {
     })
 
     expect(calls).toEqual(['annotateLine', 'markLine', 'mark'])
+  })
+})
+
+
+describe('extendConfig', () => {
+  it('unions extra keywords into the base preset without mutating it', () => {
+    const glsl = extendConfig(c, {
+      keywords: ['uniform', 'attribute'],
+    })
+
+    // Extra keywords are recognized
+    expect(glsl.keywords?.has('uniform')).toBe(true)
+    expect(glsl.keywords?.has('attribute')).toBe(true)
+
+    // Base keywords are still present
+    expect(glsl.keywords?.has('return')).toBe(true)
+    expect(glsl.keywords?.has('for')).toBe(true)
+
+    // Original config is NOT mutated
+    expect(c.keywords.has('uniform')).toBe(false)
+  })
+
+  it('unions extra typeKeywords into the base preset without mutating it', () => {
+    const glsl = extendConfig(c, {
+      typeKeywords: ['vec2', 'vec3', 'vec4', 'mat4', 'sampler2D'],
+    })
+
+    expect(glsl.typeKeywords?.has('vec3')).toBe(true)
+    expect(glsl.typeKeywords?.has('sampler2D')).toBe(true)
+
+    // Base typeKeywords are still present
+    expect(glsl.typeKeywords?.has('int')).toBe(true)
+    expect(glsl.typeKeywords?.has('float')).toBe(true)
+
+    // Original config is NOT mutated
+    expect(c.typeKeywords.has('vec3')).toBe(false)
+  })
+
+  it('highlights GLSL shader code with C rules + custom keywords', () => {
+    const glsl = extendConfig(c, {
+      keywords: ['uniform', 'attribute', 'varying'],
+      typeKeywords: ['vec2', 'vec3', 'vec4', 'mat4', 'sampler2D'],
+    })
+
+    const tokens = tokenize('uniform vec3 color;', glsl)
+    const types = tokens.map(([type]) => SugarHigh.TokenTypes[type])
+    const values = tokens.map(([, value]) => value)
+
+    expect(values[0]).toBe('uniform')
+    expect(types[0]).toBe('keyword')
+
+    expect(values[2]).toBe('vec3')
+    expect(types[2]).toBe('class')  // typeKeywords render as class
+  })
+
+  it('works with both keywords and typeKeywords together', () => {
+    const glsl = extendConfig(cpp, {
+      keywords: ['uniform'],
+      typeKeywords: ['vec4'],
+    })
+
+    const html = render(parse('uniform vec4 color;', glsl))
+    expect(html).toContain('sh__token--keyword')   // uniform
+    expect(html).toContain('sh__token--class')     // vec4
+  })
+
+  it('accepts an iterable (array) as well as a Set', () => {
+    const ext = extendConfig(c, {
+      keywords: ['custom1', 'custom2'],
+      typeKeywords: ['MyType'],
+    })
+    expect(ext.keywords?.has('custom1')).toBe(true)
+    expect(ext.keywords?.has('custom2')).toBe(true)
+    expect(ext.typeKeywords?.has('MyType')).toBe(true)
+  })
+
+  it('returns a valid config when overrides are empty', () => {
+    const copy = extendConfig(c, {})
+    expect(copy.keywords?.has('return')).toBe(true)
+    expect(copy.typeKeywords?.has('int')).toBe(true)
+    expect(copy).not.toBe(c)  // must be a copy, not the same reference
+  })
+
+  it('works on a config with no base keywords', () => {
+    const ext = extendConfig({}, { keywords: ['foo'] })
+    expect(ext.keywords?.has('foo')).toBe(true)
   })
 })
