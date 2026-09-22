@@ -407,6 +407,3 @@
 .react-product [data-sh="code"],
 .react-product [data-sh="editor"] { font: var(--docs-code-font-size)/22px ui-monospace, monospace; }
 .react-product [data-sh-header] [data-sh-title] { font: 13px/20px ui-monospace, monospace; }
-
-.react-gpu-demo { border: 1px solid var(--border-color, #ddd); border-radius: 6px; overflow: hidden; }
-.react-gpu-demo .react-demo__status { justify-content: space-between; }

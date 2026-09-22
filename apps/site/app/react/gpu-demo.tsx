@@ -12,7 +12,6 @@ export function LargeEditor({ source }) {
       value={source}
       onChange={saveSource}
       lineNumbers
-      wrapLongLines={false}
     />
   )
 }`
@@ -30,8 +29,17 @@ export function GpuDemo() {
   const [size, setSize] = useState('example')
 
   return (
-    <div className="react-demo react-gpu-demo">
+    <div className="react-demo">
+      <Editor
+        className="react-demo__editor"
+        theme={palette}
+        title={null}
+        controls={false}
+        value={code}
+        onChange={setCode}
+      />
       <div className="react-demo__status">
+        <span>{code.split('\n').length.toLocaleString()} lines · {code.length.toLocaleString()} characters</span>
         <select aria-label="GPU editor document size" value={size} onChange={event => {
           const size = event.target.value
           setSize(size)
@@ -43,17 +51,7 @@ export function GpuDemo() {
           <option value="256">256 KiB</option>
           <option value="1024">1 MiB</option>
         </select>
-        <span>{code.split('\n').length.toLocaleString()} lines · {(new TextEncoder().encode(code).length / 1024).toFixed(1)} KiB</span>
       </div>
-      <Editor
-        className="react-demo__editor"
-        theme={palette}
-        title={null}
-        controls={false}
-        wrapLongLines={false}
-        value={code}
-        onChange={setCode}
-      />
     </div>
   )
 }

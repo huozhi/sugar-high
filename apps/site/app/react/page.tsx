@@ -222,7 +222,7 @@ export default function ReactPage() {
               </div>
             </div>
             <div className="react-demo-theme-picker"><ReactThemePicker label="GPU editor theme" /></div>
-            <GpuDemo />
+            <Window title="gpu-editor.tsx"><GpuDemo /></Window>
           </section>
 
         </div>
