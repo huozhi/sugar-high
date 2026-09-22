@@ -10,10 +10,11 @@ The comparison isolates rendering/input: both modes use the same Sugar High GPU 
 
 ## Reference measurements
 
-All times are milliseconds. Input timing is keydown to the second animation-frame callback,
+All times are milliseconds (ms). p50 is the median; p95 is the 95th percentile.
+1 KiB = 1,024 bytes; 1 MiB = 1,024 KiB. Input timing is keydown to the second animation-frame callback,
 including browser frame scheduling, not pure handler execution or Event Timing INP.
 
-| Source (KiB) | Renderer | Edit p50 | Edit p95 | Mount to highlighted frame | DOM elements |
+| Source (KiB) | Renderer | Edit p50 (ms) | Edit p95 (ms) | Mount to highlighted frame (ms) | DOM elements (count) |
 | --- | --- | ---: | ---: | ---: | ---: |
 | 64 | textarea | 33.7 | 36.7 | 129.9 | 28,694 |
 | 64 | editcontext | 29.2 | 33.9 | 126.3 | 27 |
@@ -29,7 +30,7 @@ the plain-text flash on the EditContext path.
 
 GPU parser timing is measured independently, so it is the same for both renderers:
 
-| Source (KiB) | Parse p50 | Parse p95 |
+| Source (KiB) | Parse p50 (ms) | Parse p95 (ms) |
 | --- | ---: | ---: |
 | 64 | 10.0 | 14.2 |
 | 256 | 22.1 | 39.1 |
