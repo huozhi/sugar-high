@@ -1,11 +1,13 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { parse } from 'sugar-high/gpu'
 import type { ParsedCode } from 'sugar-high/core'
 import { CodeView } from './code/code'
 import type { CodeProps as DefaultCodeProps } from './code'
 import { createEditor, type EditorProps } from './editor/editor'
+import { ContextEditor } from './editor/gpu-editor'
+import { supportsEditContext } from './editor/edit-context'
 
 export type { EditorProps }
 
@@ -68,7 +70,17 @@ export function Code({ children, extension: _extension, lang: _lang, ...props }:
   )
 }
 
-/** A textarea-overlay editor highlighted asynchronously with WebGPU. */
-export const Editor: React.ForwardRefExoticComponent<
-  EditorProps & React.RefAttributes<HTMLDivElement>
-> = /* @__PURE__ */ createEditor(Code)
+const TextareaEditor = /* @__PURE__ */ createEditor(Code)
+
+const subscribe = () => () => {}
+const serverSupport = () => false
+
+/** An EditContext editor with persistent GPU highlight ranges and a textarea fallback. */
+export const Editor: React.ForwardRefExoticComponent<EditorProps & React.RefAttributes<HTMLDivElement>> = forwardRef<HTMLDivElement, EditorProps>(function Editor(props, ref) {
+  const supported = useSyncExternalStore(subscribe, supportsEditContext, serverSupport)
+  // Preserve textarea refs/events and token DOM hooks rather than silently ignoring them.
+  const compatible = !props.textareaRef && !props.textareaProps && !props.cx && !props.mark
+  return supported && compatible
+    ? <ContextEditor {...props} ref={ref} />
+    : <TextareaEditor {...props} ref={ref} />
+})
