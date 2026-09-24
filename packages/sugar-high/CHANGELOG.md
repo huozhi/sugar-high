@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.5.0
+
+### Minor Changes
+
+- f33feeb: Highlight JavaScript and CSS embedded inside HTML, Vue, and Svelte `<script>` and `<style>` blocks.
+
 ## 2.4.1
 
 ### Patch Changes
