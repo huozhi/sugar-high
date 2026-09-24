@@ -1,0 +1,10 @@
+/* Keep side options visible; fade only at the outer edges. */
+.scroll-edge-fade {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10px,
+    black calc(100% - 10px),
+    transparent
+  );
+}

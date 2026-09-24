@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState, type ComponentP
 import { Code } from '@sugar-high/react'
 import * as themes from '@sugar-high/react/themes'
 import type { Theme, ThemePalette } from '@sugar-high/react/themes'
+import { scrollItemScale } from './scroll-effects'
 import './react-themes.css'
 
 const { taffy, ...otherThemes } = themes
@@ -13,8 +14,6 @@ const options = Object.entries({ taffy, ...otherThemes }).map(([id, theme]) => (
   label: ({ vscode: 'VS Code', oneDarkPro: 'One Dark Pro', tokyoNight: 'Tokyo Night', nordLight: 'Nord Light', softMinimal: 'Soft Minimal' } as Record<string, string>)[id]
     ?? id[0].toUpperCase() + id.slice(1),
 }))
-
-const repeatedOptions = Array.from({ length: 5 }, () => options).flat()
 
 const ThemeContext = createContext<{
   id: string
@@ -50,8 +49,23 @@ export function ReactThemeProvider({ children }: { children: ReactNode }) {
 
 export function ReactThemePicker({ label = 'Preview theme' }: { label?: string }) {
   const { id, dark, setId, setDark } = useReactTheme()
+  return <ThemePicker options={options} id={id} dark={dark} setId={setId} setDark={setDark} label={label} />
+}
+
+export function ThemePicker({ options, id, dark, setId, setDark, label = 'Preview theme' }: {
+  options: readonly { id: string; label: string; theme: Theme }[]
+  id: string
+  dark: boolean
+  setId: (id: string) => void
+  setDark: (dark: boolean) => void
+  label?: string
+}) {
+  const repeatedOptions = Array.from({ length: 5 }, () => options).flat()
   const swatches = useRef<HTMLDivElement>(null)
-  const [activeIndex, setActiveIndex] = useState(options.length * 2)
+  const [scrollPosition, setScrollPosition] = useState(() =>
+    options.length * 2 + options.findIndex(option => option.id === id)
+  )
+  const activeIndex = Math.round(scrollPosition)
   const currentId = useRef(id)
   currentId.current = id
   useEffect(() => {
@@ -59,23 +73,25 @@ export function ReactThemePicker({ label = 'Preview theme' }: { label?: string }
     const index = Math.round(element.scrollLeft / 30)
     if (repeatedOptions[index]?.id !== id) {
       element.scrollLeft = (options.length * 2 + options.findIndex(option => option.id === id)) * 30
+      setScrollPosition(element.scrollLeft / 30)
     }
-  }, [id])
+  }, [id, options])
   useEffect(() => {
     const element = swatches.current!
     const center = () => {
       element.scrollLeft = (options.length * 2 + options.findIndex(option => option.id === currentId.current)) * 30
+      setScrollPosition(element.scrollLeft / 30)
     }
     const observer = new ResizeObserver(center)
     observer.observe(element)
     center()
     return () => observer.disconnect()
-  }, [])
+  }, [options])
   const selected = options.find(option => option.id === id)!
   return (
     <div className="react-theme-picker">
       <span className="react-theme-picker__name" aria-live="polite">{selected.label}</span>
-      <div className="react-theme-picker__swatches" role="group" aria-label={label} ref={swatches}
+      <div className="react-theme-picker__swatches scroll-edge-fade" role="group" aria-label={label} ref={swatches}
         onScroll={event => {
           const element = event.currentTarget
           const cycle = options.length * 30
@@ -85,7 +101,7 @@ export function ReactThemePicker({ label = 'Preview theme' }: { label?: string }
             element.scrollLeft = position
           }
           const index = Math.round(position / 30)
-          setActiveIndex(index)
+          setScrollPosition(position / 30)
           setId(repeatedOptions[index].id)
         }}
       >
@@ -104,7 +120,10 @@ export function ReactThemePicker({ label = 'Preview theme' }: { label?: string }
                 swatches.current!.scrollLeft = index * 30
                 setId(option.id)
               }}
-              style={{ background: `linear-gradient(135deg, ${colors[0]}, ${colors[1]} 50%, ${colors[2]})` }}
+              style={{
+                background: `linear-gradient(135deg, ${colors[0]}, ${colors[1]} 50%, ${colors[2]})`,
+                transform: `scale(${scrollItemScale(index, scrollPosition)})`,
+              }}
             />
           )
         })}

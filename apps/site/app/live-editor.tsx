@@ -10,8 +10,10 @@ import {
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
 } from 'react'
-import { SugarHigh } from 'sugar-high/core'
 import { Editor } from '@sugar-high/react'
+import { lang, languages } from 'sugar-high/lang'
+import { LanguageScroller } from './components/language-scroller'
+import { ThemePicker } from './components/react-themes'
 import { CopyButton } from './components/copy-button'
 import { copyImageDataUrl } from './lib/copy-image'
 import {
@@ -30,12 +32,16 @@ import {
 import { SyntaxThemeContext } from './syntax-theme-context'
 
 const themes = LIVE_EDITOR_THEME_PRESETS
+const themeOptions = themes.map(({ id, name, colors, colorsDark }) => ({
+  id,
+  label: name,
+  theme: {
+    light: { ...colors, background: '#ffffff', foreground: colors.identifier },
+    dark: { ...(colorsDark ?? colors), background: '#242629', foreground: (colorsDark ?? colors).identifier },
+  },
+}))
 
 const defaultColorPlateColors: LiveEditorColorPlate = themes[0].colors
-
-const customizableColors = Object.entries(SugarHigh.TokenTypes)
-  .filter(([, tokenTypeName]) => tokenTypeName !== 'break' && tokenTypeName !== 'space')
-  .sort((a, b) => Number(a) - Number(b))
 
 const DEFAULT_LIVE_CODE = LANGUAGE_EXAMPLES.javascript
 const DEFAULT_LIVE_EDITOR_MIN_HEIGHT = `${
@@ -176,25 +182,10 @@ export default function LiveEditor({
   const [textareaColor, setTextareaColor] = useState('transparent')
 
   const currentTheme = themes[currentThemeIndex]
-  const nextTheme = themes[(currentThemeIndex + 1) % themes.length]
   const colorPlateColors =
     isDarkTheme && currentTheme.colorsDark
       ? currentTheme.colorsDark
       : currentTheme.colors
-
-  const toggleTheme = () => {
-    const nextIndex = (currentThemeIndex + 1) % themes.length
-    if (syntaxThemeCtx) syntaxThemeCtx.setThemeIndex(nextIndex)
-    else setLocalThemeIndex(nextIndex)
-  }
-
-  const toggleAppearance = () => {
-    if (syntaxThemeCtx) {
-      syntaxThemeCtx.setPreviewMode(isDarkTheme ? 'light' : 'dark')
-    } else {
-      setLocalIsDarkTheme(value => !value)
-    }
-  }
 
   const toggleTextareaColor = () => {
     setTextareaColor((prev) =>
@@ -402,41 +393,40 @@ export default function LiveEditor({
             }
           >
             {colorPlate && (
-              <div
-                className="live-editor__header"
-                role="toolbar"
-                aria-label="Syntax theme"
-              >
-                <button
-                  type="button"
-                  onClick={toggleTheme}
-                  className="live-editor__theme-button"
-                  aria-label={`Next syntax theme (${nextTheme.name})`}
-                  title={`Theme: ${currentTheme.name}`}
-                >
-                  <span className="live-editor__theme-name">{currentTheme.name}</span>
-                  <span className="live-editor__swatches" aria-hidden="true">
-                    {customizableColors.map(([tokenType, tokenTypeName]) => (
-                      <span
-                        key={tokenType}
-                        className="live-editor__swatch-dot"
-                        style={{ backgroundColor: colorPlateColors[tokenTypeName] }}
-                      />
-                    ))}
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="live-editor__appearance-toggle"
-                  onClick={toggleAppearance}
-                  aria-label={isDarkTheme ? 'Use light code theme' : 'Use dark code theme'}
-                  aria-pressed={isDarkTheme}
-                  title={isDarkTheme ? 'Light theme' : 'Dark theme'}
-                >
-                  <span aria-hidden="true" />
-                </button>
+              <div className="live-editor__theme-picker">
+                <ThemePicker
+                  options={themeOptions}
+                  id={currentTheme.id}
+                  dark={isDarkTheme}
+                  label="Syntax theme"
+                  setId={(id) => {
+                    const index = themes.findIndex(theme => theme.id === id)
+                    if (syntaxThemeCtx) syntaxThemeCtx.setThemeIndex(index)
+                    else setLocalThemeIndex(index)
+                  }}
+                  setDark={(dark) => {
+                    if (syntaxThemeCtx) syntaxThemeCtx.setPreviewMode(dark ? 'dark' : 'light')
+                    else setLocalIsDarkTheme(dark)
+                  }}
+                />
               </div>
             )}
+            {colorPlate && languageSwitcher && !onFileExtensionChange ? (
+              <div className="live-editor__language-scroller">
+                <LanguageScroller
+                  initialLanguage={lang(activeFileExtension || 'js') || 'javascript'}
+                  onChange={(language) => {
+                    const extension = languages.find(item => item.id === language)!.extension
+                    setLocalFileExtension(fileExtensionFromSyntaxSelect(extension))
+                    const example = exampleFromSyntaxSelect(extension)
+                    if (example) {
+                      handleEditorChange(example.code)
+                      setCaptureFilename(example.filename)
+                    }
+                  }}
+                />
+              </div>
+            ) : colorPlate && languageControl}
             {!colorPlate && languageControl}
             <div
               className="live-editor__capture-area"
@@ -516,7 +506,6 @@ export default function LiveEditor({
                       <path d="M12 2v4M12 18v4M2 12h4M18 12h4" />
                     </svg>
                   </button>
-                  {languageControl}
                   <button
                     type="button"
                     className="live-editor__screenshot-button"

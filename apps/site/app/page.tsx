@@ -32,7 +32,7 @@ export default function Page() {
 
       <SyntaxThemeProvider>
         <Carousel />
-        <LiveEditor languageSwitcher />
+        <LiveEditor languageSwitcher className="live-editor-section--home" />
         <InstallBanner />
       </SyntaxThemeProvider>
       <section className="gpu-callout" aria-labelledby="gpu-callout-title">
