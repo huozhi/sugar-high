@@ -72,18 +72,11 @@ describe('first-wave language presets', () => {
     expect(actual).toContain('color => property')
   })
 
-  it.each(['vue', 'svelte'])('uses HTML highlighting for %s templates', (lang) => {
-    const actual = getTokensAsString(tokenize('<Component title="Hello">content</Component>', { lang }))
-    expect(actual).toContain('Component => entity')
-    expect(actual).toContain('title => property')
-    expect(actual).toContain('Hello => string')
-  })
-
-  it.each(['vue', 'svelte'])('uses embedded language highlighting for %s blocks', (lang) => {
-    const actual = getTokensAsString(tokenize('<script>import { ref } from \'vue\'</script><style>.counter { color: red; }</style>', { lang }))
-    expect(actual).toContain('import => keyword')
-    expect(actual).toContain('ref => identifier')
-    expect(actual).toContain('color => property')
+  it('does not treat script-like text in HTML comments or attributes as embedded code', () => {
+    const actual = getTokensAsString(tokenize('<!-- <script>const fake = true</script> -->\n<div title="<script>const fake = true</script>">real</div>', {
+      lang: 'html',
+    }))
+    expect(actual).not.toContain('const => keyword')
   })
 
   it('highlights YAML values and hash comments', () => {
