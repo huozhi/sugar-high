@@ -79,6 +79,13 @@ describe('first-wave language presets', () => {
     expect(actual).toContain('Hello => string')
   })
 
+  it.each(['vue', 'svelte'])('uses embedded language highlighting for %s blocks', (lang) => {
+    const actual = getTokensAsString(tokenize('<script>import { ref } from \'vue\'</script><style>.counter { color: red; }</style>', { lang }))
+    expect(actual).toContain('import => keyword')
+    expect(actual).toContain('ref => identifier')
+    expect(actual).toContain('color => property')
+  })
+
   it('highlights YAML values and hash comments', () => {
     const actual = getTokensAsString(tokenize('enabled: true # rollout\nmissing: null', {
       lang: 'yaml',
