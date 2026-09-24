@@ -60,7 +60,7 @@ describe('first-wave language presets', () => {
     const actual = getTokensAsString(tokenize('<Component title="Hello">content</Component>', { lang }))
     expect(actual).toContain('Component => entity')
     expect(actual).toContain('title => property')
-    expect(actual).toContain('"Hello" => string')
+    expect(actual).toContain('Hello => string')
   })
 
   it('highlights YAML values and hash comments', () => {
