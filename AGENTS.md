@@ -7,6 +7,8 @@
 - For website-only changes, implement and verify locally, then share the local preview for user
   review. Do not create or update a PR or push these changes until the user chooses whether to
   use a PR or push directly to `main`.
+- Keep README benchmarks after the usage and API documentation, before License. Refresh the
+  existing benchmark markers in place; do not move the section back above Install.
 - Use pnpm. Run `pnpm test`, `pnpm build`, and `git diff --check` before submitting changes.
 - For React layout changes, build the React package and optionally run
   `pnpm --filter @sugar-high/react test:browser`. This uses an existing `agent-browser` installation

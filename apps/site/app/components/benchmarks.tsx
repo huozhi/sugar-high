@@ -1,78 +1,60 @@
 import results from '../../../../docs/benchmark-results.json'
 import './benchmarks.css'
 
+const metrics = [
+  ...(['gzip', 'minified'] as const).map(metric => ({
+    id: metric,
+    label: metric === 'gzip' ? 'Gzip · KiB' : 'Minified · KiB',
+    values: results.engines.map(engine => {
+      const value = results.bundles.results.find(bundle => bundle.engine === engine.id)?.[metric]
+      return value === undefined ? undefined : value / 1024
+    }),
+  })),
+  {
+    id: 'time',
+    label: '500 KiB TypeScript · ms',
+    values: results.engines.map(engine =>
+      results.results.find(row => row.engine === engine.id && row.targetKiB === 500)?.milliseconds
+    ),
+  },
+]
+const maxima = metrics.map(metric => Math.max(0, ...metric.values.map(value => value ?? 0)))
+
 export default function Benchmarks() {
-  const sizes = [...new Set(results.results.map(result => result.targetKiB))].filter(size => size === 500)
-
-  const metrics = [
-    ...(['minified', 'gzip'] as const).map(metric => ({
-      id: metric,
-      label: metric === 'gzip' ? 'Gzip bundle' : 'Minified bundle',
-      unit: 'KiB',
-      values: results.engines.map(engine => ({
-        ...engine,
-        value: results.bundles?.results.find(bundle => bundle.engine === engine.id)?.[metric],
-      })).map(engine => ({ ...engine, value: engine.value === undefined ? undefined : engine.value / 1024 })),
-    })),
-    ...sizes.map(size => ({
-      id: `time-${size}`,
-      label: `${Math.round(results.results.find(result => result.targetKiB === size)!.sourceBytes / 1024)} KiB file`,
-      unit: 'ms',
-      values: results.engines.map(engine => ({
-        ...engine,
-        value: results.results.find(result => result.engine === engine.id && result.targetKiB === size)?.milliseconds,
-      })),
-    })),
-  ]
-
   return (
     <section className="benchmarks" id="benchmarks" aria-labelledby="benchmarks-title">
-      <div className="benchmarks__heading">
-        <h2 id="benchmarks-title">Benchmark</h2>
-      </div>
-      <div className="benchmarks__libraries" aria-label="Highlighter colors">
-        {results.engines.map(engine => (
-          <span key={engine.id} data-engine={engine.id} title={`${engine.label} ${engine.version}`}>
-            <i aria-hidden="true" />{engine.label}
-          </span>
-        ))}
-      </div>
-      <div className="benchmarks__charts">
-        {metrics.map(metric => {
-          const values = metric.values
-          const measured = values.flatMap(row => row.value === undefined ? [] : [row.value])
-          const highest = Math.max(...measured)
-          return (
-            <section className="benchmarks__chart" key={metric.id} aria-labelledby={`benchmark-${metric.id}`}>
-              <h3 id={`benchmark-${metric.id}`}>{metric.label}</h3>
-              <dl>
-                {values.map(row => {
+      <h2 id="benchmarks-title">Benchmark</h2>
+      <div className="benchmarks__scroll" tabIndex={0} role="region" aria-label="Benchmark comparison">
+        <table className="benchmarks__table">
+          <thead>
+            <tr>
+              <th scope="col"><span className="benchmarks__sr-only">Library</span></th>
+              {metrics.map(metric => <th scope="col" key={metric.id}>{metric.label}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {results.engines.map((engine, index) => (
+              <tr key={engine.id} data-engine={engine.id}>
+                <th scope="row" title={`${engine.label} ${engine.version}`}>{engine.label}</th>
+                {metrics.map((metric, metricIndex) => {
+                  const value = metric.values[index]
                   return (
-                    <div className="benchmarks__row" data-engine={row.id} key={row.id}>
-                      <dt className="benchmarks__sr-only">{row.label}</dt>
-                      <dd>
+                    <td key={metric.id}>
+                      <div className="benchmarks__measurement">
                         <span className="benchmarks__track" aria-hidden="true">
-                          {row.value !== undefined && (
-                            <span style={{ width: `${highest > 0 ? row.value / highest * 100 : 0}%` }} />
-                          )}
+                          {value !== undefined && <span style={{ width: `${maxima[metricIndex] ? value / maxima[metricIndex] * 100 : 0}%` }} />}
                         </span>
-                        <span className="benchmarks__value">
-                          {row.value === undefined ? <span aria-label="Not measured">—</span> : (
-                            <>{row.value.toFixed(2)} <span className="benchmarks__unit">{metric.unit}</span></>
-                          )}
-                        </span>
-                      </dd>
-                    </div>
+                        <span className="benchmarks__value">{value === undefined ? '—' : value.toFixed(2)}</span>
+                      </div>
+                    </td>
                   )
                 })}
-              </dl>
-            </section>
-          )
-        })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <p className="benchmarks__caption">
-        Measured {results.measuredAt.slice(0, 10)}.
-      </p>
+      <a className="benchmarks__methodology" href="https://github.com/huozhi/sugar-high/blob/main/docs/BENCHMARK.md">Methodology ↗</a>
     </section>
   )
 }
