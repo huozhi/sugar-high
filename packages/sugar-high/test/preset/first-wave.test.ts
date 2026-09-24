@@ -47,13 +47,15 @@ describe('first-wave language presets', () => {
     expect(actual).toContain('-- enabled => comment')
   })
 
-  it('highlights HTML tags, attributes, and comments', () => {
-    const actual = getTokensAsString(tokenize('<!-- note -->\n<section aria-label="Hi">Hello</section>', {
+  it('highlights HTML tags, attributes, comments, and embedded blocks', () => {
+    const actual = getTokensAsString(tokenize('<!-- note -->\n<section aria-label="Hi">Hello</section>\n<script>const ready = true</script>\n<style>.card { color: red; }</style>', {
       lang: 'html',
     }))
     expect(actual).toContain('<!-- note --> => comment')
     expect(actual).toContain('section => entity')
     expect(actual).toContain('aria-label => property')
+    expect(actual).toContain('const => keyword')
+    expect(actual).toContain('color => property')
   })
 
   it.each(['vue', 'svelte'])('uses HTML highlighting for %s templates', (lang) => {

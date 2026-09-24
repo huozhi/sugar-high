@@ -1,11 +1,11 @@
 // @ts-check
-import { tokenize as tokenizeJavaScript } from '../presets/javascript-runtime.js'
+import { tokenizeEmbeddedHtml } from './embedded-html.js'
 
 export const keywords = new Set([])
 export const jsx = true
 export const regex = false
 export const templateStrings = false
-export const tokenize = tokenizeJavaScript
+export const tokenize = tokenizeEmbeddedHtml
 
 export const onCommentStart = (_currentChar, _nextChar, index, code) =>
   code.startsWith('<!--', index) ? 2 : 0

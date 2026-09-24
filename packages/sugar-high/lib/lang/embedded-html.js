@@ -1,7 +1,17 @@
 // @ts-check
 import { tokenize as tokenizeCss } from './css.js'
-import { tokenize as tokenizeHtml } from './html.js'
 import { tokenize as tokenizeJavaScript } from './javascript.js'
+
+const htmlOptions = {
+  keywords: new Set(),
+  jsx: true,
+  regex: false,
+  templateStrings: false,
+  onCommentStart: (_currentChar, _nextChar, index, code) => code.startsWith('<!--', index) ? 2 : 0,
+  onCommentEnd: (_prevChar, _currChar, index, code) => code.slice(index - 2, index + 1) === '-->' ? 2 : 0,
+}
+
+const tokenizeHtml = (code) => tokenizeJavaScript(code, htmlOptions)
 
 const embeddedBlock = /<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi
 
