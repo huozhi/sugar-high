@@ -72,6 +72,13 @@ describe('first-wave language presets', () => {
     expect(actual).toContain('color => property')
   })
 
+  it('does not treat script-like text in HTML comments or attributes as embedded code', () => {
+    const actual = getTokensAsString(tokenize('<!-- <script>const fake = true</script> -->\n<div title="<script>const fake = true</script>">real</div>', {
+      lang: 'html',
+    }))
+    expect(actual).not.toContain('const => keyword')
+  })
+
   it('highlights YAML values and hash comments', () => {
     const actual = getTokensAsString(tokenize('enabled: true # rollout\nmissing: null', {
       lang: 'yaml',
