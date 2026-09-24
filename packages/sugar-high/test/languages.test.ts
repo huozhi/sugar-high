@@ -49,6 +49,8 @@ describe('language registry', () => {
     ['c++', 'cpp'],
     ['cs', 'csharp'],
     ['xml', 'html'],
+    ['vue', 'vue'],
+    ['svelte', 'svelte'],
     ['yml', 'yaml'],
     ['mdx', 'markdown'],
     ['kts', 'kotlin'],

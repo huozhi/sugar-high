@@ -33,6 +33,8 @@ const languages = [
   { id: 'csharp', extension: 'cs', aliases: ['c#', 'cs', 'dotnet'], config: nonJavaScript(csharp) },
   { id: 'sql', extension: 'sql', aliases: [], config: nonJavaScript(sql) },
   { id: 'html', extension: 'html', aliases: ['htm', 'xml'], config: html },
+  { id: 'vue', extension: 'vue', aliases: [], config: html },
+  { id: 'svelte', extension: 'svelte', aliases: [], config: html },
   { id: 'yaml', extension: 'yaml', aliases: ['yml'], config: nonJavaScript(yaml) },
   { id: 'markdown', extension: 'md', aliases: ['md', 'mdx'], config: nonJavaScript(markdown) },
   { id: 'plaintext', extension: 'txt', aliases: ['text', 'plain'], config: nonJavaScript(plaintext) },

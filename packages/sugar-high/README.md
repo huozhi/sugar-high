@@ -112,11 +112,12 @@ behavior.
 ## Built-in languages
 
 `javascript`, `typescript`, `css`, `python`, `c`, `go`, `java`, `rust`, `json`, `diff`, `shell`,
-`cpp`, `csharp`, `sql`, `html`, `yaml`, `markdown`, `plaintext`, `ruby`, `kotlin`, `swift`, `php`,
+`cpp`, `csharp`, `sql`, `html`, `vue`, `svelte`, `yaml`, `markdown`, `plaintext`, `ruby`, `kotlin`, `swift`, `php`,
 `toml`, `powershell`, `dockerfile`, `graphql`, `hcl`, `zig`, and `lua`.
 
 Related dialects share one implementation: JavaScript includes JSX, TypeScript includes TSX, JSON
-includes JSONC comments, Shell includes sh/Bash/Zsh, and HCL includes Terraform.
+includes JSONC comments, Shell includes sh/Bash/Zsh, HTML currently provides the base highlighting
+for Vue and Svelte, and HCL includes Terraform.
 
 ## Composable core
 
