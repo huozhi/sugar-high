@@ -72,6 +72,13 @@ describe('first-wave language presets', () => {
     expect(actual).toContain('color => property')
   })
 
+  it.each(['vue', 'svelte'])('uses HTML highlighting for %s templates', (lang) => {
+    const actual = getTokensAsString(tokenize('<Component title="Hello">content</Component>', { lang }))
+    expect(actual).toContain('Component => entity')
+    expect(actual).toContain('title => property')
+    expect(actual).toContain('"Hello" => string')
+  })
+
   it('highlights YAML values and hash comments', () => {
     const actual = getTokensAsString(tokenize('enabled: true # rollout\nmissing: null', {
       lang: 'yaml',
