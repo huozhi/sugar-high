@@ -63,22 +63,23 @@
   white-space: pre-wrap;
 }
 
-.remark-preview .sh__line,
-.remark-product .product-code .sh__line {
+.remark-preview .sh__line {
   display: block;
   padding: 0;
 }
 
-.remark-product .product-code[data-codice-code] {
-  border-radius: 0;
+.remark-product .product-code code {
+  padding: 0;
 }
 
-.remark-product .remark-highlighted code { padding: 0; }
-
-.remark-product .remark-highlighted .sh__line {
+.remark-product .product-code .sh__line {
   box-sizing: border-box;
   width: 100%;
   padding-inline: var(--sh-padding);
+}
+
+.remark-product .product-code[data-codice-code] {
+  border-radius: 0;
 }
 
 .remark-product .product-card .product-code [data-codice-header] {

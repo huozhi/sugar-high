@@ -12,11 +12,11 @@
   line-height: 1.2;
   letter-spacing: -.045em;
 }
-.benchmarks [data-engine='sugar-high'] { --bar-color: #61958c; }
+.benchmarks [data-engine='sugar-high'] { --bar-color: #82b8aa; }
 .benchmarks [data-engine='prismjs'] { --bar-color: #a4b2bc; }
 .benchmarks [data-engine='highlight.js'] { --bar-color: #c4ccd2; }
 .benchmarks__scroll { overflow-x: auto; }
-.benchmarks__scroll:focus-visible { outline: 2px solid #61958c; outline-offset: 4px; }
+.benchmarks__scroll:focus-visible { outline: 2px solid #82b8aa; outline-offset: 4px; }
 .benchmarks__table { width: 100%; min-width: 560px; table-layout: fixed; border-collapse: collapse; }
 .benchmarks__table th, .benchmarks__table td { border: 0; }
 .benchmarks__table thead th { padding: 0 0 12px 24px; text-align: left; font-size: 11px; font-weight: 500; color: #788592; }

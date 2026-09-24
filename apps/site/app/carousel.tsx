@@ -320,8 +320,8 @@ export default function Carousel() {
         observer.disconnect()
       },
       {
-        rootMargin: '0px 0px -12% 0px',
-        threshold: 0.28,
+        rootMargin: '0px 0px 8% 0px',
+        threshold: 0.1,
       }
     )
 
