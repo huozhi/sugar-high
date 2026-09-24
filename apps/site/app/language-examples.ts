@@ -363,6 +363,26 @@ LIMIT 10;
   </body>
 </html>
 `,
+  vue: `<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
+</script>
+
+<template>
+  <button class="counter" @click="count++">
+    Clicked {{ count }} times
+  </button>
+</template>
+`,
+  svelte: `<script>
+  let count = 0
+</script>
+
+<button class="counter" onclick={() => count++}>
+  Clicked {count} times
+</button>
+`,
   yaml: `# Configuration for the project gallery.
 name: project-gallery
 version: 1

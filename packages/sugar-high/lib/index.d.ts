@@ -23,6 +23,8 @@ export type LanguageName =
   | 'csharp'
   | 'sql'
   | 'html'
+  | 'vue'
+  | 'svelte'
   | 'yaml'
   | 'markdown'
   | 'plaintext'

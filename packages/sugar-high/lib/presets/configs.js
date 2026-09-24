@@ -27,6 +27,8 @@ import * as sql from '../lang/sql.js'
 import * as swift from '../lang/swift.js'
 import * as toml from '../lang/toml.js'
 import * as typescript from '../lang/typescript.js'
+import * as svelte from '../lang/svelte.js'
+import * as vue from '../lang/vue.js'
 import * as yaml from '../lang/yaml.js'
 import * as zig from '../lang/zig.js'
 
@@ -61,6 +63,8 @@ function createConfigs() {
     csharp: nonJavaScript(csharp),
     sql: nonJavaScript(sql),
     html,
+    vue,
+    svelte,
     yaml: nonJavaScript(yaml),
     markdown: nonJavaScript(markdown),
     plaintext: nonJavaScript(plaintext),
@@ -88,5 +92,5 @@ function configFor(name) {
 export {
   c, configFor, configs, cpp, csharp, css, diff, dockerfile, go, graphql, hcl, html, java,
   javascript, json, kotlin, lua, markdown, nonJavaScript, php, plaintext, powershell, python, ruby,
-  rust, shell, sql, swift, toml, typescript, yaml, zig,
+  rust, shell, sql, svelte, swift, toml, typescript, vue, yaml, zig,
 }

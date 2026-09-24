@@ -3,7 +3,7 @@
 import {
   c, cpp, csharp, css, diff, dockerfile, go, graphql, hcl, html, java, javascript, json,
   kotlin, lua, markdown, nonJavaScript, php, plaintext, powershell, python, ruby, rust, shell, sql,
-  swift, toml, typescript, yaml, zig,
+  svelte, swift, toml, typescript, vue, yaml, zig,
 } from './presets/configs.js'
 
 /**
@@ -33,6 +33,8 @@ const languages = [
   { id: 'csharp', extension: 'cs', aliases: ['c#', 'cs', 'dotnet'], config: nonJavaScript(csharp) },
   { id: 'sql', extension: 'sql', aliases: [], config: nonJavaScript(sql) },
   { id: 'html', extension: 'html', aliases: ['htm', 'xml'], config: html },
+  { id: 'vue', extension: 'vue', aliases: [], config: vue },
+  { id: 'svelte', extension: 'svelte', aliases: [], config: svelte },
   { id: 'yaml', extension: 'yaml', aliases: ['yml'], config: nonJavaScript(yaml) },
   { id: 'markdown', extension: 'md', aliases: ['md', 'mdx'], config: nonJavaScript(markdown) },
   { id: 'plaintext', extension: 'txt', aliases: ['text', 'plain'], config: nonJavaScript(plaintext) },

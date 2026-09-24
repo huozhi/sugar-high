@@ -38,6 +38,8 @@ const languageLabels: Record<string, string> = {
   csharp: 'C#',
   sql: 'SQL',
   html: 'HTML, XML',
+  vue: 'Vue',
+  svelte: 'Svelte',
   yaml: 'YAML',
   markdown: 'Markdown, MDX',
   plaintext: 'Plain text',
