@@ -318,27 +318,27 @@
 }
 
 .theme-agent__command {
-  position: relative;
+  display: flex;
+  align-items: flex-start;
   min-width: 0;
   width: 100%;
   background: #f6f6f6;
 }
 
 .theme-agent__command code {
-  display: block;
+  flex: 1 1 auto;
   min-width: 0;
-  padding: 14px 48px 14px 16px;
-  overflow-x: auto;
+  padding: 14px 8px 14px 16px;
   color: #354150;
   font-size: var(--docs-code-font-size);
   line-height: 1.55;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .theme-agent__command .copy-button {
-  position: absolute;
-  top: 14px;
-  right: 16px;
+  flex: 0 0 auto;
+  margin: 14px 16px 0 8px;
   color: #8a949d;
 }
 
