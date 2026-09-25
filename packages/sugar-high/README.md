@@ -31,28 +31,6 @@ import { highlight } from 'sugar-high'
 const html = highlight('const ready = true')
 ```
 
-## Experimental WebGPU highlighting
-
-Use the opt-in `sugar-high/gpu` entry for asynchronous, language-agnostic highlighting powered by
-[`gpu-lexer`](https://gpu-lexer.vercel.app). It requires WebGPU and rejects when WebGPU is
-unavailable; importing any other Sugar High entry does not load the GPU model.
-
-Install the experimental lexer separately when using this entry:
-
-```sh
-npm install sugar-high gpu-lexer
-```
-
-```js
-import { highlight, parse } from 'sugar-high/gpu'
-
-const parsed = await parse(source)
-const html = await highlight(source)
-```
-
-GPU labels map onto Sugar High's existing token classes, themes, `cx`, `mark`, and `markLine`
-hooks. The model infers syntax without a language option and may differ from grammar-based output.
-
 JavaScript, including JSX, is the default. Pass a canonical name for another built-in language:
 
 ```js
@@ -240,6 +218,28 @@ processing Markdown. Fence aliases are normalized through the same `lang()` mapp
 See [`docs/API.md`](https://github.com/huozhi/sugar-high/blob/main/docs/API.md) for package exports, the full language mapping, highlighting
 options, and lower-level functions. Upgrading from v1? Read the
 [v2 migration guide](https://github.com/huozhi/sugar-high/blob/main/docs/MIGRATION.md).
+
+## Experimental WebGPU highlighting
+
+Use the opt-in `sugar-high/gpu` entry for asynchronous, language-agnostic highlighting powered by
+[`gpu-lexer`](https://gpu-lexer.vercel.app). It requires WebGPU and rejects when WebGPU is
+unavailable; importing any other Sugar High entry does not load the GPU model.
+
+Install the experimental lexer separately when using this entry:
+
+```sh
+npm install sugar-high gpu-lexer
+```
+
+```js
+import { highlight, parse } from 'sugar-high/gpu'
+
+const parsed = await parse(source)
+const html = await highlight(source)
+```
+
+GPU labels map onto Sugar High's existing token classes, themes, `cx`, `mark`, and `markLine`
+hooks. The model infers syntax without a language option and may differ from grammar-based output.
 
 ## Benchmarks
 
