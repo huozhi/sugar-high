@@ -1,5 +1,11 @@
 # @sugar-high/remark
 
+## 1.0.3
+
+### Patch Changes
+
+- 4996c5b: Update the React and remark integrations to pick up the latest language support from Sugar High.
+
 ## 1.0.2
 
 ### Patch Changes
