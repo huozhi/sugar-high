@@ -39,7 +39,9 @@
     "benchmark": "node scripts/benchmark.mjs",
     "test": "vitest --run",
     "prepublishOnly": "pnpm build",
-    "test:browser": "node --test scripts/test-layout.mjs"
+    "test:browser": "node --test scripts/test-layout.mjs",
+    "test:gpu:browser": "node scripts/gpu-browser.mjs",
+    "benchmark:gpu": "node scripts/gpu-browser.mjs --benchmark"
   },
   "dependencies": {
     "sugar-high": "workspace:^"
