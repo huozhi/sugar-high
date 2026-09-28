@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@types/node": "22.12.0",
-    "gpu-lexer": "0.0.2",
+    "gpu-lexer": "0.0.3",
     "typescript": "6.0.2",
     "vitest": "^3.0.2"
   },

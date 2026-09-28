@@ -130,11 +130,43 @@ import { Code, Editor } from '@sugar-high/react/gpu'
 <Editor value={source} onChange={setSource} />
 ```
 
-The components render synchronized plain text while the GPU initializes. Their nested code view
-sets `data-sh-gpu` to `pending`, `ready`, or `unavailable`; when WebGPU is unavailable, the plain
-text remains readable and editable. GPU highlighting is language-agnostic, so `lang` and
-`extension` are accepted only for compatibility and do not affect inference. All other Code and
-Editor layout, theme, line-number, and display-hook props continue to work.
+The GPU editor uses the browser's EditContext API and CSS Custom Highlights when available.
+It keeps a persistent text node, retains token colors while parsing new input, and only paints
+highlight ranges and line numbers around the visible viewport. The default viewport is 24rem
+high; override it with `style` or `className`. It supports clipboard input, IME bounds and
+composition underlines, undo/redo, indentation, grapheme-aware deletion, and word/line deletion
+shortcuts. The default React entry remains the textarea editor.
+
+The same `EditorProps` work with the GPU entry. Browsers without EditContext or CSS Custom
+Highlights use the existing textarea overlay. Providing `textareaProps`, `textareaRef`, `cx`,
+or `mark` also selects that renderer, preserving native textarea events/refs and per-token DOM
+hooks. The textarea path still rebuilds token markup and shows plain text while a new parse is
+pending. Switching between input modes remounts the editor; keep those props stable while editing.
+External value replacements reset EditContext undo history; normal controlled onChange echoes do not.
+
+The code view or editing surface sets `data-sh-gpu` to `pending`, `ready`, or `unavailable`.
+When WebGPU is unavailable, text remains readable and editable. Highlighting is language-agnostic,
+so `lang` and `extension` do not affect inference. GPU `Code` retains its existing DOM renderer.
+
+#### Large-document benchmarks
+
+Build the package, then use the globally installed `agent-browser` and Bun bundler:
+
+```sh
+pnpm --filter @sugar-high/react build
+pnpm --filter @sugar-high/react test:gpu:browser
+pnpm --filter @sugar-high/react benchmark:gpu --output=../../docs/gpu-editor-benchmark.json
+```
+
+The benchmark uses a production React fixture with actual WebGPU and compares the existing
+textarea overlay against EditContext on the same 64 KiB, 256 KiB, and 1 MiB TypeScript source.
+It reports parse timings, mount-to-frame and mount-to-highlight times, DOM element counts, and
+keydown-to-second-animation-frame p50/p95 over 12 edits. That frame proxy includes display-frame
+scheduling; it is not Event Timing INP or a pure JavaScript execution measurement. Cold GPU
+initialization is reported separately. WebGPU failures fail the benchmark instead of reporting
+plain-text fallback as GPU performance. Results are machine/browser dependent.
+
+See [benchmark results and methodology](../../docs/gpu-editor-benchmark.md).
 
 `lang` takes a canonical Sugar High language name. When omitted, `title` or the legacy
 `extension` prop is resolved through Sugar High's language aliases.
@@ -309,7 +341,7 @@ The `--sh-*` variables control both the component frame and syntax tokens; see t
 | `--sh-line-number-color` | Both | unset | Line-number color. |
 | `--sh-line-highlight-color` | Both | unset | Background for lines selected by `highlightLines`. |
 
-The editor is a textarea layered over highlighted code. Keep `--sh-editor-text-color` and
+The default editor and the GPU compatibility path use a textarea layered over highlighted code. Keep `--sh-editor-text-color` and
 `--sh-editor-background-color` transparent unless deliberately changing that overlay; set the root's
 ordinary `color` and `backgroundColor` for the visible surface.
 

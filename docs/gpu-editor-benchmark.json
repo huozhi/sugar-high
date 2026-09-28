@@ -1,0 +1,86 @@
+{
+  "measuredAt": "2026-09-22T16:27:28.008Z",
+  "platform": "darwin",
+  "arch": "arm64",
+  "node": "v24.18.0",
+  "react": "19.2.0",
+  "gpuLexer": "0.0.3",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+  "gpu": {
+    "architecture": "metal-3",
+    "description": "",
+    "device": "",
+    "vendor": "apple"
+  },
+  "coldSmallReadyMs": 128.29999999701977,
+  "parseSamples": 5,
+  "editSamples": 12,
+  "rows": [
+    {
+      "kib": 64,
+      "mode": "textarea",
+      "elements": 28694,
+      "firstFrameMs": 26.700000002980232,
+      "readyMs": 129.8999999910593,
+      "parseP50Ms": 10,
+      "parseP95Ms": 14.200000002980232,
+      "editP50Ms": 33.70000000298023,
+      "editP95Ms": 36.69999998807907
+    },
+    {
+      "kib": 64,
+      "mode": "editcontext",
+      "elements": 27,
+      "firstFrameMs": 7.200000002980232,
+      "readyMs": 126.29999999701975,
+      "parseP50Ms": 10,
+      "parseP95Ms": 14.200000002980232,
+      "editP50Ms": 29.200000002980232,
+      "editP95Ms": 33.8999999910593
+    },
+    {
+      "kib": 256,
+      "mode": "textarea",
+      "elements": 115318,
+      "firstFrameMs": 93.79999999701975,
+      "readyMs": 498.09999999403954,
+      "parseP50Ms": 22.099999994039536,
+      "parseP95Ms": 39.099999994039536,
+      "editP50Ms": 145.29999999701977,
+      "editP95Ms": 152.6000000089407
+    },
+    {
+      "kib": 256,
+      "mode": "editcontext",
+      "elements": 27,
+      "firstFrameMs": 21.19999998807907,
+      "readyMs": 165.19999998807907,
+      "parseP50Ms": 22.099999994039536,
+      "parseP95Ms": 39.099999994039536,
+      "editP50Ms": 29.599999994039536,
+      "editP95Ms": 31
+    },
+    {
+      "kib": 1024,
+      "mode": "textarea",
+      "elements": 459411,
+      "firstFrameMs": 380,
+      "readyMs": 2035.6000000089407,
+      "parseP50Ms": 93.20000000298025,
+      "parseP95Ms": 102.8999999910593,
+      "editP50Ms": 613,
+      "editP95Ms": 634.8999999910593
+    },
+    {
+      "kib": 1024,
+      "mode": "editcontext",
+      "elements": 27,
+      "firstFrameMs": 81.69999998807907,
+      "readyMs": 305.5,
+      "parseP50Ms": 93.20000000298025,
+      "parseP95Ms": 102.8999999910593,
+      "editP50Ms": 49.099999994039536,
+      "editP95Ms": 63.1000000089407
+    }
+  ]
+}
