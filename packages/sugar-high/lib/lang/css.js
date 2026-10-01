@@ -36,17 +36,23 @@ const isHyphen = ([type, value]) => type === T_SIGN && value === '-'
  * @param {Array<[number, string]>} tokens
  */
 const mergeDashedNames = (tokens) => {
+  /** @type {Array<[number, string]>} */
+  const merged = []
   for (let index = 0; index < tokens.length; index++) {
     let firstWord = index
     let end = index
 
     if (isHyphen(tokens[end])) {
       while (tokens[end] && isHyphen(tokens[end])) end++
-      if (!tokens[end] || !isNameStart(tokens[end])) continue
+      if (!tokens[end] || !isNameStart(tokens[end])) {
+        merged.push(tokens[index])
+        continue
+      }
       firstWord = end++
     } else if (isNameStart(tokens[end])) {
       end++
     } else {
+      merged.push(tokens[index])
       continue
     }
 
@@ -62,10 +68,15 @@ const mergeDashedNames = (tokens) => {
       end++
     }
 
-    if (!dashed) continue
+    if (!dashed) {
+      merged.push(tokens[index])
+      continue
+    }
     const name = tokens.slice(index, end).map(([, value]) => value).join('')
-    tokens.splice(index, end - index, [tokens[firstWord][0], name])
+    merged.push([tokens[firstWord][0], name])
+    index = end - 1
   }
+  return merged
 }
 
 /** Return true when a colon belongs to a nested selector instead of a declaration. */
@@ -91,29 +102,37 @@ const opensBlock = (tokens, start) => {
  * @param {import('../core.js').ParseOptions} options
  */
 export const tokenize = (code, options) => {
-  const tokens = tokenizePlain(code, { ...options, tokenize: undefined })
-  mergeDashedNames(tokens)
+  const tokens = mergeDashedNames(tokenizePlain(code, { ...options, tokenize: undefined }))
+  /** @type {Array<[number, string]>} */
+  const output = []
   let blockDepth = 0
   let declarationStart = false
 
   for (let index = 0; index < tokens.length; index++) {
-    const [type, value] = tokens[index]
+    const token = tokens[index]
+    const [type, value] = token
 
     if (type === T_SIGN && value === '{') {
       blockDepth++
       declarationStart = true
+      output.push(token)
       continue
     }
     if (type === T_SIGN && value === '}') {
       blockDepth--
       declarationStart = false
+      output.push(token)
       continue
     }
     if (type === T_SIGN && value === ';') {
       declarationStart = blockDepth > 0
+      output.push(token)
       continue
     }
-    if (!declarationStart || isIgnored(type)) continue
+    if (!declarationStart || isIgnored(type)) {
+      output.push(token)
+      continue
+    }
 
     const propertyStart = index
     let propertyEnd = index
@@ -133,10 +152,13 @@ export const tokenize = (code, options) => {
         .slice(propertyStart, propertyEnd)
         .map(([, part]) => part)
         .join('')
-      tokens.splice(propertyStart, propertyEnd - propertyStart, [T_PROPERTY, property])
+      output.push([T_PROPERTY, property])
+      index = propertyEnd - 1
+    } else {
+      output.push(token)
     }
     declarationStart = false
   }
 
-  return tokens
+  return output
 }

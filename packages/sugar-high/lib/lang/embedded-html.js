@@ -35,6 +35,8 @@ function findTagEnd(code, start) {
 /** Find real script/style blocks while ignoring comments and quoted attributes. */
 function findEmbeddedBlocks(code) {
   const blocks = []
+  /** @type {Set<string>} */
+  const unclosed = new Set()
   let index = 0
   while (index < code.length) {
     if (code.startsWith('<!--', index)) {
@@ -57,10 +59,15 @@ function findEmbeddedBlocks(code) {
     }
 
     const tag = match[1].toLowerCase()
+    if (unclosed.has(tag)) {
+      index = openEnd
+      continue
+    }
     const closing = embeddedClosingTag(tag)
     closing.lastIndex = openEnd
     const closeMatch = closing.exec(code)
     if (!closeMatch) {
+      unclosed.add(tag)
       index = openEnd
       continue
     }
@@ -77,22 +84,29 @@ function findEmbeddedBlocks(code) {
  * @returns {Array<[number, string]>}
  */
 export function tokenizeEmbeddedHtml(code) {
+  const blocks = findEmbeddedBlocks(code)
+  if (!blocks.length) return tokenizeHtml(code)
+
   /** @type {Array<[number, string]>} */
   const tokens = []
+  /** @param {Array<[number, string]>} part */
+  const append = (part) => {
+    for (let index = 0; index < part.length; index++) tokens.push(part[index])
+  }
   let cursor = 0
 
-  for (const block of findEmbeddedBlocks(code)) {
+  for (const block of blocks) {
     const { start, openEnd, closeStart, end, tag } = block
 
-    tokens.push(...tokenizeHtml(code.slice(cursor, start)))
-    tokens.push(...tokenizeHtml(code.slice(start, openEnd)))
-    tokens.push(...(tag === 'style'
+    append(tokenizeHtml(code.slice(cursor, start)))
+    append(tokenizeHtml(code.slice(start, openEnd)))
+    append(tag === 'style'
       ? tokenizeCss(code.slice(openEnd, closeStart))
-      : tokenizeJavaScript(code.slice(openEnd, closeStart), { jsx: false })))
-    tokens.push(...tokenizeHtml(code.slice(closeStart, end)))
+      : tokenizeJavaScript(code.slice(openEnd, closeStart), { jsx: false }))
+    append(tokenizeHtml(code.slice(closeStart, end)))
     cursor = end
   }
 
-  tokens.push(...tokenizeHtml(code.slice(cursor)))
+  append(tokenizeHtml(code.slice(cursor)))
   return tokens
 }
