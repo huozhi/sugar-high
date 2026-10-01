@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.5.1
+
+### Patch Changes
+
+- 5cfb676: Keep CSS and embedded HTML tokenization linear on large inputs: large stylesheets no longer slow down quadratically, and large HTML, Vue, and Svelte sources no longer overflow the call stack.
+
 ## 2.5.0
 
 ### Minor Changes
