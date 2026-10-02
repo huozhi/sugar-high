@@ -72,6 +72,15 @@ describe('first-wave language presets', () => {
     expect(actual).toContain('color => property')
   })
 
+  it('highlights embedded style blocks like standalone CSS', () => {
+    const style = '@media screen { .card { color: #0d6efd; } }'
+    const embedded = core.tokenize(`<style>${style}</style>`, languages.find(({ id }) => id === 'html')?.config)
+    const standalone = core.tokenize(style, languages.find(({ id }) => id === 'css')?.config)
+
+    expect(embedded.slice(3, -3)).toEqual(standalone)
+    expect(getTokensAsString(embedded)).toContain('#0d6efd => string')
+  })
+
   it('does not treat script-like text in HTML comments or attributes as embedded code', () => {
     const actual = getTokensAsString(tokenize('<!-- <script>const fake = true</script> -->\n<div title="<script>const fake = true</script>">real</div>', {
       lang: 'html',

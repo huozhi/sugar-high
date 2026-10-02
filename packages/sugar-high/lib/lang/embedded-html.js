@@ -1,5 +1,5 @@
 // @ts-check
-import { tokenize as tokenizeCss } from './css.js'
+import * as css from './css.js'
 import { tokenize as tokenizeJavaScript } from './javascript.js'
 
 const htmlOptions = {
@@ -101,7 +101,7 @@ export function tokenizeEmbeddedHtml(code) {
     append(tokenizeHtml(code.slice(cursor, start)))
     append(tokenizeHtml(code.slice(start, openEnd)))
     append(tag === 'style'
-      ? tokenizeCss(code.slice(openEnd, closeStart))
+      ? css.tokenize(code.slice(openEnd, closeStart), css)
       : tokenizeJavaScript(code.slice(openEnd, closeStart), { jsx: false }))
     append(tokenizeHtml(code.slice(closeStart, end)))
     cursor = end
