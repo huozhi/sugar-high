@@ -230,6 +230,53 @@ function isPropertyKey(code, quoteEnd) {
  * or null/undefined/below 1 for default JS single-quoted strings. No substring allocation.
  * @return {Array<[number, string]>}
  */
+/** @param {[number, string]} token */
+const isTrivia = ([type]) => type === T_SPACE || type === T_BREAK || type === T_COMMENT
+
+/**
+ * Mark identifiers used as keys of object literals, destructuring patterns, and type literals.
+ * @param {Array<[number, string]>} tokens
+ */
+function markObjectKeys(tokens) {
+  /** @type {string[]} */
+  const brackets = []
+  let previous = ''
+  let lineStart = false
+  for (let index = 0; index < tokens.length; index++) {
+    const [type, value] = tokens[index]
+    if (type === T_BREAK) lineStart = true
+    if (type === T_SIGN) {
+      for (const char of value) {
+        if (char === '(' || char === '[' || char === '{') brackets.push(char)
+        else if (char === ')' || char === ']' || char === '}') brackets.pop()
+      }
+      previous = value
+      lineStart = false
+      continue
+    }
+    if (isTrivia(tokens[index])) continue
+    if (
+      type === T_IDENTIFIER &&
+      brackets[brackets.length - 1] === '{' &&
+      (lineStart || previous.endsWith('{') || previous.endsWith(',') || previous.endsWith(';'))
+    ) {
+      let next = index + 1
+      while (tokens[next] && isTrivia(tokens[next])) next++
+      let sign = tokens[next]?.[0] === T_SIGN ? tokens[next][1] : ''
+      if (sign === '?') {
+        next++
+        while (tokens[next] && isTrivia(tokens[next])) next++
+        sign = tokens[next]?.[0] === T_SIGN ? tokens[next][1] : ''
+      } else if (sign[0] === '?') {
+        sign = sign.slice(1)
+      }
+      if (sign[0] === ':' && sign[1] !== ':') tokens[index][0] = T_PROPERTY
+    }
+    previous = value
+    lineStart = false
+  }
+}
+
 function tokenize(code, options) {
   const mergedOptions = resolveHighlightOptions(options)
   const hasCustomKeywords = mergedOptions.keywords !== DefaultOptions.keywords
@@ -748,6 +795,7 @@ function tokenize(code, options) {
   }
 
   append()
+  markObjectKeys(tokens)
 
   return tokens
 }
