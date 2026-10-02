@@ -153,7 +153,39 @@ function parse(code, options) {
   return parsed
 }
 
-export { generate, parse, render, SugarHigh, tokenize }
+/**
+ * Copy a ParseOptions config and union extra keywords and typeKeywords into it.
+ * The base config is never mutated - a new config object is always returned.
+ * Pass the result directly to parse() or 	okenize().
+ *
+ * @example
+ * import { parse, render, extendConfig } from 'sugar-high/core'
+ * import * as c from 'sugar-high/lang/c'
+ *
+ * const glsl = extendConfig(c, {
+ *   keywords: ['uniform', 'attribute', 'varying'],
+ *   typeKeywords: ['vec2', 'vec3', 'vec4', 'mat4', 'sampler2D'],
+ * })
+ * const html = render(parse(shaderCode, glsl))
+ *
+ * @param {ParseOptions} base  An existing preset config.
+ * @param {{ keywords?: Iterable<string>, typeKeywords?: Iterable<string> }} [overrides]
+ * @returns {ParseOptions}
+ */
+function extendConfig(base, overrides) {
+  const { keywords, typeKeywords } = overrides || {}
+  return {
+    ...base,
+    ...(keywords !== undefined && {
+      keywords: new Set([...(base.keywords ?? []), ...keywords]),
+    }),
+    ...(typeKeywords !== undefined && {
+      typeKeywords: new Set([...(base.typeKeywords ?? []), ...typeKeywords]),
+    }),
+  }
+}
+
+export { extendConfig, generate, parse, render, SugarHigh, tokenize }
 
 /**
  * @typedef {Object} ParseOptions
