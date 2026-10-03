@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.5.2
+
+### Patch Changes
+
+- 660cb97: Highlight embedded HTML, Vue, and Svelte style blocks with the same CSS rules as standalone CSS, so hex colors and at-rule keywords keep their colors.
+
 ## 2.5.1
 
 ### Patch Changes
