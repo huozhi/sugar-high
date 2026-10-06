@@ -77,11 +77,6 @@ function measureSizes(directory, prefix) {
     'sugar-high/core': measureBundle(join(directory, 'lib/core.js'), join(benchmarkDir, `${prefix}-core.js`)),
     'core + javascript': measureBundle(javascriptEntry, join(benchmarkDir, `${prefix}-javascript.js`)),
   }
-  const gpuEntry = join(directory, 'lib/gpu.js')
-  // The PR report only includes CPU entries; its base worktree has no peer dependencies installed.
-  if (!markdown && existsSync(gpuEntry)) {
-    sizes['sugar-high/gpu'] = measureBundle(gpuEntry, join(benchmarkDir, `${prefix}-gpu.js`))
-  }
   return sizes
 }
 

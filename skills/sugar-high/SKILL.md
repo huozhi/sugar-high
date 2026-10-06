@@ -36,10 +36,8 @@ Do not call `lang()` when the caller already has a canonical name. The highlight
 ## Choose the entry point
 
 - Use `sugar-high` for the standard, one-step highlighter with all built-in languages.
-- Use `sugar-high/gpu` for experimental asynchronous, language-agnostic WebGPU highlighting.
 - Use `@sugar-high/react` for React `<Code>` blocks, the textarea-overlay `<Editor>`, or a
   navigable `<FileTree>`.
-- Use `@sugar-high/react/gpu` for opt-in client-side GPU `Code` and `Editor` components.
 - Use `@sugar-high/remark` to highlight fenced Markdown code blocks.
 - Use `sugar-high/core` only when the caller needs to compose parsing and rendering or selectively
   imports language configurations for bundle size.
@@ -50,28 +48,6 @@ Do not call `lang()` when the caller already has a canonical name. The highlight
 For React components, props, server compatibility, and styling hooks, read
 [the React API reference](references/react.md). For Remark plugin configuration, fence metadata,
 and generated markup, read [the Remark API reference](references/remark.md).
-
-## Experimental WebGPU highlighting
-
-Install `gpu-lexer` alongside Sugar High when using the opt-in GPU entry:
-
-```sh
-npm install sugar-high gpu-lexer
-```
-
-Both GPU APIs are asynchronous:
-
-```ts
-import { highlight, parse } from 'sugar-high/gpu'
-
-const parsed = await parse(source)
-const html = await highlight(source)
-```
-
-Use this entry for language-agnostic highlighting when the browser has WebGPU. It rejects when
-WebGPU is unavailable, and the model infers syntax without a `lang` option. Importing the standard
-`sugar-high` entry does not load the GPU model. For client-side React components, import `Code` or
-`Editor` from `@sugar-high/react/gpu` and install `gpu-lexer` separately.
 
 ## Customize display
 
