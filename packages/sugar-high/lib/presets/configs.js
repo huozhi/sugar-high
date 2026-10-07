@@ -7,6 +7,7 @@ import * as css from '../lang/css.js'
 import * as diff from '../lang/diff.js'
 import * as dockerfile from '../lang/dockerfile.js'
 import * as go from '../lang/go.js'
+import * as glsl from '../lang/glsl.js'
 import * as graphql from '../lang/graphql.js'
 import * as hcl from '../lang/hcl.js'
 import * as html from '../lang/html.js'
@@ -54,6 +55,7 @@ function createConfigs() {
     python: nonJavaScript(python),
     c: nonJavaScript(c),
     go: nonJavaScript(go),
+    glsl: nonJavaScript(glsl),
     java: nonJavaScript(java),
     rust: nonJavaScript(rust),
     json: nonJavaScript(json),
@@ -90,7 +92,7 @@ function configFor(name) {
 }
 
 export {
-  c, configFor, configs, cpp, csharp, css, diff, dockerfile, go, graphql, hcl, html, java,
+  c, configFor, configs, cpp, csharp, css, diff, dockerfile, go, glsl, graphql, hcl, html, java,
   javascript, json, kotlin, lua, markdown, nonJavaScript, php, plaintext, powershell, python, ruby,
   rust, shell, sql, svelte, swift, toml, typescript, vue, yaml, zig,
 }

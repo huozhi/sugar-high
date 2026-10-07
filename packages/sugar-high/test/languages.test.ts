@@ -61,6 +61,8 @@ describe('language registry', () => {
     ['tf', 'hcl'],
     ['zig', 'zig'],
     ['lua', 'lua'],
+    ['vert', 'glsl'],
+    ['frag', 'glsl'],
     ['rb', 'ruby'],
     ['txt', 'plaintext'],
     ['text', 'plaintext'],

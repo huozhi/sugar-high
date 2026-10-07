@@ -14,6 +14,7 @@ export type LanguageName =
   | 'python'
   | 'c'
   | 'go'
+  | 'glsl'
   | 'java'
   | 'rust'
   | 'json'

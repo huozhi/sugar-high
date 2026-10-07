@@ -1,7 +1,7 @@
 // @ts-check
 
 import {
-  c, cpp, csharp, css, diff, dockerfile, go, graphql, hcl, html, java, javascript, json,
+  c, cpp, csharp, css, diff, dockerfile, go, glsl, graphql, hcl, html, java, javascript, json,
   kotlin, lua, markdown, nonJavaScript, php, plaintext, powershell, python, ruby, rust, shell, sql,
   svelte, swift, toml, typescript, vue, yaml, zig,
 } from './presets/configs.js'
@@ -24,6 +24,7 @@ const languages = [
   { id: 'python', extension: 'py', aliases: ['py', 'python3'], config: nonJavaScript(python) },
   { id: 'c', extension: 'c', aliases: [], config: nonJavaScript(c) },
   { id: 'go', extension: 'go', aliases: ['golang'], config: nonJavaScript(go) },
+  { id: 'glsl', extension: 'glsl', aliases: ['vert', 'frag', 'geom', 'tesc', 'tese', 'comp'], config: nonJavaScript(glsl) },
   { id: 'java', extension: 'java', aliases: [], config: nonJavaScript(java) },
   { id: 'rust', extension: 'rs', aliases: ['rs'], config: nonJavaScript(rust) },
   { id: 'json', extension: 'json', aliases: ['jsonc'], config: nonJavaScript(json) },

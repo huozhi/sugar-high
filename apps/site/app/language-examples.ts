@@ -734,6 +734,18 @@ pub fn main() void {
     std.debug.print("Total stars: {d}\\n", .{total});
 }
 `,
+  glsl: `#version 330 core
+
+uniform mat4 projection;
+in vec3 position;
+out vec3 color;
+
+void main() {
+  vec3 normal = normalize(position);
+  color = normal * 0.5 + 0.5;
+  gl_Position = projection * vec4(position, 1.0);
+}
+`,
   lua: `local projects = {
   { name = "Sugar High", stars = 1200, active = true },
   { name = "Code Garden", stars = 480, active = true },
