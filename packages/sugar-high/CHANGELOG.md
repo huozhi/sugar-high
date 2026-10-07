@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.6.0
+
+### Minor Changes
+
+- 47610a5: Add a GLSL language preset with shader stage extension aliases and built-in GLSL type highlighting.
+
 ## 2.5.2
 
 ### Patch Changes

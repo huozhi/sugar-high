@@ -1,5 +1,16 @@
 # @sugar-high/react
 
+## 2.5.0
+
+### Minor Changes
+
+- 6012575: Support GLSL highlighting in `Code` and `Editor` with `lang="glsl"`.
+
+### Patch Changes
+
+- Updated dependencies [47610a5]
+  - sugar-high@2.6.0
+
 ## 2.4.1
 
 ### Patch Changes
