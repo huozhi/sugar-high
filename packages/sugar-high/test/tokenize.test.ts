@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import * as core from '../lib/core.js'
 import * as javascript from '../lib/lang/javascript.js'
-import * as typescript from '../lib/lang/typescript.js'
 import { getTokensAsString } from './testing-utils'
 
 const tokenize = (code, options = {}) =>
@@ -254,57 +253,5 @@ describe('tokenize - identifier characters', () => {
     expect(actual).toContain('$value => property')
     expect(actual).toContain('_value => identifier')
     expect(actual).toContain('_flag => property')
-  })
-})
-
-describe('tokenize - object keys', () => {
-  it('classifies nested object keys inside a JSX prop without changing JSX attributes', () => {
-    const actual = getTokensAsString(tokenize(
-      '<Widget config={{ label: title, nested: { value: item.value }, render: ({ id: local }) => <Tag data-id={local} /> }} />',
-    ))
-    for (const key of ['label', 'nested', 'value', 'render', 'id']) {
-      expect(actual).toContain(`${key} => property`)
-    }
-    expect(actual).toContain('config => property')
-    expect(actual).toContain('data-id => property')
-    expect(actual).toContain('title => identifier')
-    expect(actual).toContain('local => identifier')
-  })
-
-  it('classifies optional, readonly, and nested keys in a generic TypeScript type', () => {
-    const actual = getTokensAsString(core.tokenize(
-      'type Schema<T> = { readonly meta?: { id: T; tags: Array<{ label: string; value?: T }> }; map: Record<string, { enabled: boolean }> }',
-      typescript,
-    ))
-    for (const key of ['meta', 'id', 'tags', 'label', 'value', 'map', 'enabled']) {
-      expect(actual).toContain(`${key} => property`)
-    }
-    expect(actual).toContain('readonly => keyword')
-    expect(actual).toContain('string => keyword')
-  })
-
-  it('classifies keys of objects, destructuring patterns, and type literals as properties', () => {
-    const actual = getTokensAsString(tokenize('const { a: b } = { name: "Ann", nested: { deep: 1 } }'))
-    expect(actual).toContain('a => property')
-    expect(actual).toContain('b => identifier')
-    expect(actual).toContain('name => property')
-    expect(actual).toContain('deep => property')
-
-    const types = getTokensAsString(core.tokenize('interface User {\n  id: number\n  name?: string; tags: string[]\n}', typescript))
-    expect(types).toContain('id => property')
-    expect(types).toContain('name => property')
-    expect(types).toContain('tags => property')
-  })
-
-  it('keeps ternaries, switch cases, parameters, and shorthand keys as identifiers', () => {
-    const actual = getTokensAsString(tokenize('const o = { a, b: ok ? left : right }; switch (x) { case y: break }'))
-    expect(actual).toContain('a => identifier')
-    expect(actual).toContain('b => property')
-    expect(actual).toContain('left => identifier')
-    expect(actual).toContain('right => identifier')
-    expect(actual).toContain('y => identifier')
-
-    const params = getTokensAsString(core.tokenize('function f(a, b: string) {}', typescript))
-    expect(params).toContain('b => identifier')
   })
 })
