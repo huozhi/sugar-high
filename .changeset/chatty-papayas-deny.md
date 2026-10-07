@@ -1,5 +1,5 @@
 ---
-"@sugar-high/react": major
+"@sugar-high/react": minor
 "sugar-high": major
 ---
 
