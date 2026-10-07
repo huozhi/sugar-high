@@ -160,7 +160,7 @@ describe('jsx', () => {
         "= => sign",
         "{ => sign",
         "{ => sign",
-        "sault => identifier",
+        "sault => property",
         ": => sign",
         "< => sign",
         "p => entity",
