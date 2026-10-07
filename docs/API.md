@@ -72,6 +72,7 @@ input map to that canonical name. Canonical names themselves are always accepted
 | `python` | `.py` | `py`, `python3` |
 | `c` | `.c` | — |
 | `go` | `.go` | `golang` |
+| `glsl` | `.glsl` | `vert`, `frag`, `geom`, `tesc`, `tese`, `comp` |
 | `java` | `.java` | — |
 | `rust` | `.rs` | `rs` |
 | `json` | `.json` | `jsonc` |

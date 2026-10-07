@@ -63,7 +63,7 @@ behavior.
 
 ## Built-in languages
 
-`javascript`, `typescript`, `css`, `python`, `c`, `go`, `java`, `rust`, `json`, `diff`, `shell`,
+`javascript`, `typescript`, `css`, `python`, `c`, `go`, `glsl`, `java`, `rust`, `json`, `diff`, `shell`,
 `cpp`, `csharp`, `sql`, `html`, `vue`, `svelte`, `yaml`, `markdown`, `plaintext`, `ruby`, `kotlin`, `swift`, `php`,
 `toml`, `powershell`, `dockerfile`, `graphql`, `hcl`, `zig`, and `lua`.
 
@@ -103,6 +103,20 @@ const highlight = (code, language) =>
 ```
 
 Use the default `sugar-high` export when you want built-in languages and one-step `highlight()`.
+
+For project-specific GLSL types, copy the built-in configuration before extending its type set:
+
+```js
+import { parse, render } from 'sugar-high/core'
+import * as glsl from 'sugar-high/lang/glsl'
+
+const shader = {
+  ...glsl,
+  typeKeywords: new Set([...glsl.typeKeywords, 'myVector']),
+}
+
+render(parse('myVector color;', shader))
+```
 
 ## Customize tokens
 
