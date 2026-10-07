@@ -263,6 +263,13 @@ function tokenize(code, options) {
   let beforeLast = [-2, '']
   /** @type {Array<[number, string]>} */
   const tokens = []
+  /** @type {string[]} */
+  const brackets = []
+  /** @type {[number, string] | null} */
+  let possibleKey = null
+  let optionalKey = false
+  let previous = ''
+  let lineStart = false
 
   /**
    * TS generics (`Map<string>`) and JSX (`<div>`) share the same `<Name …>` lexical shape. We use
@@ -364,6 +371,33 @@ function tokenize(code, options) {
       type = typeof type_ === 'number' ? type_ : classify(current)
       /** @type [number, string]  */
       const pair = [type, current]
+      if (type === T_BREAK) lineStart = true
+      if (type !== T_SPACE && type !== T_BREAK && type !== T_COMMENT) {
+        if (possibleKey) {
+          if (type === T_SIGN && current === '?' && !optionalKey) {
+            optionalKey = true
+          } else {
+            let sign = type === T_SIGN ? current : ''
+            if (!optionalKey && sign[0] === '?') sign = sign.slice(1)
+            if (sign[0] === ':' && sign[1] !== ':') possibleKey[0] = T_PROPERTY
+            possibleKey = null
+            optionalKey = false
+          }
+        }
+        if (type === T_IDENTIFIER && brackets[brackets.length - 1] === '{' &&
+          (lineStart || previous === 'readonly' || previous.endsWith('{') ||
+            previous.endsWith(',') || previous.endsWith(';'))) {
+          possibleKey = pair
+        }
+        if (type === T_SIGN) {
+          for (const char of current) {
+            if (char === '(' || char === '[' || char === '{') brackets.push(char)
+            else if (char === ')' || char === ']' || char === '}') brackets.pop()
+          }
+        }
+        previous = current
+        lineStart = false
+      }
       if (type !== T_SPACE && type !== T_BREAK) {
         beforeLast = last
         last = pair
