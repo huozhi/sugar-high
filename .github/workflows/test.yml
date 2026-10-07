@@ -25,7 +25,8 @@ jobs:
       - name: Install browser tooling
         run: |
           pnpm add --global agent-browser@0.36.0
-          agent-browser install --with-deps
+          chrome_path=$(command -v google-chrome)
+          echo "AGENT_BROWSER_EXECUTABLE_PATH=$chrome_path" >> "$GITHUB_ENV"
       - run: pnpm --filter @sugar-high/react test:browser
 
   test:
