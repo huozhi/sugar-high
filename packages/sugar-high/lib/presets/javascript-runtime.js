@@ -96,52 +96,38 @@ function isLikelyTypeScript(code) {
   return tsScore >= 2
 }
 
-/**
- * Detects `<T, U = ...>(` style generic parameter lists so they are not
- * treated as JSX tags.
- * @param {string} code
- * @param {number} startIndex
- * @returns {boolean}
- */
-function isTypeParameterListStart(code, startIndex) {
-  if (code[startIndex] !== '<') return false
-
+/** Find the end of a balanced type argument list, including quoted literal types. */
+function typeArgumentEnd(code, startIndex) {
   let depth = 0
-  let sawIdentifierStart = false
-
+  let braces = 0
   for (let i = startIndex; i < code.length; i++) {
     const ch = code[i]
-
-    if (ch === '<') {
-      depth++
-      continue
-    }
-    if (ch === '>') {
-      depth--
-      if (depth === 0) {
-        let next = i + 1
-        while (next < code.length && /\s/.test(code[next])) next++
-        if (!(sawIdentifierStart && code[next] === '(')) return false
-
-        // Focus this heuristic on generic arrow functions:
-        // const fn = <T>(arg) => ...
-        const tail = code.slice(next, next + 320)
-        return /\)\s*(?::[\s\S]{0,120}?)?=>/.test(tail)
+    if (ch === '"' || ch === "'") {
+      const quote = ch
+      while (++i < code.length && code[i] !== quote) {
+        if (code[i] === '\\') i++
       }
-      continue
+    } else if (ch === '{') {
+      braces++
+    } else if (ch === '}') {
+      if (!braces) return -1
+      braces--
+    } else if (ch === ';' && !braces) {
+      return -1
+    } else if (ch === '<') {
+      depth++
+    } else if (ch === '>' && code[i - 1] !== '=') {
+      if (--depth === 0) return i + 1
     }
-    if (depth === 0) continue
-
-    if (/[$A-Za-z_]/.test(ch)) {
-      sawIdentifierStart = true
-      continue
-    }
-    if (/[\s,\.\=\?\:\|\&\[\]]/.test(ch)) continue
-
-    return false
   }
+  return -1
+}
 
-  return false
+/** Detect `<T, U = ...>(...) => ...` without entering JSX mode. */
+function isTypeParameterListStart(code, startIndex) {
+  const end = typeArgumentEnd(code, startIndex)
+  if (end < 0 || !/^\s*\(/.test(code.slice(end))) return false
+  return /\)\s*(?::[\s\S]{0,120}?)?=>/.test(code.slice(end, end + 320))
 }
 
 /**
@@ -265,9 +251,8 @@ function tokenize(code, options) {
   const tokens = []
 
   /**
-   * TS generics (`Map<string>`) and JSX (`<div>`) share the same `<Name …>` lexical shape. We use
-   * one tag-lexer mode (__jsxTag + __jsxStack) for both when we enter it; isTsTypeArgStart and
-   * isTypeParameterListStart only decide when *not* to enter (e.g. `foo<T>`, `<T>(x)=>`).
+   * TS generics (`Map<string>`) and JSX (`<div>`) share the same `<Name …>` lexical shape.
+   * Recognized type argument lists are consumed in JavaScript mode before the JSX tag lexer.
    * __jsxEnter gates that mode so a latched __jsxTag (from `<` in `"a<b"`) does not run the tag
    * lexer until we are in real JSX/TSX surface (not inside strings).
    * @type {boolean}
@@ -459,6 +444,23 @@ function tokenize(code, options) {
           continue
         }
         templateStack[depthIndex]--
+      }
+    }
+
+    // Parse type arguments in JavaScript mode even when surrounded by JSX.
+    if (supportsJsx && curr === '<' && !inStringContent() && !inJsxLiterals()) {
+      const lhs = current.trim() || last[1]
+      const followsValue = (isIdentifier(lhs) && !resolvedKeywords.has(lhs)) ||
+        isCls(lhs) || lhs === ')' || lhs === ']'
+      const end = (followsValue || isTypeParameterListStart(code, i))
+        ? typeArgumentEnd(code, i) : -1
+      if (end > i) {
+        append()
+        for (const [kind, value] of tokenize(code.slice(i, end), {
+          ...mergedOptions, jsx: false, typescript: isTs,
+        })) append(kind, value)
+        i = end - 1
+        continue
       }
     }
 
