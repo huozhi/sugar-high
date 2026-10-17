@@ -84,6 +84,8 @@ describe('tokenize - template interpolation braces', () => {
     '(() => { if (true) { console.log("hello"); } else { console.log("world"); } }).toString()',
     '({ nested: { value: item } }).nested.value',
     '`inner ${({ value: item }).value} tail` + other',
+    '`inner ${item} middle ${({ value: other }).value} tail`',
+    '`plain` + `outer ${`inner ${item}`} tail`',
     '(() => { const inner = `inner ${({ value: item }).value}`; return inner })()',
     '"} ` {" + value',
     '/* } { */ value',
