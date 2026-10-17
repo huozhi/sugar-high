@@ -79,6 +79,29 @@ describe('tokenize - nested JSX child expressions', () => {
   })
 })
 
+describe('tokenize - template interpolation braces', () => {
+  it.each([
+    '(() => { if (true) { console.log("hello"); } else { console.log("world"); } }).toString()',
+    '({ nested: { value: item } }).nested.value',
+    '`inner ${({ value: item }).value} tail` + other',
+    '(() => { const inner = `inner ${({ value: item }).value}`; return inner })()',
+    '"} ` {" + value',
+    '/* } { */ value',
+    '/[{}]/.test(value)',
+    '(() => { // }\n return value })()',
+  ])('preserves JavaScript and trailing literal content for %s', (expression) => {
+    const input = '`prefix ${' + expression + ', after} suffix`; outside'
+    const tokens = tokenize(input)
+    const actual = getTokensAsString(tokens)
+
+    expect(tokens.map(([, value]) => value).join('')).toBe(input)
+    expect(actual).toContain('after => identifier')
+    expect(actual).toContain('suffix => string')
+    expect(actual).toContain('outside => identifier')
+    if (expression.includes('else')) expect(actual).toContain('else => keyword')
+  })
+})
+
 describe('tokenize - typeKeywords', () => {
   it('classifies typeKeywords as class before keywords', () => {
     const input = 'int x'
