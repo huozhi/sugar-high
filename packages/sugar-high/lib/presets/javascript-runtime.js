@@ -291,15 +291,13 @@ function tokenize(code, options) {
   let __strQuote = null
   let __strTokenStart = 0
   let __regexQuoteStart = false
-  let __strTemplateExprStack = 0
-  // Stack of unmatched `{` counts within each active `${...}`, outermost first.
-  // The interpolation's opening brace is excluded; at zero, `}` closes it.
-  const templateBraceDepths = []
-  let __strTemplateQuoteStack = 0
+  // One entry per open template, outermost first: -1 means literal text;
+  // otherwise it counts unmatched `{` inside `${...}`, excluding its opening brace.
+  const templateStack = []
   const inStringQuotes = () => __strQuote !== null
   const inRegexQuotes = () => __regexQuoteStart
-  const inStrTemplateLiterals = () => (__strTemplateQuoteStack > __strTemplateExprStack)
-  const inStrTemplateExpr = () => __strTemplateQuoteStack > 0 && (__strTemplateQuoteStack === __strTemplateExprStack)
+  const inStrTemplateLiterals = () => templateStack.length > 0 && templateStack[templateStack.length - 1] === -1
+  const inStrTemplateExpr = () => templateStack.length > 0 && templateStack[templateStack.length - 1] >= 0
   const inStringContent = () => inStringQuotes() || inStrTemplateLiterals()
 
   /**
@@ -434,15 +432,15 @@ function tokenize(code, options) {
 
     if (isTemplateQuote(curr) && !inStringQuotes() && !inJsxLiterals()) {
       append()
-      __strTemplateQuoteStack += inStrTemplateLiterals() ? -1 : 1
+      if (inStrTemplateLiterals()) templateStack.pop()
+      else templateStack.push(-1)
       append(T_STRING, curr)
       continue
     }
 
     if (inStrTemplateLiterals()) {
       if (c_n === '${') {
-        __strTemplateExprStack++
-        templateBraceDepths.push(0)
+        templateStack[templateStack.length - 1] = 0
         append(T_STRING)
         append(T_SIGN, c_n)
         i++
@@ -451,17 +449,16 @@ function tokenize(code, options) {
     }
 
     if (inStrTemplateExpr() && !inStringQuotes() && !inJsxLiterals()) {
-      const depthIndex = templateBraceDepths.length - 1
-      if (curr === '{') templateBraceDepths[depthIndex]++
+      const depthIndex = templateStack.length - 1
+      if (curr === '{') templateStack[depthIndex]++
       if (curr === '}') {
-        if (templateBraceDepths[depthIndex] === 0) {
+        if (templateStack[depthIndex] === 0) {
           append()
-          templateBraceDepths.pop()
-          __strTemplateExprStack--
+          templateStack[depthIndex] = -1
           append(T_SIGN, curr)
           continue
         }
-        templateBraceDepths[depthIndex]--
+        templateStack[depthIndex]--
       }
     }
 
