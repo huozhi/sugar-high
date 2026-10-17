@@ -292,6 +292,7 @@ function tokenize(code, options) {
   let __strTokenStart = 0
   let __regexQuoteStart = false
   let __strTemplateExprStack = 0
+  const templateBraceDepths = []
   let __strTemplateQuoteStack = 0
   const inStringQuotes = () => __strQuote !== null
   const inRegexQuotes = () => __regexQuoteStart
@@ -429,7 +430,7 @@ function tokenize(code, options) {
       continue
     }
 
-    if (isTemplateQuote(curr)) {
+    if (isTemplateQuote(curr) && !inStringQuotes() && !inJsxLiterals()) {
       append()
       __strTemplateQuoteStack += inStrTemplateLiterals() ? -1 : 1
       append(T_STRING, curr)
@@ -439,6 +440,7 @@ function tokenize(code, options) {
     if (inStrTemplateLiterals()) {
       if (c_n === '${') {
         __strTemplateExprStack++
+        templateBraceDepths.push(0)
         append(T_STRING)
         append(T_SIGN, c_n)
         i++
@@ -446,11 +448,19 @@ function tokenize(code, options) {
       }
     }
 
-    if (inStrTemplateExpr() && curr === '}') {
-      append()
-      __strTemplateExprStack--
-      append(T_SIGN, curr)
-      continue
+    if (inStrTemplateExpr() && !inStringQuotes() && !inJsxLiterals()) {
+      const depthIndex = templateBraceDepths.length - 1
+      if (curr === '{') templateBraceDepths[depthIndex]++
+      if (curr === '}') {
+        if (templateBraceDepths[depthIndex] === 0) {
+          append()
+          templateBraceDepths.pop()
+          __strTemplateExprStack--
+          append(T_SIGN, curr)
+          continue
+        }
+        templateBraceDepths[depthIndex]--
+      }
     }
 
     if (__jsxChild()) {
