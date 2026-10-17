@@ -1,5 +1,13 @@
 # sugar-high
 
+## 2.6.1
+
+### Patch Changes
+
+- 216c7c9: Fix nested braces in JavaScript template literal interpolations.
+- 98d4b43: Keep TypeScript generic expressions and component type arguments in JavaScript mode inside JSX.
+- 719426e: Restore parent JSX state after nested elements and fragments close.
+
 ## 2.6.0
 
 ### Minor Changes
