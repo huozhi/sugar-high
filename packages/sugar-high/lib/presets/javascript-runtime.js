@@ -292,6 +292,8 @@ function tokenize(code, options) {
   let __strTokenStart = 0
   let __regexQuoteStart = false
   let __strTemplateExprStack = 0
+  // Stack of unmatched `{` counts within each active `${...}`, outermost first.
+  // The interpolation's opening brace is excluded; at zero, `}` closes it.
   const templateBraceDepths = []
   let __strTemplateQuoteStack = 0
   const inStringQuotes = () => __strQuote !== null
