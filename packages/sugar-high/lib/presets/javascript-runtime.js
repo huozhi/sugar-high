@@ -253,8 +253,8 @@ function tokenize(code, options) {
   /**
    * TS generics (`Map<string>`) and JSX (`<div>`) share the same `<Name …>` lexical shape.
    * Recognized type argument lists are consumed in JavaScript mode before the JSX tag lexer.
-   * __jsxEnter gates that mode so a latched __jsxTag (from `<` in `"a<b"`) does not run the tag
-   * lexer until we are in real JSX/TSX surface (not inside strings).
+   * __jsxEnter gates that mode; nested elements and fragments restore their parent's
+   * tag and expression state when they close.
    * @type {boolean}
    */
   let __jsxEnter = false
@@ -263,14 +263,26 @@ function tokenize(code, options) {
   let __jsxExprDepth = 0
   let __jsxTagExpr = 0
 
-  /** Nested `<open>…</open>` depth (content between tags, including nested elements). */
-  let __jsxStack = 0
+  // Each nested element or fragment saves its parent's tag and expression state.
+  /** @type {Array<[0 | 1 | 2, number, number]>} */
+  const jsxContexts = []
+  /** @param {0 | 1} tag */
+  const openJsx = (tag) => {
+    jsxContexts.push([__jsxTag, __jsxExprDepth, __jsxTagExpr])
+    __jsxTag = tag
+    __jsxExprDepth = __jsxTagExpr = 0
+    __jsxEnter = true
+  }
+  const closeJsx = () => {
+    [__jsxTag, __jsxExprDepth, __jsxTagExpr] = jsxContexts.pop() || [0, 0, 0]
+    __jsxEnter = jsxContexts.length > 0
+  }
 
   const __jsxChild = () => __jsxEnter && !__jsxExprDepth && !__jsxTag
   // < __content__ >
   const inJsxTag = () => __jsxTag
   // {'__content__'}
-  const inJsxLiterals = () => __jsxChild() && __jsxStack
+  const inJsxLiterals = () => __jsxChild() && jsxContexts.length
 
   /** @type {string | null} */
   let __strQuote = null
@@ -355,7 +367,7 @@ function tokenize(code, options) {
         last = pair
       }
       if (inJsxTag() && type === T_SIGN) {
-        if (current === '{') __jsxTagExpr++
+        if (current === '{' || current === '${') __jsxTagExpr++
         if (current === '}') __jsxTagExpr--
       }
       tokens.push(pair)
@@ -473,10 +485,20 @@ function tokenize(code, options) {
       }
     }
 
+    if (supportsJsx && curr === '<' && !inStringContent() && (next === '>' || code.slice(i, i + 3) === '</>')) {
+      append()
+      const closing = next === '/'
+      if (closing) closeJsx()
+      else openJsx(0)
+      append(T_SIGN, closing ? '</>' : '<>')
+      i += closing ? 2 : 1
+      continue
+    }
+
     if (__jsxEnter) {
       // <: open tag sign
       // new '<' not inside jsx
-      if (!__jsxTag && curr === '<') {
+      if ((!__jsxTag || __jsxTagExpr) && curr === '<' && !inStringContent() && (next === '/' || isIdentifierChar(next))) {
         append()
         if (next === '/') {
           // close tag
@@ -485,7 +507,7 @@ function tokenize(code, options) {
           i++
         } else {
           // open tag
-          __jsxTag = 1
+          openJsx(1)
           current = curr
         }
         append(T_SIGN)
@@ -495,35 +517,25 @@ function tokenize(code, options) {
         // >: open tag close sign or closing tag closing sign
         // and it's not `=>` or `/>`
         // `curr` could be `>` or `/`
-        if ((curr === '>' && !'/='.includes(prev))) {
+        if (curr === '>' && !'/='.includes(prev) && !inStringContent() && !__jsxTagExpr) {
           append()
           if (__jsxTag === 1) {
             __jsxTag = 0
-            __jsxStack++
           } else {
-            __jsxTag = 0
-            __jsxEnter = false
+            closeJsx()
           }
           append(T_SIGN, curr)
           continue
         }
 
-        // >: tag self close sign or close tag sign
-        if (c_n === '/>' || c_n === '</') {
+        // Self-closing tag: restore the containing element or expression.
+        if (c_n === '/>' && !inStringContent() && !__jsxTagExpr) {
           // if current token is not part of close tag sign, push it first
           if (current !== '<' && current !== '/') {
             append()
           }
 
-          if (c_n === '/>') {
-            __jsxTag = 0
-          } else {
-            // is '</'
-            __jsxStack--
-          }
-
-          if (!__jsxStack)
-            __jsxEnter = false
+          closeJsx()
 
           current = c_n
           i++
@@ -532,7 +544,7 @@ function tokenize(code, options) {
         }
 
         // <: open tag sign
-        if (curr === '<') {
+        if (curr === '<' && !inStringContent() && !__jsxTagExpr) {
           append()
           current = curr
           append(T_SIGN)
@@ -600,10 +612,6 @@ function tokenize(code, options) {
               lastType === T_CLS_NUMBER ||
               (lastType === T_SIGN && (lastTok === ')' || lastTok === ']')))))
       const isTsGenericStart = curr === '<' && isTypeParameterListStart(code, i)
-      if (!isTsTypeArgStart && !isTsGenericStart) {
-        __jsxTag = next === '/' ? 2 : 1
-      }
-
       if (curr === '<' && (next === '/' || isAlpha(next))) {
         if (
           !isTsTypeArgStart &&
@@ -612,7 +620,9 @@ function tokenize(code, options) {
           !inJsxLiterals() &&
           !inRegexQuotes()
         ) {
-          __jsxEnter = true
+          append()
+          if (next === '/') __jsxTag = 2
+          else openJsx(1)
         }
       }
     }
