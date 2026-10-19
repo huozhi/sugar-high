@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { highlight } from 'sugar-high'
 import { generate, parse, render, tokenize, type DisplayOptions } from 'sugar-high/core'
+import * as css from '../lib/lang/css.js'
 import * as javascript from '../lib/lang/javascript.js'
+import * as markdown from '../lib/lang/markdown.js'
 import * as python from '../lib/lang/python.js'
+import * as rust from '../lib/lang/rust.js'
 import * as typescript from '../lib/lang/typescript.js'
 
 const entities: Record<string, string> = {
@@ -158,5 +161,30 @@ describe('composable core export', () => {
     })
 
     expect(calls).toEqual(['annotateLine', 'markLine', 'mark'])
+  })
+})
+
+describe('CRLF line endings', () => {
+  const lines = (code: string, options: Parameters<typeof parse>[1]) =>
+    parse(code, options).lines.map(({ value, tokens, annotations }) => ({ value, tokens, annotations }))
+
+  it.each([
+    ['javascript', javascript, 'const a = 1 // one\nconst b = <div className="x">{a}</div>\n/* block\ncomment */\n'],
+    ['typescript', typescript, 'type A = { name: string }\nconst b: A = { name: `x\ny` }\n'],
+    ['python', python, 'def f():  # one\n    return "x"\n'],
+    ['css', css, '.a {\n  color: #fff;\n  margin: 0;\n}\n'],
+    ['markdown', markdown, '# Title\n\n---\n- item\n'],
+    ['rust', rust, 'fn main() {\n    let a = 1;\n}\n'],
+  ])('parses %s the same as with LF', (_, options, code) => {
+    expect(lines(code.replaceAll('\n', '\r\n'), options)).toEqual(lines(code, options))
+  })
+
+  it('keeps tokens lossless', () => {
+    const code = 'const a = 1 // one\r\nconst b = "x"\r\n'
+    expect(tokenize(code, javascript).map(([, value]) => value).join('')).toBe(code)
+  })
+
+  it('does not render carriage returns', () => {
+    expect(highlight('const a = 1 // one\r\nconst b = "x"\r\n')).not.toContain('\r')
   })
 })

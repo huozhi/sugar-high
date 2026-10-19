@@ -21,8 +21,8 @@ export const tokenize = (code) => {
 
   for (const part of code.match(/[^\n]*(?:\n|$)/g) || []) {
     if (!part) continue
-    const newline = part.endsWith('\n') ? '\n' : ''
-    const line = newline ? part.slice(0, -1) : part
+    const newline = part.match(/\r?\n$/)?.[0] || ''
+    const line = part.slice(0, part.length - newline.length)
     /** @type {Array<[number, number]>} */
     const ranges = []
     const container = line.match(/^(?: {0,3}>[ \t]?)*/)?.[0] || ''

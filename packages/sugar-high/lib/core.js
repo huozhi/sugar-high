@@ -96,9 +96,10 @@ function tokenize(code, options) {
       continue
     }
 
-    if (curr === '\n') {
-      append(T_BREAK, curr)
-      i++
+    if (curr === '\n' || (curr === '\r' && next === '\n')) {
+      const lineBreak = curr === '\r' ? '\r\n' : curr
+      append(T_BREAK, lineBreak)
+      i += lineBreak.length
       continue
     }
 

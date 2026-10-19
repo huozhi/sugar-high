@@ -11,6 +11,9 @@ const SugarHigh = /** @type {const} */ ({
   TokenMap: new Map(TokenTypes.map((type, index) => [type, index])),
 })
 
+/** @param {string} value */
+const trimCarriageReturn = (value) => value.endsWith('\r') ? value.slice(0, -1) : value
+
 /** @param {string} value @param {Array<[number, string]>} tokens */
 function assemble(value, tokens) {
   const lines = []
@@ -21,6 +24,11 @@ function assemble(value, tokens) {
 
   /** @param {Array<[number, string]>} tokens */
   function flushLine(tokens) {
+    const last = tokens[tokens.length - 1]
+    if (last && last[1].endsWith('\r')) {
+      const value = trimCarriageReturn(last[1])
+      tokens = value ? [...tokens.slice(0, -1), [last[0], value]] : tokens.slice(0, -1)
+    }
     lines.push({
       index: lineIndex++,
       value: tokens.map(([, tokenValue]) => tokenValue).join(''),
@@ -39,8 +47,9 @@ function assemble(value, tokens) {
       if (value.includes('\n')) {
         const values = value.split('\n')
         for (let part = 0; part < values.length; part++) {
-          lineTokens.push([type, values[part]])
-          if (part < values.length - 1) {
+          const isLineEnd = part < values.length - 1
+          lineTokens.push([type, isLineEnd ? trimCarriageReturn(values[part]) : values[part]])
+          if (isLineEnd) {
             flushLine(lineTokens)
             lineTokens.length = 0
           }
