@@ -1,4 +1,6 @@
 // @ts-check
+import { onCommentEnd, onCommentStart } from '../presets/clike-base.js'
+
 export const keywords = new Set([
   'as', 'break', 'const', 'continue', 'crate', 'else', 'enum', 'extern', 'false', 'fn', 'for',
   'if', 'impl', 'in', 'let', 'loop', 'match', 'mod', 'move', 'mut', 'pub', 'ref', 'return', 'self',
@@ -41,3 +43,5 @@ export function onQuote(curr, i, code) {
   }
   return 1
 }
+
+export { onCommentEnd, onCommentStart }

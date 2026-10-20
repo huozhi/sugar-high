@@ -11,4 +11,14 @@ describe('tokenize - rust preset', () => {
     expect(actual).toContain("'_ => identifier")
     expect(actual).toContain("'z' => identifier")
   })
+
+  it('highlights line, doc, and block comments', () => {
+    const actual = getTokensAsString(
+      tokenize('/// Docs\nfn main() { // note\n  let a = 1; /* block\n  comment */\n}\n', rust)
+    )
+    expect(actual).toContain('/// Docs => comment')
+    expect(actual).toContain('// note => comment')
+    expect(actual).toContain('/* block\n  comment */ => comment')
+    expect(actual).toContain('fn => keyword')
+  })
 })

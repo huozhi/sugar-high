@@ -6,3 +6,6 @@
  */
 export function onQuote(curr: string, i: number, code: string): number;
 export const keywords: Set<string>;
+import { onCommentEnd } from '../presets/clike-base.js';
+import { onCommentStart } from '../presets/clike-base.js';
+export { onCommentEnd, onCommentStart };
