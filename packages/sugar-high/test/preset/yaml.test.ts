@@ -9,7 +9,7 @@ describe('tokenize - yaml preset', () => {
     expect(actual).toContain("' => identifier")
     expect(actual).toContain('next => identifier')
     expect(actual).toContain('value => identifier')
-    expect(actual).not.toContain('string')
+    expect(actual.some(token => token.endsWith(' => string'))).toBe(false)
   })
 
   it('highlights single-quoted scalars and escaped quotes', () => {
