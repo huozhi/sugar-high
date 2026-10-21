@@ -1,5 +1,13 @@
 # sugar-high
 
+## 2.6.2
+
+### Patch Changes
+
+- a81ea55: Treat CRLF line endings like LF, so Windows sources no longer render an empty line after every line or lose JSX, CSS property, and Markdown highlighting.
+- dea164c: Highlight Rust line, doc, and block comments as comments instead of operators and identifiers.
+- fb0a8f0: Keep apostrophes inside YAML plain scalars, such as `don't` or `users'`, from opening a string that swallows the following lines.
+
 ## 2.6.1
 
 ### Patch Changes
