@@ -11,9 +11,6 @@ const SugarHigh = /** @type {const} */ ({
   TokenMap: new Map(TokenTypes.map((type, index) => [type, index])),
 })
 
-/** @param {string} value */
-const trimCarriageReturn = (value) => value.endsWith('\r') ? value.slice(0, -1) : value
-
 /** @param {string} value @param {Array<[number, string]>} tokens */
 function assemble(value, tokens) {
   const lines = []
@@ -22,12 +19,11 @@ function assemble(value, tokens) {
   const lineTokens = []
   let lastWasBreak = false
 
-  /** @param {Array<[number, string]>} tokens */
-  function flushLine(tokens) {
+  /** @param {Array<[number, string]>} tokens @param {boolean} [beforeLF] */
+  function flushLine(tokens, beforeLF = false) {
     const last = tokens[tokens.length - 1]
-    if (last && last[1].endsWith('\r')) {
-      const value = trimCarriageReturn(last[1])
-      tokens = value ? [...tokens.slice(0, -1), [last[0], value]] : tokens.slice(0, -1)
+    if (beforeLF && last && last[1].endsWith('\r')) {
+      tokens = [...tokens.slice(0, -1), [last[0], last[1].slice(0, -1)]]
     }
     lines.push({
       index: lineIndex++,
@@ -48,9 +44,9 @@ function assemble(value, tokens) {
         const values = value.split('\n')
         for (let part = 0; part < values.length; part++) {
           const isLineEnd = part < values.length - 1
-          lineTokens.push([type, isLineEnd ? trimCarriageReturn(values[part]) : values[part]])
+          lineTokens.push([type, values[part]])
           if (isLineEnd) {
-            flushLine(lineTokens)
+            flushLine(lineTokens, true)
             lineTokens.length = 0
           }
         }
@@ -61,7 +57,8 @@ function assemble(value, tokens) {
     } else {
       if (lastWasBreak) flushLine([])
       else {
-        flushLine(lineTokens)
+        // A CRLF break token already contains its carriage return.
+        flushLine(lineTokens, value === '\n')
         lineTokens.length = 0
       }
       if (index === tokens.length - 1) flushLine([])

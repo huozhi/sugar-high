@@ -187,4 +187,13 @@ describe('CRLF line endings', () => {
   it('does not render carriage returns', () => {
     expect(highlight('const a = 1 // one\r\nconst b = "x"\r\n')).not.toContain('\r')
   })
+
+  it.each([
+    ['value\r', 'value\r'],
+    ['value\r\r\n', 'value\r'],
+    ['// comment\r\r\n', '// comment\r'],
+  ])('only removes the carriage return belonging to CRLF in %j', (code, expected) => {
+    expect(parse(code, javascript).lines[0].value).toBe(expected)
+    expect(parse(code, markdown).lines[0].value).toBe(expected)
+  })
 })

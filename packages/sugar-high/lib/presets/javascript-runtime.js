@@ -729,7 +729,11 @@ function tokenize(code, options) {
         }
       } else {
         append()
-        current = curr === '\r' ? code.slice(i, ++i + 1) : curr
+        current = curr
+        if (curr === '\r') {
+          current = '\r\n'
+          i++
+        }
         append()
       }
     } else {
