@@ -55,6 +55,20 @@ export default function Benchmarks() {
         </table>
       </div>
       <a className="benchmarks__methodology" href="https://github.com/huozhi/sugar-high/blob/main/docs/BENCHMARK.md">Methodology ↗</a>
+      <div className="benchmarks__explanation">
+        <h3>Small parser, just enough context</h3>
+        <p>
+          Many syntax highlighters rely on regular expressions. A pattern can match the
+          right text in the wrong context: a keyword inside a string is still just text.
+          Sugar High uses a small parser to track context such as strings, comments,
+          and nested expressions, helping it classify tokens correctly.
+        </p>
+        <p>
+          Its parsing rules are deliberately looser than a full language parser, and it
+          skips building an abstract syntax tree (AST). Keeping only the context needed
+          for highlighting balances correctness with a small bundle and fast execution.
+        </p>
+      </div>
     </section>
   )
 }
