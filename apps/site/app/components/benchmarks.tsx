@@ -58,15 +58,10 @@ export default function Benchmarks() {
       <div className="benchmarks__explanation">
         <h3>Small parser, just enough context</h3>
         <p>
-          Many syntax highlighters rely on regular expressions. A pattern can match the
-          right text in the wrong context: a keyword inside a string is still just text.
-          Sugar High uses a small parser to track context such as strings, comments,
-          and nested expressions, helping it classify tokens correctly.
-        </p>
-        <p>
-          Its parsing rules are deliberately looser than a full language parser, and it
-          skips building an abstract syntax tree (AST). Keeping only the context needed
-          for highlighting balances correctness with a small bundle and fast execution.
+          Regex matches can misclassify tokens without context. Sugar High’s small parser
+          tracks “loose context” for highlighting—far lighter than an abstract syntax
+          tree (AST). This helps keep tokens in context while balancing correctness,
+          bundle size, and speed.
         </p>
       </div>
     </section>
