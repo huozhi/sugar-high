@@ -259,6 +259,12 @@ Run `pnpm --filter sugar-high benchmark:large --write` to refresh this table and
 [website comparison](https://sugar-high.vercel.app/#benchmarks) from the same measurement.
 See [benchmark methodology and options](../../docs/BENCHMARK.md).
 
+### Small parser, just enough context
+
+Regex matches can misclassify tokens without context. Sugar High's small parser tracks
+“loose context” for highlighting—far lighter than an abstract syntax tree (AST). This
+helps keep tokens in context while balancing correctness, bundle size, and speed.
+
 ## License
 
 MIT

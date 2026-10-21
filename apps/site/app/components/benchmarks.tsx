@@ -55,6 +55,15 @@ export default function Benchmarks() {
         </table>
       </div>
       <a className="benchmarks__methodology" href="https://github.com/huozhi/sugar-high/blob/main/docs/BENCHMARK.md">Methodology ↗</a>
+      <div className="benchmarks__explanation">
+        <h3>Small parser, just enough context</h3>
+        <p>
+          Regex matches can misclassify tokens without context. Sugar High’s small parser
+          tracks “loose context” for highlighting—far lighter than an abstract syntax
+          tree (AST). This helps keep tokens in context while balancing correctness,
+          bundle size, and speed.
+        </p>
+      </div>
     </section>
   )
 }
