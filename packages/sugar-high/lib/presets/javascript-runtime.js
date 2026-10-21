@@ -303,7 +303,7 @@ function tokenize(code, options) {
    * @returns {number}
    */
   function classify(token) {
-    const isLineBreak = token === '\n'
+    const isLineBreak = token === '\n' || token === '\r\n'
     // First checking if they're attributes values
     if (inJsxTag()) {
       if (inStringQuotes()) {
@@ -712,7 +712,7 @@ function tokenize(code, options) {
       }
       current = code.slice(start, i + 1)
       append(T_COMMENT)
-    } else if (curr === ' ' || curr === '\n') {
+    } else if (curr === ' ' || curr === '\n' || (curr === '\r' && next === '\n')) {
       if (
         curr === ' ' &&
         (
@@ -730,6 +730,10 @@ function tokenize(code, options) {
       } else {
         append()
         current = curr
+        if (curr === '\r') {
+          current = '\r\n'
+          i++
+        }
         append()
       }
     } else {

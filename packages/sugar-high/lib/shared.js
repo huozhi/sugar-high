@@ -39,8 +39,10 @@ function assemble(value, tokens) {
       if (value.includes('\n')) {
         const values = value.split('\n')
         for (let part = 0; part < values.length; part++) {
-          lineTokens.push([type, values[part]])
-          if (part < values.length - 1) {
+          const isLineEnd = part < values.length - 1
+          const text = values[part]
+          lineTokens.push([type, isLineEnd && text.endsWith('\r') ? text.slice(0, -1) : text])
+          if (isLineEnd) {
             flushLine(lineTokens)
             lineTokens.length = 0
           }
@@ -52,6 +54,11 @@ function assemble(value, tokens) {
     } else {
       if (lastWasBreak) flushLine([])
       else {
+        // A CRLF break token already contains its carriage return.
+        const last = lineTokens[lineTokens.length - 1]
+        if (value === '\n' && last && last[1].endsWith('\r')) {
+          lineTokens[lineTokens.length - 1] = [last[0], last[1].slice(0, -1)]
+        }
         flushLine(lineTokens)
         lineTokens.length = 0
       }
