@@ -19,12 +19,8 @@ function assemble(value, tokens) {
   const lineTokens = []
   let lastWasBreak = false
 
-  /** @param {Array<[number, string]>} tokens @param {boolean} [beforeLF] */
-  function flushLine(tokens, beforeLF = false) {
-    const last = tokens[tokens.length - 1]
-    if (beforeLF && last && last[1].endsWith('\r')) {
-      tokens = [...tokens.slice(0, -1), [last[0], last[1].slice(0, -1)]]
-    }
+  /** @param {Array<[number, string]>} tokens */
+  function flushLine(tokens) {
     lines.push({
       index: lineIndex++,
       value: tokens.map(([, tokenValue]) => tokenValue).join(''),
@@ -44,9 +40,10 @@ function assemble(value, tokens) {
         const values = value.split('\n')
         for (let part = 0; part < values.length; part++) {
           const isLineEnd = part < values.length - 1
-          lineTokens.push([type, values[part]])
+          const text = values[part]
+          lineTokens.push([type, isLineEnd && text.endsWith('\r') ? text.slice(0, -1) : text])
           if (isLineEnd) {
-            flushLine(lineTokens, true)
+            flushLine(lineTokens)
             lineTokens.length = 0
           }
         }
@@ -58,7 +55,11 @@ function assemble(value, tokens) {
       if (lastWasBreak) flushLine([])
       else {
         // A CRLF break token already contains its carriage return.
-        flushLine(lineTokens, value === '\n')
+        const last = lineTokens[lineTokens.length - 1]
+        if (value === '\n' && last && last[1].endsWith('\r')) {
+          lineTokens[lineTokens.length - 1] = [last[0], last[1].slice(0, -1)]
+        }
+        flushLine(lineTokens)
         lineTokens.length = 0
       }
       if (index === tokens.length - 1) flushLine([])
