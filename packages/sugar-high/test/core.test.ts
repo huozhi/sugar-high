@@ -130,6 +130,14 @@ describe('composable core export', () => {
     expect(render(parsed, options)).toBe(toHtml(generate(parsed, options)))
   })
 
+  it('preserves escaping and Unicode in the fast renderer', () => {
+    const value = Array.from({ length: 128 }, (_, i) => String.fromCharCode(i)).join('')
+      + 'é中😀\ud800 &<>"\''
+    const parsed = parse(value, { tokenize: () => [[2, value]] })
+    expect(render(parsed)).toBe(toHtml(generate(parsed)))
+    expect(render(parsed)).toBe(render(parsed, { mark() {} }))
+  })
+
   it('keeps syntax-tree and semantic token types separate', () => {
     const [line] = generate(parse('const ready = true', javascript))
 
