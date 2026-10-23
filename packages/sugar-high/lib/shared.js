@@ -21,13 +21,17 @@ function assemble(value, tokens) {
 
   /** @param {Array<[number, string]>} tokens */
   function flushLine(tokens) {
+    let value = ''
+    const parsedTokens = new Array(tokens.length)
+    for (let i = 0; i < tokens.length; i++) {
+      const [type, tokenValue] = tokens[i]
+      value += tokenValue
+      parsedTokens[i] = { type: TokenTypes[type], value: tokenValue }
+    }
     lines.push({
       index: lineIndex++,
-      value: tokens.map(([, tokenValue]) => tokenValue).join(''),
-      tokens: tokens.map(([type, tokenValue]) => ({
-        type: TokenTypes[type],
-        value: tokenValue,
-      })),
+      value,
+      tokens: parsedTokens,
       annotations: [],
     })
   }
@@ -145,6 +149,10 @@ function generate(parsed, options) {
   })
 }
 
+const tokenOpen = Object.fromEntries(TokenTypes.map(type => [
+  type, `<span class="sh__token--${type}" style="color:var(--sh-${type})">`,
+]))
+
 /**
  * Render parsed lines directly while preserving generate()'s markup and mutable display hooks.
  * @param {import('./core.js').ParsedCode} parsed
@@ -156,13 +164,18 @@ function render(parsed, options) {
   const markLine = options?.markLine
 
   if (!cx && !mark && !markLine) {
-    return parsed.lines.map((line) => {
+    let out = ''
+    for (let i = 0; i < parsed.lines.length; i++) {
+      const line = parsed.lines[i]
+      if (i) out += '\n'
       const className = `sh__line${line.annotations.map(annotation => ` sh__line--${annotation}`).join('')}`
-      const children = line.tokens.map(({ type, value }) => (
-        `<span class="sh__token--${type}" style="color:var(--sh-${type})">${encode(value)}</span>`
-      )).join('')
-      return `<span class="${encode(className)}">${children}</span>`
-    }).join('\n')
+      out += `<span class="${encode(className)}">`
+      for (const { type, value } of line.tokens) {
+        out += tokenOpen[type] + encode(value) + '</span>'
+      }
+      out += '</span>'
+    }
+    return out
   }
 
   return parsed.lines.map((parsedLine) => {
@@ -185,9 +198,22 @@ function render(parsed, options) {
   }).join('\n')
 }
 
-const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }
 /** @param {string} value */
-const encode = (value) => value.replace(/[&<>"']/g, character => entities[character])
+function encode(value) {
+  let out = ''
+  let start = 0
+  for (let i = 0; i < value.length; i++) {
+    const c = value.charCodeAt(i)
+    if (c > 62) continue
+    const entity = c === 38 ? '&amp;' : c === 60 ? '&lt;' : c === 62 ? '&gt;'
+      : c === 34 ? '&quot;' : c === 39 ? '&#039;' : null
+    if (entity !== null) {
+      out += value.slice(start, i) + entity
+      start = i + 1
+    }
+  }
+  return start === 0 ? value : out + value.slice(start)
+}
 
 /** @param {Record<string, any>} values */
 function attributes(values) {

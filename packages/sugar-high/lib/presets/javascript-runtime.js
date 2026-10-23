@@ -154,7 +154,20 @@ function isSign(ch) {
 }
 
 function isWord(chr) {
-  return /^[\w$\u0080-\uffff]+$/.test(chr || '')
+  if (!chr) return false
+  for (let i = 0; i < chr.length; i++) {
+    const c = chr.charCodeAt(i)
+    if (!(c >= 128 || c >= 97 && c <= 122 || c >= 65 && c <= 90 ||
+      c >= 48 && c <= 57 || c === 95 || c === 36)) return false
+  }
+  return true
+}
+
+function isSigns(value) {
+  for (let i = 0; i < value.length; i++) {
+    if (!Signs.has(value[i])) return false
+  }
+  return true
 }
 
 function isCls(str) {
@@ -162,11 +175,15 @@ function isCls(str) {
 }
 
 function isAlpha(chr) {
-  return /^[a-zA-Z]$/.test(chr)
+  if (!chr || chr.length !== 1) return false
+  const c = chr.charCodeAt(0)
+  return c >= 65 && c <= 90 || c >= 97 && c <= 122
 }
 
 function isIdentifierChar(chr) {
-  return /^[$_A-Za-z\u0080-\uffff]$/.test(chr || '')
+  if (!chr || chr.length !== 1) return false
+  const c = chr.charCodeAt(0)
+  return c >= 128 || c >= 65 && c <= 90 || c >= 97 && c <= 122 || c === 36 || c === 95
 }
 
 function isIdentifier(str) {
@@ -334,7 +351,7 @@ function tokenize(code, options) {
       return T_BREAK
     } else if (isSpaces(token)) {
       return T_SPACE
-    } else if (token.split('').every(isSign)) {
+    } else if (isSigns(token)) {
       return T_SIGN
     } else if (isCls(token)) {
       return inJsxTag() && !__jsxTagExpr ? T_IDENTIFIER : T_CLS_NUMBER
