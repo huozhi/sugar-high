@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-24T00:10:31.769Z",
+  "measuredAt": "2026-10-24T01:01:13.952Z",
   "engines": [
     {
       "id": "sugar-high",
@@ -21,7 +21,7 @@
   "platform": "darwin arm64",
   "cpu": "Apple M4",
   "targetMiB": 4,
-  "runs": 5,
+  "runs": 3,
   "results": [
     {
       "engine": "sugar-high",
@@ -29,12 +29,12 @@
       "sourceBytes": 10800,
       "outputBytes": 276734,
       "iterations": 410,
-      "runs": 5,
-      "milliseconds": 0.6337728658536584,
-      "mibPerSecond": 16.251378328282282,
-      "spreadPercent": 13.878083214550768,
-      "retainedHeapMiB": 0.737091064453125,
-      "checksum": 567581434
+      "runs": 3,
+      "milliseconds": 0.5416327243902439,
+      "mibPerSecond": 19.015990270496705,
+      "spreadPercent": 7.4928121896910564,
+      "retainedHeapMiB": 0.626556396484375,
+      "checksum": 340659554
     },
     {
       "engine": "prismjs",
@@ -42,12 +42,12 @@
       "sourceBytes": 10800,
       "outputBytes": 83873,
       "iterations": 410,
-      "runs": 5,
-      "milliseconds": 1.1459228658536584,
-      "mibPerSecond": 8.988111612132569,
-      "spreadPercent": 8.446317852954628,
-      "retainedHeapMiB": 0.7049942016601562,
-      "checksum": 172023523
+      "runs": 3,
+      "milliseconds": 1.149473780487805,
+      "mibPerSecond": 8.960345848703568,
+      "spreadPercent": 2.783160330510702,
+      "retainedHeapMiB": 0.7015762329101562,
+      "checksum": 103247663
     },
     {
       "engine": "highlight.js",
@@ -55,12 +55,12 @@
       "sourceBytes": 10800,
       "outputBytes": 45679,
       "iterations": 410,
-      "runs": 5,
-      "milliseconds": 2.130408536585366,
-      "mibPerSecond": 4.834604462154431,
-      "spreadPercent": 9.285064560582972,
-      "retainedHeapMiB": 0.3752288818359375,
-      "checksum": 93687629
+      "runs": 3,
+      "milliseconds": 2.0906123975609754,
+      "mibPerSecond": 4.926634238467007,
+      "spreadPercent": 7.924189660867881,
+      "retainedHeapMiB": 0.38173675537109375,
+      "checksum": 56230849
     },
     {
       "engine": "sugar-high",
@@ -68,12 +68,12 @@
       "sourceBytes": 102496,
       "outputBytes": 2601924,
       "iterations": 41,
-      "runs": 5,
-      "milliseconds": 10.042514219512196,
-      "mibPerSecond": 9.733399485206105,
-      "spreadPercent": 8.36239351684335,
-      "retainedHeapMiB": 4.1035919189453125,
-      "checksum": 535996344
+      "runs": 3,
+      "milliseconds": 6.833025414634147,
+      "mibPerSecond": 14.305201108286616,
+      "spreadPercent": 6.1407788684172235,
+      "retainedHeapMiB": 3.6167221069335938,
+      "checksum": 322638576
     },
     {
       "engine": "prismjs",
@@ -81,12 +81,12 @@
       "sourceBytes": 102496,
       "outputBytes": 791547,
       "iterations": 41,
-      "runs": 5,
-      "milliseconds": 19.34636890243902,
-      "mibPerSecond": 5.052514155359241,
-      "spreadPercent": 4.507577513701968,
-      "retainedHeapMiB": 6.730918884277344,
-      "checksum": 163058682
+      "runs": 3,
+      "milliseconds": 18.576,
+      "mibPerSecond": 5.262047950816915,
+      "spreadPercent": 2.7146921411860627,
+      "retainedHeapMiB": 6.727958679199219,
+      "checksum": 98151828
     },
     {
       "engine": "highlight.js",
@@ -94,12 +94,12 @@
       "sourceBytes": 102496,
       "outputBytes": 429911,
       "iterations": 41,
-      "runs": 5,
-      "milliseconds": 24.713416658536588,
-      "mibPerSecond": 3.9552524883527447,
-      "spreadPercent": 27.542544282211345,
-      "retainedHeapMiB": 2.4165115356445312,
-      "checksum": 88561666
+      "runs": 3,
+      "milliseconds": 23.564599609756097,
+      "mibPerSecond": 4.148078234009372,
+      "spreadPercent": 2.034662373895354,
+      "retainedHeapMiB": 2.4013442993164062,
+      "checksum": 53308964
     },
     {
       "engine": "sugar-high",
@@ -107,12 +107,12 @@
       "sourceBytes": 512458,
       "outputBytes": 12953124,
       "iterations": 9,
-      "runs": 5,
-      "milliseconds": 57.57215744444444,
-      "mibPerSecond": 8.488791362535157,
-      "spreadPercent": 9.923132022822145,
-      "retainedHeapMiB": 20.416458129882812,
-      "checksum": 595843704
+      "runs": 3,
+      "milliseconds": 45.435240666666665,
+      "mibPerSecond": 10.756365007998287,
+      "spreadPercent": 9.086087330130974,
+      "retainedHeapMiB": 18.546043395996094,
+      "checksum": 362687472
     },
     {
       "engine": "prismjs",
@@ -120,12 +120,12 @@
       "sourceBytes": 512458,
       "outputBytes": 3943215,
       "iterations": 9,
-      "runs": 5,
-      "milliseconds": 107.22542588888888,
-      "mibPerSecond": 4.5578558330310806,
-      "spreadPercent": 3.159976841182075,
-      "retainedHeapMiB": 33.442848205566406,
-      "checksum": 181387890
+      "runs": 3,
+      "milliseconds": 105.27129166666666,
+      "mibPerSecond": 4.642462584998023,
+      "spreadPercent": 1.4555940140035524,
+      "retainedHeapMiB": 33.44274139404297,
+      "checksum": 110410020
     },
     {
       "engine": "highlight.js",
@@ -133,12 +133,12 @@
       "sourceBytes": 512458,
       "outputBytes": 2141945,
       "iterations": 9,
-      "runs": 5,
-      "milliseconds": 120.0362638888889,
-      "mibPerSecond": 4.07141989431872,
-      "spreadPercent": 2.004171287028185,
-      "retainedHeapMiB": 12.159416198730469,
-      "checksum": 98529470
+      "runs": 3,
+      "milliseconds": 121.0557638888889,
+      "mibPerSecond": 4.037131460220962,
+      "spreadPercent": 0.93546732969,
+      "retainedHeapMiB": 12.154853820800781,
+      "checksum": 59974460
     }
   ],
   "phases": [
@@ -147,12 +147,12 @@
       "targetKiB": 10,
       "sourceBytes": 10800,
       "iterations": 410,
-      "runs": 5,
-      "milliseconds": 0.5208362804878048,
-      "mibPerSecond": 19.775278725861845,
-      "spreadPercent": 16.561251578518956,
-      "retainedHeapMiB": 0.6326370239257812,
-      "checksum": 892185
+      "runs": 3,
+      "milliseconds": 0.4944877024390244,
+      "mibPerSecond": 20.828996487445632,
+      "spreadPercent": 5.835333163151064,
+      "retainedHeapMiB": 0.6347198486328125,
+      "checksum": 535485
     },
     {
       "engine": "sugar-high-render",
@@ -160,24 +160,24 @@
       "sourceBytes": 10800,
       "outputBytes": 276734,
       "iterations": 410,
-      "runs": 5,
-      "milliseconds": 0.10393313170731709,
-      "mibPerSecond": 99.0991269866872,
-      "spreadPercent": 19.37652173997689,
+      "runs": 3,
+      "milliseconds": 0.10574187073170731,
+      "mibPerSecond": 97.40401362219403,
+      "spreadPercent": 16.80735051881137,
       "retainedHeapMiB": 0.39528656005859375,
-      "checksum": 567581434
+      "checksum": 340659554
     },
     {
       "engine": "sugar-high-parse",
       "targetKiB": 100,
       "sourceBytes": 102496,
       "iterations": 41,
-      "runs": 5,
-      "milliseconds": 5.927392268292683,
-      "mibPerSecond": 16.490861125769584,
-      "spreadPercent": 10.18487410076314,
-      "retainedHeapMiB": 3.222869873046875,
-      "checksum": 846042
+      "runs": 3,
+      "milliseconds": 5.9657459268292685,
+      "mibPerSecond": 16.384841716906127,
+      "spreadPercent": 3.991024433313634,
+      "retainedHeapMiB": 3.2229385375976562,
+      "checksum": 509268
     },
     {
       "engine": "sugar-high-render",
@@ -185,24 +185,24 @@
       "sourceBytes": 102496,
       "outputBytes": 2601924,
       "iterations": 41,
-      "runs": 5,
-      "milliseconds": 1.8634989756097562,
-      "mibPerSecond": 52.453907414889194,
-      "spreadPercent": 18.642689130225037,
+      "runs": 3,
+      "milliseconds": 1.806874,
+      "mibPerSecond": 54.097741588165526,
+      "spreadPercent": 22.1463277449333,
       "retainedHeapMiB": 3.7522201538085938,
-      "checksum": 535996344
+      "checksum": 322638576
     },
     {
       "engine": "sugar-high-parse",
       "targetKiB": 500,
       "sourceBytes": 512458,
       "iterations": 9,
-      "runs": 5,
-      "milliseconds": 35.231162000000005,
-      "mibPerSecond": 13.87175458013318,
-      "spreadPercent": 8.830736782934752,
-      "retainedHeapMiB": 16.224891662597656,
-      "checksum": 940746
+      "runs": 3,
+      "milliseconds": 35.23363888888889,
+      "mibPerSecond": 13.870779409930146,
+      "spreadPercent": 13.81533385719955,
+      "retainedHeapMiB": 16.227630615234375,
+      "checksum": 572628
     },
     {
       "engine": "sugar-high-render",
@@ -210,12 +210,12 @@
       "sourceBytes": 512458,
       "outputBytes": 12953124,
       "iterations": 9,
-      "runs": 5,
-      "milliseconds": 20.124736111111112,
-      "mibPerSecond": 24.28444428481658,
-      "spreadPercent": 13.487582268235467,
+      "runs": 3,
+      "milliseconds": 19.69672222222222,
+      "mibPerSecond": 24.812150332583407,
+      "spreadPercent": 2.8149109999766364,
       "retainedHeapMiB": 18.6990966796875,
-      "checksum": 595843704
+      "checksum": 362687472
     }
   ],
   "bundles": {
@@ -225,7 +225,7 @@
       {
         "engine": "sugar-high",
         "minified": 11724,
-        "gzip": 5136
+        "gzip": 5137
       },
       {
         "engine": "prismjs",

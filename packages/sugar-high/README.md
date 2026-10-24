@@ -244,11 +244,11 @@ Measured 2026-10-24 with Node v22.21.1, darwin arm64, Apple M4.
 | --- | ---: | ---: | ---: |
 | Minified (KiB) | 11.45 | 14.58 | 29.49 |
 | Gzip (KiB) | 5.02 | 5.57 | 11.28 |
-| 11 KiB | 0.63 | 1.15 | 2.13 |
-| 100 KiB | 10.04 | 19.35 | 24.71 |
-| 500 KiB | 57.57 | 107.23 | 120.04 |
+| 11 KiB | 0.54 | 1.15 | 2.09 |
+| 100 KiB | 6.83 | 18.58 | 23.56 |
+| 500 KiB | 45.44 | 105.27 | 121.06 |
 
-Median milliseconds per file; lower is better. 5 timed samples after warmup.
+Median milliseconds per file; lower is better. 3 timed samples after warmup.
 Sizes are TypeScript-only browser bundles, minified with Bun; gzip uses level 9. Theme CSS is excluded.
 Loading and initialization are excluded. Each library highlights the same generated TypeScript
 into HTML using an explicit language. Grammars and HTML output differ; this is not a measure
