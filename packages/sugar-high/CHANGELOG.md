@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.6.4
+
+### Patch Changes
+
+- a19ced0: Speed up tokenization with character-code checks and batched text scanning while preserving tokens and highlighted HTML.
+
 ## 2.6.3
 
 ### Patch Changes

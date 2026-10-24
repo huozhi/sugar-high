@@ -1,5 +1,13 @@
 # @sugar-high/react
 
+## 2.5.1
+
+### Patch Changes
+
+- a7a0c15: Require Sugar High 2.6.4 or later to include the latest tokenization performance improvements.
+- Updated dependencies [a19ced0]
+  - sugar-high@2.6.4
+
 ## 2.5.0
 
 ### Minor Changes

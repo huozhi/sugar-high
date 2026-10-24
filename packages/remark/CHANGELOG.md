@@ -1,5 +1,13 @@
 # @sugar-high/remark
 
+## 1.0.4
+
+### Patch Changes
+
+- a7a0c15: Require Sugar High 2.6.4 or later to include the latest tokenization performance improvements.
+- Updated dependencies [a19ced0]
+  - sugar-high@2.6.4
+
 ## 1.0.3
 
 ### Patch Changes

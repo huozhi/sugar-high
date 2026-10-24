@@ -1,6 +1,6 @@
 {
   "name": "@sugar-high/remark",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "remark plugin of sugar high syntax highlighter",
   "repository": {
     "type": "git",
