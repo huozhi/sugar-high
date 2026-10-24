@@ -9,7 +9,25 @@ const signs = new Set('+-*/%=!&|^~?:.,;()[]{}<>#@\\'.split(''))
 const noComment = () => 0
 
 /** @param {string} value */
-const isWord = (value) => value === '_' || value === '$' || /[\p{L}\p{N}]/u.test(value)
+const isWord = (value) => {
+  const c = value.charCodeAt(0)
+  return c < 128
+    ? c >= 97 && c <= 122 || c >= 65 && c <= 90 || c >= 48 && c <= 57 || c === 95 || c === 36
+    : /[\p{L}\p{N}]/u.test(value)
+}
+/** @param {number} c */
+const isDigitCode = (c) => c >= 48 && c <= 57
+/** @param {string} code @param {number} index */
+const isInlineSpace = (code, index) => {
+  const c = code.charCodeAt(index)
+  return c < 128 ? c === 32 || c === 9 || c === 11 || c === 12 : /\s/.test(code[index])
+}
+
+/** @param {string} value */
+const isUpperStart = (value) => {
+  const c = value.charCodeAt(0)
+  return c < 128 ? c >= 65 && c <= 90 : /^\p{Lu}/u.test(value)
+}
 
 /** @param {string} code @param {number} index */
 function isQuotedKey(code, index) {
@@ -103,9 +121,9 @@ function tokenize(code, options) {
       continue
     }
 
-    if (/[^\S\r\n]/.test(curr)) {
+    if (isInlineSpace(code, i)) {
       const start = i++
-      while (i < code.length && /[^\S\r\n]/.test(code[i])) i++
+      while (i < code.length && isInlineSpace(code, i)) i++
       append(T_SPACE, code.slice(start, i))
       continue
     }
@@ -113,7 +131,7 @@ function tokenize(code, options) {
     if (isWord(curr)) {
       const start = i++
       while (i < code.length && isWord(code[i])) i++
-      if (/^\d/.test(curr) && code[i] === '.' && /\d/.test(code[i + 1] || '')) {
+      if (isDigitCode(curr.charCodeAt(0)) && code[i] === '.' && isDigitCode(code.charCodeAt(i + 1))) {
         i++
         while (i < code.length && isWord(code[i])) i++
       }
@@ -125,7 +143,7 @@ function tokenize(code, options) {
           ? T_KEYWORD
           : lastSignificant === '.'
             ? T_PROPERTY
-            : (/^\d/.test(value) || value === 'null' || /^\p{Lu}/u.test(value))
+            : (isDigitCode(value.charCodeAt(0)) || value === 'null' || isUpperStart(value))
               ? T_CLASS
               : T_IDENTIFIER
       append(type, value)
