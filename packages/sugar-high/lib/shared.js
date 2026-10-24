@@ -154,7 +154,7 @@ const tokenOpen = Object.fromEntries(TokenTypes.map(type => [
 ]))
 
 /** @param {Array<[number, string]>} tokens */
-function renderTokens(tokens) {
+function html(tokens) {
   if (!tokens.length) return ''
   const line = '<span class="sh__line">'
   let out = line
@@ -248,6 +248,6 @@ function attributes(values) {
 }
 
 export {
-  assemble, encode, generate, render, renderTokens, SugarHigh, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
+  assemble, encode, generate, html, render, SugarHigh, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
   T_JSX_LITERALS, T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 }

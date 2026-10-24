@@ -3,7 +3,7 @@ import { highlight } from '../lib/index.js'
 import { parse, render, type DisplayOptions } from '../lib/core.js'
 import { languages } from '../lib/lang.js'
 import { configFor } from '../lib/presets/configs.js'
-import { assemble, renderTokens } from '../lib/shared.js'
+import { assemble, html } from '../lib/shared.js'
 
 const sources = [
   '', '\n', '\r\n', '\n\n', 'value\r', 'value\r\r\n',
@@ -36,7 +36,7 @@ describe('direct HTML rendering', () => {
     const tails: Array<Array<[number, string]>> = [[], [[9, '\n']], [[0, '']]]
     for (const first of choices) for (const second of choices) for (const tail of tails) {
       const tokens = [first, second, ...tail]
-      expect(renderTokens(tokens), JSON.stringify(tokens)).toBe(render(assemble('', tokens)))
+      expect(html(tokens), JSON.stringify(tokens)).toBe(render(assemble('', tokens)))
     }
   })
 
