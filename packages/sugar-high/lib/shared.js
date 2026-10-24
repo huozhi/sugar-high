@@ -155,47 +155,24 @@ const tokenOpen = Object.fromEntries(TokenTypes.map(type => [
 
 /** @param {Array<[number, string]>} tokens */
 function renderTokens(tokens) {
-  const lineOpen = '<span class="sh__line">'
-  let out = ''
-  let hasLine = false
+  if (!tokens.length) return ''
+  const line = '<span class="sh__line">'
+  let out = line
   for (let i = 0; i < tokens.length; i++) {
     const [type, value] = tokens[i]
     if (type === T_BREAK) {
-      if (!hasLine) out += lineOpen
-      out += '</span>\n'
-      hasLine = false
+      out += '</span>\n' + line
       continue
-    }
-
-    if (!hasLine) {
-      out += lineOpen
-      hasLine = true
     }
     const open = tokenOpen[TokenTypes[type]]
     const next = tokens[i + 1]
     // A separate LF token consumes one trailing CR from this token.
-    const stripCR = next?.[0] === T_BREAK && next[1] === '\n'
-    let start = 0
-    let end = value.indexOf('\n')
-    if (end === -1) {
-      const text = stripCR && value.endsWith('\r') ? value.slice(0, -1) : value
-      out += open + encode(text) + '</span>'
-      continue
-    }
-
+    let text = encode(next?.[0] === T_BREAK && next[1] === '\n' && value.endsWith('\r') ? value.slice(0, -1) : value)
     // Multiline tokens keep a span on each line, including empty segments.
-    do {
-      const stop = end > start && value.charCodeAt(end - 1) === 13 ? end - 1 : end
-      out += open + encode(value.slice(start, stop)) + '</span></span>\n' + lineOpen
-      start = end + 1
-      end = value.indexOf('\n', start)
-    } while (end !== -1)
-    const stop = stripCR && value.endsWith('\r') ? value.length - 1 : value.length
-    out += open + encode(value.slice(start, stop)) + '</span>'
+    if (text.includes('\n')) text = text.replace(/\r?\n/g, '</span></span>\n' + line + open)
+    out += open + text + '</span>'
   }
-  if (hasLine) out += '</span>'
-  else if (tokens.length) out += lineOpen + '</span>'
-  return out
+  return out + '</span>'
 }
 
 /**
