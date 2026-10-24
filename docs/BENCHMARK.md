@@ -56,9 +56,9 @@ pnpm --filter sugar-high benchmark:large --write
 
 This runs the same suite, saves the raw results and environment metadata to
 `docs/benchmark-results.json`, and refreshes the generated table in `packages/sugar-high/README.md`.
-The homepage imports that JSON snapshot on the server, so both surfaces show the same run without
-shipping benchmark libraries to visitors. Commit the snapshot and README together. Running without
-`--write` leaves the published results unchanged.
+The homepage imports that JSON snapshot on the server and displays the 100 KiB timing, so both
+surfaces show the same run without shipping benchmark libraries to visitors. Commit the snapshot
+and README together. Running without `--write` leaves the published results unchanged.
 
 The comparison measures warmed highlight-to-HTML calls with an explicit TypeScript language.
 Package loading and initialization happen before timing. Each library and input size runs in a

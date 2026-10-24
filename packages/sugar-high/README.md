@@ -238,17 +238,17 @@ options, and lower-level functions. Upgrading from v1? Read the
 Sugar High, PrismJS, and highlight.js highlighting the same generated TypeScript files:
 
 <!-- benchmark:start -->
-Measured 2026-10-24 with Node v22.21.1, darwin arm64, Apple M4.
+Measured 2026-10-24 with Node v26.5.0, darwin arm64, Apple M4.
 
-| TypeScript | Sugar High 2.6.2 | PrismJS 1.30.0 | highlight.js 11.12.0 |
+| TypeScript | Sugar High 2.6.3 | PrismJS 1.30.0 | highlight.js 11.12.0 |
 | --- | ---: | ---: | ---: |
-| Minified (KiB) | 11.45 | 14.58 | 29.49 |
-| Gzip (KiB) | 5.02 | 5.57 | 11.28 |
-| 11 KiB | 0.54 | 1.15 | 2.09 |
-| 100 KiB | 6.83 | 18.58 | 23.56 |
-| 500 KiB | 45.44 | 105.27 | 121.06 |
+| Minified (KiB) | 12.11 | 14.58 | 29.49 |
+| Gzip (KiB) | 5.16 | 5.50 | 11.18 |
+| 11 KiB | 0.53 | 1.19 | 2.13 |
+| 100 KiB | 5.68 | 14.63 | 23.06 |
+| 500 KiB | 36.19 | 91.81 | 120.82 |
 
-Median milliseconds per file; lower is better. 3 timed samples after warmup.
+Median milliseconds per file; lower is better. 5 timed samples after warmup.
 Sizes are TypeScript-only browser bundles, minified with Bun; gzip uses level 9. Theme CSS is excluded.
 Loading and initialization are excluded. Each library highlights the same generated TypeScript
 into HTML using an explicit language. Grammars and HTML output differ; this is not a measure

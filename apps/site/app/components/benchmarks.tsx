@@ -12,9 +12,9 @@ const metrics = [
   })),
   {
     id: 'time',
-    label: '500 KiB TypeScript · ms',
+    label: '100 KiB TypeScript · ms',
     values: results.engines.map(engine =>
-      results.results.find(row => row.engine === engine.id && row.targetKiB === 500)?.milliseconds
+      results.results.find(row => row.engine === engine.id && row.targetKiB === 100)?.milliseconds
     ),
   },
 ]
