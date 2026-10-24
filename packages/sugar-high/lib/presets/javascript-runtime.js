@@ -145,8 +145,19 @@ function isTypeParameterListStart(code, startIndex) {
  * 10 - space
  *
  */
-function isSpaces(str) {
-  return /^[^\S\r\n]+$/g.test(str)
+/** Whether `str[i]` matches RegExp `\s`, with an ASCII fast path. */
+function isSpace(str, i) {
+  const c = str.charCodeAt(i)
+  return c < 128 ? c === 32 || c >= 9 && c <= 13 : /\s/.test(str[i])
+}
+
+/** Whether a non-empty string is all `\s`, optionally excluding line breaks. */
+function isSpaces(str, breaks) {
+  if (!str) return false
+  for (let i = 0; i < str.length; i++) {
+    if (!isSpace(str, i) || !breaks && (str[i] === '\n' || str[i] === '\r')) return false
+  }
+  return true
 }
 
 function isSign(ch) {
@@ -217,7 +228,7 @@ function isCommentEnd_Js(prev, curr) {
 
 function isPropertyKey(code, quoteEnd) {
   let i = quoteEnd + 1
-  while (i < code.length && /\s/.test(code[i])) i++
+  while (i < code.length && isSpace(code, i)) i++
   return code[i] === ':'
 }
 
@@ -231,12 +242,14 @@ function isPropertyKey(code, quoteEnd) {
 function tokenize(code, options) {
   const mergedOptions = resolveHighlightOptions(options)
   const hasCustomKeywords = mergedOptions.keywords !== DefaultOptions.keywords
-  const isTs = typeof mergedOptions.typescript === 'boolean'
-    ? mergedOptions.typescript
-    : isLikelyTypeScript(code)
-  const resolvedKeywords = hasCustomKeywords
-    ? mergedOptions.keywords
-    : (isTs ? Keywords_Ts : Keywords_Js)
+  let isTs = mergedOptions.typescript
+  // The TypeScript heuristic scans the whole input, so run it only once a TS-only keyword appears.
+  const tsKeywords = () => (isTs ??= isLikelyTypeScript(code)) ? Keywords_Ts : Keywords_Js
+  /** @type {Set<string> | undefined} */
+  let keywordSet = hasCustomKeywords ? mergedOptions.keywords : isTs == null ? undefined : tsKeywords()
+  /** @param {string} word */
+  const hasKeyword = (word) => keywordSet ? keywordSet.has(word)
+    : Keywords_Js.has(word) || Keywords_Ts.has(word) && (keywordSet = tsKeywords()).has(word)
 
   const {
     onCommentStart,
@@ -327,7 +340,7 @@ function tokenize(code, options) {
         // classify jsx open tag
         if ((lastToken === '<' || lastToken === '</'))
           return T_ENTITY
-        if (!__jsxTagExpr && /^\s+$/.test(tokens[tokens.length - 1]?.[1] || ''))
+        if (!__jsxTagExpr && isSpaces(tokens[tokens.length - 1]?.[1], true))
           return T_PROPERTY
       }
     }
@@ -340,7 +353,7 @@ function tokenize(code, options) {
       return T_STRING
     } else if (resolvedTypeKeywords && resolvedTypeKeywords.has(normalizeKeyword(token))) {
       return last[1] === '.' ? T_IDENTIFIER : T_CLS_NUMBER
-    } else if (resolvedKeywords.has(normalizeKeyword(token))) {
+    } else if (hasKeyword(normalizeKeyword(token))) {
       return last[1] === '.' ? T_IDENTIFIER : T_KEYWORD
     } else if (isLineBreak) {
       return T_BREAK
@@ -472,14 +485,14 @@ function tokenize(code, options) {
     // Parse type arguments in JavaScript mode even when surrounded by JSX.
     if (supportsJsx && curr === '<' && !inStringContent() && !inJsxLiterals()) {
       const lhs = current.trim() || last[1]
-      const followsValue = (isIdentifier(lhs) && !resolvedKeywords.has(lhs)) ||
+      const followsValue = (isIdentifier(lhs) && !hasKeyword(lhs)) ||
         isCls(lhs) || lhs === ')' || lhs === ']'
       const end = (followsValue || isTypeParameterListStart(code, i))
         ? typeArgumentEnd(code, i) : -1
       if (end > i) {
         append()
         for (const [kind, value] of tokenize(code.slice(i, end), {
-          ...mergedOptions, jsx: false, typescript: isTs,
+          ...mergedOptions, jsx: false, typescript: tsKeywords() === Keywords_Ts,
         })) append(kind, value)
         i = end - 1
         continue
@@ -593,7 +606,7 @@ function tokenize(code, options) {
     // if it's not in a jsx tag declaration or a string, close child if next is jsx close tag
     if (supportsJsx && !__jsxTag && curr === '<' && (isIdentifierChar(next) || next === '/')) {
       let prevNonSpace = i - 1
-      while (prevNonSpace >= 0 && /\s/.test(code[prevNonSpace])) prevNonSpace--
+      while (prevNonSpace >= 0 && isSpace(code, prevNonSpace)) prevNonSpace--
       const prevChar = prevNonSpace >= 0 ? code[prevNonSpace] : ''
 
       const [lastType, lastTok] = last
@@ -606,7 +619,7 @@ function tokenize(code, options) {
         // args / `<`). Any other keyword (`return`, `void`, …) is JSX-friendly — no keyword allowlist.
         if (isCls(w) || w === 'true' || w === 'false') {
           typeArgFromPending = true
-        } else if (resolvedKeywords.has(w) && isIdentifier(w)) {
+        } else if (hasKeyword(w) && isIdentifier(w)) {
           jsxFromPending = true
         } else if (isIdentifier(w)) {
           typeArgFromPending = true
@@ -647,6 +660,14 @@ function tokenize(code, options) {
       current += curr
       // Consume the escaped character before the next delimiter check.
       if (curr === '\\') current += code[++i] || ''
+      // Inside string content only quotes, escapes and template delimiters change state.
+      const stops = __strQuote ? '"\'\\' : inStrTemplateLiterals() ? '`$\\' : ''
+      if (stops) {
+        let end = i + 1
+        while (end < code.length && !stops.includes(code[end])) end++
+        current += code.slice(i + 1, end)
+        i = end - 1
+      }
     } else if (isRegexChar) {
       append()
       const [lastType, lastToken] = last
@@ -687,7 +708,7 @@ function tokenize(code, options) {
         if (ch === '/' && !inCharClass) {
           foundClose = true
           // end of regex, append regex flags
-          while (/^[a-z]$/.test(code[i + 1])) {
+          while (code.charCodeAt(i + 1) >= 97 && code.charCodeAt(i + 1) <= 122) {
             i++
           }
           break
@@ -761,6 +782,13 @@ function tokenize(code, options) {
         ((isWord(curr) === isWord(current[current.length - 1]) || __jsxChild()) && !Signs.has(curr))
       ) {
         current += curr
+        // JSX text only changes state at brackets, spaces, line breaks and comment slashes.
+        if (isJsxLiterals && !JSXBrackets.has(curr) && onCommentStart === isCommentStart_Js) {
+          let end = i + 1
+          while (end < code.length && !' \n\r/<>{}[]'.includes(code[end])) end++
+          current += code.slice(i + 1, end)
+          i = end - 1
+        }
       } else {
         if (prev === '<' && curr === '/') {
           current = '</'
