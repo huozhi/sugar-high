@@ -1,10 +1,10 @@
 {
-  "measuredAt": "2026-09-04T19:22:24.984Z",
+  "measuredAt": "2026-10-24T00:10:31.769Z",
   "engines": [
     {
       "id": "sugar-high",
       "label": "Sugar High",
-      "version": "2.2.2"
+      "version": "2.6.2"
     },
     {
       "id": "prismjs",
@@ -17,9 +17,9 @@
       "version": "11.12.0"
     }
   ],
-  "runtime": "v24.18.0",
+  "runtime": "v22.21.1",
   "platform": "darwin arm64",
-  "cpu": "Apple M4 Pro",
+  "cpu": "Apple M4",
   "targetMiB": 4,
   "runs": 5,
   "results": [
@@ -30,10 +30,10 @@
       "outputBytes": 276734,
       "iterations": 410,
       "runs": 5,
-      "milliseconds": 1.784623068292683,
-      "mibPerSecond": 5.771349031726359,
-      "spreadPercent": 22.151132412495866,
-      "retainedHeapMiB": 0.2385101318359375,
+      "milliseconds": 0.6337728658536584,
+      "mibPerSecond": 16.251378328282282,
+      "spreadPercent": 13.878083214550768,
+      "retainedHeapMiB": 0.737091064453125,
       "checksum": 567581434
     },
     {
@@ -43,10 +43,10 @@
       "outputBytes": 83873,
       "iterations": 410,
       "runs": 5,
-      "milliseconds": 1.1787885170731707,
-      "mibPerSecond": 8.737515226870988,
-      "spreadPercent": 12.496301567968453,
-      "retainedHeapMiB": 0.6789093017578125,
+      "milliseconds": 1.1459228658536584,
+      "mibPerSecond": 8.988111612132569,
+      "spreadPercent": 8.446317852954628,
+      "retainedHeapMiB": 0.7049942016601562,
       "checksum": 172023523
     },
     {
@@ -56,10 +56,10 @@
       "outputBytes": 45679,
       "iterations": 410,
       "runs": 5,
-      "milliseconds": 2.110474695121951,
-      "mibPerSecond": 4.880268235858827,
-      "spreadPercent": 3.281402256077063,
-      "retainedHeapMiB": 0,
+      "milliseconds": 2.130408536585366,
+      "mibPerSecond": 4.834604462154431,
+      "spreadPercent": 9.285064560582972,
+      "retainedHeapMiB": 0.3752288818359375,
       "checksum": 93687629
     },
     {
@@ -69,10 +69,10 @@
       "outputBytes": 2601924,
       "iterations": 41,
       "runs": 5,
-      "milliseconds": 18.02487092682927,
-      "mibPerSecond": 5.422940509875245,
-      "spreadPercent": 12.998916046032017,
-      "retainedHeapMiB": 2.39337158203125,
+      "milliseconds": 10.042514219512196,
+      "mibPerSecond": 9.733399485206105,
+      "spreadPercent": 8.36239351684335,
+      "retainedHeapMiB": 4.1035919189453125,
       "checksum": 535996344
     },
     {
@@ -82,10 +82,10 @@
       "outputBytes": 791547,
       "iterations": 41,
       "runs": 5,
-      "milliseconds": 15.250603658536587,
-      "mibPerSecond": 6.409438270311371,
-      "spreadPercent": 3.786512229712158,
-      "retainedHeapMiB": 6.722358703613281,
+      "milliseconds": 19.34636890243902,
+      "mibPerSecond": 5.052514155359241,
+      "spreadPercent": 4.507577513701968,
+      "retainedHeapMiB": 6.730918884277344,
       "checksum": 163058682
     },
     {
@@ -95,10 +95,10 @@
       "outputBytes": 429911,
       "iterations": 41,
       "runs": 5,
-      "milliseconds": 23.054494926829268,
-      "mibPerSecond": 4.239858780017023,
-      "spreadPercent": 3.2330186951775484,
-      "retainedHeapMiB": 2.4327850341796875,
+      "milliseconds": 24.713416658536588,
+      "mibPerSecond": 3.9552524883527447,
+      "spreadPercent": 27.542544282211345,
+      "retainedHeapMiB": 2.4165115356445312,
       "checksum": 88561666
     },
     {
@@ -108,10 +108,10 @@
       "outputBytes": 12953124,
       "iterations": 9,
       "runs": 5,
-      "milliseconds": 90.98263888888889,
-      "mibPerSecond": 5.371552625921889,
-      "spreadPercent": 6.739734433601387,
-      "retainedHeapMiB": 12.353294372558594,
+      "milliseconds": 57.57215744444444,
+      "mibPerSecond": 8.488791362535157,
+      "spreadPercent": 9.923132022822145,
+      "retainedHeapMiB": 20.416458129882812,
       "checksum": 595843704
     },
     {
@@ -121,10 +121,10 @@
       "outputBytes": 3943215,
       "iterations": 9,
       "runs": 5,
-      "milliseconds": 96.4139491111111,
-      "mibPerSecond": 5.068955657792803,
-      "spreadPercent": 1.6268983449068157,
-      "retainedHeapMiB": 33.44206237792969,
+      "milliseconds": 107.22542588888888,
+      "mibPerSecond": 4.5578558330310806,
+      "spreadPercent": 3.159976841182075,
+      "retainedHeapMiB": 33.442848205566406,
       "checksum": 181387890
     },
     {
@@ -134,10 +134,10 @@
       "outputBytes": 2141945,
       "iterations": 9,
       "runs": 5,
-      "milliseconds": 118.39404633333334,
-      "mibPerSecond": 4.127893656585987,
-      "spreadPercent": 2.4597586528662747,
-      "retainedHeapMiB": 12.139480590820312,
+      "milliseconds": 120.0362638888889,
+      "mibPerSecond": 4.07141989431872,
+      "spreadPercent": 2.004171287028185,
+      "retainedHeapMiB": 12.159416198730469,
       "checksum": 98529470
     }
   ],
@@ -148,10 +148,10 @@
       "sourceBytes": 10800,
       "iterations": 410,
       "runs": 5,
-      "milliseconds": 1.2168709341463415,
-      "mibPerSecond": 8.464071519970133,
-      "spreadPercent": 14.995310690757101,
-      "retainedHeapMiB": 0.27082061767578125,
+      "milliseconds": 0.5208362804878048,
+      "mibPerSecond": 19.775278725861845,
+      "spreadPercent": 16.561251578518956,
+      "retainedHeapMiB": 0.6326370239257812,
       "checksum": 892185
     },
     {
@@ -161,10 +161,10 @@
       "outputBytes": 276734,
       "iterations": 410,
       "runs": 5,
-      "milliseconds": 0.37874644390243906,
-      "mibPerSecond": 27.194136824267016,
-      "spreadPercent": 11.71461746919332,
-      "retainedHeapMiB": 0.2649688720703125,
+      "milliseconds": 0.10393313170731709,
+      "mibPerSecond": 99.0991269866872,
+      "spreadPercent": 19.37652173997689,
+      "retainedHeapMiB": 0.39528656005859375,
       "checksum": 567581434
     },
     {
@@ -173,10 +173,10 @@
       "sourceBytes": 102496,
       "iterations": 41,
       "runs": 5,
-      "milliseconds": 14.206686999999999,
-      "mibPerSecond": 6.880407989165596,
-      "spreadPercent": 10.10403419024619,
-      "retainedHeapMiB": 2.5736541748046875,
+      "milliseconds": 5.927392268292683,
+      "mibPerSecond": 16.490861125769584,
+      "spreadPercent": 10.18487410076314,
+      "retainedHeapMiB": 3.222869873046875,
       "checksum": 846042
     },
     {
@@ -186,10 +186,10 @@
       "outputBytes": 2601924,
       "iterations": 41,
       "runs": 5,
-      "milliseconds": 3.6290000000000004,
-      "mibPerSecond": 26.935189510712316,
-      "spreadPercent": 8.9842483598985,
-      "retainedHeapMiB": 2.4778518676757812,
+      "milliseconds": 1.8634989756097562,
+      "mibPerSecond": 52.453907414889194,
+      "spreadPercent": 18.642689130225037,
+      "retainedHeapMiB": 3.7522201538085938,
       "checksum": 535996344
     },
     {
@@ -198,10 +198,10 @@
       "sourceBytes": 512458,
       "iterations": 9,
       "runs": 5,
-      "milliseconds": 67.08393977777777,
-      "mibPerSecond": 7.285171897414511,
-      "spreadPercent": 3.58864115455937,
-      "retainedHeapMiB": 13.028556823730469,
+      "milliseconds": 35.231162000000005,
+      "mibPerSecond": 13.87175458013318,
+      "spreadPercent": 8.830736782934752,
+      "retainedHeapMiB": 16.224891662597656,
       "checksum": 940746
     },
     {
@@ -211,31 +211,31 @@
       "outputBytes": 12953124,
       "iterations": 9,
       "runs": 5,
-      "milliseconds": 20.71035188888889,
-      "mibPerSecond": 23.597765767519935,
-      "spreadPercent": 9.246018919917665,
-      "retainedHeapMiB": 12.362457275390625,
+      "milliseconds": 20.124736111111112,
+      "mibPerSecond": 24.28444428481658,
+      "spreadPercent": 13.487582268235467,
+      "retainedHeapMiB": 18.6990966796875,
       "checksum": 595843704
     }
   ],
   "bundles": {
-    "bundler": "Bun 1.4.0",
+    "bundler": "Bun 1.3.13",
     "language": "typescript",
     "results": [
       {
         "engine": "sugar-high",
-        "minified": 10133,
-        "gzip": 4452
+        "minified": 11724,
+        "gzip": 5136
       },
       {
         "engine": "prismjs",
-        "minified": 14985,
-        "gzip": 5603
+        "minified": 14927,
+        "gzip": 5706
       },
       {
         "engine": "highlight.js",
-        "minified": 30253,
-        "gzip": 11389
+        "minified": 30200,
+        "gzip": 11554
       }
     ]
   }

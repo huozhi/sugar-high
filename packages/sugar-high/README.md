@@ -238,15 +238,15 @@ options, and lower-level functions. Upgrading from v1? Read the
 Sugar High, PrismJS, and highlight.js highlighting the same generated TypeScript files:
 
 <!-- benchmark:start -->
-Measured 2026-09-04 with Node v24.18.0, darwin arm64, Apple M4 Pro.
+Measured 2026-10-24 with Node v22.21.1, darwin arm64, Apple M4.
 
-| TypeScript | Sugar High 2.2.2 | PrismJS 1.30.0 | highlight.js 11.12.0 |
+| TypeScript | Sugar High 2.6.2 | PrismJS 1.30.0 | highlight.js 11.12.0 |
 | --- | ---: | ---: | ---: |
-| Minified (KiB) | 9.90 | 14.63 | 29.54 |
-| Gzip (KiB) | 4.35 | 5.47 | 11.12 |
-| 11 KiB | 1.78 | 1.18 | 2.11 |
-| 100 KiB | 18.02 | 15.25 | 23.05 |
-| 500 KiB | 90.98 | 96.41 | 118.39 |
+| Minified (KiB) | 11.45 | 14.58 | 29.49 |
+| Gzip (KiB) | 5.02 | 5.57 | 11.28 |
+| 11 KiB | 0.63 | 1.15 | 2.13 |
+| 100 KiB | 10.04 | 19.35 | 24.71 |
+| 500 KiB | 57.57 | 107.23 | 120.04 |
 
 Median milliseconds per file; lower is better. 5 timed samples after warmup.
 Sizes are TypeScript-only browser bundles, minified with Bun; gzip uses level 9. Theme CSS is excluded.
@@ -257,7 +257,7 @@ of highlighting quality or browser rendering speed. Results vary by machine and 
 
 Run `pnpm --filter sugar-high benchmark:large --write` to refresh this table and the
 [website comparison](https://sugar-high.vercel.app/#benchmarks) from the same measurement.
-See [benchmark methodology and options](../../docs/BENCHMARK.md).
+See [benchmark methodology and options](https://github.com/huozhi/sugar-high/blob/main/docs/BENCHMARK.md).
 
 ### Small parser, just enough context
 
