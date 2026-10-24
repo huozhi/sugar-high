@@ -153,6 +153,28 @@ const tokenOpen = Object.fromEntries(TokenTypes.map(type => [
   type, `<span class="sh__token--${type}" style="color:var(--sh-${type})">`,
 ]))
 
+/** @param {Array<[number, string]>} tokens */
+function html(tokens) {
+  if (!tokens.length) return ''
+  const line = '<span class="sh__line">'
+  let out = line
+  for (let i = 0; i < tokens.length; i++) {
+    const [type, value] = tokens[i]
+    if (type === T_BREAK) {
+      out += '</span>\n' + line
+      continue
+    }
+    const open = tokenOpen[TokenTypes[type]]
+    const next = tokens[i + 1]
+    // A separate LF token consumes one trailing CR from this token.
+    let text = encode(next?.[0] === T_BREAK && next[1] === '\n' && value.endsWith('\r') ? value.slice(0, -1) : value)
+    // Multiline tokens keep a span on each line, including empty segments.
+    if (text.includes('\n')) text = text.replace(/\r?\n/g, '</span></span>\n' + line + open)
+    out += open + text + '</span>'
+  }
+  return out + '</span>'
+}
+
 /**
  * Render parsed lines directly while preserving generate()'s markup and mutable display hooks.
  * @param {import('./core.js').ParsedCode} parsed
@@ -226,6 +248,6 @@ function attributes(values) {
 }
 
 export {
-  assemble, encode, generate, render, SugarHigh, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
+  assemble, encode, generate, html, render, SugarHigh, TokenTypes, T_BREAK, T_CLASS, T_COMMENT, T_ENTITY, T_IDENTIFIER,
   T_JSX_LITERALS, T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 }
