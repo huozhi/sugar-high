@@ -1,5 +1,13 @@
 # sugar-high
 
+## 2.6.3
+
+### Patch Changes
+
+- 1adb6ca: Speed up JavaScript and TypeScript highlighting while preserving token and HTML output.
+- d22460c: Render ordinary highlights directly from tokens while preserving existing HTML, themes, annotations, and display hooks.
+- 34eb4dd: Reduce allocations in JavaScript tokenization and HTML rendering while preserving token and markup output.
+
 ## 2.6.2
 
 ### Patch Changes
