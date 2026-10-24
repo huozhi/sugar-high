@@ -280,3 +280,32 @@ describe('tokenize - identifier characters', () => {
     expect(actual).toContain('_flag => property')
   })
 })
+
+
+describe('tokenize - word runs', () => {
+  it('keeps custom comment starts inside identifiers', () => {
+    const input = 'beforeSTOPafter\nnext'
+    const tokens = tokenize(input, {
+      onCommentStart: (curr) => curr === 'S' ? 1 : 0,
+      onCommentEnd: (_, curr) => curr === '\n' ? 1 : 0,
+    })
+    expect(tokens.map(([, value]) => value).join('')).toBe(input)
+    expect(getTokensAsString(tokens)).toEqual([
+      'before => identifier', 'STOPafter => comment', 'next => identifier',
+    ])
+  })
+
+  it('keeps JSX attributes and children separate from expression identifiers', () => {
+    const input = '<Button title={longIdentifier} data-value={anotherValue}>helloWorld{someValue}</Button>'
+    const tokens = tokenize(input)
+    const actual = getTokensAsString(tokens)
+    expect(tokens.map(([, value]) => value).join('')).toBe(input)
+    expect(actual.filter(value => value.endsWith('=> property'))).toEqual([
+      'title => property', 'data-value => property',
+    ])
+    expect(actual).toContain('helloWorld => jsxliterals')
+    for (const name of ['longIdentifier', 'anotherValue', 'someValue']) {
+      expect(actual).toContain(`${name} => identifier`)
+    }
+  })
+})

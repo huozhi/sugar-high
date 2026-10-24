@@ -204,20 +204,15 @@ function isStringQuotation(chr) {
 
 /** @returns {0|1|2}  */
 function isCommentStart_Js(curr, next) {
-  const str = curr + next
-  if (str === '/*') return 2
-  return str === '//' ? 1 : 0
+  if (curr !== '/') return 0
+  return next === '*' ? 2 : next === '/' ? 1 : 0
 }
 
 /** @returns {0|1|2}  */
 function isCommentEnd_Js(prev, curr) {
-  return (prev + curr) === '*/'
+  return prev === '*' && curr === '/'
     ? 2
     : curr === '\n' ? 1 : 0
-}
-
-function isRegexStart(str) {
-  return str[0] === '/' && !isCommentStart_Js(str[0], str[1])
 }
 
 function isPropertyKey(code, quoteEnd) {
@@ -395,8 +390,6 @@ function tokenize(code, options) {
     const curr = code[i]
     const prev = code[i - 1]
     const next = code[i + 1]
-    const p_c = prev + curr // previous and current
-    const c_n = curr + next // current and next
 
     // onQuote(curr, i, code): length from i; end = i + len (capped).
     if (
@@ -453,10 +446,10 @@ function tokenize(code, options) {
     }
 
     if (inStrTemplateLiterals()) {
-      if (c_n === '${') {
+      if (curr === '$' && next === '{') {
         templateStack[templateStack.length - 1] = 0
         append(T_STRING)
-        append(T_SIGN, c_n)
+        append(T_SIGN, '${')
         i++
         continue
       }
@@ -520,7 +513,7 @@ function tokenize(code, options) {
         if (next === '/') {
           // close tag
           __jsxTag = 2
-          current = c_n
+          current = '</'
           i++
         } else {
           // open tag
@@ -546,7 +539,7 @@ function tokenize(code, options) {
         }
 
         // Self-closing tag: restore the containing element or expression.
-        if (c_n === '/>' && !inStringContent() && !__jsxTagExpr) {
+        if (curr === '/' && next === '>' && !inStringContent() && !__jsxTagExpr) {
           // if current token is not part of close tag sign, push it first
           if (current !== '<' && current !== '/') {
             append()
@@ -554,7 +547,7 @@ function tokenize(code, options) {
 
           closeJsx()
 
-          current = c_n
+          current = '/>'
           i++
           append(T_SIGN)
           continue
@@ -598,7 +591,7 @@ function tokenize(code, options) {
     }
 
     // if it's not in a jsx tag declaration or a string, close child if next is jsx close tag
-    if (supportsJsx && !__jsxTag && (curr === '<' && isIdentifierChar(next) || c_n === '</')) {
+    if (supportsJsx && !__jsxTag && curr === '<' && (isIdentifierChar(next) || next === '/')) {
       let prevNonSpace = i - 1
       while (prevNonSpace >= 0 && /\s/.test(code[prevNonSpace])) prevNonSpace--
       const prevChar = prevNonSpace >= 0 ? code[prevNonSpace] : ''
@@ -646,7 +639,7 @@ function tokenize(code, options) {
 
     const isQuotationChar = isSingleQuotes(curr) || isTemplateQuote(curr)
     const isStringTemplateLiterals = inStrTemplateLiterals()
-    const isRegexChar = supportsRegex && !__jsxEnter && isRegexStart(c_n)
+    const isRegexChar = supportsRegex && !__jsxEnter && curr === '/' && !isCommentStart_Js(curr, next)
     const isJsxLiterals = inJsxLiterals()
 
     // string quotation
@@ -769,21 +762,29 @@ function tokenize(code, options) {
       ) {
         current += curr
       } else {
-        if (p_c === '</') {
-          current = p_c
+        if (prev === '<' && curr === '/') {
+          current = '</'
         }
         append()
 
-        if (p_c !== '</') {
+        if (prev !== '<' || curr !== '/') {
           current = curr
 
         }
-        if ((c_n === '</' || c_n === '/>')) {
-          current = c_n
+        if (curr === '<' && next === '/' || curr === '/' && next === '>') {
+          current = curr + next
           append()
           i++
         }
         else if (JSXBrackets.has(curr)) append()
+      }
+      // Word characters cannot change JavaScript syntax state. Consume the rest
+      // together; custom comment hooks and JSX attributes still inspect each character.
+      if (!__jsxTag && !isJsxLiterals && onCommentStart === isCommentStart_Js && isWord(curr)) {
+        let end = i + 1
+        while (end < code.length && isWord(code[end])) end++
+        current += code.slice(i + 1, end)
+        i = end - 1
       }
       if (__jsxExprDepth && curr === '{') __jsxExprDepth++
     }
