@@ -21,4 +21,11 @@ describe('tokenize - rust preset', () => {
     expect(actual).toContain('/* block\n  comment */ => comment')
     expect(actual).toContain('fn => keyword')
   })
+
+  it('does not classify range bounds as properties', () => {
+    const actual = getTokensAsString(tokenize('for i in 0..len { v.push(i) }\nlet r = start..=end;', rust))
+    expect(actual).toContain('len => identifier')
+    expect(actual).toContain('end => identifier')
+    expect(actual).toContain('push => property')
+  })
 })

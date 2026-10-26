@@ -2,4 +2,4 @@
 "sugar-high": patch
 ---
 
-Fix property classification after multi-dot operators
+Keep identifiers after `..` operators, such as Lua concatenation and Rust or Kotlin ranges, from being highlighted as properties.
