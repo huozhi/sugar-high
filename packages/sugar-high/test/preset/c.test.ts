@@ -37,4 +37,22 @@ static int total = 2;
     expect(actual).toContain('static => keyword')
     expect(actual).toContain('int => class')
   })
+
+  it('highlights include directives and angle-bracket headers', () => {
+    const input = '#include <stdio.h> // io\n#include<sys/types.h>\n  #  include <vector>\n#include "local.h"\n'
+    const actual = getTokensAsString(tokenize(input, c))
+    expect(actual).toContain('include => keyword')
+    expect(actual).toContain('<stdio.h> => string')
+    expect(actual).toContain('<sys/types.h> => string')
+    expect(actual).toContain('<vector> => string')
+    expect(actual).toContain('"local.h" => string')
+  })
+
+  it('keeps comparisons outside include directives as signs', () => {
+    const input = 'int x = a < b && c > d; // <not.h>\nif (n<max) return include;\n'
+    const actual = getTokensAsString(tokenize(input, c))
+    expect(actual).toContain('< => sign')
+    expect(actual).toContain('> => sign')
+    expect(actual.some(token => token.endsWith(' => string'))).toBe(false)
+  })
 })

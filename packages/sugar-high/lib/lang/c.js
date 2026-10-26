@@ -1,5 +1,6 @@
 // @ts-check
 import { onCommentStart, onCommentEnd } from '../presets/clike-base.js'
+import { onLiteral } from '../presets/c-preprocessor.js'
 
 export const typeKeywords = new Set([
   'void', 'char', 'short', 'int', 'long', 'float', 'double', 'signed', 'unsigned',
@@ -8,10 +9,10 @@ export const typeKeywords = new Set([
 
 export const keywords = new Set([
   'auto', 'break', 'case', 'const', 'continue', 'default', 'do', 'else', 'enum',
-  'extern', 'for', 'goto', 'if', 'inline', 'register', 'restrict', 'return',
+  'extern', 'for', 'goto', 'if', 'include', 'inline', 'register', 'restrict', 'return',
   'sizeof', 'static', 'struct', 'switch', 'typedef', 'union', 'volatile', 'while',
   '_Alignas', '_Alignof', '_Atomic', '_Generic', '_Noreturn', '_Static_assert',
   '_Thread_local',
 ])
 
-export { onCommentStart, onCommentEnd }
+export { onCommentStart, onCommentEnd, onLiteral }
