@@ -42,6 +42,14 @@ describe('second-wave language presets', () => {
     expect(actual).toContain('[==[text]==] => string')
   })
 
+  it('does not classify Lua concatenation operands as properties', () => {
+    const actual = getTokensAsString(
+      tokenize('local message = "hello " .. name\nlocal value = user.name', { lang: 'lua' })
+    )
+    expect(actual).toContain('name => identifier')
+    expect(actual).toContain('name => property')
+  })
+
   it('supports Zig multiline string lines', () => {
     const actual = getTokensAsString(tokenize('const text =\n    \\\\first line\n    \\\\second line;', {
       lang: 'zig',
