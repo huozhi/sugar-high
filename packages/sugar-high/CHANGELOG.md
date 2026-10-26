@@ -1,5 +1,11 @@
 # sugar-high
 
+## 2.6.5
+
+### Patch Changes
+
+- f1655db: Highlight angle-bracket header names in C and C++ `#include` directives as strings.
+
 ## 2.6.4
 
 ### Patch Changes
