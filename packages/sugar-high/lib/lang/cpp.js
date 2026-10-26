@@ -1,5 +1,6 @@
 // @ts-check
 import { onCommentEnd, onCommentStart } from '../presets/clike-base.js'
+import { onLiteral } from '../presets/c-preprocessor.js'
 
 export const keywords = new Set([
   'alignas', 'alignof', 'and', 'and_eq', 'asm', 'auto', 'bitand', 'bitor', 'break',
@@ -19,4 +20,4 @@ export const typeKeywords = new Set([
   'short', 'signed', 'unsigned', 'void', 'wchar_t',
 ])
 
-export { onCommentEnd, onCommentStart }
+export { onCommentEnd, onCommentStart, onLiteral }
