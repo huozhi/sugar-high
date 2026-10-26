@@ -102,6 +102,7 @@ export type ParseOptions = {
   jsx?: boolean
   regex?: boolean
   templateStrings?: boolean
+  objectKeys?: boolean
   caseInsensitive?: boolean
   typescript?: boolean
   tokenize?: (code: string, options: ParseOptions) => Array<[number, string]>

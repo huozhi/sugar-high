@@ -185,6 +185,7 @@ export { generate, parse, render, SugarHigh, tokenize }
  * @property {boolean} [quotedKeys]
  * @property {boolean} [caseInsensitive]
  * @property {boolean} [templateStrings]
+ * @property {boolean} [objectKeys]
  * @property {(code: string, options: ParseOptions) => Array<[number, string]>} [tokenize]
  * @property {(line: AnnotateLine) => void} [annotateLine]
  */

@@ -233,6 +233,28 @@ function isPropertyKey(code, quoteEnd) {
 }
 
 /**
+ * Words that can be an object key. `case` and `default` stay keywords so `switch` labels are not keys.
+ * @param {number} type
+ * @param {string} value
+ */
+function isKeyCandidate(type, value) {
+  if (type === T_IDENTIFIER) return true
+  if (type === T_KEYWORD) return value !== 'case' && value !== 'default'
+  if (type !== T_CLS_NUMBER) return false
+  const code = value.charCodeAt(0)
+  return code < 48 || code > 57
+}
+
+/**
+ * A line that starts after `?` or `:` continues a ternary, not a member list.
+ * @param {string} previous
+ */
+function continuesExpression(previous) {
+  const last = previous[previous.length - 1]
+  return last === '?' || last === ':'
+}
+
+/**
  * @param {string} code
  * @param {HighlightOptions | undefined} options
  * Optional `onQuote(curr, i, code)` at `code[i] === "'"`: return length to consume from `i` (>= 1),
@@ -241,6 +263,7 @@ function isPropertyKey(code, quoteEnd) {
  */
 function tokenize(code, options) {
   const mergedOptions = resolveHighlightOptions(options)
+  const objectKeys = mergedOptions.objectKeys === true
   const hasCustomKeywords = mergedOptions.keywords !== DefaultOptions.keywords
   let isTs = mergedOptions.typescript
   // The TypeScript heuristic scans the whole input, so run it only once a TS-only keyword appears.
@@ -274,6 +297,47 @@ function tokenize(code, options) {
   let beforeLast = [-2, '']
   /** @type {Array<[number, string]>} */
   const tokens = []
+
+  // Resolve object keys as tokens arrive, without a second pass over the result.
+  /** @type {string[]} */
+  const brackets = []
+  /** @type {[number, string] | null} */
+  let possibleKey = null
+  let optionalKey = false
+  let previous = ''
+  let lineStart = false
+
+  /** @param {[number, string]} token */
+  function trackObjectKey(token) {
+    const [tokenType, value] = token
+    if (tokenType === T_BREAK) lineStart = true
+    if (tokenType === T_SPACE || tokenType === T_BREAK || tokenType === T_COMMENT) return
+
+    if (possibleKey) {
+      if (tokenType === T_SIGN && value === '?' && !optionalKey) {
+        optionalKey = true
+      } else {
+        let sign = tokenType === T_SIGN ? value : ''
+        if (!optionalKey && sign[0] === '?') sign = sign.slice(1)
+        if (sign[0] === ':' && sign[1] !== ':') possibleKey[0] = T_PROPERTY
+        possibleKey = null
+        optionalKey = false
+      }
+    }
+    if (isKeyCandidate(tokenType, value) && brackets[brackets.length - 1] === '{' &&
+      ((lineStart && !continuesExpression(previous)) || previous === 'readonly' || previous.endsWith('{') ||
+        previous.endsWith(',') || previous.endsWith(';'))) {
+      possibleKey = token
+    }
+    if (tokenType === T_SIGN) {
+      for (const char of value) {
+        if (char === '(' || char === '[' || char === '{') brackets.push(char)
+        else if (char === ')' || char === ']' || char === '}') brackets.pop()
+      }
+    }
+    previous = value
+    lineStart = false
+  }
 
   /**
    * TS generics (`Map<string>`) and JSX (`<div>`) share the same `<Name …>` lexical shape.
@@ -387,6 +451,7 @@ function tokenize(code, options) {
       type = typeof type_ === 'number' ? type_ : classify(current)
       /** @type [number, string]  */
       const pair = [type, current]
+      if (objectKeys) trackObjectKey(pair)
       if (type !== T_SPACE && type !== T_BREAK) {
         beforeLast = last
         last = pair
@@ -836,6 +901,7 @@ export { tokenize }
  * @property {boolean} [jsx] Whether JSX tag parsing is enabled.
  * @property {boolean} [regex] Whether JavaScript-style regular expressions are enabled.
  * @property {boolean} [templateStrings] Whether JavaScript template strings are enabled.
+ * @property {boolean} [objectKeys] Whether keys of objects and type literals are highlighted as properties.
  * @property {boolean} [caseInsensitive] Whether keyword matching ignores case.
  * @property {boolean} [typescript] Override heuristic TypeScript detection.
  * @property {(line: import('../core.js').AnnotateLine) => void} [annotateLine]
