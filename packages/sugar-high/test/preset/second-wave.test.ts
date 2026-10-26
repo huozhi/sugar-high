@@ -27,6 +27,23 @@ describe('second-wave language presets', () => {
     expect(actual).toContain(second)
   })
 
+  it('highlights HCL blocks and attribute names', () => {
+    const actual = getTokensAsString(tokenize([
+      'resource "aws_instance" "web" {',
+      '  ami   = var.ami # image',
+      '  count = var.n == 1 ? 2 : 0',
+      '  tags  = { Name = "web" }',
+      '  ids   = [for k, v in var.map : k => v.id if v.id != ""]',
+      '}',
+    ].join('\n'), { lang: 'hcl' }))
+    expect(actual).toContain('resource => keyword')
+    expect(actual).toContain('ami => property')
+    expect(actual).toContain('count => property')
+    expect(actual).toContain('Name => property')
+    expect(actual).toContain('ids => property')
+    expect(actual.filter(token => token.endsWith(' => property'))).not.toContain('k => property')
+  })
+
   it('supports PowerShell block comments', () => {
     const actual = getTokensAsString(tokenize('<# note #>\nfunction Test {}', {
       lang: 'powershell',
