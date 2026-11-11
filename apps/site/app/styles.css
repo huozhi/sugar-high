@@ -1342,6 +1342,8 @@ code {
 
 .live-editor__window {
   position: relative;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 8px 28px rgba(50, 60, 70, 0.12);
@@ -1358,6 +1360,7 @@ code {
   position: absolute;
   z-index: 40;
   touch-action: none;
+  user-select: none;
 }
 
 .live-editor__resize-handle--right,
@@ -1368,8 +1371,42 @@ code {
   cursor: ew-resize;
 }
 
-.live-editor__resize-handle--right { right: -5px; }
-.live-editor__resize-handle--left { left: -5px; }
+.live-editor__resize-handle--right { right: 0; }
+.live-editor__resize-handle--left { left: 0; }
+
+.live-editor__resize-handle--top,
+.live-editor__resize-handle--bottom {
+  left: 14px;
+  right: 14px;
+  height: 10px;
+  cursor: ns-resize;
+}
+
+.live-editor__resize-handle--top { top: 0; }
+.live-editor__resize-handle--bottom { bottom: 0; }
+
+.live-editor__resize-handle--top-left,
+.live-editor__resize-handle--top-right,
+.live-editor__resize-handle--bottom-left,
+.live-editor__resize-handle--bottom-right {
+  width: 14px;
+  height: 14px;
+}
+
+.live-editor__resize-handle--top-left { top: 0; left: 0; cursor: nwse-resize; }
+.live-editor__resize-handle--top-right { top: 0; right: 0; cursor: nesw-resize; }
+.live-editor__resize-handle--bottom-left { bottom: 0; left: 0; cursor: nesw-resize; }
+.live-editor__resize-handle--bottom-right { bottom: 0; right: 0; cursor: nwse-resize; }
+
+.live-editor__window[data-resized-height] > .codice.editor {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.live-editor__window-header {
+  flex-shrink: 0;
+}
 
 .live-editor.live-editor--with-header .live-editor__capture-area .codice.editor {
   border-radius: 0 0 6px 6px;
@@ -1658,17 +1695,14 @@ code {
     overflow: hidden;
   }
 
-  .live-editor__resize-handle {
-    display: none;
-  }
-
   .live-editor__capture-area {
     width: 100% !important;
     height: auto !important;
   }
 
   .live-editor__window {
-    width: 100% !important;
+    max-width: 100%;
+    margin-inline: auto;
   }
 
   .live-editor__color {
