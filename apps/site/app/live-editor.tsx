@@ -168,7 +168,7 @@ export default function LiveEditor({
   const [isCapturing, setIsCapturing] = useState(false)
   const [captureFilename, setCaptureFilename] = useState('example.js')
   const [capturePadding, setCapturePadding] = useState<20 | 36 | 56>(36)
-  const [editorSize, setEditorSize] = useState<{ width: number }>({
+  const [editorSize, setEditorSize] = useState<{ width: number; height?: number }>({
     width: 640,
   })
   const [localThemeIndex, setLocalThemeIndex] = useState(0)
@@ -228,7 +228,8 @@ export default function LiveEditor({
   }, [isCapturing, isDarkTheme])
 
   const startResize = useCallback(
-    (edge: 'right' | 'left', event: ReactPointerEvent) => {
+    (edge: string, event: ReactPointerEvent) => {
+      if (event.button !== 0) return
       event.preventDefault()
       const target = event.currentTarget as HTMLElement
       const editor = target.parentElement
@@ -237,23 +238,42 @@ export default function LiveEditor({
       target.setPointerCapture(event.pointerId)
       const rect = editor.getBoundingClientRect()
       const startX = event.clientX
+      const startY = event.clientY
+      const resizeWidth = edge.includes('left') || edge.includes('right')
+      const resizeHeight = edge.includes('top') || edge.includes('bottom')
+      const isMobile = window.matchMedia('(max-width: 640px)').matches
+      const canvas = editor.parentElement
+      const canvasStyle = canvas && getComputedStyle(canvas)
+      const maxWidth = isMobile && canvas && canvasStyle
+        ? canvas.clientWidth - parseFloat(canvasStyle.paddingLeft) - parseFloat(canvasStyle.paddingRight)
+        : Infinity
+      const minWidth = Math.min(isMobile ? 200 : 360, maxWidth)
 
       const onMove = (moveEvent: PointerEvent) => {
         const horizontalDelta = moveEvent.clientX - startX
-        const widthDelta = edge === 'left' ? -horizontalDelta : horizontalDelta
+        const widthDelta = edge.includes('left') ? -horizontalDelta : horizontalDelta
+        const verticalDelta = moveEvent.clientY - startY
+        const heightDelta = edge.includes('top') ? -verticalDelta : verticalDelta
 
-        setEditorSize({
-          width: Math.max(360, rect.width + widthDelta * 2),
-        })
+        setEditorSize((size) => ({
+          width: resizeWidth
+            ? Math.min(maxWidth, Math.max(minWidth, rect.width + widthDelta * 2))
+            : size.width,
+          height: resizeHeight ? Math.max(160, rect.height + heightDelta) : size.height,
+        }))
       }
 
       const onEnd = () => {
         window.removeEventListener('pointermove', onMove)
         window.removeEventListener('pointerup', onEnd)
+        window.removeEventListener('pointercancel', onEnd)
+        target.removeEventListener('lostpointercapture', onEnd)
       }
 
       window.addEventListener('pointermove', onMove)
       window.addEventListener('pointerup', onEnd, { once: true })
+      window.addEventListener('pointercancel', onEnd, { once: true })
+      target.addEventListener('lostpointercapture', onEnd, { once: true })
     },
     []
   )
@@ -433,7 +453,11 @@ export default function LiveEditor({
               ref={captureRef}
               style={{ padding: capturePadding }}
             >
-              <div className="live-editor__window" style={{ width: editorSize.width }}>
+              <div
+                className="live-editor__window"
+                data-resized-height={editorSize.height !== undefined ? '' : undefined}
+                style={editorSize}
+              >
                 <div className="live-editor__window-header">
                   <div className="live-editor__window-buttons" aria-hidden="true">
                     <span />
@@ -458,7 +482,7 @@ export default function LiveEditor({
                   extension={activeFileExtension}
                   onChange={handleEditorChange}
                 />
-                {(['right', 'left'] as const).map((edge) => (
+                {(['right', 'left', 'top', 'bottom', 'top-left', 'top-right', 'bottom-left', 'bottom-right'] as const).map((edge) => (
                   <div
                     key={edge}
                     className={`live-editor__resize-handle live-editor__resize-handle--${edge}`}
