@@ -44,9 +44,6 @@ const themeOptions = themes.map(({ id, name, colors, colorsDark }) => ({
 const defaultColorPlateColors: LiveEditorColorPlate = themes[0].colors
 
 const DEFAULT_LIVE_CODE = LANGUAGE_EXAMPLES.javascript
-const DEFAULT_LIVE_EDITOR_MIN_HEIGHT = `${
-  DEFAULT_LIVE_CODE.split('\n').length * 1.35 + 1.5
-}rem`
 
 function useTextTypingAnimation(targetText, delay, enableTypingAnimation, onReady) {
   const [text, setText] = useState(enableTypingAnimation ? '' : targetText)
@@ -168,6 +165,7 @@ export default function LiveEditor({
   const [isCapturing, setIsCapturing] = useState(false)
   const [captureFilename, setCaptureFilename] = useState('example.js')
   const [capturePadding, setCapturePadding] = useState<20 | 36 | 56>(36)
+  const [showLineNumbers, setShowLineNumbers] = useState(true)
   const [editorSize, setEditorSize] = useState<{ width: number; height?: number }>({
     width: 640,
   })
@@ -201,11 +199,21 @@ export default function LiveEditor({
     setIsCapturing(true)
     try {
       const { default: domToImage } = await import('dom-to-image')
+      await document.fonts.ready
       const node = captureRef.current
       const rect = node.getBoundingClientRect()
+      const width = node.scrollWidth
+      const height = node.scrollHeight
+      const scale = 3
       const dataUrl = await domToImage.toPng(node, {
-        width: node.scrollWidth,
-        height: node.scrollHeight,
+        width: width * scale,
+        height: height * scale,
+        style: {
+          width: `${width}px`,
+          height: `${height}px`,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+        },
         bgcolor: isDarkTheme ? '#3a3d42' : '#eef1f3',
       })
 
@@ -237,6 +245,15 @@ export default function LiveEditor({
 
       target.setPointerCapture(event.pointerId)
       const rect = editor.getBoundingClientRect()
+      const code = editor.querySelector('code')
+      const header = editor.querySelector<HTMLElement>('.live-editor__window-header')
+      const codeStyle = code && getComputedStyle(code)
+      let minHeight = (header?.offsetHeight ?? 0) + (codeStyle ? parseFloat(codeStyle.lineHeight) : 24)
+      // Include padding around the code so one full line stays visible.
+      for (let node = code; node && node !== editor; node = node.parentElement) {
+        const style = getComputedStyle(node)
+        minHeight += parseFloat(style.paddingTop) + parseFloat(style.paddingBottom)
+      }
       const startX = event.clientX
       const startY = event.clientY
       const resizeWidth = edge.includes('left') || edge.includes('right')
@@ -259,7 +276,7 @@ export default function LiveEditor({
           width: resizeWidth
             ? Math.min(maxWidth, Math.max(minWidth, rect.width + widthDelta * 2))
             : size.width,
-          height: resizeHeight ? Math.max(160, rect.height + heightDelta) : size.height,
+          height: resizeHeight ? Math.max(minHeight, rect.height + heightDelta) : size.height,
         }))
       }
 
@@ -355,7 +372,6 @@ export default function LiveEditor({
         '--live-editor-window-surface': isDarkTheme ? '#242629' : '#ffffff',
         '--live-editor-canvas-surface': isDarkTheme ? '#3a3d42' : '#eef1f3',
         '--live-editor-window-border': isDarkTheme ? '#34373b' : '#e4e7e9',
-        '--live-editor-preset-min-height': DEFAULT_LIVE_EDITOR_MIN_HEIGHT,
       }) as CSSProperties,
     [activePlateColors, isDarkTheme, textareaTint]
   )
@@ -406,9 +422,6 @@ export default function LiveEditor({
               (colorPlate ? ' live-editor--with-header' : '') +
               (!colorPlate && showLanguageSwitcher
                 ? ' live-editor--with-syntax-toolbar'
-                : '') +
-              (languageSwitcher && !isControlled
-                ? ' live-editor--preset-height'
                 : '')
             }
           >
@@ -477,6 +490,7 @@ export default function LiveEditor({
                   ref={editorRef}
                   className="codice editor flex-1"
                   controls={false}
+                  lineNumbers={showLineNumbers}
                   value={displayCode}
                   fontSize="var(--docs-code-font-size)"
                   extension={activeFileExtension}
@@ -512,6 +526,18 @@ export default function LiveEditor({
                     <option value={36}>Balanced</option>
                     <option value={56}>Spacious</option>
                   </select>
+                  <button
+                    type="button"
+                    className="live-editor__line-numbers-toggle"
+                    onClick={() => setShowLineNumbers((visible) => !visible)}
+                    aria-label="Line numbers"
+                    aria-pressed={showLineNumbers}
+                    title={showLineNumbers ? 'Hide line numbers' : 'Show line numbers'}
+                  >
+                    <svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h1v6M4 10h2M3.5 15c0-2 3-2 3 0 0 1-3 3-3 4h3M11 5h9M11 12h9M11 19h9" />
+                    </svg>
+                  </button>
                   <CopyButton
                     codeSnippet={customizableColorsString}
                     aria-label="Copy color theme"

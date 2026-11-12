@@ -1251,6 +1251,7 @@ code {
 }
 
 .live-editor__footer .copy-button,
+.live-editor__line-numbers-toggle,
 .live-editor__screenshot-button {
   display: inline-flex;
   flex: 0 0 auto;
@@ -1271,7 +1272,9 @@ code {
   background: transparent;
 }
 
-.live-editor__screenshot-button:hover {
+.live-editor__screenshot-button:hover,
+.live-editor__line-numbers-toggle:hover,
+.live-editor__line-numbers-toggle[aria-pressed='true'] {
   color: #354150;
   background: #e9edf0;
 }
@@ -1664,6 +1667,7 @@ code {
   }
 
   .live-editor__footer .copy-button,
+  .live-editor__line-numbers-toggle,
   .live-editor__screenshot-button,
   .live-editor__footer .textarea-color-toggle,
   .live-editor__header .live-editor__appearance-toggle {
@@ -1802,10 +1806,6 @@ code {
 .live-editor__capture-area .codice.editor,
 .live-editor__capture-area .codice.editor [data-codice-content] {
   background-color: var(--live-editor-window-surface);
-}
-
-.live-editor--preset-height .codice.editor [data-codice-content] {
-  min-height: var(--live-editor-preset-min-height);
 }
 
 .live-editor__capture-area .codice.editor textarea,
