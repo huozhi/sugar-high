@@ -53,7 +53,8 @@ function tokenize(code, options) {
   const typeKeywords = options?.typeKeywords || new Set()
   const onCommentStart = options?.onCommentStart || noComment
   const onCommentEnd = options?.onCommentEnd || noComment
-  const word = options?.word
+  // Only a sticky pattern matches at the cursor; others would search ahead or never advance.
+  const word = options?.word?.sticky ? options.word : undefined
   const normalize = options?.caseInsensitive
     ? (value) => value.toLowerCase()
     : (value) => value
@@ -93,16 +94,25 @@ function tokenize(code, options) {
       continue
     }
 
-    if (typeof options?.onQuote === 'function' && curr === "'") {
-      const length = options.onQuote(curr, i, code)
-      if (typeof length === 'number' && length >= 1) {
-        append(T_IDENTIFIER, code.slice(i, i + length))
-        i += length
-        continue
-      }
+    if (curr === '\n' || (curr === '\r' && next === '\n')) {
+      const lineBreak = curr === '\r' ? '\r\n' : curr
+      append(T_BREAK, lineBreak)
+      i += lineBreak.length
+      continue
     }
 
-    if (curr === '"' || curr === "'" || (options?.templateStrings && curr === '`')) {
+    if (isInlineSpace(code, i)) {
+      const start = i++
+      while (i < code.length && isInlineSpace(code, i)) i++
+      append(T_SPACE, code.slice(start, i))
+      continue
+    }
+
+    // A preset word pattern runs before strings, so it can claim apostrophes such as Rust `'a`.
+    if (word) word.lastIndex = i
+    const wordEnd = word?.test(code) ? word.lastIndex : 0
+
+    if (!wordEnd && (curr === '"' || curr === "'")) {
       const quote = curr
       const start = i++
       while (i < code.length) {
@@ -119,26 +129,10 @@ function tokenize(code, options) {
       continue
     }
 
-    if (curr === '\n' || (curr === '\r' && next === '\n')) {
-      const lineBreak = curr === '\r' ? '\r\n' : curr
-      append(T_BREAK, lineBreak)
-      i += lineBreak.length
-      continue
-    }
-
-    if (isInlineSpace(code, i)) {
-      const start = i++
-      while (i < code.length && isInlineSpace(code, i)) i++
-      append(T_SPACE, code.slice(start, i))
-      continue
-    }
-
-    if (word) word.lastIndex = i
-    const wordEnd = word?.test(code) ? word.lastIndex : 0
     if (wordEnd || isWord(curr)) {
       const start = i++
       if (wordEnd) i = wordEnd
-      while (i < code.length && isWord(code[i])) i++
+      else while (i < code.length && isWord(code[i])) i++
       if (isDigitCode(curr.charCodeAt(0)) && code[i] === '.' && isDigitCode(code.charCodeAt(i + 1))) {
         i++
         while (i < code.length && isWord(code[i])) i++
@@ -191,11 +185,9 @@ export { generate, parse, render, SugarHigh, tokenize }
  * @property {(curr: string, next: string, index: number, code: string) => number | boolean} [onCommentStart]
  * @property {(prev: string, curr: string, index: number, code: string, start: number) => number | boolean} [onCommentEnd]
  * @property {(curr: string, index: number, code: string) => number | null | undefined} [onLiteral]
- * @property {(curr: string, index: number, code: string) => number | null | undefined} [onQuote]
  * @property {':' | '='} [keys] Separator after a key; the word or quoted string before it is a property.
  * @property {boolean} [caseInsensitive]
- * @property {RegExp} [word] Sticky pattern for words the default lexer would split, such as CSS `font-size`.
- * @property {boolean} [templateStrings]
+ * @property {RegExp} [word] Sticky (`y`) pattern for words the default lexer would split, such as CSS `font-size` or Rust `'a`.
  * @property {(code: string, options: ParseOptions) => Array<[number, string]>} [tokenize]
  * @property {(line: AnnotateLine) => void} [annotateLine]
  */

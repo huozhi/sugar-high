@@ -33,54 +33,40 @@ import * as vue from '../lang/vue.js'
 import * as yaml from '../lang/yaml.js'
 import * as zig from '../lang/zig.js'
 
-/**
- * Disable JavaScript-only scanner modes for a non-JavaScript language.
- * @param {import('../core.js').ParseOptions} config
- * @returns {import('../core.js').ParseOptions}
- */
-function nonJavaScript(config) {
-  return {
-    ...config,
-    jsx: false,
-    regex: false,
-    templateStrings: false,
-  }
-}
-
 function createConfigs() {
   return {
     javascript,
     typescript,
-    css: nonJavaScript(css),
-    python: nonJavaScript(python),
-    c: nonJavaScript(c),
-    go: nonJavaScript(go),
-    glsl: nonJavaScript(glsl),
-    java: nonJavaScript(java),
-    rust: nonJavaScript(rust),
-    json: nonJavaScript(json),
-    diff: nonJavaScript(diff),
-    shell: nonJavaScript(shell),
-    cpp: nonJavaScript(cpp),
-    csharp: nonJavaScript(csharp),
-    sql: nonJavaScript(sql),
+    css: css,
+    python: python,
+    c: c,
+    go: go,
+    glsl: glsl,
+    java: java,
+    rust: rust,
+    json: json,
+    diff: diff,
+    shell: shell,
+    cpp: cpp,
+    csharp: csharp,
+    sql: sql,
     html,
     vue,
     svelte,
-    yaml: nonJavaScript(yaml),
-    markdown: nonJavaScript(markdown),
-    plaintext: nonJavaScript(plaintext),
-    ruby: nonJavaScript(ruby),
-    kotlin: nonJavaScript(kotlin),
-    swift: nonJavaScript(swift),
-    php: nonJavaScript(php),
-    toml: nonJavaScript(toml),
-    powershell: nonJavaScript(powershell),
-    dockerfile: nonJavaScript(dockerfile),
-    graphql: nonJavaScript(graphql),
-    hcl: nonJavaScript(hcl),
-    zig: nonJavaScript(zig),
-    lua: nonJavaScript(lua),
+    yaml: yaml,
+    markdown: markdown,
+    plaintext: plaintext,
+    ruby: ruby,
+    kotlin: kotlin,
+    swift: swift,
+    php: php,
+    toml: toml,
+    powershell: powershell,
+    dockerfile: dockerfile,
+    graphql: graphql,
+    hcl: hcl,
+    zig: zig,
+    lua: lua,
   }
 }
 
@@ -93,6 +79,6 @@ function configFor(name) {
 
 export {
   c, configFor, configs, cpp, csharp, css, diff, dockerfile, go, glsl, graphql, hcl, html, java,
-  javascript, json, kotlin, lua, markdown, nonJavaScript, php, plaintext, powershell, python, ruby,
+  javascript, json, kotlin, lua, markdown, php, plaintext, powershell, python, ruby,
   rust, shell, sql, svelte, swift, toml, typescript, vue, yaml, zig,
 }

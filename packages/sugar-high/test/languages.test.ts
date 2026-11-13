@@ -107,13 +107,4 @@ describe('language registry', () => {
     expect(lang('python')).toBe('python')
     expect(lang('py')).toBe('python')
   })
-
-  it('disables JavaScript-only scanner modes for other languages', () => {
-    const language = languages.find(({ id }) => id === lang('jsonc'))
-    expect(language?.config).toMatchObject({
-      jsx: false,
-      regex: false,
-      templateStrings: false,
-    })
-  })
 })

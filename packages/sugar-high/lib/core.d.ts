@@ -97,14 +97,12 @@ export type ParseOptions = {
     start: number,
   ) => number | boolean
   onLiteral?: (curr: string, index: number, code: string) => number | null | undefined
-  onQuote?: (curr: string, index: number, code: string) => number | null | undefined
   /** Separator after a key; the word or quoted string before it is a property. */
   keys?: ':' | '='
   jsx?: boolean
   regex?: boolean
-  templateStrings?: boolean
   caseInsensitive?: boolean
-  /** Sticky pattern for words the default lexer would split, such as CSS `font-size`. */
+  /** Sticky (`y`) pattern for words the default lexer would split, such as CSS `font-size` or Rust `'a`. */
   word?: RegExp
   typescript?: boolean
   tokenize?: (code: string, options: ParseOptions) => Array<[number, string]>

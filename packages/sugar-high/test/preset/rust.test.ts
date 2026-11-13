@@ -12,6 +12,15 @@ describe('tokenize - rust preset', () => {
     expect(actual).toContain("'z' => identifier")
   })
 
+  it('reads lifetimes, escaped chars, and lone apostrophes without opening a string', () => {
+    const actual = getTokensAsString(tokenize("fn f<'a>(s: &'a str) { let n = '\\n'; let q = '\\''; }", rust))
+    expect(actual).toContain("'a => identifier")
+    expect(actual).toContain("'\\n' => identifier")
+    expect(actual).toContain("'\\'' => identifier")
+    expect(actual).toContain('str => identifier')
+    expect(actual.some(token => token.endsWith(' => string'))).toBe(false)
+  })
+
   it('highlights line, doc, and block comments', () => {
     const actual = getTokensAsString(
       tokenize('/// Docs\nfn main() { // note\n  let a = 1; /* block\n  comment */\n}\n', rust)

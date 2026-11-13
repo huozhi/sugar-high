@@ -235,8 +235,6 @@ function isPropertyKey(code, quoteEnd, sign) {
 /**
  * @param {string} code
  * @param {HighlightOptions | undefined} options
- * Optional `onQuote(curr, i, code)` at `code[i] === "'"`: return length to consume from `i` (>= 1),
- * or null/undefined/below 1 for default JS single-quoted strings. No substring allocation.
  * @return {Array<[number, string]>}
  */
 function tokenize(code, options) {
@@ -403,30 +401,6 @@ function tokenize(code, options) {
     const curr = code[i]
     const prev = code[i - 1]
     const next = code[i + 1]
-
-    // onQuote(curr, i, code): length from i; end = i + len (capped).
-    if (
-      typeof mergedOptions.onQuote === 'function' &&
-      curr === "'" &&
-      !inStringQuotes() &&
-      !inJsxLiterals() &&
-      !inStrTemplateLiterals()
-    ) {
-      const rawLen = mergedOptions.onQuote(curr, i, code)
-      if (
-        typeof rawLen === 'number' &&
-        rawLen >= 1 &&
-        !Number.isNaN(rawLen)
-      ) {
-        const len = Math.min(rawLen, code.length - i)
-        const end = i + len
-        append()
-        current = code.slice(i, end)
-        append(T_IDENTIFIER)
-        i = end - 1
-        continue
-      }
-    }
 
     // Determine string quotation outside of jsx literals and template literals.
     // Inside jsx literals or template literals, string quotation is still part of it.
@@ -831,7 +805,6 @@ export { tokenize }
  * @property {Set<string>} [typeKeywords]
  * @property {(curr: string, next: string, index: number, code: string) => number | boolean} [onCommentStart]
  * @property {(prev: string, curr: string, index: number, code: string) => number | boolean} [onCommentEnd]
- * @property {(curr: string, i: number, code: string) => number | null | undefined} [onQuote]
  * @property {':' | '='} [keys] Separator after a quoted key.
  * @property {boolean} [jsx] Whether JSX tag parsing is enabled.
  * @property {boolean} [regex] Whether JavaScript-style regular expressions are enabled.
