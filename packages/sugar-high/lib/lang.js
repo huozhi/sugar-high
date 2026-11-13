@@ -76,7 +76,7 @@ for (const language of languages) {
 
 /**
  * Find canonical language metadata using a name, alias, or preferred extension.
- * @param {string} name
+ * @param {unknown} name
  * @returns {Language | undefined}
  */
 function findLanguage(name) {
@@ -92,7 +92,7 @@ function findLanguage(name) {
  */
 /**
  * Resolve a name, alias, or extension to its canonical language name.
- * @param {string} name
+ * @param {unknown} name
  * @returns {string | undefined}
  */
 function lang(name) {

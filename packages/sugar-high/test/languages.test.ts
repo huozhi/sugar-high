@@ -91,6 +91,11 @@ describe('language registry', () => {
     expect(lang('not-a-language')).toBeUndefined()
   })
 
+  it('returns undefined for non-string input', () => {
+    expect(lang(undefined)).toBeUndefined()
+    expect(lang(null)).toBeUndefined()
+  })
+
   it('configures tokenization using a canonical lang', () => {
     const actual = getTokensAsString(tokenize('# note\ndef run():', { lang: 'python' }))
 

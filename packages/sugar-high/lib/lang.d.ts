@@ -11,4 +11,4 @@ export type Language = Readonly<{
 
 export const languages: readonly Language[]
 /** Normalize a language name, fence alias, or extension to its canonical name. */
-export function lang(name: string): LanguageName | undefined
+export function lang(name: unknown): LanguageName | undefined
