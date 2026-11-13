@@ -6,7 +6,8 @@ import { getTokensAsString } from '../testing-utils'
 describe('tokenize - yaml preset', () => {
   it('keeps apostrophes inside plain scalars from opening a string', () => {
     const actual = getTokensAsString(tokenize("message: don't stop\nnext: value\nowner: users' list\n", yaml))
-    expect(actual).toContain("' => identifier")
+    expect(actual).toContain("don't => identifier")
+    expect(actual).toContain("users' => identifier")
     expect(actual).toContain('next => property')
     expect(actual).toContain('value => identifier')
     expect(actual.some(token => token.endsWith(' => string'))).toBe(false)

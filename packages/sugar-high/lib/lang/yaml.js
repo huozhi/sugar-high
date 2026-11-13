@@ -8,14 +8,7 @@ export const keywords = new Set([
 
 export const keys = ':'
 
-/**
- * @param {string} curr `code[i]` (apostrophe)
- * @param {number} i
- * @param {string} code
- * @returns {number} code units to consume from `i`, 0 when a quoted scalar starts
- */
-export function onQuote(curr, i, code) {
-  return /[\p{L}\p{N}]/u.test(code[i - 1] || '') ? 1 : 0
-}
+// Plain scalars keep apostrophes inside the word, such as `don't` or `users'`.
+export const word = /[\p{L}\p{N}_$]+(?:'[\p{L}\p{N}_$]*)*/uy
 
 export { onCommentEnd, onCommentStart }

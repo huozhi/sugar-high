@@ -3,7 +3,6 @@ export type HighlightOptions = {
     typeKeywords?: Set<string> | undefined;
     onCommentStart?: ((curr: string, next: string, index: number, code: string) => number | boolean) | undefined;
     onCommentEnd?: ((prev: string, curr: string, index: number, code: string) => number | boolean) | undefined;
-    onQuote?: ((curr: string, i: number, code: string) => number | null | undefined) | undefined;
     /**
      * Separator after a quoted key.
      */
@@ -33,8 +32,6 @@ export type HighlightOptions = {
 /**
  * @param {string} code
  * @param {HighlightOptions | undefined} options
- * Optional `onQuote(curr, i, code)` at `code[i] === "'"`: return length to consume from `i` (>= 1),
- * or null/undefined/below 1 for default JS single-quoted strings. No substring allocation.
  * @return {Array<[number, string]>}
  */
 export function tokenize(code: string, options: HighlightOptions | undefined): Array<[number, string]>;
