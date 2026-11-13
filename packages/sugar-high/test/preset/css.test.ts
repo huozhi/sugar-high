@@ -92,6 +92,7 @@ describe('tokenize - css preset', () => {
     const actual = getTokensAsString(tokens)
 
     expect(actual).toContain('offset-card => property')
+    expect(getTokensAsString(tokenize('.-mx-1 { margin: 0 }', css))).toContain('-mx-1 => property')
     expect(tokens.filter(([, value]) => value === '-')).toHaveLength(2)
     expect(tokens.map(([, value]) => value)).not.toContain('-1rem')
   })
