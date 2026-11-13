@@ -102,7 +102,7 @@ export type ParseOptions = {
   jsx?: boolean
   regex?: boolean
   caseInsensitive?: boolean
-  /** Sticky pattern for words the default lexer would split, such as CSS `font-size` or Rust `'a`. */
+  /** Sticky (`y`) pattern for words the default lexer would split, such as CSS `font-size` or Rust `'a`. */
   word?: RegExp
   typescript?: boolean
   tokenize?: (code: string, options: ParseOptions) => Array<[number, string]>

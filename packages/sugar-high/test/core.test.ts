@@ -204,4 +204,11 @@ describe('CRLF line endings', () => {
     expect(parse(code, javascript).lines[0].value).toBe(expected)
     expect(parse(code, markdown).lines[0].value).toBe(expected)
   })
+
+  it('only uses sticky word patterns', () => {
+    const values = (word: RegExp) => tokenize('x + b-c', { word }).map(([, value]) => value)
+    expect(values(/[a-z]+(?:-[a-z]+)*/y)).toEqual(['x', ' ', '+', ' ', 'b-c'])
+    expect(values(/[a-z]+(?:-[a-z]+)*/g)).toEqual(['x', ' ', '+', ' ', 'b', '-', 'c'])
+    expect(values(/[a-z]+(?:-[a-z]+)*/)).toEqual(['x', ' ', '+', ' ', 'b', '-', 'c'])
+  })
 })
