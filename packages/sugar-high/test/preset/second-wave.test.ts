@@ -27,6 +27,37 @@ describe('second-wave language presets', () => {
     expect(actual).toContain(second)
   })
 
+  it('highlights TOML bare and quoted keys', () => {
+    const actual = getTokensAsString(tokenize('name = "web"\n"quoted key" = 1\n[server]\nport = 8080', {
+      lang: 'toml',
+    }))
+    expect(actual).toContain('name => property')
+    expect(actual).toContain('"quoted key" => property')
+    expect(actual).toContain('port => property')
+    expect(actual).toContain('"web" => string')
+    expect(actual).toContain('server => identifier')
+  })
+
+  it('highlights HCL blocks and attribute names', () => {
+    const actual = getTokensAsString(tokenize([
+      'resource "aws_instance" "web" {',
+      '  ami   = var.ami # image',
+      '  count = var.n == 1 ? 2 : 0',
+      '  tags  = { Name = "web" }',
+      '  ids   = [for k, v in var.map : k => v.id if v.id != ""]',
+      '}',
+    ].join('\n'), { lang: 'hcl' }))
+    expect(actual).toContain('resource => keyword')
+    expect(actual).toContain('ami => property')
+    expect(actual).toContain('count => property')
+    expect(actual).toContain('Name => property')
+    expect(actual).toContain('ids => property')
+    expect(actual).toContain('n => property')
+    expect(actual).toContain('k => identifier')
+    expect(actual).not.toContain('k => property')
+    expect(actual).not.toContain('v => property')
+  })
+
   it('supports PowerShell block comments', () => {
     const actual = getTokensAsString(tokenize('<# note #>\nfunction Test {}', {
       lang: 'powershell',

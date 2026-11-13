@@ -6,7 +6,7 @@ export const keywords = new Set([
   'off', 'Off', 'OFF', 'on', 'On', 'ON', 'true', 'True', 'TRUE', 'yes', 'Yes', 'YES',
 ])
 
-export const quotedKeys = true
+export const keys = ':'
 
 /**
  * @param {string} curr `code[i]` (apostrophe)

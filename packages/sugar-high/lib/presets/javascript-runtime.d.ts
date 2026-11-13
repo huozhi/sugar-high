@@ -4,7 +4,10 @@ export type HighlightOptions = {
     onCommentStart?: ((curr: string, next: string, index: number, code: string) => number | boolean) | undefined;
     onCommentEnd?: ((prev: string, curr: string, index: number, code: string) => number | boolean) | undefined;
     onQuote?: ((curr: string, i: number, code: string) => number | null | undefined) | undefined;
-    quotedKeys?: boolean | undefined;
+    /**
+     * Separator after a quoted key.
+     */
+    keys?: ":" | "=" | undefined;
     /**
      * Whether JSX tag parsing is enabled.
      */

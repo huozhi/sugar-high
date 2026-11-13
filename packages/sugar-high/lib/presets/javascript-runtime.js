@@ -226,10 +226,10 @@ function isCommentEnd_Js(prev, curr) {
     : curr === '\n' ? 1 : 0
 }
 
-function isPropertyKey(code, quoteEnd) {
+function isPropertyKey(code, quoteEnd, sign) {
   let i = quoteEnd + 1
   while (i < code.length && isSpace(code, i)) i++
-  return code[i] === ':'
+  return code[i] === sign
 }
 
 /**
@@ -442,7 +442,7 @@ function tokenize(code, options) {
       }
 
       append(T_STRING, curr)
-      if (mergedOptions.quotedKeys && isStringClose && isPropertyKey(code, i)) {
+      if (mergedOptions.keys && isStringClose && isPropertyKey(code, i, mergedOptions.keys)) {
         for (let tokenIndex = __strTokenStart; tokenIndex < tokens.length; tokenIndex++) {
           tokens[tokenIndex][0] = T_PROPERTY
         }
@@ -832,7 +832,7 @@ export { tokenize }
  * @property {(curr: string, next: string, index: number, code: string) => number | boolean} [onCommentStart]
  * @property {(prev: string, curr: string, index: number, code: string) => number | boolean} [onCommentEnd]
  * @property {(curr: string, i: number, code: string) => number | null | undefined} [onQuote]
- * @property {boolean} [quotedKeys]
+ * @property {':' | '='} [keys] Separator after a quoted key.
  * @property {boolean} [jsx] Whether JSX tag parsing is enabled.
  * @property {boolean} [regex] Whether JavaScript-style regular expressions are enabled.
  * @property {boolean} [templateStrings] Whether JavaScript template strings are enabled.
