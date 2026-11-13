@@ -1,5 +1,19 @@
 # sugar-high
 
+## 2.7.0
+
+### Minor Changes
+
+- e422f8d: Highlight keys before `=` or `:` as properties in TOML, YAML, and HCL, and Terraform block types such as `resource` and `variable` as keywords. The core `quotedKeys` option is replaced by `keys: ':' | '='`, which marks the bare word or quoted string before that separator as a property.
+- 3c2e688: Remove the `onQuote` and `templateStrings` core options. Presets that need custom words, such as Rust lifetimes and char literals or YAML apostrophes in plain scalars, now provide a sticky `word` pattern instead. Rust escaped char literals such as `'\''` are now kept together, and YAML words such as `don't` are one token.
+
+### Patch Changes
+
+- f1655db: Highlight angle-bracket header names in C and C++ `#include` directives as strings.
+- b03f3c5: Tokenize CSS hyphenated names such as `font-size`, `--color`, and `-webkit-box` while lexing instead of rejoining them afterwards, making CSS highlighting faster and smaller. Class names that start with a hyphen, such as `.-mx-1`, are now highlighted like other class names.
+- 7412187: Tokenize `..`, `..=`, and `...` as a single operator, so range and spread operators render as one sign span.
+- 0a65980: Keep identifiers after `..` operators, such as Lua concatenation and Rust or Kotlin ranges, from being highlighted as properties.
+
 ## 2.6.4
 
 ### Patch Changes
