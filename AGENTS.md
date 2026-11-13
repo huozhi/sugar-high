@@ -57,6 +57,8 @@
 
 - Pushes to `main` may create/update the Changesets version PR but must never publish packages.
 - Merge the version PR to apply versions and changelogs.
+- The version job comments bundle size and performance against the latest npm release on the
+  version PR, so the release's combined effect is visible before merging.
 - Publishing is manual: Actions → Publish → Run workflow on `main`.
 - npm publishing uses trusted publishing through OIDC. Do not add npm tokens or publish directly
   from CI.

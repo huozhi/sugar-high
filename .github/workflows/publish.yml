@@ -32,11 +32,53 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Create or update release PR
+        id: changesets
         uses: changesets/action@v2
         with:
           version-script: pnpm run version
           pr-title: 'ci: release packages'
           commit-message: 'ci: release packages'
+
+      # The release PR is opened with the workflow token, so pull_request checks never run on it.
+      # Report the combined effect of every pending change against the latest npm release here.
+      - name: Set up Bun for bundle measurement
+        if: steps.changesets.outputs.pullRequestNumber
+        uses: oven-sh/setup-bun@v2
+
+      - name: Compare with the latest release
+        id: release-report
+        if: steps.changesets.outputs.pullRequestNumber
+        continue-on-error: true
+        working-directory: packages/sugar-high
+        run: |
+          node scripts/benchmark.mjs --markdown --perf --base npm:sugar-high@latest > release-report.md
+          cat release-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment on release PR
+        if: steps.release-report.outcome == 'success'
+        continue-on-error: true
+        uses: actions/github-script@v8
+        env:
+          PULL_REQUEST: ${{ steps.changesets.outputs.pullRequestNumber }}
+        with:
+          script: |
+            const fs = require('fs')
+            const body = fs.readFileSync('packages/sugar-high/release-report.md', 'utf8')
+            const { owner, repo } = context.repo
+            const issue_number = Number(process.env.PULL_REQUEST)
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+            })
+            const previous = comments.find(comment =>
+              comment.user?.type === 'Bot' && comment.body?.includes('<!-- sugar-high-release-report -->')
+            )
+            if (previous) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: previous.id, body })
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body })
+            }
 
   publish:
     if: github.event_name == 'workflow_dispatch'
