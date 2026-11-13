@@ -29,10 +29,14 @@ const isUpperStart = (value) => {
   return c < 128 ? c >= 65 && c <= 90 : /^\p{Lu}/u.test(value)
 }
 
-/** @param {string} code @param {number} index */
-function isQuotedKey(code, index) {
-  while (index < code.length && /\s/.test(code[index])) index++
-  return code[index] === ':'
+/**
+ * A key is followed by its separator; a bare `key:` also needs space after it, unlike `http://`.
+ * @param {string} code @param {number} index @param {string} sign @param {boolean} [bare]
+ */
+function isKey(code, index, sign, bare) {
+  while (isInlineSpace(code, index)) index++
+  const next = code[index + 1]
+  return code[index] === sign && (sign === '=' ? !'=>'.includes(next) : !bare || !next || /\s/.test(next))
 }
 
 /**
@@ -114,7 +118,7 @@ function tokenize(code, options) {
         i++
       }
       const value = code.slice(start, i)
-      append(options?.quotedKeys && isQuotedKey(code, i) ? T_PROPERTY : T_STRING, value)
+      append(options?.keys && isKey(code, i, options.keys) ? T_PROPERTY : T_STRING, value)
       continue
     }
 
@@ -145,7 +149,7 @@ function tokenize(code, options) {
         ? T_CLASS
         : keywords.has(normalized)
           ? T_KEYWORD
-          : lastSignificant === '.' && previousSignificant !== '.'
+          : lastSignificant === '.' && previousSignificant !== '.' || options?.keys && isKey(code, i, options.keys, true)
             ? T_PROPERTY
             : (isDigitCode(value.charCodeAt(0)) || value === 'null' || isUpperStart(value))
               ? T_CLASS
@@ -186,7 +190,7 @@ export { generate, parse, render, SugarHigh, tokenize }
  * @property {(prev: string, curr: string, index: number, code: string, start: number) => number | boolean} [onCommentEnd]
  * @property {(curr: string, index: number, code: string) => number | null | undefined} [onLiteral]
  * @property {(curr: string, index: number, code: string) => number | null | undefined} [onQuote]
- * @property {boolean} [quotedKeys]
+ * @property {':' | '='} [keys] Separator after a key; the word or quoted string before it is a property.
  * @property {boolean} [caseInsensitive]
  * @property {boolean} [templateStrings]
  * @property {(code: string, options: ParseOptions) => Array<[number, string]>} [tokenize]

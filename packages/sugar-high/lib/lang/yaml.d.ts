@@ -1,5 +1,5 @@
 export const keywords: Set<string>;
-export const quotedKeys: true;
+export const keys: ":";
 /**
  * @param {string} curr `code[i]` (apostrophe)
  * @param {number} i

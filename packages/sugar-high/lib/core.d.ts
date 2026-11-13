@@ -98,7 +98,8 @@ export type ParseOptions = {
   ) => number | boolean
   onLiteral?: (curr: string, index: number, code: string) => number | null | undefined
   onQuote?: (curr: string, index: number, code: string) => number | null | undefined
-  quotedKeys?: boolean
+  /** Separator after a key; the word or quoted string before it is a property. */
+  keys?: ':' | '='
   jsx?: boolean
   regex?: boolean
   templateStrings?: boolean
