@@ -42,12 +42,12 @@ jobs:
       # The release PR is opened with the workflow token, so pull_request checks never run on it.
       # Report the combined effect of every pending change against the latest npm release here.
       - name: Set up Bun for bundle measurement
-        if: steps.changesets.outputs.pullRequestNumber
+        if: steps.changesets.outputs['pr-number']
         uses: oven-sh/setup-bun@v2
 
       - name: Compare with the latest release
         id: release-report
-        if: steps.changesets.outputs.pullRequestNumber
+        if: steps.changesets.outputs['pr-number']
         continue-on-error: true
         working-directory: packages/sugar-high
         run: |
@@ -59,7 +59,7 @@ jobs:
         continue-on-error: true
         uses: actions/github-script@v8
         env:
-          PULL_REQUEST: ${{ steps.changesets.outputs.pullRequestNumber }}
+          PULL_REQUEST: ${{ steps.changesets.outputs['pr-number'] }}
         with:
           script: |
             const fs = require('fs')
