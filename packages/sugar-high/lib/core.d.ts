@@ -104,6 +104,8 @@ export type ParseOptions = {
   regex?: boolean
   templateStrings?: boolean
   caseInsensitive?: boolean
+  /** Sticky pattern for words the default lexer would split, such as CSS `font-size`. */
+  word?: RegExp
   typescript?: boolean
   tokenize?: (code: string, options: ParseOptions) => Array<[number, string]>
   /** Apply syntax-specific semantic annotations while parsing. */

@@ -53,6 +53,7 @@ function tokenize(code, options) {
   const typeKeywords = options?.typeKeywords || new Set()
   const onCommentStart = options?.onCommentStart || noComment
   const onCommentEnd = options?.onCommentEnd || noComment
+  const word = options?.word
   const normalize = options?.caseInsensitive
     ? (value) => value.toLowerCase()
     : (value) => value
@@ -136,8 +137,11 @@ function tokenize(code, options) {
       continue
     }
 
-    if (isWord(curr)) {
+    if (word) word.lastIndex = i
+    const wordEnd = word?.test(code) ? word.lastIndex : 0
+    if (wordEnd || isWord(curr)) {
       const start = i++
+      if (wordEnd) i = wordEnd
       while (i < code.length && isWord(code[i])) i++
       if (isDigitCode(curr.charCodeAt(0)) && code[i] === '.' && isDigitCode(code.charCodeAt(i + 1))) {
         i++
@@ -192,6 +196,7 @@ export { generate, parse, render, SugarHigh, tokenize }
  * @property {(curr: string, index: number, code: string) => number | null | undefined} [onQuote]
  * @property {':' | '='} [keys] Separator after a key; the word or quoted string before it is a property.
  * @property {boolean} [caseInsensitive]
+ * @property {RegExp} [word] Sticky pattern for words the default lexer would split, such as CSS `font-size`.
  * @property {boolean} [templateStrings]
  * @property {(code: string, options: ParseOptions) => Array<[number, string]>} [tokenize]
  * @property {(line: AnnotateLine) => void} [annotateLine]

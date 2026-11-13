@@ -10,6 +10,9 @@ export const keywords = new Set([
   '@font-feature-values', '@viewport', '@counter-style', '@font-feature-values', '@document',
 ])
 
+// Hyphenated names such as `font-size`, `--color`, or `-webkit-box`, but not `-1rem`.
+export const word = /-*[\p{L}_$][\p{L}\p{N}_$]*(?:-+[\p{L}\p{N}_$]+)*/uy
+
 export const onCommentStart = (currentChar, nextChar) => {
   return '/*' === (currentChar + nextChar) ? 1 : 0
 }
@@ -24,61 +27,6 @@ export const onLiteral = (curr, index, code) => {
 }
 
 const isIgnored = (type) => type === T_SPACE || type === T_BREAK || type === T_COMMENT
-const isPropertyPart = ([type, value]) =>
-  type === T_IDENTIFIER || type === T_CLASS || (type === T_SIGN && value === '-')
-const isNamePart = ([type]) =>
-  type === T_IDENTIFIER || type === T_CLASS || type === T_PROPERTY
-const isNameStart = (token) => isNamePart(token) && !/^\d/.test(token[1])
-const isHyphen = ([type, value]) => type === T_SIGN && value === '-'
-
-/**
- * Rejoin CSS dashed identifiers split by the shared punctuation lexer.
- * @param {Array<[number, string]>} tokens
- */
-const mergeDashedNames = (tokens) => {
-  /** @type {Array<[number, string]>} */
-  const merged = []
-  for (let index = 0; index < tokens.length; index++) {
-    let firstWord = index
-    let end = index
-
-    if (isHyphen(tokens[end])) {
-      while (tokens[end] && isHyphen(tokens[end])) end++
-      if (!tokens[end] || !isNameStart(tokens[end])) {
-        merged.push(tokens[index])
-        continue
-      }
-      firstWord = end++
-    } else if (isNameStart(tokens[end])) {
-      end++
-    } else {
-      merged.push(tokens[index])
-      continue
-    }
-
-    let dashed = firstWord > index
-    while (tokens[end] && isHyphen(tokens[end])) {
-      const hyphenStart = end
-      while (tokens[end] && isHyphen(tokens[end])) end++
-      if (!tokens[end] || !isNamePart(tokens[end])) {
-        end = hyphenStart
-        break
-      }
-      dashed = true
-      end++
-    }
-
-    if (!dashed) {
-      merged.push(tokens[index])
-      continue
-    }
-    const name = tokens.slice(index, end).map(([, value]) => value).join('')
-    merged.push([tokens[firstWord][0], name])
-    index = end - 1
-  }
-  return merged
-}
-
 /** Return true when a colon belongs to a nested selector instead of a declaration. */
 const opensBlock = (tokens, start) => {
   let parentheses = 0
@@ -102,9 +50,7 @@ const opensBlock = (tokens, start) => {
  * @param {import('../core.js').ParseOptions} options
  */
 export const tokenize = (code, options) => {
-  const tokens = mergeDashedNames(tokenizePlain(code, { ...options, tokenize: undefined }))
-  /** @type {Array<[number, string]>} */
-  const output = []
+  const tokens = tokenizePlain(code, { ...options, tokenize: undefined })
   let blockDepth = 0
   let declarationStart = false
 
@@ -112,53 +58,25 @@ export const tokenize = (code, options) => {
     const token = tokens[index]
     const [type, value] = token
 
-    if (type === T_SIGN && value === '{') {
-      blockDepth++
-      declarationStart = true
-      output.push(token)
+    if (type === T_SIGN && (value === '{' || value === '}' || value === ';')) {
+      if (value !== ';') blockDepth += value === '{' ? 1 : -1
+      declarationStart = value === '{' || value === ';' && blockDepth > 0
       continue
     }
-    if (type === T_SIGN && value === '}') {
-      blockDepth--
-      declarationStart = false
-      output.push(token)
-      continue
-    }
-    if (type === T_SIGN && value === ';') {
-      declarationStart = blockDepth > 0
-      output.push(token)
-      continue
-    }
-    if (!declarationStart || isIgnored(type)) {
-      output.push(token)
-      continue
-    }
+    if (!declarationStart || isIgnored(type)) continue
 
-    const propertyStart = index
-    let propertyEnd = index
-    while (propertyEnd < tokens.length && isPropertyPart(tokens[propertyEnd])) {
-      propertyEnd++
-    }
-    let colon = propertyEnd
+    let colon = index + 1
     while (colon < tokens.length && isIgnored(tokens[colon][0])) colon++
-
     if (
-      propertyEnd > propertyStart &&
-      tokens[colon]?.[0] === T_SIGN &&
-      tokens[colon][1] === ':' &&
+      (type === T_IDENTIFIER || type === T_CLASS) &&
+      tokens[colon]?.[1] === ':' &&
+      tokens[colon][0] === T_SIGN &&
       !opensBlock(tokens, colon + 1)
     ) {
-      const property = tokens
-        .slice(propertyStart, propertyEnd)
-        .map(([, part]) => part)
-        .join('')
-      output.push([T_PROPERTY, property])
-      index = propertyEnd - 1
-    } else {
-      output.push(token)
+      token[0] = T_PROPERTY
     }
     declarationStart = false
   }
 
-  return output
+  return tokens
 }
