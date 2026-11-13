@@ -59,16 +59,12 @@ function tokenize(code, options) {
   /** @type {Array<[number, string]>} */
   const tokens = []
   let lastSignificant = ''
-  let previousSignificant = ''
 
   /** @param {number} type @param {string} value */
   function append(type, value) {
     if (!value) return
     tokens.push([type, value])
-    if (type !== T_SPACE && type !== T_BREAK) {
-      previousSignificant = lastSignificant
-      lastSignificant = value
-    }
+    if (type !== T_SPACE && type !== T_BREAK) lastSignificant = value
   }
 
   for (let i = 0; i < code.length;) {
@@ -149,7 +145,7 @@ function tokenize(code, options) {
         ? T_CLASS
         : keywords.has(normalized)
           ? T_KEYWORD
-          : lastSignificant === '.' && previousSignificant !== '.' || options?.keys && isKey(code, i, options.keys, true)
+          : lastSignificant === '.' || options?.keys && isKey(code, i, options.keys, true)
             ? T_PROPERTY
             : (isDigitCode(value.charCodeAt(0)) || value === 'null' || isUpperStart(value))
               ? T_CLASS
@@ -159,8 +155,10 @@ function tokenize(code, options) {
     }
 
     if (signs.has(curr)) {
-      append(T_SIGN, curr)
-      i++
+      // A run of dots (`..`, `...`) is one operator, so only a single `.` starts a property.
+      const start = i++
+      if (curr === '.') while (code[i] === '.') i++
+      append(T_SIGN, code.slice(start, i))
       continue
     }
 
