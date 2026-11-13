@@ -55,12 +55,16 @@ function tokenize(code, options) {
   /** @type {Array<[number, string]>} */
   const tokens = []
   let lastSignificant = ''
+  let previousSignificant = ''
 
   /** @param {number} type @param {string} value */
   function append(type, value) {
     if (!value) return
     tokens.push([type, value])
-    if (type !== T_SPACE && type !== T_BREAK) lastSignificant = value
+    if (type !== T_SPACE && type !== T_BREAK) {
+      previousSignificant = lastSignificant
+      lastSignificant = value
+    }
   }
 
   for (let i = 0; i < code.length;) {
@@ -141,7 +145,7 @@ function tokenize(code, options) {
         ? T_CLASS
         : keywords.has(normalized)
           ? T_KEYWORD
-          : lastSignificant === '.'
+          : lastSignificant === '.' && previousSignificant !== '.'
             ? T_PROPERTY
             : (isDigitCode(value.charCodeAt(0)) || value === 'null' || isUpperStart(value))
               ? T_CLASS
