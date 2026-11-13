@@ -11,6 +11,21 @@ pnpm --filter sugar-high benchmark
 This reports the minified, gzip, and Brotli sizes of the main entry points and measures the common
 small-input highlighting path.
 
+## Comparing versions
+
+```sh
+cd packages/sugar-high
+node scripts/benchmark.mjs --markdown --base origin/main
+node scripts/benchmark.mjs --markdown --perf --base npm:sugar-high@latest
+```
+
+`--base` takes a git ref or a published `npm:` package and prints a Markdown size comparison.
+`--perf` adds `highlight()` throughput per language. Both versions run in alternating rounds, and
+the fastest round of each is reported. Changes under 5% are treated as noise.
+
+Pull requests get the git-ref size comparison as a comment. The release PR gets the npm comparison
+with `--perf`, which shows the combined effect of every pending change against the latest release.
+
 ## Large-file comparison
 
 ```sh
