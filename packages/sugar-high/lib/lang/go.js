@@ -1,4 +1,5 @@
 // @ts-check
+import { doubleQuoted, singleQuoted, strings } from '../presets/strings.js'
 import { onCommentStart, onCommentEnd } from '../presets/clike-base.js'
 
 export const typeKeywords = new Set([
@@ -14,3 +15,6 @@ export const keywords = new Set([
 ])
 
 export { onCommentStart, onCommentEnd }
+
+// Raw strings in backticks have no escapes and may span lines.
+export const string = strings(/`[^`]*`?/, doubleQuoted, singleQuoted)

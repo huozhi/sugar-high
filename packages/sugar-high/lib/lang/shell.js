@@ -1,4 +1,5 @@
 // @ts-check
+import { doubleQuoted, strings } from '../presets/strings.js'
 import { onCommentEnd, onCommentStart } from '../presets/hash-comment-base.js'
 
 export const keywords = new Set([
@@ -8,3 +9,6 @@ export const keywords = new Set([
 ])
 
 export { onCommentEnd, onCommentStart }
+
+// Single quotes have no escapes.
+export const string = strings(doubleQuoted, /'[^']*'?/)

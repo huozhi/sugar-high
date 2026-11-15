@@ -1,6 +1,7 @@
 // @ts-check
 import { onCommentStart, onCommentEnd } from '../presets/clike-base.js'
-import { onLiteral } from '../presets/c-preprocessor.js'
+import { cStrings } from '../presets/c-preprocessor.js'
+import { strings } from '../presets/strings.js'
 
 export const typeKeywords = new Set([
   'void', 'char', 'short', 'int', 'long', 'float', 'double', 'signed', 'unsigned',
@@ -15,4 +16,6 @@ export const keywords = new Set([
   '_Thread_local',
 ])
 
-export { onCommentStart, onCommentEnd, onLiteral }
+export { onCommentStart, onCommentEnd }
+
+export const string = strings(...cStrings)

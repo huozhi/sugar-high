@@ -7,4 +7,4 @@ export function onCommentEnd(
   code: string,
   start: number,
 ): number;
-export function onLiteral(curr: string, index: number, code: string): number;
+export const string: RegExp;

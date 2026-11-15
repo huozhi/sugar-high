@@ -1,4 +1,5 @@
 // @ts-check
+import { doubleQuoted, singleQuoted, strings } from '../presets/strings.js'
 
 export const keywords = new Set([
   'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'goto', 'if', 'in',
@@ -34,12 +35,5 @@ export function onCommentEnd(_prev, curr, index, code, start) {
   return 0
 }
 
-/** @param {string} curr @param {number} index @param {string} code */
-export function onLiteral(curr, index, code) {
-  if (curr !== '[') return 0
-  const opener = code.slice(index).match(/^\[(=*)\[/)
-  if (!opener) return 0
-  const closing = `]${opener[1]}]`
-  const end = code.indexOf(closing, index + opener[0].length)
-  return end === -1 ? code.length - index : end + closing.length - index
-}
+// Long brackets `[[...]]` and `[==[...]==]` close at the same number of `=`.
+export const string = strings(/\[(=*)\[[\s\S]*?(?:\]\1\]|$)/, doubleQuoted, singleQuoted)

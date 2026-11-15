@@ -1,4 +1,5 @@
 // @ts-check
+import { strings } from '../presets/strings.js'
 
 export const keywords = new Set([
   'add', 'all', 'alter', 'and', 'as', 'asc', 'between', 'by', 'case', 'check',
@@ -29,3 +30,6 @@ export const onCommentEnd = (prevChar, currChar) => {
   if (currChar === '\n') return 1
   return prevChar + currChar === '*/' ? 2 : 0
 }
+
+// Standard SQL quotes escape themselves (`'it''s'`) and keep `\` literal.
+export const string = strings(/'(?:''|[^'])*'?/, /"(?:""|[^"])*"?/)
