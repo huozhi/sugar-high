@@ -4,9 +4,13 @@ import {
   assemble, generate, render, SugarHigh, T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER,
   T_KEYWORD, T_PROPERTY, T_SIGN, T_SPACE, T_STRING,
 } from './shared.js'
+import { doubleQuoted, singleQuoted, strings } from './presets/strings.js'
 
 const signs = new Set('+-*/%=!&|^~?:.,;()[]{}<>#@\\'.split(''))
 const noComment = () => 0
+const quoted = strings(doubleQuoted, singleQuoted)
+/** A word followed by `"`, `'`, `` ` ``, `#`, or `@` may prefix a string, such as Rust `r#"`. */
+const isStringPrefixEnd = (c) => c === 34 || c === 39 || c === 96 || c === 35 || c === 64
 
 /** @param {string} value */
 const isWord = (value) => {
@@ -55,6 +59,7 @@ function tokenize(code, options) {
   const onCommentEnd = options?.onCommentEnd || noComment
   // Only a sticky pattern matches at the cursor; others would search ahead or never advance.
   const word = options?.word?.sticky ? options.word : undefined
+  const string = options?.string?.sticky ? options.string : quoted
   const normalize = options?.caseInsensitive
     ? (value) => value.toLowerCase()
     : (value) => value
@@ -87,13 +92,6 @@ function tokenize(code, options) {
       continue
     }
 
-    const literalLength = options?.onLiteral?.(curr, i, code)
-    if (literalLength) {
-      append(T_STRING, code.slice(i, i + literalLength))
-      i += literalLength
-      continue
-    }
-
     if (curr === '\n' || (curr === '\r' && next === '\n')) {
       const lineBreak = curr === '\r' ? '\r\n' : curr
       append(T_BREAK, lineBreak)
@@ -110,29 +108,26 @@ function tokenize(code, options) {
 
     // A preset word pattern runs before strings, so it can claim apostrophes such as Rust `'a`.
     if (word) word.lastIndex = i
-    const wordEnd = word?.test(code) ? word.lastIndex : 0
-
-    if (!wordEnd && (curr === '"' || curr === "'")) {
-      const quote = curr
-      const start = i++
-      while (i < code.length) {
-        if (code[i] === '\\') {
-          i++
-        } else if (code[i] === quote) {
-          i++
-          break
-        }
-        i++
-      }
-      const value = code.slice(start, i)
-      append(options?.keys && isKey(code, i, options.keys) ? T_PROPERTY : T_STRING, value)
-      continue
+    let wordEnd = word?.test(code) ? word.lastIndex : 0
+    if (!wordEnd && isWord(curr)) {
+      wordEnd = i + 1
+      while (wordEnd < code.length && isWord(code[wordEnd])) wordEnd++
     }
 
-    if (wordEnd || isWord(curr)) {
-      const start = i++
-      if (wordEnd) i = wordEnd
-      else while (i < code.length && isWord(code[i])) i++
+    // Strings start at a non-word character or at a word prefix such as Rust `r#"` or C++ `R"(`.
+    if (!wordEnd || isStringPrefixEnd(code.charCodeAt(wordEnd))) {
+      string.lastIndex = i
+      if (string.test(code) && string.lastIndex > i) {
+        const start = i
+        i = string.lastIndex
+        append(options?.keys && isKey(code, i, options.keys) ? T_PROPERTY : T_STRING, code.slice(start, i))
+        continue
+      }
+    }
+
+    if (wordEnd) {
+      const start = i
+      i = wordEnd
       if (isDigitCode(curr.charCodeAt(0)) && code[i] === '.' && isDigitCode(code.charCodeAt(i + 1))) {
         i++
         while (i < code.length && isWord(code[i])) i++
@@ -184,7 +179,7 @@ export { generate, parse, render, SugarHigh, tokenize }
  * @property {Set<string>} [typeKeywords]
  * @property {(curr: string, next: string, index: number, code: string) => number | boolean} [onCommentStart]
  * @property {(prev: string, curr: string, index: number, code: string, start: number) => number | boolean} [onCommentEnd]
- * @property {(curr: string, index: number, code: string) => number | null | undefined} [onLiteral]
+ * @property {RegExp} [string] Sticky (`y`) pattern for string literals; replaces the default `"` and `'` strings.
  * @property {':' | '='} [keys] Separator after a key; the word or quoted string before it is a property.
  * @property {boolean} [caseInsensitive]
  * @property {RegExp} [word] Sticky (`y`) pattern for words the default lexer would split, such as CSS `font-size` or Rust `'a`.

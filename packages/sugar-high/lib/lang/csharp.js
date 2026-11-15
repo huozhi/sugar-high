@@ -1,4 +1,5 @@
 // @ts-check
+import { doubleQuoted, singleQuoted, strings } from '../presets/strings.js'
 import { onCommentEnd, onCommentStart } from '../presets/clike-base.js'
 
 export const keywords = new Set([
@@ -19,3 +20,8 @@ export const typeKeywords = new Set([
 ])
 
 export { onCommentEnd, onCommentStart }
+
+// Raw `"""` strings close at a run of the same length; verbatim `@"` strings escape `"` as `""`.
+export const string = strings(
+  /\$*("{3,})[\s\S]*?(?:\1|$)/, /\$*@\$*"(?:""|[^"])*"?/, doubleQuoted, singleQuoted,
+)

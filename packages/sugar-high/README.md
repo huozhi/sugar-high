@@ -15,6 +15,9 @@ without requiring a DOM.
 npm install sugar-high
 ```
 
+Sugar High uses regular expression lookbehind, so it runs in Node.js and browsers from Chrome 62,
+Firefox 78, and Safari 16.4.
+
 ## Agent skill
 
 Install Sugar High guidance for an AI coding agent with the Skills CLI:

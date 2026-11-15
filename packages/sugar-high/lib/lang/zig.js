@@ -1,4 +1,5 @@
 // @ts-check
+import { doubleQuoted, singleQuoted, strings } from '../presets/strings.js'
 
 export const keywords = new Set([
   'addrspace', 'align', 'allowzero', 'and', 'anyframe', 'anytype', 'asm', 'async', 'await', 'break',
@@ -19,11 +20,5 @@ export const typeKeywords = new Set([
 export const onCommentStart = (curr, next) => curr + next === '//' ? 1 : 0
 export const onCommentEnd = (_prev, curr) => curr === '\n' ? 1 : 0
 
-/** @param {string} curr @param {number} index @param {string} code */
-export function onLiteral(curr, index, code) {
-  if (curr !== '\\' || code[index + 1] !== '\\') return 0
-  const lineStart = code.lastIndexOf('\n', index - 1) + 1
-  if (code.slice(lineStart, index).trim()) return 0
-  const lineEnd = code.indexOf('\n', index + 2)
-  return (lineEnd === -1 ? code.length : lineEnd) - index
-}
+// A `\\` line string starts a line and runs to its end.
+export const string = strings(/\\\\(?<=(?:^|\n)[^\S\n]*\\\\)[^\n]*/, doubleQuoted, singleQuoted)

@@ -96,7 +96,8 @@ export type ParseOptions = {
     code: string,
     start: number,
   ) => number | boolean
-  onLiteral?: (curr: string, index: number, code: string) => number | null | undefined
+  /** Sticky (`y`) pattern for string literals; replaces the default `"` and `'` strings. */
+  string?: RegExp
   /** Separator after a key; the word or quoted string before it is a property. */
   keys?: ':' | '='
   jsx?: boolean

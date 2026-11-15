@@ -1,4 +1,5 @@
 // @ts-check
+import { doubleQuoted, singleQuoted, strings } from '../presets/strings.js'
 import {
   T_BREAK, T_CLASS, T_COMMENT, T_IDENTIFIER, T_PROPERTY, T_SIGN, T_SPACE,
 } from '../shared.js'
@@ -21,10 +22,10 @@ export const onCommentEnd = (prevChar, currChar) => {
   return '*/' === (prevChar + currChar) ? 1 : 0
 }
 
-export const onLiteral = (curr, index, code) => {
-  if (curr !== '#') return 0
-  return code.slice(index).match(/^#(?:[\da-f]{8}|[\da-f]{6}|[\da-f]{4}|[\da-f]{3})(?![\w-])/i)?.[0].length || 0
-}
+// Hex colors such as `#fff` read as values.
+export const string = strings(
+  /#(?:[\da-fA-F]{8}|[\da-fA-F]{6}|[\da-fA-F]{4}|[\da-fA-F]{3})(?![\w-])/, doubleQuoted, singleQuoted,
+)
 
 const isIgnored = (type) => type === T_SPACE || type === T_BREAK || type === T_COMMENT
 /** Return true when a colon belongs to a nested selector instead of a declaration. */

@@ -1,4 +1,5 @@
 // @ts-check
+import { doubleQuoted, singleQuoted, strings, tripleQuoted } from '../presets/strings.js'
 import { onCommentStart, onCommentEnd } from '../presets/clike-base.js'
 
 export const typeKeywords = new Set([
@@ -15,3 +16,5 @@ export const keywords = new Set([
 ])
 
 export { onCommentStart, onCommentEnd }
+
+export const string = strings(tripleQuoted, doubleQuoted, singleQuoted)

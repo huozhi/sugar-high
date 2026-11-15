@@ -1,4 +1,5 @@
 // @ts-check
+import { doubleQuoted, singleQuoted, strings, tripleQuoted } from '../presets/strings.js'
 export const keywords = new Set([
   'and', 'as', 'assert', 'async', 'await', 'break', 'class', 'continue', 'def', 'del', 'elif',
   'else', 'except', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda',
@@ -12,3 +13,5 @@ export const onCommentStart = (currentChar, _nextChar) => {
 export const onCommentEnd = (_prevChar, currChar) => {
   return currChar === '\n' ? 1 : 0
 }
+
+export const string = strings(tripleQuoted, /'''[^\\']*(?:(?:\\[\s\S]|'(?!''))[^\\']*)*(?:'''|\\?$)/, doubleQuoted, singleQuoted)

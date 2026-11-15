@@ -1,4 +1,5 @@
 // @ts-check
+import { strings } from '../presets/strings.js'
 import { onCommentEnd, onCommentStart } from '../presets/clike-base.js'
 
 export const keywords = new Set([
@@ -13,3 +14,6 @@ export const keywords = new Set([
 export const word = /'(?:\\.[^'\n]*'?|\w+'?)?/y
 
 export { onCommentEnd, onCommentStart }
+
+// Raw strings `r#"..."#` close at a matching run of `#`; apostrophes are handled by `word`.
+export const string = strings(/[bc]?r(#*)"[\s\S]*?(?:"\1|$)/, /[bc]?"[^\\"]*(?:\\[\s\S][^\\"]*)*\\?"?/)

@@ -1,6 +1,7 @@
 // @ts-check
 import { onCommentEnd, onCommentStart } from '../presets/clike-base.js'
-import { onLiteral } from '../presets/c-preprocessor.js'
+import { cStrings } from '../presets/c-preprocessor.js'
+import { strings } from '../presets/strings.js'
 
 export const keywords = new Set([
   'alignas', 'alignof', 'and', 'and_eq', 'asm', 'auto', 'bitand', 'bitor', 'break',
@@ -20,4 +21,7 @@ export const typeKeywords = new Set([
   'short', 'signed', 'unsigned', 'void', 'wchar_t',
 ])
 
-export { onCommentEnd, onCommentStart, onLiteral }
+export { onCommentEnd, onCommentStart }
+
+// Raw strings `R"tag(...)tag"` close at the same tag.
+export const string = strings(/(?:u8|[uUL])?R"([^()\\\s]{0,16})\([\s\S]*?(?:\)\1"|$)/, ...cStrings)
